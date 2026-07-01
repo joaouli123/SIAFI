@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIAFI — Fluxograma de Empréstimos v3</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #1a1a18; padding: 24px; }
+h1 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #73726c; margin-bottom: 16px; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+.li { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #5F5E5A; }
+.ld { width: 12px; height: 12px; border-radius: 2px; border: 0.5px solid; flex-shrink: 0; }
+.scroll-wrap { overflow: auto; border: 0.5px solid #d3d1c7; border-radius: 12px; background: #fff; padding: 24px; max-height: 88vh; }
+.canvas { position: relative; width: 1800px; height: 2400px; }
+
+.node { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 8px; border: 0.5px solid; padding: 8px 14px; cursor: pointer; transition: opacity .15s, transform .1s; user-select: none; }
+.node:hover { opacity: .85; transform: translateY(-1px); }
+.nt { font-size: 13px; font-weight: 500; line-height: 1.3; }
+.ns { font-size: 11px; line-height: 1.3; margin-top: 3px; }
+.pill { border-radius: 22px!important; height: 40px!important; }
+.w160 { width: 160px; }
+.w200 { width: 200px; height: 56px; }
+.w240 { width: 240px; height: 56px; }
+.w180 { width: 180px; height: 56px; }
+
+.purple { background: #EEEDFE; border-color: #534AB7; color: #3C3489; }.purple .ns { color: #534AB7; }
+.teal { background: #E1F5EE; border-color: #0F6E56; color: #085041; }.teal .ns { color: #0F6E56; }
+.green { background: #EAF3DE; border-color: #3B6D11; color: #27500A; }.green .ns { color: #3B6D11; }
+.red { background: #FCEBEB; border-color: #A32D2D; color: #791F1F; }.red .ns { color: #A32D2D; }
+.amber { background: #FAEEDA; border-color: #854F0B; color: #633806; }.amber .ns { color: #854F0B; }
+.blue { background: #E6F1FB; border-color: #185FA5; color: #0C447C; }.blue .ns { color: #185FA5; }
+.gray { background: #F1EFE8; border-color: #888780; color: #444441; }.gray .ns { color: #5F5E5A; }
+.coral { background: #FAECE7; border-color: #993C1D; color: #712B13; }.coral .ns { color: #993C1D; }
+
+.diamond { position: absolute; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity .15s; }
+.diamond:hover { opacity: .85; }
+.ds { position: absolute; width: 106px; height: 106px; transform: rotate(45deg); border-radius: 6px; background: #FAEEDA; border: 0.5px solid #854F0B; }
+.dl { position: relative; z-index: 1; text-align: center; font-size: 12px; font-weight: 500; color: #633806; line-height: 1.3; pointer-events: none; padding: 0 12px; }
+
+svg.lines { position: absolute; top: 0; left: 0; width: 1800px; height: 2400px; overflow: visible; pointer-events: none; }
+
+.tag { position: absolute; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; pointer-events: none; }
+.tag-new { background: #E6F1FB; border: 0.5px solid #185FA5; color: #0C447C; }
+
+.info-box { position: absolute; padding: 10px 14px; background: #F1EFE8; border-radius: 8px; border: 0.5px solid #d3d1c7; font-size: 11px; color: #5F5E5A; line-height: 1.7; }
+.info-box strong { display: block; font-size: 12px; color: #1a1a18; margin-bottom: 2px; }
+
+.tooltip { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2C2C2A; color: #F1EFE8; font-size: 12px; padding: 8px 16px; border-radius: 20px; pointer-events: none; z-index: 100; max-width: 500px; text-align: center; line-height: 1.5; }
+.tooltip.show { display: block; }
+</style>
+</head>
+<body>
+<h1>SIAFI — Fluxograma de Empréstimos <span style="font-size:13px;font-weight:400;color:#73726c">v3 · Correção de Layout</span></h1>
+<p class="subtitle">Lidera Tecnologia · Alinhamento e conexões ortogonais corrigidas · <span style="color:#185FA5">Azul = novos fluxos operacionais</span></p>
+
+<div class="legend">
+  <div class="li"><div class="ld" style="background:#EEEDFE;border-color:#534AB7"></div>Cadastro</div>
+  <div class="li"><div class="ld" style="background:#FAEEDA;border-color:#854F0B"></div>Decisão / SLA</div>
+  <div class="li"><div class="ld" style="background:#EAF3DE;border-color:#3B6D11"></div>Aprovação / Pagamento</div>
+  <div class="li"><div class="ld" style="background:#FCEBEB;border-color:#A32D2D"></div>Rejeição / Inadimplência</div>
+  <div class="li"><div class="ld" style="background:#E1F5EE;border-color:#0F6E56"></div>Parcelas</div>
+  <div class="li"><div class="ld" style="background:#E6F1FB;border-color:#185FA5"></div>Novos Status / Travas</div>
+  <div class="li"><div class="ld" style="background:#FAECE7;border-color:#993C1D"></div>Expiração / Cancelamento</div>
+  <div class="li">
+    <svg width="28" height="12"><line x1="0" y1="6" x2="28" y2="6" stroke="#888" stroke-width="1" stroke-dasharray="4 3"/></svg>
+    Retorno ao ciclo
+  </div>
+</div>
+
+<div class="scroll-wrap"><div class="canvas">
+
+<svg class="lines">
+<defs>
+  <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="aa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="agr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<line x1="800" y1="80" x2="800" y2="120" stroke="#888780" stroke-width="1" marker-end="url(#ag)"/>
+<line x1="800" y1="176" x2="800" y2="220" stroke="#534AB7" stroke-width="1" marker-end="url(#ap)"/>
+<line x1="800" y1="276" x2="800" y2="320" stroke="#534AB7" stroke-width="1" marker-end="url(#ap)"/>
+<line x1="800" y1="376" x2="800" y2="420" stroke="#534AB7" stroke-width="1" marker-end="url(#ap)"/>
+<line x1="800" y1="476" x2="800" y2="520" stroke="#534AB7" stroke-width="1" marker-end="url(#ap)"/>
+<line x1="800" y1="576" x2="800" y2="640" stroke="#854F0B" stroke-width="1" marker-end="url(#aa)"/>
+<line x1="800" y1="696" x2="800" y2="760" stroke="#888780" stroke-width="1" marker-end="url(#ag)"/>
+
+<path d="M 725 835 L 250 835 L 250 880" stroke="#E24B4A" stroke-width="1" fill="none" marker-end="url(#ar)"/>
+<text x="480" y="825" font-size="11" font-weight="500" fill="#A32D2D" text-anchor="middle">Não</text>
+
+<path d="M 875 835 L 1440 835 L 1440 880" stroke="#3B6D11" stroke-width="1" fill="none" marker-end="url(#agr)"/>
+<text x="1150" y="825" font-size="11" font-weight="500" fill="#3B6D11" text-anchor="middle">Sim</text>
+
+<line x1="250" y1="936" x2="250" y2="980" stroke="#E24B4A" stroke-width="1" marker-end="url(#ar)"/>
+<line x1="250" y1="1036" x2="250" y2="1080" stroke="#E24B4A" stroke-width="1" marker-end="url(#ar)"/>
+
+<line x1="1440" y1="936" x2="1440" y2="980" stroke="#3B6D11" stroke-width="1" marker-end="url(#agr)"/>
+<line x1="1440" y1="1036" x2="1440" y2="1080" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
+
+<line x1="1365" y1="1155" x2="1200" y2="1155" stroke="#993C1D" stroke-width="1" marker-end="url(#ac)"/>
+<text x="1282" y="1145" font-size="11" font-weight="500" fill="#993C1D" text-anchor="middle">Não · expirou</text>
+<line x1="1100" y1="1183" x2="1100" y2="1230" stroke="#993C1D" stroke-width="1" marker-end="url(#ac)"/>
+
+<line x1="1440" y1="1230" x2="1440" y2="1280" stroke="#3B6D11" stroke-width="1" marker-end="url(#agr)"/>
+<text x="1455" y="1255" font-size="11" font-weight="500" fill="#3B6D11">Sim</text>
+<line x1="1440" y1="1336" x2="1440" y2="1380" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
+<line x1="1440" y1="1436" x2="1440" y2="1480" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
+
+<line x1="1440" y1="1630" x2="1440" y2="1680" stroke="#3B6D11" stroke-width="1" marker-end="url(#agr)"/>
+<line x1="1440" y1="1736" x2="1440" y2="1780" stroke="#3B6D11" stroke-width="1" marker-end="url(#agr)"/>
+
+<line x1="1320" y1="1808" x2="1220" y2="1808" stroke="#0F6E56" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#agr)"/>
+
+<line x1="1440" y1="1836" x2="1440" y2="1880" stroke="#3B6D11" stroke-width="1" marker-end="url(#agr)"/>
+
+<line x1="1440" y1="2030" x2="1440" y2="2080" stroke="#3B6D11" stroke-width="1" marker-end="url(#agr)"/>
+
+<line x1="1515" y1="1955" x2="1560" y2="1955" stroke="#854F0B" stroke-width="1" marker-end="url(#aa)"/>
+<text x="1535" y="1945" font-size="11" font-weight="500" fill="#854F0B">Parcial</text>
+
+<line x1="1365" y1="1955" x2="350" y2="1955" stroke="#E24B4A" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+<text x="850" y="1945" font-size="11" fill="#E24B4A" text-anchor="middle">Não pago / Vencido</text>
+
+<line x1="250" y1="1983" x2="250" y2="2030" stroke="#E24B4A" stroke-width="1" marker-end="url(#ar)"/>
+<line x1="250" y1="2086" x2="250" y2="2130" stroke="#854F0B" stroke-width="1" marker-end="url(#aa)"/>
+<line x1="250" y1="2186" x2="250" y2="2230" stroke="#854F0B" stroke-width="1" marker-end="url(#aa)"/>
+
+<path d="M 250 2286 L 250 2350 L 1440 2350 L 1440 1880" stroke="#854F0B" stroke-width="1" stroke-dasharray="4 3" fill="none" marker-end="url(#aa)"/>
+</svg>
+
+<div class="node w160 pill gray" style="left:720px;top:40px" data-info="Início do processo. O consultor identifica a demanda de crédito e inicia o fluxo."><span class="nt">Início</span></div>
+
+<div class="node w240 purple" style="left:680px;top:120px" data-info="Coleta obrigatória de dados cadastrais essenciais do cliente."><span class="nt">Consultor coleta dados</span><span class="ns">Nome, CPF, RG, comprovante renda</span></div>
+
+<div class="node w240 purple" style="left:680px;top:220px" data-info="Upload criptografado no Supabase Storage (bucket client-documents privado)."><span class="nt">Upload de documentos</span><span class="ns">Bucket client-documents</span></div>
+
+<div class="node w240 purple" style="left:680px;top:320px" data-info="Gravação e indexação do cliente com vínculo imutável e automático ao consultor proprietário."><span class="nt">Cliente cadastrado</span><span class="ns">consultorId vinculado automaticamente</span></div>
+
+<div class="node w240 purple" style="left:680px;top:420px" data-info="Registro formal das expectativas da operação de crédito. Status: aguardando."><span class="nt">Consultor registra intenção</span><span class="ns">Valor, parcelas, finalidade</span></div>
+
+<div class="node w240 amber" style="left:680px;top:520px" data-info="O sistema inicia o SLA de 24h. Financeiro é acionado via BullMQ e uma sala de chat contextual é gerada."><span class="nt">SLA iniciado · Alertas</span><span class="ns">Conversa de contexto criada</span></div>
+
+<div class="node w240 gray" style="left:680px;top:640px" data-info="Análise analítica de mesa: cruzamento automático do Score de Risco da carteira interna com a documentação."><span class="nt">Financeiro analisa intenção</span><span class="ns">Score de risco · docs · valor</span></div>
+
+<div class="diamond" style="left:725px;top:760px" data-info="Mesa de crédito decide o destino do ticket comercial.">
+  <div class="ds"></div><div class="dl">Aprovado?</div>
+</div>
+
+<div class="node w200 red" style="left:150px;top:880px" data-info="Intenção reprovada. Exige categorização do motivo para alimentar as métricas de conversão."><span class="nt">Intenção rejeitada</span><span class="ns">Motivo obrigatório · consultor avisado</span></div>
+<div class="node w200 red" style="left:150px;top:980px" data-info="Consultor realiza a devolutiva. O canal e a data são snapshotados no banco para auditorias futuras."><span class="nt">Consultor informa cliente</span><span class="ns">Canal registrado no sistema</span></div>
+<div class="node w180 pill gray" style="left:160px;top:1080px" data-info="Encerramento da esteira atual. O cliente fica liberado para novas propostas caso mitigue os riscos apresentados."><span class="nt">Fim · Nova esteira aberta</span></div>
+
+<div class="node w240 green" style="left:1320px;top:880px" data-info="Contrato pré-gerado com status imutável de aguardando_aceite. O split de juros e principal é calculado preventivamente via decimal.js.">
+  <span class="nt">Contrato gerado</span><span class="ns">Status: aguardando_aceite · split calculado</span>
+</div>
+<span class="tag tag-new" style="left:1325px;top:860px">TRAVA</span>
+
+<div class="node w240 blue" style="left:1320px;top:980px" data-info="Ativação silenciosa do ecossistema do cliente no portal. Disparo automatizado de credenciais temporárias."><span class="nt">Portal ativado · Acesso</span><span class="ns">Supabase Auth · senha temporária</span></div>
+
+<div class="diamond" style="left:1365px;top:1080px" data-info="Janela regulatória de 7 dias para colher a assinatura digital do cliente no portal de autosserviço.">
+  <div class="ds" style="background:#E6F1FB;border-color:#185FA5"></div>
+  <div class="dl" style="color:#0C447C">Cliente assinou<br>no prazo?</div>
+</div>
+
+<div class="node w200 coral" style="left:1000px;top:1127px" data-info="Gatilho de proteção: a ausência de assinatura cancela o contrato provisório e expira o lote de capital reservado, liberando a intenção de crédito para revisão."><span class="nt">Proposta expirada</span><span class="ns">Loan cancelado · intenção revertida</span></div>
+<div class="node w200 coral" style="left:1000px;top:1230px" data-info="Notificação imediata ao front comercial para repactuação do lead de crédito."><span class="nt">Consultor notificado</span><span class="ns">Pode reiniciar o processo</span></div>
+
+<div class="node w240 green" style="left:1320px;top:1280px" data-info="O cliente chancela a operação. Captura jurídica inquestionável: carimbo de IP, Geolocalização aproximada, Timestamp e criptografia SHA-256."><span class="nt">Aceite digital no portal</span><span class="ns">Timestamp + IP + hash SHA-256</span></div>
+
+<div class="node w240 blue" style="left:1320px;top:1380px" data-info="O contrato migra para o status de aguardando_liberacao. O caixa físico ou eletrônico é acionado para preparar o repasse manual."><span class="nt">Aguardando Liberação</span><span class="ns">Status restrito · Caixa acionado</span></div>
+<span class="tag tag-new" style="left:1325px;top:1360px">FLUXO CAIXA</span>
+
+<div class="diamond" style="left:1365px;top:1480px" data-info="Confirmação humana do desembolso (Espécie, PIX ou TED de lote bancário).">
+  <div class="ds" style="background:#E6F1FB;border-color:#185FA5"></div>
+  <div class="dl" style="color:#0C447C">Capital<br>entregue?</div>
+</div>
+
+<div class="node w240 green" style="left:1320px;top:1680px" data-info="O gatilho de ativação do contrato dispara: escrita atômica do débito no livro-caixa e consolidação das datas de pagamento com base no dia real da entrega."><span class="nt">Contrato ativado</span><span class="ns">Saída no caixa · parcelas com data real</span></div>
+
+<div class="node w240 teal" style="left:1320px;top:1780px" data-info="Carnê operacional consolidado na base. Divisão de principal_payback e net_gain isoladas por registro para relatórios contábeis de DRE."><span class="nt">Parcelas geradas</span><span class="ns">diaVencimento estável por contrato</span></div>
+
+<div class="node w240 teal" style="left:960px;top:1780px;width:260px" data-info="Gatilho em background via BullMQ no Redis: geração automatizada do lote de notificações e envio de faturas digitais antes do vencimento."><span class="nt">Cobrança antecipada (D-10)</span><span class="ns">WhatsApp · E-mail c/ PDF · Portal</span></div>
+<span class="tag tag-new" style="left:965px;top:1760px">REDUÇÃO RISK</span>
+
+<div class="diamond" style="left:1365px;top:1880px" data-info="Processamento do status de entrada de capitais na data de vencimento.">
+  <div class="ds"></div><div class="dl">Parcela<br>foi paga?</div>
+</div>
+
+<div class="node w240 green" style="left:1320px;top:2080px" data-info="Conciliação bancária concluída. Registro automático de entrada de receitas e amortização do ativo da financeira. Se última, altera para quitado."><span class="nt">Pagamento total confirmado</span><span class="ns">Split no caixa · score sobe se quitado</span></div>
+
+<div class="node w200 amber" style="left:1560px;top:1927px" data-info="Mitigação de inadimplência: o saldo residual permanece aberto no histórico, sofrendo a aplicação regular de mora diária controlada, sem travar o caixa."><span class="nt">Parcialmente pago</span><span class="ns">Mora sobre saldo devedor</span></div>
+
+<div class="node w200 red" style="left:150px;top:1927px" data-info="Cron das 08h do Redis consolida o atraso. O Score de pontualidade é penalizado e réguas automáticas agressivas de cobrança assumem o cliente."><span class="nt">Parcela em atraso</span><span class="ns">Cron 08h · mora acumulada</span></div>
+
+<div class="node w200 red" style="left:150px;top:2030px" data-info="Cliente aciona o canal de suporte digital solicitando renegociação de prazos ou reemissão de títulos com juros calculados."><span class="nt">Cliente solicita renegociação</span><span class="ns">Portal ou suporte comercial</span></div>
+
+<div class="node w200 amber" style="left:150px;top:2130px" data-info="Simulador avançado de mesa: cálculo dinâmico de juros acumulados, multa e novos patamares de lucratividade absoluta."><span class="nt">Financeiro define termos</span><span class="ns">Simulador contábil · multa · mora</span></div>
+
+<div class="node w200 amber" style="left:150px;top:2230px" data-info="Execução sob transação rígida: baixa por cancelamento do contrato depreciado e geração do novo Loan amarrado ao ID de origem legal."><span class="nt">Novo contrato gerado</span><span class="ns">origemLoanId · Aguardando novo aceite</span></div>
+
+<div class="info-box" style="left:970px;top:1910px;width:240px">
+  <strong>Meios de Pagamento Suportados</strong>
+  PIX dinâmico · Boleto · Dinheiro · Cartão<br>
+  Webhook Mercado Pago · Baixa em real-time<br>
+  Atualização automática de saldo devedor
+</div>
+
+<div class="info-box" style="left:970px;top:1413px;width:240px">
+  <strong>Tratamento do Fluxo de Caixa</strong>
+  Lançamentos físicos ou via internet banking<br>
+  Operador registra o método de saída no painel<br>
+  A esteira financeira não gera saídas automáticas
+</div>
+
+</div></div>
+
+<div id="tip" class="tooltip"></div>
+<script>
+const tip=document.getElementById('tip');let t;
+document.querySelectorAll('.node,.diamond').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const info=el.getAttribute('data-info');
+    if(!info)return;
+    tip.textContent=info;
+    tip.classList.add('show');
+    clearTimeout(t);
+    t=setTimeout(()=>tip.classList.remove('show'),6000);
+  });
+});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.node')&&!e.target.closest('.diamond'))
+    tip.classList.remove('show');
+});
+</script>
+</body>
+</html>

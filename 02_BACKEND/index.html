@@ -1,0 +1,2764 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+        <link rel="prev" href="../01_ARQUITETURA/">
+      
+      
+        <link rel="next" href="../03_FRONTEND/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Backend - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-guia-do-backend-nestjs" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Backend
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-estrutura-de-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Estrutura de Módulos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-padrao-de-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Padrão de Controller
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-modulo-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Módulo Auth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modulo-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Módulo Clients
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-modulo-loans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Módulo Loans
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-modulo-installments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Módulo Installments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-modulo-payments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Módulo Payments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-modulo-intencaoemprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Módulo IntencaoEmprestimo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-modulo-reparcelamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Módulo Reparcelamento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-modulo-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Módulo Consultor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-modulo-scorerisco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Módulo ScoreRisco
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-modulo-mensagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Módulo Mensagens
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-modulo-email" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Módulo Email
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-modulo-cobranca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Módulo Cobrança
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-modulo-pix-webhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Módulo PIX / Webhook
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-modulo-portal-client-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Módulo Portal (Client Portal)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-modulos-de-suporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Módulos de Suporte
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-guards-e-decorators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. Guards e Decorators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-auditinterceptor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. AuditInterceptor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-helpers-e-utilitarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. Helpers e Utilitários
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apendice-todos-os-endpoints-da-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APÊNDICE — Todos os Endpoints da API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="APÊNDICE — Todos os Endpoints da API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auth-apiauth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth /api/auth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#users-apiusers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Users /api/users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clients-apiclients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clients /api/clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loans-apiloans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loans /api/loans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installments-apiinstallments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installments /api/installments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payments-apipayments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Payments /api/payments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transactions-apitransactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transactions /api/transactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renegociacoes-apirenegociacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renegociacoes /api/renegociacoes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pix-apipix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PIX /api/pix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhook-apiwebhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook /api/webhook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifications-apinotifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifications /api/notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reports-apireports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reports /api/reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-apiaudit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit /api/audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings-apisettings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings /api/settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-portal-apiportal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client Portal /api/portal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score-risco-apiscore-risco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Score Risco /api/score-risco
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intencoes-apiintencoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intencoes /api/intencoes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reparcelamentos-apireparcelamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reparcelamentos /api/reparcelamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mensagens-apimensagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mensagens /api/mensagens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consultor-apiconsultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consultor /api/consultor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-estrutura-de-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Estrutura de Módulos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-padrao-de-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Padrão de Controller
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-modulo-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Módulo Auth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-modulo-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Módulo Clients
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-modulo-loans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Módulo Loans
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-modulo-installments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Módulo Installments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-modulo-payments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Módulo Payments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-modulo-intencaoemprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Módulo IntencaoEmprestimo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-modulo-reparcelamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Módulo Reparcelamento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-modulo-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Módulo Consultor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-modulo-scorerisco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Módulo ScoreRisco
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-modulo-mensagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Módulo Mensagens
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-modulo-email" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Módulo Email
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-modulo-cobranca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Módulo Cobrança
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-modulo-pix-webhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Módulo PIX / Webhook
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-modulo-portal-client-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Módulo Portal (Client Portal)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-modulos-de-suporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Módulos de Suporte
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-guards-e-decorators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. Guards e Decorators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-auditinterceptor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. AuditInterceptor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-helpers-e-utilitarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. Helpers e Utilitários
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apendice-todos-os-endpoints-da-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APÊNDICE — Todos os Endpoints da API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="APÊNDICE — Todos os Endpoints da API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auth-apiauth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth /api/auth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#users-apiusers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Users /api/users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clients-apiclients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clients /api/clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loans-apiloans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loans /api/loans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installments-apiinstallments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installments /api/installments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payments-apipayments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Payments /api/payments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transactions-apitransactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transactions /api/transactions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renegociacoes-apirenegociacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renegociacoes /api/renegociacoes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pix-apipix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PIX /api/pix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhook-apiwebhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook /api/webhook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifications-apinotifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifications /api/notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reports-apireports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reports /api/reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-apiaudit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit /api/audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings-apisettings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings /api/settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-portal-apiportal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client Portal /api/portal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score-risco-apiscore-risco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Score Risco /api/score-risco
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intencoes-apiintencoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intencoes /api/intencoes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reparcelamentos-apireparcelamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reparcelamentos /api/reparcelamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mensagens-apimensagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mensagens /api/mensagens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consultor-apiconsultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consultor /api/consultor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-guia-do-backend-nestjs">SIAFI 2.0 — Guia do Backend (NestJS)</h1>
+<blockquote>
+<p>Última atualização: 2026-05-23 | NestJS 10 · TypeScript 5 · Prisma 5</p>
+</blockquote>
+<hr />
+<h2 id="1-estrutura-de-modulos">1. Estrutura de Módulos</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>backend/src/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── main.ts
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── app.module.ts
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── common/
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── decorators/        ← @Roles(), @CurrentUser(), @Public()
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── guards/            ← JwtAuthGuard, RolesGuard
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── interceptors/      ← AuditInterceptor
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── helpers/           ← safeDecimal(), calcularEncargos(), generateHash()
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└── modules/
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    ├── auth/              ← Login, refresh, logout, me, MFA
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    ├── users/             ← CRUD operadores
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ├── clients/           ← CRUD clientes + upload documentos
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    ├── loans/             ← Contratos + geração de parcelas + split decimal.js
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    ├── installments/      ← Parcelas + markOverdue + pagamento parcial
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    ├── payments/          ← Pagamentos + estorno + recálculo de encargos
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    ├── transactions/      ← Caixa (saldo + movimentação + lançamentos)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    ├── renegociacoes/     ← Renegociação de dívidas
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    ├── pix/               ← Geração QR Code Mercado Pago
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    ├── webhook/           ← Confirmação de pagamento Mercado Pago
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    ├── notifications/     ← Log de notificações enviadas
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    ├── reports/           ← Relatórios (carteira, faturamento, aging, movimentação, contratos)
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    ├── audit/             ← Log de auditoria imutável
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    ├── settings/          ← Parâmetros globais do sistema
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    ├── client-portal/     ← Portal do cliente (role=cliente)
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    ├── score-risco/       ← Score ponderado de crédito interno
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    ├── intencao/          ← Intenções de empréstimo + SLA + ativação de portal
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    ├── reparcelamento/    ← Fluxo completo: solicitação → proposta → aprovação → execução
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    ├── mensagem/          ← Chat interno + Supabase Realtime
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    ├── email/             ← Templates editáveis + dispatch BullMQ
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    ├── cobranca/          ← Cobrança antecipada + reenvio automático
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    └── consultor/         ← Carteira, solicitações, cobranças filtradas por consultorId
+</code></pre></div>
+<hr />
+<h2 id="2-padrao-de-controller">2. Padrão de Controller</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">@UseGuards</span><span class="p">(</span><span class="nx">JwtAuthGuard</span><span class="p">,</span><span class="w"> </span><span class="nx">RolesGuard</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">@Controller</span><span class="p">(</span><span class="s1">&#39;endpoint&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">MeuController</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="c1">// Rotas estáticas SEMPRE antes de /:id</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="kd">@Get</span><span class="p">(</span><span class="s1">&#39;stats&#39;</span><span class="p">)</span><span class="w"> </span><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;financeiro&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nx">getStats</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="kd">@Get</span><span class="p">(</span><span class="s1">&#39;:id&#39;</span><span class="p">)</span><span class="w"> </span><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;financeiro&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nx">findOne</span><span class="p">(</span><span class="kd">@Param</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Rotas estáticas (<code>/badge</code>, <code>/stats</code>, <code>/simular</code>, <code>/overdue</code>) devem ser declaradas antes de <code>/:id</code> no controller para evitar conflito de roteamento no NestJS.</p>
+</blockquote>
+<hr />
+<h2 id="3-modulo-auth">3. Módulo Auth</h2>
+<p><strong>Endpoint base:</strong> <code>/api/auth</code> | <strong>Roles:</strong> público (exceto <code>/me</code>)</p>
+<p>Fluxo: <code>POST /login</code> → Supabase <code>signInWithPassword()</code> → valida <code>role</code> no banco local → emite JWT com <code>{ sub, email, role }</code> + refresh token.</p>
+<p>MFA via Supabase TOTP. Perfis <code>admin</code>/<code>financeiro</code>/<code>consultor</code> bloqueados imediatamente se não configurado. <code>caixa</code>/<code>cliente</code> têm prazo de 5 logins (<code>loginCount</code>).</p>
+<hr />
+<h2 id="4-modulo-clients">4. Módulo Clients</h2>
+<p><strong>Endpoint base:</strong> <code>/api/clients</code> | <strong>Roles:</strong> admin, financeiro, caixa</p>
+<p>Upload via <code>multipart/form-data</code>: foto, RG e comprovante armazenados no bucket <code>client-documents</code> (Supabase Storage).</p>
+<p>Soft-delete: campo <code>active: false</code> — o cliente desaparece de listagens mas dados e histórico são preservados.</p>
+<hr />
+<h2 id="5-modulo-loans">5. Módulo Loans</h2>
+<p><strong>Endpoint base:</strong> <code>/api/loans</code> | <strong>Roles:</strong> admin, financeiro</p>
+<p><strong>Geração de parcelas:</strong> ao criar um loan, o sistema gera <code>n</code> installments via <code>Decimal.js</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>installment_amount   = valor informado (invariante)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>principal_payback    = principal_amount / numeroParcelas
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>net_gain             = installment_amount - principal_payback
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>total_receivable     = installment_amount × numeroParcelas
+</code></pre></div>
+<p>Campos <code>principal_payback</code> e <code>net_gain</code> <strong>nunca</strong> são retornados a perfis <code>caixa</code> ou <code>cliente</code>.</p>
+<hr />
+<h2 id="6-modulo-installments">6. Módulo Installments</h2>
+<p><strong>Endpoint base:</strong> <code>/api/installments</code> | <strong>Roles:</strong> admin, financeiro, caixa</p>
+<p>Quando <code>valorPago &lt; installment_amount</code>, a parcela fica com status <code>parcialmente_pago</code>. Os campos <code>saldoDevedor</code> e <code>moraAcumulada</code> são recalculados pelo cron <code>atualizarEncargos</code> a cada meia-noite.</p>
+<hr />
+<h2 id="7-modulo-payments">7. Módulo Payments</h2>
+<p><strong>Endpoint base:</strong> <code>/api/payments</code> | <strong>Roles:</strong> admin, financeiro, caixa</p>
+<p><strong>Estorno:</strong> <code>DELETE /:id/estornar</code> reverte o pagamento, recalcula saldo e mora da parcela.</p>
+<p>Após qualquer pagamento ou estorno: <code>void scoreRisco.recalcularScore(clientId)</code> (fire-and-forget — nunca propaga erro).</p>
+<hr />
+<h2 id="8-modulo-intencaoemprestimo">8. Módulo IntencaoEmprestimo</h2>
+<p><strong>Endpoint base:</strong> <code>/api/intencoes</code> | <strong>Roles:</strong> admin, financeiro, consultor</p>
+<p><strong>Ciclo de status:</strong>
+<code>rascunho</code> → <code>pendente</code> → <code>em_analise</code> → <code>aprovada</code> | <code>rejeitada</code> | <code>expirada</code></p>
+<p>Cron <code>verificarSlaIntencoes</code> (a cada 2h) expira intenções com <code>prazoAnalise</code> vencido. Auto-aprovação configurável via <code>financeiro.auto_aprovacao</code> nas SiteSettings.</p>
+<p><strong>Ativação de portal:</strong> ao aprovar, se o cliente não tiver <code>supabaseId</code>, o sistema enfileira o job <code>activate-portal</code> no BullMQ — cria usuário Supabase e envia e-mail de boas-vindas.</p>
+<hr />
+<h2 id="9-modulo-reparcelamento">9. Módulo Reparcelamento</h2>
+<p><strong>Endpoint base:</strong> <code>/api/reparcelamentos</code> | <strong>Roles:</strong> admin, financeiro, consultor</p>
+<p><strong>Fluxo de 4 etapas:</strong>
+1. <strong>Solicitação</strong> — consultor ou cliente via portal cria a solicitação
+2. <strong>Proposta</strong> — financeiro define novos termos (<code>PATCH /:id/proposta</code>)
+3. <strong>2ª aprovação</strong> — se acima do limite configurável (<code>PATCH /:id/aprovar</code>)
+4. <strong>Execução atômica</strong> — <code>PATCH /:id/executar</code> em <code>$transaction</code> Prisma:
+   - Cancela loan original + parcelas não pagas
+   - Cria novo loan com <code>origemLoanId</code> + <code>reparcelamentoCount + 1</code>
+   - Gera <code>aceiteClienteHash</code> (SHA-256 do aceite digital)
+   - Atualiza solicitação para <code>executado</code>
+   - <code>void scoreRisco.recalcularScore(clientId)</code></p>
+<hr />
+<h2 id="10-modulo-consultor">10. Módulo Consultor</h2>
+<p><strong>Endpoint base:</strong> <code>/api/consultor</code> | <strong>Roles:</strong> consultor, admin, financeiro</p>
+<p>Todos os endpoints filtram por <code>consultorId</code> extraído do JWT. Admin e financeiro passam <code>?consultorId=</code> opcional para ver qualquer carteira.</p>
+<p>Registra <code>CobrancaContato</code> ao registrar tentativas de cobrança (canal, resultado, observações).</p>
+<hr />
+<h2 id="11-modulo-scorerisco">11. Módulo ScoreRisco</h2>
+<p><strong>Endpoint base:</strong> <code>/api/score-risco</code> | <strong>Roles:</strong> admin, financeiro, consultor</p>
+<p><strong>Ponderação:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Fator</th>
+<th>Peso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pontualidade de pagamentos</td>
+<td>50%</td>
+</tr>
+<tr>
+<td>Histórico de reparcelamentos</td>
+<td>30%</td>
+</tr>
+<tr>
+<td>Contratos quitados com sucesso</td>
+<td>20%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Quando recalcular (sempre fire-and-forget — nunca propaga erro):</strong>
+- Após pagamento registrado
+- Após estorno de pagamento
+- Após <code>markOverdue</code>
+- Após execução de reparcelamento</p>
+<hr />
+<h2 id="12-modulo-mensagens">12. Módulo Mensagens</h2>
+<p><strong>Endpoint base:</strong> <code>/api/mensagens</code> | <strong>Roles:</strong> admin, financeiro, consultor, caixa</p>
+<p>Conversas diretas 1:1 entre operadores. Realtime via Supabase <code>postgres_changes</code> na tabela <code>mensagens</code> (evento INSERT).</p>
+<p><code>GET /badge</code> retorna <code>{ count: number }</code> — rota estática, declarada antes de <code>/:id</code>.</p>
+<p><code>ultimaLeitura</code> por participante é atualizada ao acessar <code>GET /conversas/:id</code>.</p>
+<hr />
+<h2 id="13-modulo-email">13. Módulo Email</h2>
+<p><strong>Roles:</strong> sistema interno (sem endpoint público direto)</p>
+<p>13 tipos de e-mail automático. Templates editáveis pelo admin armazenados no model <code>EmailTemplate</code>. Dispatch via job BullMQ <code>send-email</code> → Nodemailer → SMTP configurado em SiteSettings.</p>
+<p>Variáveis de template: <code>{{nome_cliente}}</code>, <code>{{valor_parcela}}</code>, <code>{{data_vencimento}}</code>, <code>{{link_portal}}</code>, <code>{{link_aceite}}</code>, <code>{{nome_consultor}}</code>, entre outras.</p>
+<hr />
+<h2 id="14-modulo-cobranca">14. Módulo Cobrança</h2>
+<p><strong>Roles:</strong> sistema interno (sem endpoint público direto)</p>
+<p>Cron <code>enviarCobrancasAntecipadas</code> envia notificação X dias antes do vencimento — valor configurável por contrato ou pelo padrão global em SiteSettings. Canais: WhatsApp (Evolution API), Email (SMTP), notificação interna do portal.</p>
+<p>Cron <code>reenviarCobrancaNaoLida</code> verifica cobranças sem confirmação de leitura e reenvia às 14h.</p>
+<hr />
+<h2 id="15-modulo-pix-webhook">15. Módulo PIX / Webhook</h2>
+<p><strong>PIX:</strong> <code>/api/pix</code> (auth) | <strong>Webhook:</strong> <code>/api/webhook/mp</code> (público)</p>
+<p>Geração: <code>POST /api/pix/generate</code> → Mercado Pago API → retorna <code>qr_code</code> + <code>qr_code_base64</code>. QR Code válido por 24h.</p>
+<p>Webhook: <code>POST /api/webhook/mp</code> → valida assinatura MP → enfileira job <code>confirm-mp-payment</code> no <code>payment-queue</code>. Idempotente: verifica se o pagamento já foi registrado antes de processar.</p>
+<hr />
+<h2 id="16-modulo-portal-client-portal">16. Módulo Portal (Client Portal)</h2>
+<p><strong>Endpoint base:</strong> <code>/api/portal</code> | <strong>Roles:</strong> cliente</p>
+<p>Campos <code>principal_payback</code> e <code>net_gain</code> <strong>nunca</strong> retornados. O cliente vê apenas <code>installment_amount</code>, <code>saldoDevedor</code> e <code>status</code>.</p>
+<p>RLS Supabase garante isolamento a nível de banco — o cliente acessa somente dados com <code>client_id</code> vinculado ao seu <code>auth.uid()</code>.</p>
+<hr />
+<h2 id="17-modulos-de-suporte">17. Módulos de Suporte</h2>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Base</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reports</td>
+<td><code>/api/reports</code></td>
+<td>admin, financeiro</td>
+<td>Carteira, faturamento, clientes, movimentação, contratos</td>
+</tr>
+<tr>
+<td>Audit</td>
+<td><code>/api/audit</code></td>
+<td>admin</td>
+<td>Log imutável de todas as mutações</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td><code>/api/settings</code></td>
+<td>admin</td>
+<td>Parâmetros globais e integrações</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td><code>/api/notifications</code></td>
+<td>admin, financeiro</td>
+<td>Log de notificações enviadas</td>
+</tr>
+<tr>
+<td>Transactions</td>
+<td><code>/api/transactions</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Saldo e movimentações do caixa</td>
+</tr>
+<tr>
+<td>Renegociacoes</td>
+<td><code>/api/renegociacoes</code></td>
+<td>admin, financeiro</td>
+<td>Renegociações de dívidas</td>
+</tr>
+<tr>
+<td>Support</td>
+<td><code>/api/support</code></td>
+<td>todos</td>
+<td>Tickets de suporte</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="18-guards-e-decorators">18. Guards e Decorators</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">@UseGuards</span><span class="p">(</span><span class="nx">JwtAuthGuard</span><span class="p">,</span><span class="w"> </span><span class="nx">RolesGuard</span><span class="p">)</span><span class="w"> </span><span class="c1">// aplicar no controller ou no método</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;financeiro&#39;</span><span class="p">)</span><span class="w">        </span><span class="c1">// roles permitidas</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">@CurrentUser</span><span class="p">()</span><span class="w"> </span><span class="nx">user</span><span class="o">:</span><span class="w"> </span><span class="kt">AuthUser</span><span class="w">        </span><span class="c1">// injetar usuário autenticado</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kd">@Public</span><span class="p">()</span><span class="w">                            </span><span class="c1">// bypassar guards (login, webhook)</span>
+</code></pre></div>
+<p><code>JwtAuthGuard</code> valida assinatura do JWT local. <code>RolesGuard</code> lê o campo <code>role</code> do payload e compara com <code>@Roles()</code>. <code>@Public()</code> é usado em <code>/api/auth/login</code> e <code>/api/webhook/mp</code>.</p>
+<hr />
+<h2 id="19-auditinterceptor">19. AuditInterceptor</h2>
+<p>Intercepta todas as mutações (POST, PATCH, DELETE) e persiste no model <code>AuditLog</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>userId</code></td>
+<td>ID do operador autenticado</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td>Método HTTP + rota normalizada</td>
+</tr>
+<tr>
+<td><code>entity</code></td>
+<td>Entidade afetada (derivada da rota)</td>
+</tr>
+<tr>
+<td><code>entityId</code></td>
+<td>ID do recurso afetado (quando disponível)</td>
+</tr>
+<tr>
+<td><code>before</code></td>
+<td>Snapshot antes da mutação</td>
+</tr>
+<tr>
+<td><code>after</code></td>
+<td>Snapshot após a mutação</td>
+</tr>
+<tr>
+<td><code>ip</code></td>
+<td>IP do cliente</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>Timestamp imutável</td>
+</tr>
+</tbody>
+</table>
+<p>O model <code>AuditLog</code> não possui endpoint de DELETE — imutável por design.</p>
+<hr />
+<h2 id="20-helpers-e-utilitarios">20. Helpers e Utilitários</h2>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Localização</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>safeDecimal(value)</code></td>
+<td><code>common/helpers/decimal.ts</code></td>
+<td>Converte para <code>Decimal</code> com segurança — usar em todos os cálculos financeiros</td>
+</tr>
+<tr>
+<td><code>calcularEncargos(installment, date)</code></td>
+<td><code>common/helpers/encargos.ts</code></td>
+<td>Calcula multa + mora acumulada até <code>date</code></td>
+</tr>
+<tr>
+<td><code>formatCurrency(value)</code></td>
+<td><code>common/helpers/format.ts</code></td>
+<td>Formata <code>Decimal</code> como moeda BRL</td>
+</tr>
+<tr>
+<td><code>generateHash(data)</code></td>
+<td><code>common/helpers/crypto.ts</code></td>
+<td>SHA-256 para <code>aceiteClienteHash</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="apendice-todos-os-endpoints-da-api">APÊNDICE — Todos os Endpoints da API</h2>
+<h3 id="auth-apiauth">Auth <code>/api/auth</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td>/login</td>
+<td>público</td>
+<td>Login com e-mail e senha</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/refresh</td>
+<td>público</td>
+<td>Renovar access token</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/logout</td>
+<td>autenticado</td>
+<td>Encerrar sessão</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/me</td>
+<td>autenticado</td>
+<td>Dados do usuário atual</td>
+</tr>
+</tbody>
+</table>
+<h3 id="users-apiusers">Users <code>/api/users</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin</td>
+<td>Listar operadores</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin</td>
+<td>Criar operador</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id</td>
+<td>admin</td>
+<td>Atualizar operador</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>/:id</td>
+<td>admin</td>
+<td>Desativar operador</td>
+</tr>
+</tbody>
+</table>
+<h3 id="clients-apiclients">Clients <code>/api/clients</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro, caixa</td>
+<td>Listar clientes (paginado, search, status)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/stats</td>
+<td>admin, financeiro</td>
+<td>Totais por status</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/quitados</td>
+<td>admin, financeiro</td>
+<td>Lista de clientes quitados</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/:id</td>
+<td>admin, financeiro, caixa</td>
+<td>Detalhe com loans[]</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin, financeiro</td>
+<td>Criar cliente (multipart/form-data)</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id</td>
+<td>admin, financeiro</td>
+<td>Atualizar cliente</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>/:id</td>
+<td>admin, financeiro</td>
+<td>Soft-delete</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/:id/ativar-portal</td>
+<td>admin, financeiro</td>
+<td>Ativar acesso ao portal</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/:id/desativar-portal</td>
+<td>admin, financeiro</td>
+<td>Desativar acesso ao portal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="loans-apiloans">Loans <code>/api/loans</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro</td>
+<td>Listar contratos (search, status, clientId, page, limit)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/stats</td>
+<td>admin, financeiro</td>
+<td>Totais e valores globais</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/:id</td>
+<td>admin, financeiro, caixa</td>
+<td>Detalhe com installments[] e client</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin, financeiro</td>
+<td>Criar contrato + gerar parcelas automaticamente</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/cancel</td>
+<td>admin, financeiro</td>
+<td>Cancelar contrato</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/liberar-capital</td>
+<td>caixa, financeiro, admin</td>
+<td>Confirmar entrega do capital</td>
+</tr>
+</tbody>
+</table>
+<h3 id="installments-apiinstallments">Installments <code>/api/installments</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/overdue</td>
+<td>admin, financeiro, caixa</td>
+<td>Parcelas em atraso</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/:id</td>
+<td>admin, financeiro, caixa</td>
+<td>Detalhe da parcela com encargos calculados</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/mark-overdue</td>
+<td>sistema (cron)</td>
+<td>Marca parcelas vencidas</td>
+</tr>
+</tbody>
+</table>
+<h3 id="payments-apipayments">Payments <code>/api/payments</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro, caixa</td>
+<td>Histórico de pagamentos</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin, financeiro, caixa</td>
+<td>Registrar pagamento</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>/:id/estornar</td>
+<td>admin, financeiro</td>
+<td>Estornar pagamento</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transactions-apitransactions">Transactions <code>/api/transactions</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro, caixa</td>
+<td>Listar transações</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/saldo</td>
+<td>admin, financeiro, caixa</td>
+<td>Saldo atual do caixa</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/movimento</td>
+<td>admin, financeiro, caixa</td>
+<td>Movimentação por período</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin, financeiro, caixa</td>
+<td>Lançamento manual</td>
+</tr>
+</tbody>
+</table>
+<h3 id="renegociacoes-apirenegociacoes">Renegociacoes <code>/api/renegociacoes</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro</td>
+<td>Listar (filtro por loanId)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin, financeiro</td>
+<td>Criar renegociação</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pix-apipix">PIX <code>/api/pix</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/:installmentId</td>
+<td>admin, financeiro, consultor</td>
+<td>Consultar QR Code existente</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/generate</td>
+<td>admin, financeiro, consultor</td>
+<td>Gerar novo QR Code PIX</td>
+</tr>
+</tbody>
+</table>
+<h3 id="webhook-apiwebhook">Webhook <code>/api/webhook</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td>/mp</td>
+<td>público</td>
+<td>Receber confirmação de pagamento do Mercado Pago</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notifications-apinotifications">Notifications <code>/api/notifications</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro</td>
+<td>Log de notificações enviadas</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reports-apireports">Reports <code>/api/reports</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/carteira</td>
+<td>admin, financeiro</td>
+<td>Resumo da carteira (capital, a receber, em risco)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/clientes</td>
+<td>admin, financeiro</td>
+<td>Lista clientes ativos com próxima parcela</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/movimentacao</td>
+<td>admin, financeiro</td>
+<td>Movimentação por período (startDate, endDate)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/contratos</td>
+<td>admin, financeiro</td>
+<td>Contratos por status</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/faturamento</td>
+<td>admin, financeiro</td>
+<td>Faturamento mensal por consultor (mes=YYYY-MM)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="audit-apiaudit">Audit <code>/api/audit</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin</td>
+<td>Log de auditoria (filtros: userId, action, entity, startDate, endDate)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="settings-apisettings">Settings <code>/api/settings</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin</td>
+<td>Listar todos os parâmetros</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/</td>
+<td>admin</td>
+<td>Atualizar parâmetros</td>
+</tr>
+</tbody>
+</table>
+<h3 id="client-portal-apiportal">Client Portal <code>/api/portal</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/me</td>
+<td>cliente</td>
+<td>Dados do cliente autenticado</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/loans</td>
+<td>cliente</td>
+<td>Contratos do cliente (sem split interno)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/installments</td>
+<td>cliente</td>
+<td>Parcelas com saldoDevedor e mora</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/tickets</td>
+<td>cliente</td>
+<td>Abrir chamado de suporte</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/tickets</td>
+<td>cliente</td>
+<td>Listar chamados do cliente</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/reparcelamentos</td>
+<td>cliente</td>
+<td>Solicitar reparcelamento</td>
+</tr>
+</tbody>
+</table>
+<h3 id="score-risco-apiscore-risco">Score Risco <code>/api/score-risco</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/:clientId</td>
+<td>admin, financeiro, consultor</td>
+<td>Score atual do cliente</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/recalcular/:clientId</td>
+<td>admin, financeiro</td>
+<td>Recalcular score manualmente</td>
+</tr>
+</tbody>
+</table>
+<h3 id="intencoes-apiintencoes">Intencoes <code>/api/intencoes</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro, consultor</td>
+<td>Listar intenções (filtro por status, consultorId)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/:id</td>
+<td>admin, financeiro, consultor</td>
+<td>Detalhe da intenção</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin, financeiro, consultor</td>
+<td>Criar intenção</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/aprovar</td>
+<td>admin, financeiro</td>
+<td>Aprovar com termos finais do contrato</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/rejeitar</td>
+<td>admin, financeiro</td>
+<td>Rejeitar com motivo</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/feedback</td>
+<td>consultor</td>
+<td>Registrar feedback pós-decisão</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reparcelamentos-apireparcelamentos">Reparcelamentos <code>/api/reparcelamentos</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/</td>
+<td>admin, financeiro, consultor</td>
+<td>Listar solicitações (filtro por status, clientId, loanId)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/:id</td>
+<td>admin, financeiro, consultor</td>
+<td>Detalhe da solicitação</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/</td>
+<td>admin, financeiro, consultor</td>
+<td>Criar solicitação</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/simular</td>
+<td>admin, financeiro</td>
+<td>Simulação de novos termos sem gravar</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/proposta</td>
+<td>admin, financeiro</td>
+<td>Enviar proposta de novos termos</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/aprovar</td>
+<td>admin, financeiro</td>
+<td>2ª instância de aprovação</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/rejeitar</td>
+<td>admin, financeiro, consultor</td>
+<td>Rejeitar em qualquer etapa</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>/:id/executar</td>
+<td>admin, financeiro</td>
+<td>Executar reparcelamento atomicamente</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mensagens-apimensagens">Mensagens <code>/api/mensagens</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/badge</td>
+<td>todos (exceto cliente)</td>
+<td>Contagem de mensagens não lidas</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/conversas</td>
+<td>todos (exceto cliente)</td>
+<td>Lista de conversas com naoLidas por conversa</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/conversas/:id</td>
+<td>todos (exceto cliente)</td>
+<td>Mensagens da conversa + marca ultimaLeitura</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/conversas</td>
+<td>todos (exceto cliente)</td>
+<td>Criar conversa direta (idempotente)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/conversas/:id</td>
+<td>todos (exceto cliente)</td>
+<td>Enviar mensagem</td>
+</tr>
+</tbody>
+</table>
+<h3 id="consultor-apiconsultor">Consultor <code>/api/consultor</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/carteira</td>
+<td>consultor, admin, financeiro</td>
+<td>Clientes da carteira (filtrado por consultorId)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/carteira/:clientId</td>
+<td>consultor, admin, financeiro</td>
+<td>Detalhe do cliente na carteira</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/solicitacoes</td>
+<td>consultor, admin, financeiro</td>
+<td>Solicitações ao financeiro</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/cobrancas</td>
+<td>consultor, admin, financeiro</td>
+<td>Parcelas atrasadas da carteira</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/cobrancas/:installmentId/contato</td>
+<td>consultor</td>
+<td>Registrar tentativa de cobrança</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>Última atualização: 2026-05-23 | Mantido por: equipe SIAFI</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

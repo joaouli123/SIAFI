@@ -1,0 +1,1782 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Fase 1 - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fase-1" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fase 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#regra-de-ouro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REGRA DE OURO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-fluxo-de-autenticacao-por-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. FLUXO DE AUTENTICAÇÃO POR ROLE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. FLUXO DE AUTENTICAÇÃO POR ROLE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#roles-operacionais-admin-financeiro-caixa-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles Operacionais (admin, financeiro, caixa, usuario)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#role-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role CLIENTE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-validacao-pre-autenticacao-hook-no-supabase-guard-no-nestjs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. VALIDAÇÃO PRÉ-AUTENTICAÇÃO (hook no Supabase / guard no NestJS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-multi-fator-mfa-com-google-authenticator-logica-de-prazo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. MULTI-FATOR (MFA) COM GOOGLE AUTHENTICATOR — LÓGICA DE PRAZO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. MULTI-FATOR (MFA) COM GOOGLE AUTHENTICATOR — LÓGICA DE PRAZO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#campos-necessarios-no-schema-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Campos necessários no schema Prisma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluxo-do-prazo-de-5-logins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluxo do prazo de 5 logins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#excecao-para-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceção para roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-login-do-cliente-por-cpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. LOGIN DO CLIENTE POR CPF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-schema-prisma-atualizacoes-necessarias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. SCHEMA PRISMA — ATUALIZAÇÕES NECESSÁRIAS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-frontend-telas-necessarias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. FRONTEND — TELAS NECESSÁRIAS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. FRONTEND — TELAS NECESSÁRIAS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tela-de-login-pagina-unica-para-todos-os-tipos-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tela de Login (página única para todos os tipos de usuário)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tela-de-mfa-challenge-authmfa-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tela de MFA Challenge (/auth/mfa-challenge)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tela-de-mfa-setup-authmfa-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tela de MFA Setup (/auth/mfa-setup)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modal-de-aviso-mfa-componente-reutilizavel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modal de Aviso MFA (componente reutilizável)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-entregaveis-nesta-ordem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. ENTREGÁVEIS (nesta ordem)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regras-tecnicas-obrigatorias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REGRAS TÉCNICAS OBRIGATÓRIAS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fase-1">Fase 1</h1>
+<p>Você é um Engenheiro de Software Sênior especializado em NestJS, Next.js e 
+Supabase Auth. Preciso implementar um sistema de autenticação RESTRITIVO e 
+SEGURO para o SIAFI — sistema financeiro de factoring e empréstimos.</p>
+<h2 id="regra-de-ouro">REGRA DE OURO</h2>
+<p>O sistema NUNCA permite que um desconhecido crie conta ou acesse o sistema.
+Todo acesso depende de um cadastro prévio feito pelo administrador/financeiro.
+O Supabase Auth é usado apenas como provedor de tokens — a fonte da verdade 
+de quem pode acessar é SEMPRE o banco de dados do SIAFI (tabelas <code>users</code> e 
+<code>clients</code>).</p>
+<hr />
+<h2 id="1-fluxo-de-autenticacao-por-role">1. FLUXO DE AUTENTICAÇÃO POR ROLE</h2>
+<h3 id="roles-operacionais-admin-financeiro-caixa-usuario">Roles Operacionais (admin, financeiro, caixa, usuario)</h3>
+<ul>
+<li>Cadastro feito EXCLUSIVAMENTE pelo Administrador no painel Users do SIAFI</li>
+<li>O admin informa: nome, username, email, role e senha inicial</li>
+<li>O sistema cria o usuário no Supabase Auth via Admin SDK 
+  (<code>supabase.auth.admin.createUser</code>) e vincula o <code>supabase_id</code> no registro 
+  da tabela <code>users</code> do Prisma</li>
+<li>Login permitido por: username+senha OU email+senha</li>
+<li>Login com Google: permitido SOMENTE se o email da conta Google for 
+  IDÊNTICO ao email já cadastrado na tabela <code>users</code>. Se o email Google não 
+  existir em <code>users</code>, retornar erro 403: "Acesso não autorizado. Conta não 
+  cadastrada no sistema."</li>
+<li>NUNCA criar um novo registro em <code>users</code> automaticamente via OAuth</li>
+</ul>
+<h3 id="role-cliente">Role CLIENTE</h3>
+<ul>
+<li>Cadastro feito pelo operador (admin/financeiro) na tabela <code>clients</code></li>
+<li>A conta de acesso ao Portal do Cliente é criada automaticamente quando o 
+  operador marca "Habilitar acesso ao portal" no cadastro do cliente</li>
+<li>Vínculo obrigatório: o <code>supabase_id</code> do Auth deve ser salvo no campo 
+  <code>supabase_id</code> da tabela <code>clients</code></li>
+<li>Login permitido por:</li>
+<li>CPF + senha</li>
+<li>Email + senha  </li>
+<li>Google OAuth — SOMENTE se o email da conta Google for IDÊNTICO ao 
+     campo <code>email</code> da tabela <code>clients</code>. Caso contrário: erro 403.</li>
+<li>NUNCA permitir que um cliente acesse dados de outro cliente</li>
+</ul>
+<hr />
+<h2 id="2-validacao-pre-autenticacao-hook-no-supabase-guard-no-nestjs">2. VALIDAÇÃO PRÉ-AUTENTICAÇÃO (hook no Supabase / guard no NestJS)</h2>
+<p>Implemente um <code>SupabaseAuthGuard</code> no NestJS que, após validar o JWT do 
+Supabase, executa uma segunda verificação no banco:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Pseudocódigo da lógica obrigatória</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">validateUser</span><span class="p">(</span><span class="nx">supabaseId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="c1">// Verifica se existe em `users` (roles operacionais)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">operador</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabaseId</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">operador</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">operador</span><span class="p">,</span><span class="w"> </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;operador&#39;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="c1">// Verifica se existe em `clients` (role cliente)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cliente</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabaseId</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cliente</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">cliente</span><span class="p">,</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="c1">// Não encontrou em nenhuma tabela — acesso negado</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="s1">&#39;Conta não autorizada. Acesso restrito a usuários cadastrados.&#39;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">}</span>
+</code></pre></div>
+<p>Para Google OAuth, adicionar verificação adicional ANTES de criar sessão:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">validateGoogleOAuth</span><span class="p">(</span><span class="nx">googleEmail</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">operador</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">googleEmail</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cliente</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">googleEmail</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">operador</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">cliente</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="c1">// Revogar sessão Supabase imediatamente</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">supabaseAdmin</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">admin</span><span class="p">.</span><span class="nx">deleteUser</span><span class="p">(</span><span class="nx">supabaseUserId</span><span class="p">);</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span><span class="s1">&#39;Email não cadastrado no sistema.&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">}</span>
+</code></pre></div></p>
+<hr />
+<h2 id="3-multi-fator-mfa-com-google-authenticator-logica-de-prazo">3. MULTI-FATOR (MFA) COM GOOGLE AUTHENTICATOR — LÓGICA DE PRAZO</h2>
+<p>Implemente a seguinte lógica de MFA com prazo de adesão:</p>
+<h3 id="campos-necessarios-no-schema-prisma">Campos necessários no schema Prisma</h3>
+<p>Adicione na tabela <code>users</code> E na tabela <code>clients</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mfaEnabled        Boolean   @default(false) @map(&quot;mfa_enabled&quot;)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mfaSecret         String?   @map(&quot;mfa_secret&quot;)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mfaLoginCount     Int       @default(0) @map(&quot;mfa_login_count&quot;)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>mfaDecidedAt      DateTime? @map(&quot;mfa_decided_at&quot;)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mfaReminderShown  Int       @default(0) @map(&quot;mfa_reminder_shown&quot;)
+</code></pre></div></p>
+<h3 id="fluxo-do-prazo-de-5-logins">Fluxo do prazo de 5 logins</h3>
+<p>A cada login bem-sucedido sem MFA configurado:
+1. Incrementar <code>mfaLoginCount</code> (+ 1)
+2. Se <code>mfaLoginCount</code> &lt;= 5 E <code>mfaEnabled = false</code>:
+   - Retornar no payload do login: <code>{ mfaStatus: 'pendente', loginsRestantes: 5 - mfaLoginCount }</code>
+   - Frontend exibe modal: "Você tem X login(s) restantes para configurar o 
+     Google Authenticator. Configurar agora / Lembrar depois"
+3. Se <code>mfaLoginCount</code> &gt; 5 E <code>mfaEnabled = false</code>:
+   - BLOQUEAR o login
+   - Redirecionar OBRIGATORIAMENTE para a tela de setup do MFA
+   - Retornar: <code>{ mfaStatus: 'obrigatorio' }</code>
+   - O usuário SÓ consegue acessar o sistema após configurar o MFA
+4. Se <code>mfaEnabled = true</code>:
+   - Exigir o código TOTP de 6 dígitos a cada login (fluxo normal de 
+     challenge/verify do Supabase)</p>
+<h3 id="excecao-para-roles">Exceção para roles</h3>
+<ul>
+<li>MFA obrigatório imediato (sem prazo de 5 logins) para: <code>admin</code> e 
+  <code>financeiro</code></li>
+<li>Prazo de 5 logins para: <code>caixa</code>, <code>usuario</code> e <code>cliente</code></li>
+</ul>
+<hr />
+<h2 id="4-login-do-cliente-por-cpf">4. LOGIN DO CLIENTE POR CPF</h2>
+<p>O Supabase Auth não suporta login por CPF nativamente. Implemente assim:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// AuthService — login do cliente por CPF</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">loginClienteByCpf</span><span class="p">(</span><span class="nx">cpf</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">senha</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="c1">// 1. Buscar cliente pelo CPF no Prisma</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cliente</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">cpf</span><span class="o">:</span><span class="w"> </span><span class="kt">cpf.replace</span><span class="p">(</span><span class="sr">/\D/g</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">),</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">cliente</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnauthorizedException</span><span class="p">(</span><span class="s1">&#39;CPF não encontrado.&#39;</span><span class="p">);</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="c1">// 2. Usar o email vinculado para autenticar no Supabase</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithPassword</span><span class="p">({</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.email</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">senha</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnauthorizedException</span><span class="p">(</span><span class="s1">&#39;CPF ou senha incorretos.&#39;</span><span class="p">);</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="c1">// 3. Retornar sessão + dados do cliente</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">session</span><span class="o">:</span><span class="w"> </span><span class="kt">data.session</span><span class="p">,</span><span class="w"> </span><span class="nx">cliente</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="5-schema-prisma-atualizacoes-necessarias">5. SCHEMA PRISMA — ATUALIZAÇÕES NECESSÁRIAS</h2>
+<p>Atualize os models <code>User</code> e <code>Client</code> com os novos campos:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>model User {
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  // ... campos existentes ...
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  supabaseId        String?   @unique @map(&quot;supabase_id&quot;)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  email             String?   @unique
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  mfaEnabled        Boolean   @default(false) @map(&quot;mfa_enabled&quot;)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  mfaLoginCount     Int       @default(0) @map(&quot;mfa_login_count&quot;)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  mfaDecidedAt      DateTime? @map(&quot;mfa_decided_at&quot;)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>}
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>model Client {
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  // ... campos existentes ...
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  supabaseId        String?   @unique @map(&quot;supabase_id&quot;)
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  portalAtivo       Boolean   @default(false) @map(&quot;portal_ativo&quot;)
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  mfaEnabled        Boolean   @default(false) @map(&quot;mfa_enabled&quot;)
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  mfaLoginCount     Int       @default(0) @map(&quot;mfa_login_count&quot;)
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  mfaDecidedAt      DateTime? @map(&quot;mfa_decided_at&quot;)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>}
+</code></pre></div>
+<hr />
+<h2 id="6-frontend-telas-necessarias">6. FRONTEND — TELAS NECESSÁRIAS</h2>
+<h3 id="tela-de-login-pagina-unica-para-todos-os-tipos-de-usuario">Tela de Login (página única para todos os tipos de usuário)</h3>
+<p>Implemente em <code>src/app/(auth)/login/page.tsx</code>:
+- Campo: <strong>CPF ou Email</strong> (detectar automaticamente: se contiver apenas 
+  números e traços = CPF, senão = email)
+- Campo: <strong>Senha</strong>
+- Botão: <strong>Entrar com Google</strong> (ícone oficial Google)
+- Lógica: ao digitar CPF, mascarar automaticamente (000.000.000-00)
+- Sem campo de "tipo de usuário" — o sistema identifica automaticamente 
+  pela tabela onde encontrar o registro</p>
+<h3 id="tela-de-mfa-challenge-authmfa-challenge">Tela de MFA Challenge (<code>/auth/mfa-challenge</code>)</h3>
+<ul>
+<li>Input de 6 dígitos (estilo OTP — 6 caixas separadas)</li>
+<li>Botão verificar</li>
+<li>Link "Não consigo acessar meu autenticador" → abre ticket de suporte</li>
+</ul>
+<h3 id="tela-de-mfa-setup-authmfa-setup">Tela de MFA Setup (<code>/auth/mfa-setup</code>)</h3>
+<ul>
+<li>QR Code gerado pelo Supabase para escanear no Google Authenticator</li>
+<li>Campo para confirmar o código antes de ativar</li>
+<li>Para usuários no prazo: botão "Configurar depois" (decrementa 1 do prazo)</li>
+<li>Para usuários com prazo esgotado: SEM botão de pular — obrigatório 
+  configurar</li>
+</ul>
+<h3 id="modal-de-aviso-mfa-componente-reutilizavel">Modal de Aviso MFA (componente reutilizável)</h3>
+<ul>
+<li>Aparece após login bem-sucedido quando <code>mfaStatus === 'pendente'</code></li>
+<li>Mensagem: "Proteja sua conta! Configure o Google Authenticator."</li>
+<li>Mostra contagem regressiva: "Você tem X acesso(s) antes de ser 
+  obrigatório"</li>
+<li>Botões: "Configurar agora" / "Depois" (se ainda dentro do prazo)</li>
+</ul>
+<hr />
+<h2 id="7-entregaveis-nesta-ordem">7. ENTREGÁVEIS (nesta ordem)</h2>
+<ol>
+<li>Schema Prisma completo com os novos campos em <code>User</code> e <code>Client</code></li>
+<li><code>AuthService</code> com todos os métodos:</li>
+<li><code>loginComEmailOuCpf(identificador, senha)</code></li>
+<li><code>loginComGoogle(googleToken)</code> com validação restritiva</li>
+<li><code>verificarPrazoMfa(userId, role)</code></li>
+<li><code>setupMfa(userId)</code> — gera QR Code</li>
+<li><code>confirmarMfa(userId, codigo)</code> — ativa o fator</li>
+<li><code>challengeMfa(userId, codigo)</code> — verifica no login</li>
+<li><code>SupabaseAuthGuard</code> com dupla verificação (JWT + banco)</li>
+<li>Endpoint <code>POST /auth/habilitar-portal-cliente</code> para o admin ativar 
+   acesso de um cliente ao portal</li>
+<li>Tela de login unificada (Next.js) com detecção automática CPF/email</li>
+<li>Telas de MFA setup e challenge</li>
+<li>Modal de aviso de prazo MFA</li>
+</ol>
+<h2 id="regras-tecnicas-obrigatorias">REGRAS TÉCNICAS OBRIGATÓRIAS</h2>
+<ul>
+<li>Use <code>$transaction</code> do Prisma sempre que criar usuário no Supabase Auth 
+  E no banco simultaneamente (garantir rollback se um falhar)</li>
+<li>Nunca expor <code>SUPABASE_SERVICE_ROLE_KEY</code> no frontend</li>
+<li>Registrar TODA tentativa de acesso negado na tabela <code>audit_logs</code></li>
+<li>Mensagens de erro genéricas para o usuário final (nunca revelar se o 
+  email existe ou não — prevenir enumeração de usuários)</li>
+<li>Seguir padrões LGPD: CPF armazenado sem formatação (só números)</li>
+</ul>
+<p>Por que esse prompt está correto para um sistema financeiro:
+O ponto mais crítico — a validação dupla (JWT válido no Supabase + registro ativo no banco do SIAFI) — garante que mesmo que alguém consiga um token Supabase de alguma forma, sem estar na tabela users ou clients o acesso é negado imediatamente.
+A lógica de prazo de 5 logins para MFA é inteligente: não bloqueia o usuário de imediato (evita abandono), mas cria urgência crescente e torna obrigatório após o prazo — padrão usado em sistemas bancários.</p>
+<h1 id="fase-2">Fase 2</h1>
+<p>Atue como Engenheiro de Software Sênior e Especialista em UX para sistemas 
+financeiros. Preciso implementar a funcionalidade completa de "Ativação do 
+Portal do Cliente" no SIAFI — sistema de factoring e empréstimos.</p>
+<p>Esta funcionalidade permite que o Administrador ou Financeiro habilite o 
+acesso de um cliente cadastrado na tabela <code>clients</code> ao Portal do Cliente, 
+criando a conta dele no Supabase Auth de forma controlada e segura.</p>
+<hr />
+<h2 id="1-regras-de-negocio">1. REGRAS DE NEGÓCIO</h2>
+<ul>
+<li>Somente roles <code>admin</code> e <code>financeiro</code> podem ativar/desativar o portal</li>
+<li>O cliente precisa ter <code>email</code> cadastrado para ativar o portal
+  (email é obrigatório para criar conta no Supabase Auth)</li>
+<li>Se o cliente não tiver email, exibir aviso e impedir a ativação</li>
+<li>Ao ativar: criar conta no Supabase Auth + vincular <code>supabase_id</code> 
+  na tabela <code>clients</code> + setar <code>portalAtivo = true</code></li>
+<li>Ao desativar: banir usuário no Supabase Auth 
+  (<code>supabase.auth.admin.updateUser({ banned: true })</code>) + 
+  setar <code>portalAtivo = false</code> — NÃO deletar a conta Supabase</li>
+<li>Reativar: remover ban + setar <code>portalAtivo = true</code></li>
+<li>Toda ativação/desativação deve ser registrada no <code>AuditLog</code></li>
+<li>O cliente recebe notificação (WhatsApp e/ou email) ao ter o portal ativado</li>
+</ul>
+<hr />
+<h2 id="2-backend-endpoint-e-service-nestjs">2. BACKEND — ENDPOINT E SERVICE (NestJS)</h2>
+<h3 id="endpoint">Endpoint</h3>
+<p>POST   /api/clients/:id/portal/ativar      → ativa o portal
+POST   /api/clients/:id/portal/desativar   → desativa o portal
+GET    /api/clients/:id/portal/status      → retorna status atual</p>
+<h3 id="portalservice-logica-completa">PortalService — lógica completa</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Implemente o PortalService com os seguintes métodos:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">async</span><span class="w"> </span><span class="nx">ativarPortal</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">operadorId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="c1">// 1. Buscar cliente no Prisma — verificar se existe e está ativo</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="c1">// 2. Verificar se cliente tem email cadastrado</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="c1">//    - Se não tiver: throw BadRequestException com mensagem clara</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="c1">// 3. Verificar se portal já está ativo (idempotência)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="c1">// 4. Usar $transaction do Prisma para garantir atomicidade:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="c1">//    a. Criar usuário no Supabase Auth via Admin SDK:</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="c1">//       supabaseAdmin.auth.admin.createUser({</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="c1">//         email: cliente.email,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="c1">//         password: gerarSenhaTemporaria(),  // 12 chars aleatórios</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="c1">//         email_confirm: true,  // pular confirmação de email</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="c1">//         user_metadata: {</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="c1">//           role: &#39;cliente&#39;,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="c1">//           clientId: cliente.id,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="c1">//           nome: cliente.nome,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="c1">//         }</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="c1">//       })</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="c1">//    b. Atualizar client no Prisma:</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="c1">//       { supabaseId: supabaseUser.id, portalAtivo: true }</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="c1">//    c. Se Supabase falhar: NÃO atualizar o Prisma</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="c1">//    d. Se Prisma falhar: deletar usuário no Supabase </span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="c1">//       (supabaseAdmin.auth.admin.deleteUser)</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span><span class="c1">// 5. Enviar notificação ao cliente (WhatsApp + email) com:</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span><span class="c1">//    - Instruções de acesso</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span><span class="c1">//    - Senha temporária</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span><span class="c1">//    - Link do portal</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span><span class="c1">//    - Instrução para trocar a senha no primeiro acesso</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span><span class="c1">// 6. Registrar no AuditLog:</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span><span class="c1">//    { acao: &#39;PORTAL_ATIVADO&#39;, entidade: &#39;clients&#39;, </span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">  </span><span class="c1">//      entidadeId: clientId, userId: operadorId }</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">  </span><span class="c1">// 7. Retornar: { sucesso: true, senhaTemporaria, mensagem }</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="p">}</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="k">async</span><span class="w"> </span><span class="nx">desativarPortal</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">operadorId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">  </span><span class="c1">// 1. Buscar cliente — verificar se portal está ativo</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">  </span><span class="c1">// 2. Banir no Supabase (não deletar):</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">  </span><span class="c1">//    supabaseAdmin.auth.admin.updateUser(supabaseId, { banned: true })</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">  </span><span class="c1">// 3. Atualizar Prisma: { portalAtivo: false }</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="w">  </span><span class="c1">// 4. Registrar AuditLog: { acao: &#39;PORTAL_DESATIVADO&#39; }</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">  </span><span class="c1">// 5. Notificar cliente (opcional — configurável nas settings)</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="p">}</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="k">async</span><span class="w"> </span><span class="nx">reativarPortal</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">operadorId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">  </span><span class="c1">// 1. Verificar se supabaseId já existe (conta foi criada antes)</span>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">  </span><span class="c1">// 2. Se sim: remover ban + setar portalAtivo = true</span>
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">  </span><span class="c1">// 3. Se não: chamar ativarPortal() (primeira vez)</span>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="p">}</span>
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="c1">// Gerar senha temporária segura</span>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="k">private</span><span class="w"> </span><span class="nx">gerarSenhaTemporaria</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a><span class="w">  </span><span class="c1">// 12 caracteres: letras maiúsculas + minúsculas + números + especiais</span>
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="w">  </span><span class="c1">// Exemplo: &quot;Xk#92mLp@4Nq&quot;</span>
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="w">  </span><span class="c1">// Usar crypto.randomBytes para segurança criptográfica</span>
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="3-schema-prisma-campos-adicionais">3. SCHEMA PRISMA — CAMPOS ADICIONAIS</h2>
+<p>Adicione no model <code>Client</code> se ainda não existirem:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>model Client {
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  // ... campos existentes ...
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  supabaseId          String?   @unique @map(&quot;supabase_id&quot;)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  portalAtivo         Boolean   @default(false) @map(&quot;portal_ativo&quot;)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  portalAtivadoEm     DateTime? @map(&quot;portal_ativado_em&quot;)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  portalAtivadoPor    Int?      @map(&quot;portal_ativado_por&quot;)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  senhaTemporaria     Boolean   @default(false) @map(&quot;senha_temporaria&quot;)
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  primeiroAcesso      Boolean   @default(true) @map(&quot;primeiro_acesso&quot;)
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  mfaEnabled          Boolean   @default(false) @map(&quot;mfa_enabled&quot;)
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>  mfaLoginCount       Int       @default(0) @map(&quot;mfa_login_count&quot;)
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  mfaDecidedAt        DateTime? @map(&quot;mfa_decided_at&quot;)
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>}
+</code></pre></div>
+<hr />
+<h2 id="4-frontend-tela-de-detalhe-do-cliente-nextjs">4. FRONTEND — TELA DE DETALHE DO CLIENTE (Next.js)</h2>
+<h3 id="card-acesso-ao-portal-na-pagina-clientesid">Card "Acesso ao Portal" na página <code>/clientes/[id]</code></h3>
+<p>Adicione um card na página de detalhe do cliente com as seguintes 
+variações de estado:</p>
+<h4 id="estado-1-cliente-sem-email-cadastrado">Estado 1 — Cliente sem email cadastrado</h4>
+<p>┌─────────────────────────────────────────────┐
+│ 🔒 Portal do Cliente                        │
+│                                             │
+│  ⚠️ Cliente sem email cadastrado            │
+│  Adicione um email para habilitar o acesso  │
+│  ao portal.                                 │
+│                                             │
+│  [ Editar cadastro ]                        │
+└─────────────────────────────────────────────┘</p>
+<h4 id="estado-2-portal-inativo-cliente-tem-email">Estado 2 — Portal inativo (cliente tem email)</h4>
+<p>┌─────────────────────────────────────────────┐
+│ 🔒 Portal do Cliente          [ Inativo ]   │
+│                                             │
+│  Email: joao@email.com                      │
+│  CPF:   123.456.789-00                      │
+│                                             │
+│  O cliente ainda não tem acesso ao portal.  │
+│                                             │
+│  [ ✅ Ativar acesso ao portal ]             │
+└─────────────────────────────────────────────┘</p>
+<h4 id="estado-3-portal-ativo">Estado 3 — Portal ativo</h4>
+<p>┌─────────────────────────────────────────────┐
+│ 🔓 Portal do Cliente          [ ✅ Ativo ]  │
+│                                             │
+│  Email: joao@email.com                      │
+│  Ativado em: 19/05/2026 por Admin           │
+│  Último acesso: 20/05/2026 às 14:30         │
+│  MFA: ⚠️ Não configurado (3 logins usados) │
+│                                             │
+│  [ 🔑 Reenviar senha ]  [ ❌ Desativar ]   │
+└─────────────────────────────────────────────┘</p>
+<h4 id="estado-4-portal-desativado-ja-teve-acesso-antes">Estado 4 — Portal desativado (já teve acesso antes)</h4>
+<p>┌─────────────────────────────────────────────┐
+│ 🔒 Portal do Cliente        [ Desativado ]  │
+│                                             │
+│  Desativado em: 18/05/2026 por Financeiro   │
+│                                             │
+│  [ ✅ Reativar acesso ]                     │
+└─────────────────────────────────────────────┘</p>
+<h3 id="modal-de-confirmacao-de-ativacao">Modal de confirmação de ativação</h3>
+<p>Ao clicar em "Ativar acesso ao portal", exibir modal de confirmação:
+┌─────────────────────────────────────────────┐
+│  Ativar Portal do Cliente                   │
+│                                             │
+│  Você está prestes a criar uma conta de     │
+│  acesso para:                               │
+│                                             │
+│  👤 João da Silva                           │
+│  📧 joao@email.com                          │
+│  📱 (65) 99999-9999                         │
+│                                             │
+│  O cliente receberá:                        │
+│  ✉️ Email com instruções de acesso          │
+│  📱 WhatsApp com senha temporária           │
+│                                             │
+│  [ Cancelar ]   [ ✅ Confirmar ativação ]   │
+└─────────────────────────────────────────────┘</p>
+<h3 id="modal-de-confirmacao-de-desativacao">Modal de confirmação de desativação</h3>
+<p>┌─────────────────────────────────────────────┐
+│  ⚠️ Desativar acesso ao portal              │
+│                                             │
+│  O cliente João da Silva perderá o acesso   │
+│  imediatamente. O histórico será mantido.   │
+│                                             │
+│  Motivo (obrigatório):                      │
+│  [ <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong>______ ]     │
+│                                             │
+│  [ Cancelar ]   [ ❌ Confirmar desativação ]│
+└─────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="5-mensagem-de-notificacao-ao-cliente">5. MENSAGEM DE NOTIFICAÇÃO AO CLIENTE</h2>
+<h3 id="whatsapp-evolution-api">WhatsApp (Evolution API)</h3>
+<p>Olá, {nome}! 👋
+Seu acesso ao portal da Lidera Financeira foi ativado.
+🔐 Seus dados de acesso:</p>
+<p>Usuário: {cpf_formatado} ou {email}
+Senha temporária: {senha_temporaria}</p>
+<p>🌐 Acesso: https://financeiro.lidera.app.br/portal
+⚠️ Por segurança, troque sua senha no primeiro acesso.
+Qualquer dúvida, estamos à disposição!</p>
+<h3 id="email-smtp">Email (SMTP)</h3>
+<ul>
+<li>Assunto: "Seu acesso ao Portal Lidera está pronto"</li>
+<li>Template HTML com:</li>
+<li>Logo da empresa</li>
+<li>Dados de acesso</li>
+<li>Botão "Acessar o portal agora"</li>
+<li>Instruções para troca de senha</li>
+<li>Aviso de segurança (não compartilhar senha)</li>
+</ul>
+<hr />
+<h2 id="6-tela-de-primeiro-acesso-portal-do-cliente">6. TELA DE PRIMEIRO ACESSO — PORTAL DO CLIENTE</h2>
+<p>Quando <code>primeiroAcesso = true</code>, após o login redirecionar para 
+<code>/portal/primeiro-acesso</code>:
+┌─────────────────────────────────────────────┐
+│  Bem-vindo ao Portal Lidera! 🎉             │
+│                                             │
+│  Antes de continuar, defina sua senha       │
+│  pessoal:                                   │
+│                                             │
+│  Nova senha: [ <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_ ]         │
+│  Confirmar:  [ </em></strong><strong><em>_</em></strong><strong><em>_</em></strong>_ ]         │
+│                                             │
+│  Requisitos:                                │
+│  ✅ Mínimo 8 caracteres                    │
+│  ✅ Uma letra maiúscula                    │
+│  ✅ Um número                              │
+│  ✅ Um caractere especial                  │
+│                                             │
+│  [ Salvar minha senha e continuar ]         │
+└─────────────────────────────────────────────┘</p>
+<p>Após salvar: setar <code>primeiroAcesso = false</code> + exibir modal de MFA setup 
+(com a contagem de 5 logins iniciando).</p>
+<hr />
+<h2 id="7-listagem-de-clientes-indicador-visual">7. LISTAGEM DE CLIENTES — INDICADOR VISUAL</h2>
+<p>Na tabela de listagem <code>/clientes</code>, adicione uma coluna "Portal":
+- 🟢 Ativo
+- 🔴 Inativo<br />
+- ⚫ Sem email (não pode ativar)</p>
+<p>E no filtro de busca, adicione opção: 
+"Status portal: Todos / Ativo / Inativo / Sem acesso"</p>
+<hr />
+<h2 id="8-entregaveis-nesta-ordem">8. ENTREGÁVEIS (nesta ordem)</h2>
+<ol>
+<li>Migration Prisma com os novos campos em <code>Client</code></li>
+<li><code>PortalService</code> completo com todos os métodos</li>
+<li><code>PortalController</code> com os 3 endpoints protegidos por 
+   <code>@Roles('admin', 'financeiro')</code></li>
+<li>Card "Acesso ao Portal" para a página de detalhe do cliente (Next.js + 
+   Tailwind + shadcn/ui) com os 4 estados visuais</li>
+<li>Modal de confirmação de ativação e desativação</li>
+<li>Templates de mensagem (WhatsApp e email)</li>
+<li>Tela de primeiro acesso <code>/portal/primeiro-acesso</code></li>
+<li>Coluna "Portal" na listagem de clientes com filtro</li>
+</ol>
+<h2 id="regras-tecnicas-obrigatorias_1">REGRAS TÉCNICAS OBRIGATÓRIAS</h2>
+<ul>
+<li>Usar <code>$transaction</code> do Prisma em TODA operação que envolva 
+  Supabase Auth + banco simultaneamente</li>
+<li>Se a criação no Supabase falhar: não atualizar o banco</li>
+<li>Se a atualização do banco falhar: reverter a criação no Supabase</li>
+<li>Senha temporária gerada com <code>crypto.randomBytes</code> — nunca <code>Math.random()</code></li>
+<li>Senha temporária NÃO deve ser salva no banco — apenas enviada ao cliente</li>
+<li>Registrar no <code>AuditLog</code> toda ativação, desativação e reenvio de senha</li>
+<li>Retornar mensagens de erro claras para o operador (não para o cliente)</li>
+<li>Proteger endpoint com <code>@Roles('admin', 'financeiro')</code> + 
+  <code>SupabaseAuthGuard</code></li>
+</ul>
+<p>Por que esse prompt está completo:
+Os quatro estados visuais do card garantem que o operador sempre saiba exatamente o que pode fazer com aquele cliente, sem precisar navegar para outra tela. A lógica de rollback com $transaction é crítica — sem ela, é possível criar o usuário no Supabase e o banco falhar, deixando uma conta órfã sem vínculo com nenhum cliente. E a senha temporária gerada com crypto.randomBytes segue o padrão criptográfico exigido para sistemas financeiros.</p>
+<h1 id="fase-3">Fase 3</h1>
+<p>Atue como Engenheiro de Software Sênior, Especialista em UX/UI para sistemas 
+financeiros e Developer Frontend com expertise em Next.js. Preciso implementar 
+o Portal do Cliente completo do SIAFI — sistema de factoring e empréstimos da 
+Lidera Financeira.</p>
+<p>O Portal do Cliente é uma área exclusiva onde o cliente final visualiza seus 
+contratos, parcelas, realiza pagamentos via PIX e abre chamados de suporte.
+É acessado pelo mesmo domínio do sistema, porém em rotas isoladas (/portal/*) 
+com layout completamente separado do painel administrativo.</p>
+<hr />
+<h2 id="1-arquitetura-e-isolamento">1. ARQUITETURA E ISOLAMENTO</h2>
+<h3 id="estrutura-de-rotas-nextjs-app-router">Estrutura de rotas (Next.js App Router)</h3>
+<p>src/app/
+├── (auth)/
+│   └── login/page.tsx              ← login unificado (admin + cliente)
+│   └── portal/
+│       ├── primeiro-acesso/page.tsx
+│       ├── mfa-setup/page.tsx
+│       └── mfa-challenge/page.tsx
+└── (portal)/                       ← layout SEPARADO do dashboard
+├── layout.tsx                  ← header simples + footer (sem sidebar)
+└── portal/
+├── page.tsx                ← home do portal (resumo)
+├── contratos/
+│   ├── page.tsx            ← lista de contratos
+│   └── [id]/page.tsx       ← detalhe do contrato + parcelas
+├── pagamentos/
+│   ├── page.tsx            ← histórico de pagamentos
+│   └── pix/[installmentId]/page.tsx ← gerar QR Code PIX
+├── suporte/
+│   ├── page.tsx            ← lista de tickets
+│   └── novo/page.tsx       ← abrir novo ticket
+└── perfil/page.tsx         ← dados pessoais + segurança</p>
+<h3 id="layout-do-portal-portallayouttsx">Layout do portal (<code>(portal)/layout.tsx</code>)</h3>
+<ul>
+<li>Header simples: logo Lidera + nome do cliente + botão "Sair"</li>
+<li>SEM sidebar administrativa</li>
+<li>Footer: "Lidera Financeira © 2026 | Suporte: (65) 99999-9999"</li>
+<li>Paleta: mesma do sistema (Slate/Dark) mas com identidade visual 
+  voltada ao cliente — menos técnico, mais acolhedor</li>
+<li>Totalmente responsivo (mobile first — cliente acessa pelo celular)</li>
+</ul>
+<h3 id="seguranca-de-isolamento">Segurança de isolamento</h3>
+<ul>
+<li>Criar <code>ClientPortalGuard</code> separado do <code>RolesGuard</code> administrativo</li>
+<li>Todos os endpoints <code>/api/portal/*</code> validam que o <code>clientId</code> do JWT 
+  corresponde EXATAMENTE aos dados solicitados</li>
+<li>NUNCA retornar dados de outros clientes — mesmo que o ID seja passado 
+  na URL</li>
+<li>Exemplo de validação obrigatória:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Em TODO endpoint do portal:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">loan</span><span class="p">.</span><span class="nx">clientId</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">clientId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span><span class="s1">&#39;Acesso negado.&#39;</span><span class="p">);</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+</code></pre></div></li>
+</ul>
+<hr />
+<h2 id="2-home-do-portal-portal">2. HOME DO PORTAL (<code>/portal</code>)</h2>
+<h3 id="layout-em-cards-visao-geral-financeira-do-cliente">Layout em cards — visão geral financeira do cliente</h3>
+<p>┌─────────────────────────────────────────────────────┐
+│  Olá, João! 👋                    Maio 2026         │
+│  Bem-vindo ao seu portal financeiro                 │
+└─────────────────────────────────────────────────────┘
+┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
+│ Contratos    │ │ Próx. parcela│ │ Total em aberto  │
+│ ativos       │ │              │ │                  │
+│    2         │ │ R$ 280,00    │ │ R$ 1.400,00      │
+│              │ │ vence 25/05  │ │                  │
+└──────────────┘ └──────────────┘ └──────────────────┘
+┌─────────────────────────────────────────────────────┐
+│  ⚠️ Parcela vencendo em 5 dias                      │
+│  Contrato #2 · Parcela 3/5 · R$ 280,00             │
+│  [ Pagar com PIX agora ]                            │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│  Últimas movimentações                              │
+│  ─────────────────────────────────────────────────  │
+│  ✅ Parcela 2/5 paga · R$ 280,00 · 10/05/2026      │
+│  ✅ Parcela 1/5 paga · R$ 280,00 · 10/04/2026      │
+└─────────────────────────────────────────────────────┘</p>
+<h3 id="alertas-inteligentes-na-home">Alertas inteligentes na home</h3>
+<p>Exibir banners contextuais baseados na situação do cliente:
+- 🔴 Parcela vencida há X dias → "Regularize sua situação"
+- 🟡 Parcela vence em até 3 dias → "Pague agora com PIX"
+- 🟢 Todas as parcelas em dia → "Parabéns! Você está em dia"
+- ⚠️ MFA não configurado (com contagem) → "Proteja sua conta"</p>
+<hr />
+<h2 id="3-contratos-portalcontratos">3. CONTRATOS (<code>/portal/contratos</code>)</h2>
+<h3 id="lista-de-contratos">Lista de contratos</h3>
+<p>┌─────────────────────────────────────────────────────┐
+│  Meus Contratos                                     │
+├─────────────────────────────────────────────────────┤
+│  Contrato #1                        [ ✅ Quitado ]  │
+│  R$ 1.000,00 · 5 parcelas           Jan 2026        │
+│  ████████████████████ 100%                          │
+│                              [ Ver detalhes ]       │
+├─────────────────────────────────────────────────────┤
+│  Contrato #2                         [ 🔵 Ativo ]   │
+│  R$ 1.400,00 · 5 parcelas            Mar 2026       │
+│  ████████░░░░░░░░░░░░ 40%                           │
+│  Próxima parcela: R$ 280,00 · 25/05/2026            │
+│                              [ Ver detalhes ]       │
+└─────────────────────────────────────────────────────┘</p>
+<h3 id="detalhe-do-contrato-portalcontratosid">Detalhe do contrato (<code>/portal/contratos/[id]</code>)</h3>
+<p>┌─────────────────────────────────────────────────────┐
+│  ← Voltar    Contrato #2                            │
+├─────────────────────────────────────────────────────┤
+│  Valor emprestado:    R$ 1.000,00                   │
+│  Total a pagar:       R$ 1.400,00                   │
+│  Total pago:          R$   560,00                   │
+│  Saldo restante:      R$   840,00                   │
+│  Início:              01/03/2026                    │
+│  Forma de pagamento:  PIX                           │
+├─────────────────────────────────────────────────────┤
+│  Parcelas                                           │
+│  ─────────────────────────────────────────────────  │
+│  1/5  R$ 280,00  01/04/26  ✅ Pago em 10/04/26     │
+│  2/5  R$ 280,00  01/05/26  ✅ Pago em 10/05/26     │
+│  3/5  R$ 280,00  01/06/26  🔵 Pendente             │
+│       [ Pagar com PIX ]                             │
+│  4/5  R$ 280,00  01/07/26  ⏳ Aguardando           │
+│  5/5  R$ 280,00  01/08/26  ⏳ Aguardando           │
+└─────────────────────────────────────────────────────┘</p>
+<h3 id="regras-de-exibicao">Regras de exibição</h3>
+<ul>
+<li>Mostrar APENAS contratos do cliente autenticado</li>
+<li>Status com cores: ✅ Pago (verde) · 🔵 Pendente (azul) · 
+  🔴 Atrasado (vermelho) · ⏳ Futuro (cinza)</li>
+<li>Barra de progresso visual do contrato</li>
+<li>Botão "Pagar com PIX" apenas em parcelas <code>pendente</code> ou <code>atrasado</code></li>
+<li>NÃO mostrar: valor investido, taxa de juros, observações internas</li>
+</ul>
+<hr />
+<h2 id="4-pagamento-via-pix-portalpagamentospixinstallmentid">4. PAGAMENTO VIA PIX (<code>/portal/pagamentos/pix/[installmentId]</code>)</h2>
+<h3 id="fluxo-completo-de-geracao-de-qr-code">Fluxo completo de geração de QR Code</h3>
+<p>┌─────────────────────────────────────────────────────┐
+│  ← Voltar    Pagar com PIX                          │
+├─────────────────────────────────────────────────────┤
+│  Contrato #2 · Parcela 3/5                          │
+│  Vencimento: 01/06/2026                             │
+│                                                     │
+│  Valor:  R$ 280,00                                  │
+│                                                     │
+│  ┌─────────────────────────┐                        │
+│  │   [QR CODE IMAGE 200px] │                        │
+│  │                         │                        │
+│  └─────────────────────────┘                        │
+│                                                     │
+│  Copia e Cola:                                      │
+│  [ 00020126580014br.gov.bcb... ]  [ 📋 Copiar ]    │
+│                                                     │
+│  ⏱️ QR Code válido por 30 minutos                   │
+│  🔄 Gerar novo QR Code                              │
+│                                                     │
+│  ✅ Após o pagamento, a confirmação ocorre          │
+│     automaticamente em até 5 minutos.               │
+└─────────────────────────────────────────────────────┘</p>
+<h3 id="comportamento">Comportamento</h3>
+<ul>
+<li>Ao entrar na página: verificar se já existe QR Code ativo para 
+  essa parcela (não expirado) → reusar se existir</li>
+<li>Se não existir: chamar <code>POST /api/portal/pix/gerar</code> 
+  automaticamente ao carregar a página</li>
+<li>Polling a cada 10 segundos em <code>GET /api/portal/pix/status/[pixId]</code></li>
+<li>Quando status mudar para <code>aprovado</code>:</li>
+<li>Parar o polling</li>
+<li>Exibir tela de sucesso com animação</li>
+<li>Redirecionar para <code>/portal/contratos/[id]</code> após 3 segundos</li>
+<li>Botão "Compartilhar" (Web Share API para mobile) para enviar o 
+  código PIX via WhatsApp/SMS</li>
+</ul>
+<h3 id="tela-de-sucesso-pos-pagamento">Tela de sucesso pós-pagamento</h3>
+<p>┌─────────────────────────────────────────────────────┐
+│                                                     │
+│         ✅  Pagamento confirmado!                   │
+│                                                     │
+│    Parcela 3/5 do Contrato #2                       │
+│    R$ 280,00 · pago em 20/05/2026                   │
+│                                                     │
+│    Redirecionando em 3s...                          │
+│                                                     │
+│    [ Ver meus contratos ]                           │
+│                                                     │
+└─────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="5-historico-de-pagamentos-portalpagamentos">5. HISTÓRICO DE PAGAMENTOS (<code>/portal/pagamentos</code>)</h2>
+<p>┌─────────────────────────────────────────────────────┐
+│  Histórico de Pagamentos                            │
+│  Filtrar por: [ Todos os contratos ▼ ]  [ Mês ▼ ]  │
+├─────────────────────────────────────────────────────┤
+│  Maio 2026                                          │
+│  10/05  Parcela 2/5 · Contrato #2  R$ 280,00  PIX  │
+├─────────────────────────────────────────────────────┤
+│  Abril 2026                                         │
+│  10/04  Parcela 1/5 · Contrato #2  R$ 280,00  PIX  │
+│  05/04  Parcela 5/5 · Contrato #1  R$ 200,00  PIX  │
+└─────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="6-suporte-portalsuporte">6. SUPORTE (<code>/portal/suporte</code>)</h2>
+<h3 id="lista-de-tickets">Lista de tickets</h3>
+<p>┌─────────────────────────────────────────────────────┐
+│  Suporte                       [ + Novo chamado ]   │
+├─────────────────────────────────────────────────────┤
+│  #003  Dúvida sobre parcela     🟡 Aguardando       │
+│        Aberto em 18/05/2026                         │
+├─────────────────────────────────────────────────────┤
+│  #002  Erro no QR Code PIX      ✅ Respondido       │
+│        Aberto em 10/05/2026                         │
+│        [ Ver resposta ]                             │
+├─────────────────────────────────────────────────────┤
+│  #001  Solicitação de renegoc.  ✅ Resolvido        │
+│        Aberto em 01/04/2026                         │
+└─────────────────────────────────────────────────────┘</p>
+<h3 id="novo-ticket-portalsuportenovo">Novo ticket (<code>/portal/suporte/novo</code>)</h3>
+<p>┌─────────────────────────────────────────────────────┐
+│  ← Voltar    Abrir chamado de suporte               │
+├─────────────────────────────────────────────────────┤
+│  Assunto:                                           │
+│  [ Selecione ▼ ]                                    │
+│    • Dúvida sobre parcela                           │
+│    • Problema com pagamento PIX                     │
+│    • Solicitação de renegociação                    │
+│    • Atualização de dados cadastrais                │
+│    • Outro                                          │
+│                                                     │
+│  Contrato relacionado (opcional):                   │
+│  [ Selecione ▼ ]                                    │
+│                                                     │
+│  Mensagem:                                          │
+│  [ <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em>_ ]      │
+│  [ </strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_ ]      │
+│  [ </em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong>___ ]      │
+│                                                     │
+│  [ Enviar chamado ]                                 │
+└─────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="7-perfil-e-seguranca-portalperfil">7. PERFIL E SEGURANÇA (<code>/portal/perfil</code>)</h2>
+<p>┌─────────────────────────────────────────────────────┐
+│  Meu Perfil                                         │
+├─────────────────────────────────────────────────────┤
+│  👤 João da Silva                                   │
+│  📧 joao@email.com                                  │
+│  📱 (65) 99999-9999                                 │
+│  🪪 123.456.789-00                                  │
+│                                                     │
+│  ⚠️ Para alterar seus dados, entre em contato       │
+│     com a Lidera Financeira.                        │
+├─────────────────────────────────────────────────────┤
+│  Segurança                                          │
+│  ─────────────────────────────────────────────────  │
+│  Senha          [ Alterar senha ]                   │
+│                                                     │
+│  Google Authenticator                               │
+│  [ ⚠️ Não configurado — Configurar agora ]          │
+│  ou                                                 │
+│  [ ✅ Ativo — Remover ]                             │
+├─────────────────────────────────────────────────────┤
+│  Notificações                                       │
+│  ─────────────────────────────────────────────────  │
+│  WhatsApp  🔔 Ativado    [ toggle ]                 │
+│  Email     🔔 Ativado    [ toggle ]                 │
+└─────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="8-backend-endpoints-do-portal-nestjs">8. BACKEND — ENDPOINTS DO PORTAL (NestJS)</h2>
+<p>Todos os endpoints abaixo ficam em <code>/api/portal/*</code> e exigem 
+<code>ClientPortalGuard</code> (role = cliente):
+GET  /api/portal/home              → resumo: contratos ativos,
+próxima parcela, saldo total,
+últimos 5 pagamentos, alertas
+GET  /api/portal/contratos         → lista contratos do cliente
+GET  /api/portal/contratos/:id     → detalhe + parcelas (validar ownership)
+GET  /api/portal/pagamentos        → histórico de pagamentos do cliente
+POST /api/portal/pix/gerar         → { installmentId } → gera QR Code
+GET  /api/portal/pix/status/:pixId → polling do status do pagamento
+GET  /api/portal/suporte           → lista tickets do cliente
+POST /api/portal/suporte           → abre novo ticket
+GET  /api/portal/suporte/:id       → detalhe do ticket
+GET  /api/portal/perfil            → dados do cliente (sem info sensível)
+PATCH /api/portal/notificacoes     → atualiza preferências de notificação</p>
+<h3 id="dados-que-nunca-devem-ser-retornados-ao-cliente">Dados que NUNCA devem ser retornados ao cliente</h3>
+<ul>
+<li><code>valorInvestido</code> (custo de capital da financeira)</li>
+<li><code>taxaJuros</code> (taxa interna)</li>
+<li><code>observacoes</code> internas dos contratos</li>
+<li>Dados de outros clientes</li>
+<li>Logs de auditoria internos</li>
+<li>Configurações do sistema</li>
+</ul>
+<hr />
+<h2 id="9-notificacoes-automaticas-para-o-cliente">9. NOTIFICAÇÕES AUTOMÁTICAS PARA O CLIENTE</h2>
+<p>Adapte os Cron Jobs existentes para também notificar via portal:</p>
+<h3 id="badge-de-notificacoes-no-header-do-portal">Badge de notificações no header do portal</h3>
+<ul>
+<li>Contador de parcelas vencendo em 3 dias</li>
+<li>Tickets respondidos não lidos</li>
+<li>Implementar via Supabase Realtime:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="w">  </span><span class="nx">supabase</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="s1">&#39;portal-notificacoes&#39;</span><span class="p">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;postgres_changes&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;UPDATE&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">      </span><span class="nx">table</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;support_tickets&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">      </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="sb">`client_id=eq.</span><span class="si">${</span><span class="nx">clientId</span><span class="si">}</span><span class="sb">`</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="nx">handleTicketUpdate</span><span class="p">)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="p">.</span><span class="nx">subscribe</span><span class="p">()</span>
+</code></pre></div></li>
+</ul>
+<hr />
+<h2 id="10-entregaveis-nesta-ordem">10. ENTREGÁVEIS (nesta ordem)</h2>
+<ol>
+<li>Estrutura de pastas e arquivos do portal (<code>(portal)/layout.tsx</code> e 
+   todas as páginas)</li>
+<li><code>ClientPortalService</code> com todos os métodos e validações de ownership</li>
+<li><code>ClientPortalController</code> com todos os endpoints</li>
+<li><code>ClientPortalGuard</code> isolado do guard administrativo</li>
+<li>Home do portal com cards, barra de progresso e alertas inteligentes</li>
+<li>Página de contratos (lista + detalhe + tabela de parcelas)</li>
+<li>Página de PIX com QR Code, polling e tela de sucesso</li>
+<li>Histórico de pagamentos com filtros</li>
+<li>Módulo de suporte (lista + novo ticket)</li>
+<li>Página de perfil com segurança e notificações</li>
+<li>Hook <code>useRealtimePortal</code> para notificações em tempo real</li>
+</ol>
+<h2 id="regras-tecnicas-obrigatorias_2">REGRAS TÉCNICAS OBRIGATÓRIAS</h2>
+<ul>
+<li>TODA query do portal filtra por <code>clientId</code> do JWT — sem exceção</li>
+<li>Nunca expor campos financeiros internos (valorInvestido, taxaJuros)</li>
+<li>Polling do PIX com cleanup no <code>useEffect</code> (evitar memory leak)</li>
+<li>Layout completamente separado do painel admin (sem sidebar, sem 
+  topbar administrativa)</li>
+<li>Mobile first — cliente acessa principalmente pelo celular</li>
+<li>Usar Supabase Realtime para notificações (tickets respondidos, 
+  pagamento confirmado)</li>
+<li>Registrar no <code>AuditLog</code> toda geração de QR Code e acesso ao portal</li>
+<li>Idempotência no PIX: não gerar novo QR Code se já existir um 
+  válido para a mesma parcela</li>
+</ul>
+<p>Por que esse prompt está completo para um sistema financeiro:
+O isolamento de rotas (portal)/<em> separado do (dashboard)/</em> garante que um cliente nunca veja nenhum fragmento da interface administrativa. O ClientPortalGuard com validação de ownership em cada endpoint é a camada crítica — mesmo que um cliente manipule a URL para tentar acessar o contrato de outro cliente, o backend rejeita imediatamente.
+O polling do PIX com cleanup no useEffect evita que o cliente fique com requisições rodando em background depois de sair da página — detalhe técnico que causa bugs difíceis de rastrear em produção.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

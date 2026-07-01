@@ -1,0 +1,1857 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+        <link rel="prev" href="../02_BACKEND/">
+      
+      
+        <link rel="next" href="../04_DATABASE/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Frontend - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-guia-do-frontend-nextjs" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Frontend
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-estrutura-de-diretorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Estrutura de Diretórios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-route-role-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Route-Role Guard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-authcontext-e-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AuthContext e Session
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dashboards-por-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dashboards por Perfil
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-layout-sidebar-topbar-bottomnav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Layout: Sidebar, Topbar, BottomNav
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-padrao-de-pagina-de-lista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Padrão de Página de Lista
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-formularios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Formulários
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dados-financeiros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Dados Financeiros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-supabase-realtime-no-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Supabase Realtime no Frontend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-hooks-customizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Hooks Customizados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-componentes-reutilizaveis-do-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Componentes Reutilizáveis do Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-componentes-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Componentes de Negócio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-api-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. API Client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-rotas-completas-por-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Rotas Completas por Perfil
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-estrutura-de-diretorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Estrutura de Diretórios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-route-role-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Route-Role Guard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-authcontext-e-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AuthContext e Session
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-dashboards-por-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dashboards por Perfil
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-layout-sidebar-topbar-bottomnav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Layout: Sidebar, Topbar, BottomNav
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-padrao-de-pagina-de-lista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Padrão de Página de Lista
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-formularios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Formulários
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dados-financeiros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Dados Financeiros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-supabase-realtime-no-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Supabase Realtime no Frontend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-hooks-customizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Hooks Customizados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-componentes-reutilizaveis-do-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Componentes Reutilizáveis do Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-componentes-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Componentes de Negócio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-api-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. API Client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-rotas-completas-por-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Rotas Completas por Perfil
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-guia-do-frontend-nextjs">SIAFI 2.0 — Guia do Frontend (Next.js)</h1>
+<blockquote>
+<p>Última atualização: 2026-05-23 | Next.js 16 · TypeScript 5 · Tailwind CSS 4 · shadcn/ui</p>
+</blockquote>
+<hr />
+<h2 id="1-estrutura-de-diretorios">1. Estrutura de Diretórios</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>frontend/src/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── app/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── (auth)/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   └── login/                      ← Login + OAuth Google + MFA
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── (dashboard)/                    ← Layout compartilhado: Sidebar + Topbar
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   ├── portal-layout-content.tsx   ← Layout condicional por role
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   ├── dashboard/                  ← Dashboard renderizado por perfil
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │   ├── clientes/                   ← Lista · novo · [id] · [id]/editar
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │   ├── emprestimos/                ← Lista · novo · [id]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │   ├── parcelas/                   ← Parcelas em atraso
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   ├── pagamentos/                 ← Histórico · novo
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │   ├── caixa/                      ← Saldo + movimentações + lançamentos
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │   ├── inadimplentes/              ← Carteira inadimplente global
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │   ├── renegociacoes/              ← Lista · nova
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │   ├── reparcelamentos/            ← Lista · nova · [id]
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │   ├── intencoes/                  ← Lista · [id]
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │   ├── solicitacoes/               ← Solicitações ao financeiro
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │   ├── cobrancas/                  ← Cobranças da carteira do consultor
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │   ├── consultor/carteira/         ← Carteira do consultor
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │   ├── pix/                        ← Gerador QR Code PIX
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │   ├── conciliacao/                ← Conciliação bancária
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │   ├── relatorios/                 ← 5 abas de relatório
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │   ├── mensagens/                  ← Chat interno + Realtime
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │   ├── notificacoes/               ← Log de notificações
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │   ├── suporte/                    ← Tickets · [id] · novo
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │   ├── usuarios/                   ← Lista · novo · [id]/editar
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │   ├── configuracoes/              ← Parâmetros + templates + integrações
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │   └── auditoria/                  ← Log de auditoria
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   └── (portal)/                       ← Layout do portal do cliente
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│       └── portal/
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│           ├── page.tsx                ← Home: contratos + progresso
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│           ├── contratos/[id]/         ← Detalhe do contrato + parcelas
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│           ├── pagamentos/             ← Histórico de pagamentos
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│           ├── pagamentos/pix/[installmentId]/ ← Tela de pagamento PIX
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│           ├── suporte/                ← Chamados · novo · [id]
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│           └── perfil/                 ← Senha · 2FA · preferências
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>├── components/
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│   ├── ui/                 ← shadcn/ui: button, input, card, badge, skeleton, select, textarea
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│   ├── layout/             ← Sidebar, Topbar, BottomNav (portal mobile)
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│   └── portal/             ← Componentes exclusivos do portal do cliente
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>├── hooks/                  ← Hooks customizados
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>├── lib/
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│   ├── api.ts              ← Axios com interceptors JWT e refresh automático
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│   ├── utils.ts            ← formatCurrency, formatDate, formatDateTime
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│   └── supabase/
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│       └── client.ts       ← Supabase browser client (Realtime)
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>└── styles/                 ← Estilos globais Tailwind
+</code></pre></div>
+<hr />
+<h2 id="2-route-role-guard">2. Route-Role Guard</h2>
+<p>Todas as rotas do grupo <code>(dashboard)</code> são protegidas pelo <code>RouteRoleGuard</code> via <code>middleware.ts</code>. O objeto <code>ROUTE_ROLES</code> mapeia rota → roles permitidas:</p>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Roles permitidas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/dashboard</code></td>
+<td>admin, financeiro, consultor, caixa, cliente</td>
+</tr>
+<tr>
+<td><code>/clientes</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/clientes/novo</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/clientes/[id]</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/clientes/[id]/editar</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/emprestimos</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/emprestimos/novo</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/emprestimos/[id]</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/parcelas</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/pagamentos</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/pagamentos/novo</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/caixa</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/inadimplentes</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/renegociacoes</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/renegociacoes/nova</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/reparcelamentos</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/reparcelamentos/nova</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/reparcelamentos/[id]</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/intencoes</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/intencoes/[id]</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/solicitacoes</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/cobrancas</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/consultor/carteira</code></td>
+<td>consultor, admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/pix</code></td>
+<td>admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td><code>/conciliacao</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/relatorios</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/mensagens</code></td>
+<td>admin, financeiro, consultor, caixa</td>
+</tr>
+<tr>
+<td><code>/notificacoes</code></td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td><code>/suporte</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/suporte/[id]</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/suporte/novo</code></td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td><code>/usuarios</code></td>
+<td>admin</td>
+</tr>
+<tr>
+<td><code>/usuarios/novo</code></td>
+<td>admin</td>
+</tr>
+<tr>
+<td><code>/usuarios/[id]/editar</code></td>
+<td>admin</td>
+</tr>
+<tr>
+<td><code>/configuracoes</code></td>
+<td>admin</td>
+</tr>
+<tr>
+<td><code>/auditoria</code></td>
+<td>admin</td>
+</tr>
+<tr>
+<td><code>/portal/*</code></td>
+<td>cliente</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-authcontext-e-session">3. AuthContext e Session</h2>
+<p><code>AuthContext</code> (Provider em <code>app/layout.tsx</code>) expõe:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="nx">role</span><span class="p">,</span><span class="w"> </span><span class="nx">isLoading</span><span class="p">,</span><span class="w"> </span><span class="nx">signOut</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useAuth</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Refresh automático:</strong> interceptor Axios detecta 401 → <code>POST /api/auth/refresh</code> → repete a request original. Se o refresh falhar → <code>signOut()</code> + redirect <code>/login</code>.</p>
+<p><strong>Redirect no login:</strong> <code>admin</code>/<code>financeiro</code>/<code>consultor</code>/<code>caixa</code> → <code>/dashboard</code>; <code>cliente</code> → <code>/portal</code>.</p>
+<hr />
+<h2 id="4-dashboards-por-perfil">4. Dashboards por Perfil</h2>
+<p><code>/dashboard/page.tsx</code> renderiza condicionalmente com base na <code>role</code> do <code>AuthContext</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Componente</th>
+<th>Foco principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>admin, financeiro</td>
+<td><code>DashboardFinanceiro</code></td>
+<td>KPIs financeiros, Fila SLA, Liberações pendentes, Aging</td>
+</tr>
+<tr>
+<td>consultor</td>
+<td><code>DashboardConsultor</code></td>
+<td>Carteira, cobranças urgentes, intenções pendentes</td>
+</tr>
+<tr>
+<td>caixa</td>
+<td><code>DashboardCaixa</code></td>
+<td>Liberações pendentes, parcelas do dia, saldo atual</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-layout-sidebar-topbar-bottomnav">5. Layout: Sidebar, Topbar, BottomNav</h2>
+<p><strong>Sidebar</strong> — grupos filtrados pela <code>role</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Itens</th>
+<th>Roles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Início</td>
+<td>Dashboard</td>
+<td>todos</td>
+</tr>
+<tr>
+<td>Operacional</td>
+<td>Clientes, Empréstimos, Parcelas, Pagamentos, Caixa</td>
+<td>admin, financeiro, caixa</td>
+</tr>
+<tr>
+<td>Consultor</td>
+<td>Minha Carteira, Intenções, Solicitações, Cobranças</td>
+<td>consultor</td>
+</tr>
+<tr>
+<td>Financeiro</td>
+<td>Inadimplentes, Reparcelamentos, PIX, Renegociações, Conciliação</td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td>Relatórios</td>
+<td>Relatórios</td>
+<td>admin, financeiro</td>
+</tr>
+<tr>
+<td>Comunicação</td>
+<td>Mensagens (com badge), Notificações, Suporte</td>
+<td>admin, financeiro, consultor, caixa</td>
+</tr>
+<tr>
+<td>Administração</td>
+<td>Usuários, Configurações, Auditoria</td>
+<td>admin</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Topbar</strong> — nome do usuário, badge de mensagens não lidas (polling 30s + Realtime), botão sair.</p>
+<p><strong>BottomNav</strong> — navegação inferior para o portal do cliente (mobile-first). Itens: Início, Parcelas, PIX, Suporte, Perfil.</p>
+<hr />
+<h2 id="6-padrao-de-pagina-de-lista">6. Padrão de Página de Lista</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="s1">&#39;use client&#39;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">ListaPage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">qc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useQueryClient</span><span class="p">()</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">isLoading</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useQuery</span><span class="p">({</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;entidade&#39;</span><span class="p">],</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nx">queryFn</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">api</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/endpoint&#39;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">data</span><span class="p">),</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">mutation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useMutation</span><span class="p">({</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nx">mutationFn</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">api</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="sb">`/endpoint/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">),</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nx">onSuccess</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">qc</span><span class="p">.</span><span class="nx">invalidateQueries</span><span class="p">({</span><span class="w"> </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;entidade&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}),</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isLoading</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">SkeletonCard</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">DataTable</span><span class="w"> </span><span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">data</span><span class="p">}</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="7-formularios">7. Formulários</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">form</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useForm</span><span class="o">&lt;</span><span class="nx">Schema</span><span class="o">&gt;</span><span class="p">({</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nx">resolver</span><span class="o">:</span><span class="w"> </span><span class="kt">zodResolver</span><span class="p">(</span><span class="nx">schema</span><span class="p">)</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">,</span><span class="w"> </span><span class="c1">// cast necessário — Zod v4 + react-hook-form</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">})</span>
+</code></pre></div>
+<p>Upload de documentos: <code>FormData</code> com <code>Content-Type: multipart/form-data</code>.</p>
+<p>Operações destrutivas sempre precedidas de <code>confirm()</code> antes de executar a mutation.</p>
+<hr />
+<h2 id="8-dados-financeiros">8. Dados Financeiros</h2>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exibição</td>
+<td>Sempre <code>formatCurrency(value)</code> — nunca exibir número bruto</td>
+</tr>
+<tr>
+<td>Datas</td>
+<td><code>formatDate()</code> para dd/MM/yyyy · <code>formatDateTime()</code> para dd/MM/yyyy HH:mm</td>
+</tr>
+<tr>
+<td>Cálculos no cliente</td>
+<td><code>Decimal.js</code> — nunca <code>Math.round()</code> ou operações nativas com <code>float</code></td>
+</tr>
+<tr>
+<td>Realtime cast</td>
+<td><code>'postgres_changes' as any</code> — necessário por tipagem incompleta do SDK Supabase</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-supabase-realtime-no-frontend">9. Supabase Realtime no Frontend</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Escutar novas mensagens de uma conversa</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nx">supabase</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="sb">`conversa-</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;postgres_changes&#39;</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nx">table</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;mensagens&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="sb">`conversa_id=eq.</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="c1">// atualizar lista de mensagens</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p">.</span><span class="nx">subscribe</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="10-hooks-customizados">10. Hooks Customizados</h2>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>useAuth()</code></td>
+<td>Usuário, role, signOut do AuthContext</td>
+</tr>
+<tr>
+<td><code>useUnreadCount()</code></td>
+<td>Badge de mensagens não lidas (polling 30s)</td>
+</tr>
+<tr>
+<td><code>useMensagensNaoLidas()</code></td>
+<td>Contagem de não-lidas por conversa</td>
+</tr>
+<tr>
+<td><code>useConversaRealtime(id)</code></td>
+<td>Realtime de uma conversa específica</td>
+</tr>
+<tr>
+<td><code>useRealtimePortal()</code></td>
+<td>Realtime de installments e payments no portal do cliente</td>
+</tr>
+<tr>
+<td><code>usePortalPix(installmentId)</code></td>
+<td>Geração e polling de confirmação de QR Code PIX no portal</td>
+</tr>
+<tr>
+<td><code>useEmailTemplate(type)</code></td>
+<td>Carregar, editar e salvar template de e-mail</td>
+</tr>
+<tr>
+<td><code>useScoreRisco(clientId)</code></td>
+<td>Score do cliente com invalidação automática pós-pagamento</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11-componentes-reutilizaveis-do-portal">11. Componentes Reutilizáveis do Portal</h2>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Arquivo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MoneyDisplay</code></td>
+<td><code>portal/money-display.tsx</code></td>
+<td>Valor monetário formatado com tamanho configurável</td>
+</tr>
+<tr>
+<td><code>ProgressBar</code></td>
+<td><code>portal/progress-bar.tsx</code></td>
+<td>Barra de progresso das parcelas pagas</td>
+</tr>
+<tr>
+<td><code>StatusBadge</code></td>
+<td><code>portal/status-badges.tsx</code></td>
+<td>Badge colorido por status de parcela ou contrato</td>
+</tr>
+<tr>
+<td><code>SkeletonCard</code></td>
+<td><code>portal/skeleton-card.tsx</code></td>
+<td>Skeleton de carregamento padrão do portal</td>
+</tr>
+<tr>
+<td><code>PCard</code></td>
+<td><code>portal/p-card.tsx</code></td>
+<td>Card padrão do portal (wrapper estilizado)</td>
+</tr>
+<tr>
+<td><code>ScoreIndicator</code></td>
+<td><code>portal/score-indicator.tsx</code></td>
+<td>Indicador visual do score de risco (0–100)</td>
+</tr>
+<tr>
+<td><code>PixCopyButton</code></td>
+<td><code>portal/pix-copy-button.tsx</code></td>
+<td>Botão copia-e-cola com feedback visual de copiado</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-componentes-de-negocio">12. Componentes de Negócio</h2>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SimuladorReparcelamento</code></td>
+<td>Simulação inline com <code>Decimal.js</code> — exibe parcelas e totais sem gravar</td>
+</tr>
+<tr>
+<td><code>ScoreRiscoCard</code></td>
+<td>Card com score, histórico de fatores e classificação de risco</td>
+</tr>
+<tr>
+<td><code>EmailPreview</code></td>
+<td>Preview renderizado do template de e-mail com variáveis substituídas</td>
+</tr>
+<tr>
+<td><code>AceiteDigital</code></td>
+<td>Tela de revisão e assinatura do contrato no portal do cliente</td>
+</tr>
+<tr>
+<td><code>LiberacaoCapital</code></td>
+<td>Formulário de confirmação de entrega do capital (perfil caixa)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13-api-client">13. API Client</h2>
+<p><code>lib/api.ts</code> — instância Axios configurada:</p>
+<ul>
+<li><code>baseURL</code>: <code>process.env.NEXT_PUBLIC_API_URL</code></li>
+<li><strong>Request interceptor:</strong> injeta <code>Authorization: Bearer &lt;accessToken&gt;</code></li>
+<li><strong>Response interceptor:</strong> em 401 → <code>POST /api/auth/refresh</code> → repete a request; em falha → <code>signOut()</code> + redirect <code>/login</code></li>
+</ul>
+<hr />
+<h2 id="14-rotas-completas-por-perfil">14. Rotas Completas por Perfil</h2>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Roles</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/login</code></td>
+<td>público</td>
+<td>Login + Google + MFA</td>
+</tr>
+<tr>
+<td><code>/dashboard</code></td>
+<td>todos</td>
+<td>Dashboard condicional por perfil</td>
+</tr>
+<tr>
+<td><code>/clientes</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Lista paginada com busca</td>
+</tr>
+<tr>
+<td><code>/clientes/novo</code></td>
+<td>admin, financeiro</td>
+<td>Cadastro com upload de documentos</td>
+</tr>
+<tr>
+<td><code>/clientes/[id]</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Detalhe + contratos + score</td>
+</tr>
+<tr>
+<td><code>/clientes/[id]/editar</code></td>
+<td>admin, financeiro</td>
+<td>Edição de dados cadastrais</td>
+</tr>
+<tr>
+<td><code>/emprestimos</code></td>
+<td>admin, financeiro</td>
+<td>Lista com filtros e soma por status</td>
+</tr>
+<tr>
+<td><code>/emprestimos/novo</code></td>
+<td>admin, financeiro</td>
+<td>Criação + simulador inline</td>
+</tr>
+<tr>
+<td><code>/emprestimos/[id]</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Detalhe + pagamento rápido</td>
+</tr>
+<tr>
+<td><code>/parcelas</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Parcelas em atraso</td>
+</tr>
+<tr>
+<td><code>/pagamentos</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Histórico + estorno</td>
+</tr>
+<tr>
+<td><code>/pagamentos/novo</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Registrar pagamento (CPF → parcela)</td>
+</tr>
+<tr>
+<td><code>/caixa</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Saldo + extrato + lançamentos</td>
+</tr>
+<tr>
+<td><code>/inadimplentes</code></td>
+<td>admin, financeiro</td>
+<td>Carteira inadimplente global</td>
+</tr>
+<tr>
+<td><code>/renegociacoes</code></td>
+<td>admin, financeiro</td>
+<td>Lista de renegociações</td>
+</tr>
+<tr>
+<td><code>/renegociacoes/nova</code></td>
+<td>admin, financeiro</td>
+<td>Formulário de renegociação</td>
+</tr>
+<tr>
+<td><code>/reparcelamentos</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Lista + fluxo de aprovação</td>
+</tr>
+<tr>
+<td><code>/reparcelamentos/nova</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Formulário + simulador</td>
+</tr>
+<tr>
+<td><code>/reparcelamentos/[id]</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Detalhe + ações por etapa</td>
+</tr>
+<tr>
+<td><code>/intencoes</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Lista com SLA e status</td>
+</tr>
+<tr>
+<td><code>/intencoes/[id]</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Detalhe + aprovar/rejeitar</td>
+</tr>
+<tr>
+<td><code>/solicitacoes</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Solicitações ao financeiro</td>
+</tr>
+<tr>
+<td><code>/cobrancas</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Cobranças + registro de contato</td>
+</tr>
+<tr>
+<td><code>/consultor/carteira</code></td>
+<td>consultor, admin, financeiro</td>
+<td>Carteira do consultor</td>
+</tr>
+<tr>
+<td><code>/pix</code></td>
+<td>admin, financeiro, consultor</td>
+<td>Gerador de QR Code PIX</td>
+</tr>
+<tr>
+<td><code>/conciliacao</code></td>
+<td>admin, financeiro</td>
+<td>Conciliação bancária</td>
+</tr>
+<tr>
+<td><code>/relatorios</code></td>
+<td>admin, financeiro</td>
+<td>5 abas: carteira, faturamento, clientes, movimentação, contratos</td>
+</tr>
+<tr>
+<td><code>/mensagens</code></td>
+<td>admin, financeiro, consultor, caixa</td>
+<td>Chat interno</td>
+</tr>
+<tr>
+<td><code>/notificacoes</code></td>
+<td>admin, financeiro</td>
+<td>Log de notificações enviadas</td>
+</tr>
+<tr>
+<td><code>/suporte</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Lista de tickets</td>
+</tr>
+<tr>
+<td><code>/suporte/[id]</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Detalhe do ticket</td>
+</tr>
+<tr>
+<td><code>/suporte/novo</code></td>
+<td>admin, financeiro, caixa</td>
+<td>Abrir ticket</td>
+</tr>
+<tr>
+<td><code>/usuarios</code></td>
+<td>admin</td>
+<td>Lista de operadores</td>
+</tr>
+<tr>
+<td><code>/usuarios/novo</code></td>
+<td>admin</td>
+<td>Criar operador</td>
+</tr>
+<tr>
+<td><code>/usuarios/[id]/editar</code></td>
+<td>admin</td>
+<td>Editar operador</td>
+</tr>
+<tr>
+<td><code>/configuracoes</code></td>
+<td>admin</td>
+<td>Parâmetros + integrações + templates de e-mail</td>
+</tr>
+<tr>
+<td><code>/auditoria</code></td>
+<td>admin</td>
+<td>Log de auditoria com filtros</td>
+</tr>
+<tr>
+<td><code>/portal</code></td>
+<td>cliente</td>
+<td>Home do portal: contratos + progresso</td>
+</tr>
+<tr>
+<td><code>/portal/contratos/[id]</code></td>
+<td>cliente</td>
+<td>Detalhe do contrato + parcelas</td>
+</tr>
+<tr>
+<td><code>/portal/pagamentos</code></td>
+<td>cliente</td>
+<td>Histórico de pagamentos</td>
+</tr>
+<tr>
+<td><code>/portal/pagamentos/pix/[installmentId]</code></td>
+<td>cliente</td>
+<td>Tela PIX: QR Code + copia-e-cola</td>
+</tr>
+<tr>
+<td><code>/portal/suporte</code></td>
+<td>cliente</td>
+<td>Lista de chamados</td>
+</tr>
+<tr>
+<td><code>/portal/suporte/novo</code></td>
+<td>cliente</td>
+<td>Abrir chamado</td>
+</tr>
+<tr>
+<td><code>/portal/suporte/[id]</code></td>
+<td>cliente</td>
+<td>Detalhe do chamado</td>
+</tr>
+<tr>
+<td><code>/portal/perfil</code></td>
+<td>cliente</td>
+<td>Senha + 2FA + preferências de notificação</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>Última atualização: 2026-05-23 | Mantido por: equipe SIAFI</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

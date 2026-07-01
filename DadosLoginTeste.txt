@@ -1,0 +1,120 @@
+Crie estes usuários padão no banco.
+
+Usuários
+
+adm@siafi.lidera.srv.br	/	Role: Administrador
+João de Deus
+
+financeiro@siafi.lidera.srv.br	/	Role: Financeiro
+Ana Maria
+
+caixa@siafi.lidera.srv.br	/	Role: Caixa
+Maria Clara
+
+consultor@siafi.lidera.srv.br	/	Role: Consultor
+José Santanna
+
+cliente1@siafi.lidera.srv.br	/	Role: Cliente
+cliente2@siafi.lidera.srv.br	/	Role: Cliente
+cliente3@siafi.lidera.srv.br	/	Role: Cliente
+
+Senha: (para todos)
+Siafi@1234
+
+
+Cadastro de Clientes
+[
+	{
+		"nome": "Eloá Clara Analu Nascimento",
+		"idade": 39,
+		"cpf": "90150459173",
+		"rg": "207958312",
+		"data_nasc": "05/05/1987",
+		"sexo": "Feminino",
+		"signo": "Touro",
+		"mae": "Lara Vitória",
+		"pai": "Benício Jorge Anthony Nascimento",
+		"email": "cliente1@siafi.lidera.srv.br",
+		"senha": "Siafi@1234",
+		"cep": "78780970",
+		"endereco": "Avenida Carlos Hugney 260",
+		"numero": 923,
+		"bairro": "Centro",
+		"cidade": "Alto Araguaia",
+		"estado": "MT",
+		"telefone_fixo": "6628852692",
+		"celular": "66987868475",
+
+	},
+	{
+		"nome": "Juan Ian Barros",
+		"idade": 39,
+		"cpf": "38979033184",
+		"rg": "454429939",
+		"data_nasc": "19/05/1987",
+		"sexo": "Masculino",
+		"signo": "Touro",
+		"mae": "Sophia Joana Sônia",
+		"pai": "Manoel Augusto Iago Barros",
+		"email": "cliente2@siafi.lidera.srv.br",
+		"senha": "Siafi@1234",
+		"cep": "78780970",
+		"endereco": "Avenida Carlos Hugney 260",
+		"numero": 245,
+		"bairro": "Centro",
+		"cidade": "Alto Araguaia",
+		"estado": "MT",
+		"telefone_fixo": "6635574121",
+		"celular": "66992010928",
+
+	},
+	{
+		"nome": "Fernanda Alícia Teixeira",
+		"idade": 39,
+		"cpf": "63231627176",
+		"rg": "236314993",
+		"data_nasc": "16/02/1987",
+		"sexo": "Feminino",
+		"signo": "Aquário",
+		"mae": "Melissa Clara",
+		"pai": "Alexandre Lucca Teixeira",
+		"email": "cliente3@siafi.lidera.srv.br",
+		"senha": "Siafi@1234",
+		"cep": "78780970",
+		"endereco": "Avenida Carlos Hugney 260",
+		"numero": 904,
+		"bairro": "Centro",
+		"cidade": "Alto Araguaia",
+		"estado": "MT",
+		"telefone_fixo": "6626587467",
+		"celular": "66999571196",
+
+	}
+]
+
+nao-responder@siafi.lidera.srv.br
+Senha: Siafi@1234
+
+Protocolo
+Nome do host
+Porta
+
+Servidor de entrada (IMAP)
+imap.hostinger.com
+993	
+
+Servidor de saída (SMTP)
+smtp.hostinger.com
+465	
+
+TLS/SSL
+
+Para as contas:
+cliente1@siafi.lidera.srv.br
+cliente2@siafi.lidera.srv.br
+cliente3@siafi.lidera.srv.br
+A senha Siafi@1234 não deu certo, não faz login "Usuário ou senha inválidos.", verifique o real motivo. Veja se há conflito entre tabelas ou falta de integração.
+
+Na tela https://financeiro.lidera.app.br/clientes/1
+Mude a opção Reeviar Senha para Enviar Link de Redefinição de Senha, o cliente recebe o link e cria sua senha sem precisar da senha anterior.
+Deve chegar um link no email do cliente para uma tema onde ele coloca a senha e confirma, se for gmail, a opção de entrar com o google pelo mesmo email do cadastro.

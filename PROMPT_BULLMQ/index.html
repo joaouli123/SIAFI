@@ -1,0 +1,1324 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PROMPT BULLMQ - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#2-variaveis-de-ambiente" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PROMPT BULLMQ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2-variaveis-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. VARIÁVEIS DE AMBIENTE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-conexao-redis-srcmodulesqueueredisconfigts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CONEXÃO REDIS — src/modules/queue/redis.config.ts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-constantes-das-filas-srcmodulesqueuequeueconstantsts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. CONSTANTES DAS FILAS — src/modules/queue/queue.constants.ts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-modulo-de-filas-srcmodulesqueuequeuemodulets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. MÓDULO DE FILAS — src/modules/queue/queue.module.ts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-interfaces-dos-jobs-srcmodulesqueuequeueinterfacests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. INTERFACES DOS JOBS — src/modules/queue/queue.interfaces.ts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-fila-finance-notifications-producer-e-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. FILA finance-notifications — PRODUCER E WORKERS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. FILA finance-notifications — PRODUCER E WORKERS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#7a-notificationsservice-producer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7a. NotificationsService (producer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7b-whatsapp-worker-workerswhatsappworkerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7b. WhatsApp Worker — workers/whatsapp.worker.ts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7c-email-worker-workersemailworkerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7c. Email Worker — workers/email.worker.ts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-fila-payment-processing-webhook-e-worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. FILA payment-processing — WEBHOOK E WORKER
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. FILA payment-processing — WEBHOOK E WORKER">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#8a-webhookcontroller-refatorar-existente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8a. WebhookController — refatorar existente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8b-paymentworker-workerspaymentworkerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8b. PaymentWorker — workers/payment.worker.ts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-integracao-com-cron-jobs-existentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. INTEGRAÇÃO COM CRON JOBS EXISTENTES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-bullboard-painel-de-monitoramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. BULLBOARD — PAINEL DE MONITORAMENTO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-testes-manuais-comandos-para-validar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. TESTES MANUAIS — COMANDOS PARA VALIDAR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-entregaveis-nesta-ordem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. ENTREGÁVEIS (nesta ordem)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regras-tecnicas-obrigatorias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REGRAS TÉCNICAS OBRIGATÓRIAS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>PROMPT BULLMQ</h1>
+
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior especializado em NestJS, BullMQ e
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>arquiteturas de filas resilientes para sistemas financeiros. Analise a
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>documentação do SIAFI 2.0 (Backend e Database) e implemente a integração
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>completa de filas assíncronas com BullMQ + Redis.
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>O SIAFI roda em Windows Server com NestJS 10, Prisma e PostgreSQL (Supabase).
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>As filas são críticas para o negócio: falha no envio de WhatsApp ou no
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>processamento de pagamento deve ser retentada automaticamente, nunca
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>silenciada.
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>---
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## 1. INSTALAÇÃO E DEPENDÊNCIAS
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Gere os comandos de instalação:
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>npm install @nestjs/bullmq bullmq ioredis
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>npm install @bull-board/nestjs @bull-board/api @bull-board/express
+</code></pre></div>
+<hr />
+<h2 id="2-variaveis-de-ambiente">2. VARIÁVEIS DE AMBIENTE</h2>
+<p>Adicione ao <code>backend/.env.example</code> (com comentários explicativos):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># ── Redis ──────────────────────────────────────────
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>REDIS_HOST=redis-host.exemplo.com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>REDIS_PORT=6379
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>REDIS_PASSWORD=senha_segura_aqui
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>REDIS_TLS=true                    # true em produção, false em dev local
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># ── Mercado Pago ───────────────────────────────────
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>MP_WEBHOOK_SECRET=chave_hmac_do_painel_mp
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>MP_ACCESS_TOKEN=APP_USR-000000000000000-000000-...
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># ── Evolution API (WhatsApp) ───────────────────────
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>EVOLUTION_API_URL=https://evolution.lidera.app.br
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>EVOLUTION_API_KEY=chave_api_evolution
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>EVOLUTION_INSTANCE=lidera
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># ── SMTP (Email) ───────────────────────────────────
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>SMTP_HOST=smtp.gmail.com
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>SMTP_PORT=587
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>SMTP_USER=noreply@lidera.com
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>SMTP_PASS=senha_de_app_gmail
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>SMTP_FROM=&quot;Lidera Financeira &lt;noreply@lidera.com&gt;&quot;
+</code></pre></div></p>
+<hr />
+<h2 id="3-conexao-redis-srcmodulesqueueredisconfigts">3. CONEXÃO REDIS — <code>src/modules/queue/redis.config.ts</code></h2>
+<p>Implemente uma factory de conexão singleton com as seguintes regras:
+- Usar <code>ioredis</code> com TLS quando <code>REDIS_TLS=true</code>
+- Opções obrigatórias para compatibilidade com BullMQ:
+  <code>enableReadyCheck: false</code> e <code>maxRetriesPerRequest: null</code>
+- Reconnect automático com backoff exponencial (máx 30s)
+- Log de conexão/desconexão usando o <code>Logger</code> do NestJS
+- Exportar a instância para ser reutilizada em <code>BullModule</code> e workers</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Estrutura esperada:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">redisConnection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">IORedis</span><span class="p">({</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">host</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.REDIS_HOST</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="o">+</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REDIS_PORT</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.REDIS_PASSWORD</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nx">tls</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.REDIS_TLS</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nx">maxRetriesPerRequest</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="p">,</span><span class="w">      </span><span class="c1">// obrigatório para BullMQ</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nx">enableReadyCheck</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w">         </span><span class="c1">// obrigatório para Windows/BullMQ</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nx">retryStrategy</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">times</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">times</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">,</span><span class="w"> </span><span class="mf">30000</span><span class="p">),</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">});</span>
+</code></pre></div>
+<hr />
+<h2 id="4-constantes-das-filas-srcmodulesqueuequeueconstantsts">4. CONSTANTES DAS FILAS — <code>src/modules/queue/queue.constants.ts</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">QUEUE_FINANCE_NOTIFICATIONS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;finance-notifications&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">QUEUE_PAYMENT_PROCESSING</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;payment-processing&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// Job names — finance-notifications</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_WA_LEMBRETE_VENCIMENTO</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;whatsapp.lembrete-vencimento&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_WA_COBRANCA_ATRASO</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;whatsapp.cobranca-atraso&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_WA_CONFIRMACAO_PAGAMENTO</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;whatsapp.confirmacao-pagamento&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_WA_PORTAL_ATIVADO</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;whatsapp.portal-ativado&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_EMAIL_LEMBRETE</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;email.lembrete-vencimento&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_EMAIL_CONFIRMACAO</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;email.confirmacao-pagamento&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_EMAIL_PORTAL_ATIVADO</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;email.portal-ativado&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">// Job names — payment-processing</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_PAYMENT_WEBHOOK</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;payment.webhook&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">JOB_PAYMENT_CONCILIACAO</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;payment.conciliacao&#39;</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h2 id="5-modulo-de-filas-srcmodulesqueuequeuemodulets">5. MÓDULO DE FILAS — <code>src/modules/queue/queue.module.ts</code></h2>
+<p>Implemente um <code>@Global()</code> QueueModule que:
+- Registre as duas filas via <code>BullModule.registerQueue()</code>
+- Use a conexão Redis singleton do <code>redis.config.ts</code>
+- Configure os defaults de cada fila:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// finance-notifications</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nx">defaultJobOptions</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nx">attempts</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nx">backoff</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;exponential&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">delay</span><span class="o">:</span><span class="w"> </span><span class="kt">5000</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">removeOnComplete</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="kt">100</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nx">removeOnFail</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="kt">500</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1">// payment-processing</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nx">defaultJobOptions</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="nx">attempts</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nx">backoff</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;exponential&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">delay</span><span class="o">:</span><span class="w"> </span><span class="kt">10000</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="nx">removeOnComplete</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="kt">200</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="nx">removeOnFail</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Configure e exporte o BullBoard em <code>/admin/queues</code>
+  (protegido por middleware que verifica role <code>admin</code> no JWT)</li>
+<li>Exporte ambas as filas para uso nos outros módulos</li>
+</ul>
+<hr />
+<h2 id="6-interfaces-dos-jobs-srcmodulesqueuequeueinterfacests">6. INTERFACES DOS JOBS — <code>src/modules/queue/queue.interfaces.ts</code></h2>
+<p>Defina as interfaces TypeScript para os dados de cada job:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Dados para jobs de notificação</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">NotificationJobData</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">clienteNome</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">clienteWhatsapp?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nx">clienteEmail?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nx">loanId?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nx">installmentId?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nx">valorParcela?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nx">dataVencimento?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nx">senhaTemporaria?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="nx">templateVars?</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p">}</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1">// Dados para jobs de pagamento</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">PaymentJobData</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="nx">paymentId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span><span class="nx">externalReference</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="nx">amount</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="nx">dateApproved?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="nx">installmentId?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="nx">origem</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;webhook&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;cron&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;manual&#39;</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="7-fila-finance-notifications-producer-e-workers">7. FILA <code>finance-notifications</code> — PRODUCER E WORKERS</h2>
+<h3 id="7a-notificationsservice-producer">7a. NotificationsService (producer)</h3>
+<p>Refatore o <code>src/modules/notifications/notifications.service.ts</code> existente
+para usar a fila ao invés de chamar a Evolution API diretamente:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Métodos que devem enfileirar jobs (não chamar API diretamente):</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">async</span><span class="w"> </span><span class="nx">enviarLembreteVencimento</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">installmentId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="nx">add</span><span class="p">(</span><span class="nx">JOB_WA_LEMBRETE_VENCIMENTO</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="nx">add</span><span class="p">(</span><span class="nx">JOB_EMAIL_LEMBRETE</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span><span class="w">  </span><span class="c1">// se cliente tiver email</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">async</span><span class="w"> </span><span class="nx">enviarCobrancaAtraso</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">installmentId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="nx">add</span><span class="p">(</span><span class="nx">JOB_WA_COBRANCA_ATRASO</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">async</span><span class="w"> </span><span class="nx">enviarConfirmacaoPagamento</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">paymentId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="nx">add</span><span class="p">(</span><span class="nx">JOB_WA_CONFIRMACAO_PAGAMENTO</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="nx">add</span><span class="p">(</span><span class="nx">JOB_EMAIL_CONFIRMACAO</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">async</span><span class="w"> </span><span class="nx">enviarAcessoPortal</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">senhaTemporaria</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="nx">add</span><span class="p">(</span><span class="nx">JOB_WA_PORTAL_ATIVADO</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="nx">add</span><span class="p">(</span><span class="nx">JOB_EMAIL_PORTAL_ATIVADO</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="7b-whatsapp-worker-workerswhatsappworkerts">7b. WhatsApp Worker — <code>workers/whatsapp.worker.ts</code></h3>
+<p>Implemente o <code>@Processor(QUEUE_FINANCE_NOTIFICATIONS)</code> que:
+- Usa <code>@Process(JOB_WA_*)</code> para cada tipo de job WhatsApp
+- Chama a Evolution API via <code>axios</code> com os dados do job
+- Em caso de erro HTTP 4xx da Evolution (ex: instância desconectada):
+  lançar erro para o BullMQ retentar
+- Em caso de erro HTTP 5xx: lançar erro para retry
+- Após esgotar todas as tentativas (<code>onFailed</code>): registrar no <code>AuditLog</code>
+  com <code>{ acao: 'WHATSAPP_FALHOU', dados: { jobId, erro, clientId } }</code>
+- Concorrência: <code>{ concurrency: 5 }</code></p>
+<p>Templates de mensagem para cada job name:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// whatsapp.lembrete-vencimento</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="sb">`Olá, </span><span class="si">${</span><span class="nx">nome</span><span class="si">}</span><span class="sb">! 👋</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="sb">Sua parcela de *R$ </span><span class="si">${</span><span class="nx">valor</span><span class="si">}</span><span class="sb">* vence em *</span><span class="si">${</span><span class="nx">dataVencimento</span><span class="si">}</span><span class="sb">*.</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="sb">Pague com PIX pelo portal: https://financeiro.lidera.app.br/portal`</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">// whatsapp.cobranca-atraso</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="sb">`Olá, </span><span class="si">${</span><span class="nx">nome</span><span class="si">}</span><span class="sb">. Identificamos que sua parcela de *R$ </span><span class="si">${</span><span class="nx">valor</span><span class="si">}</span><span class="sb">* </span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="sb">está em atraso. Entre em contato para regularizar: (65) 99999-9999`</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1">// whatsapp.confirmacao-pagamento</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="sb">`✅ Pagamento confirmado!</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="sb">Valor: *R$ </span><span class="si">${</span><span class="nx">valor</span><span class="si">}</span><span class="sb">*</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="sb">Obrigado pela pontualidade, </span><span class="si">${</span><span class="nx">nome</span><span class="si">}</span><span class="sb">!`</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1">// whatsapp.portal-ativado</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="sb">`Olá, </span><span class="si">${</span><span class="nx">nome</span><span class="si">}</span><span class="sb">! 👋</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="sb">Seu acesso ao portal Lidera foi ativado.</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="sb">🔐 Senha temporária: *</span><span class="si">${</span><span class="nx">senhaTemporaria</span><span class="si">}</span><span class="sb">*</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="sb">🌐 https://financeiro.lidera.app.br/portal</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="sb">⚠️ Troque sua senha no primeiro acesso.`</span>
+</code></pre></div></p>
+<h3 id="7c-email-worker-workersemailworkerts">7c. Email Worker — <code>workers/email.worker.ts</code></h3>
+<p>Implemente o worker de email usando <code>nodemailer</code>:
+- Instalar: <code>npm install nodemailer @types/nodemailer</code>
+- Usar as variáveis SMTP do <code>.env</code>
+- Templates HTML simples com:
+  - Logo da empresa (URL pública)
+  - Conteúdo da mensagem
+  - Botão de ação (quando aplicável)
+  - Footer com dados da empresa
+- Concorrência: <code>{ concurrency: 3 }</code>
+- Após esgotar tentativas: registrar no <code>AuditLog</code></p>
+<hr />
+<h2 id="8-fila-payment-processing-webhook-e-worker">8. FILA <code>payment-processing</code> — WEBHOOK E WORKER</h2>
+<h3 id="8a-webhookcontroller-refatorar-existente">8a. WebhookController — refatorar existente</h3>
+<p>Refatore <code>src/modules/webhook/webhook.controller.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">@Post</span><span class="p">(</span><span class="s1">&#39;mercadopago&#39;</span><span class="p">)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">handleMercadoPago</span><span class="p">(</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="kd">@Headers</span><span class="p">(</span><span class="s1">&#39;x-signature&#39;</span><span class="p">)</span><span class="w"> </span><span class="nx">signature</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="kd">@Headers</span><span class="p">(</span><span class="s1">&#39;x-request-id&#39;</span><span class="p">)</span><span class="w"> </span><span class="nx">requestId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="kd">@Body</span><span class="p">()</span><span class="w"> </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="kd">@Req</span><span class="p">()</span><span class="w"> </span><span class="nx">req</span><span class="o">:</span><span class="w"> </span><span class="kt">Request</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="c1">// 1. Validar HMAC-SHA256 imediatamente</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1">//    Se inválido: throw UnauthorizedException (não enfileirar)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="c1">// 2. Extrair paymentId do body</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">paymentId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">body</span><span class="o">?</span><span class="p">.</span><span class="nx">data</span><span class="o">?</span><span class="p">.</span><span class="nx">id</span><span class="o">?</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="c1">// 3. Enfileirar com jobId para idempotência:</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">paymentQueue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="nx">JOB_PAYMENT_WEBHOOK</span><span class="p">,</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">paymentId</span><span class="p">,</span><span class="w"> </span><span class="nx">externalReference</span><span class="o">:</span><span class="w"> </span><span class="kt">body?.data?.id</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">body?.action</span><span class="p">,</span><span class="w"> </span><span class="nx">amount</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">origem</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;webhook&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">      </span><span class="nx">jobId</span><span class="o">:</span><span class="w"> </span><span class="sb">`mp-</span><span class="si">${</span><span class="nx">paymentId</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w">  </span><span class="c1">// ← previne duplo processamento</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">      </span><span class="nx">priority</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span><span class="w">               </span><span class="c1">// ← alta prioridade</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span><span class="c1">// 4. Retornar 200 IMEDIATAMENTE (não aguardar processamento)</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="p">}</span>
+</code></pre></div>
+<p>Validação HMAC obrigatória:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">private</span><span class="w"> </span><span class="nx">validateMercadoPagoSignature</span><span class="p">(</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">signature</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">requestId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="c1">// Implementar conforme documentação oficial do MP:</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="c1">// https://www.mercadopago.com.br/developers/pt/docs/your-integrations/notifications/webhooks</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="c1">// Usar crypto.createHmac(&#39;sha256&#39;, MP_WEBHOOK_SECRET)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="c1">// Comparar com crypto.timingSafeEqual() (previne timing attacks)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="8b-paymentworker-workerspaymentworkerts">8b. PaymentWorker — <code>workers/payment.worker.ts</code></h3>
+<p>Implemente <code>@Processor(QUEUE_PAYMENT_PROCESSING)</code> que:</p>
+<p>Para <code>JOB_PAYMENT_WEBHOOK</code>:
+1. Consultar o status real do pagamento na API do MP:
+   <code>GET https://api.mercadopago.com/v1/payments/{paymentId}</code>
+2. Verificar se <code>externalReference</code> corresponde a uma parcela no banco
+3. Se status = <code>approved</code>:
+   - Usar <code>$transaction</code> do Prisma:
+     a. Criar <code>Payment</code> na tabela payments
+     b. Atualizar <code>totalPago</code> da <code>Installment</code>
+     c. Se parcela quitada: atualizar status para <code>pago</code>
+     d. Se todas parcelas do loan quitadas: atualizar loan para <code>quitado</code>
+     e. Criar <code>Transaction</code> no caixa (entrada)
+   - Enfileirar job de confirmação WhatsApp/Email:
+     <code>notificationsQueue.add(JOB_WA_CONFIRMACAO_PAGAMENTO, ...)</code>
+4. Se status = <code>pending</code> ou <code>in_process</code>: logar e não processar
+5. Se status = <code>rejected</code> ou <code>cancelled</code>: logar no AuditLog
+6. Registrar resultado no <code>AuditLog</code> sempre</p>
+<p>Para <code>JOB_PAYMENT_CONCILIACAO</code> (cron job diário):
+- Buscar todos os <code>PixPayment</code> com status <code>pendente</code> há mais de 1 hora
+- Consultar status na API do MP para cada um
+- Processar os aprovados que não receberam webhook</p>
+<p>Concorrência: <code>{ concurrency: 3 }</code> — não processar muitos pagamentos 
+simultaneamente para evitar race conditions no banco</p>
+<hr />
+<h2 id="9-integracao-com-cron-jobs-existentes">9. INTEGRAÇÃO COM CRON JOBS EXISTENTES</h2>
+<p>Refatore <code>src/modules/cron/cron.service.ts</code> para usar as filas:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Antes (chamada direta):</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kd">@Cron</span><span class="p">(</span><span class="s1">&#39;0 9 * * *&#39;</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">async</span><span class="w"> </span><span class="nx">sendReminders</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="c1">// chamava Evolution API diretamente</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">}</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1">// Depois (enfileira jobs):</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="kd">@Cron</span><span class="p">(</span><span class="s1">&#39;0 9 * * *&#39;</span><span class="p">)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">async</span><span class="w"> </span><span class="nx">sendReminders</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">parcelasProximas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pendente&#39;</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">      </span><span class="nx">dataVencimento</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="nx">gte</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">        </span><span class="nx">lte</span><span class="o">:</span><span class="w"> </span><span class="kt">addDays</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span><span class="w"> </span><span class="mf">3</span><span class="p">),</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">client</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">  </span><span class="c1">// Enfileirar um job por parcela (não chamar API em loop)</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">parcela</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">parcelasProximas</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">notificationsQueue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">      </span><span class="nx">JOB_WA_LEMBRETE_VENCIMENTO</span><span class="p">,</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">        </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.loan.clientId</span><span class="p">,</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">        </span><span class="nx">clienteNome</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.loan.client.nome</span><span class="p">,</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">        </span><span class="nx">clienteWhatsapp</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.loan.client.whatsapp</span><span class="p">,</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">        </span><span class="nx">installmentId</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.id</span><span class="p">,</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="w">        </span><span class="nx">valorParcela</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.valor.toNumber</span><span class="p">(),</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="w">        </span><span class="nx">dataVencimento</span><span class="o">:</span><span class="w"> </span><span class="kt">format</span><span class="p">(</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dd/MM/yyyy&#39;</span><span class="p">),</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="w">        </span><span class="nx">jobId</span><span class="o">:</span><span class="w"> </span><span class="sb">`lembrete-</span><span class="si">${</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">-</span><span class="si">${</span><span class="nx">format</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span><span class="w"> </span><span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="p">}</span>
+</code></pre></div>
+<p>Aplicar o mesmo padrão para:
+- <code>sendOverdueNotices</code> (cobranças de atraso — 10:00)
+- Qualquer outro cron que chame a Evolution API diretamente</p>
+<hr />
+<h2 id="10-bullboard-painel-de-monitoramento">10. BULLBOARD — PAINEL DE MONITORAMENTO</h2>
+<p>Configure o BullBoard para monitorar as filas em tempo real:
+- Rota: <code>/admin/queues</code>
+- Middleware de autenticação: verificar JWT + role <code>admin</code> antes de 
+  renderizar o painel
+- Exibir: jobs ativos, aguardando, concluídos, falhos e atrasados
+- Permitir: reprocessar job falho manualmente pelo painel</p>
+<hr />
+<h2 id="11-testes-manuais-comandos-para-validar">11. TESTES MANUAIS — COMANDOS PARA VALIDAR</h2>
+<p>Gere um arquivo <code>src/modules/queue/queue.debug.ts</code> com métodos de teste:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// Métodos para testar manualmente via endpoint de debug (apenas dev):</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">// Testar envio WhatsApp</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">debug</span><span class="o">/</span><span class="nx">queue</span><span class="o">/</span><span class="nx">test</span><span class="o">-</span><span class="nx">whatsapp</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">{</span><span class="w"> </span><span class="s2">&quot;clientId&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tipo&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;lembrete-vencimento&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1">// Testar processamento de pagamento</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">debug</span><span class="o">/</span><span class="nx">queue</span><span class="o">/</span><span class="nx">test</span><span class="o">-</span><span class="nx">payment</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="p">{</span><span class="w"> </span><span class="s2">&quot;paymentId&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;approved&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1">// Ver status das filas</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="nx">GET</span><span class="w"> </span><span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">debug</span><span class="o">/</span><span class="nx">queue</span><span class="o">/</span><span class="nx">status</span>
+</code></pre></div>
+<p>Proteger esses endpoints com:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kd">@UseGuards</span><span class="p">(</span><span class="nx">JwtAuthGuard</span><span class="p">,</span><span class="w"> </span><span class="nx">RolesGuard</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1">// E verificar NODE_ENV !== &#39;production&#39; antes de executar</span>
+</code></pre></div></p>
+<hr />
+<h2 id="12-entregaveis-nesta-ordem">12. ENTREGÁVEIS (nesta ordem)</h2>
+<ol>
+<li>Comandos de instalação das dependências</li>
+<li>Variáveis de ambiente (<code>.env.example</code> atualizado)</li>
+<li><code>redis.config.ts</code> — conexão singleton com TLS e reconnect</li>
+<li><code>queue.constants.ts</code> — todas as constantes</li>
+<li><code>queue.interfaces.ts</code> — interfaces TypeScript dos jobs</li>
+<li><code>queue.module.ts</code> — registro das filas + BullBoard</li>
+<li><code>notifications.service.ts</code> refatorado (producer)</li>
+<li><code>whatsapp.worker.ts</code> — com todos os templates</li>
+<li><code>email.worker.ts</code> — com nodemailer e templates HTML</li>
+<li><code>webhook.controller.ts</code> refatorado — HMAC + enfileirar</li>
+<li><code>payment.worker.ts</code> — lógica completa com $transaction</li>
+<li><code>cron.service.ts</code> refatorado — usando filas</li>
+<li><code>queue.debug.ts</code> — endpoints de teste</li>
+<li>Atualização do <code>app.module.ts</code> importando <code>QueueModule</code></li>
+</ol>
+<h2 id="regras-tecnicas-obrigatorias">REGRAS TÉCNICAS OBRIGATÓRIAS</h2>
+<ul>
+<li>NUNCA chamar Evolution API ou SMTP diretamente nos Controllers</li>
+<li>NUNCA usar <code>Math.random()</code> ou <code>setTimeout()</code> para retry — usar o 
+  backoff nativo do BullMQ</li>
+<li>SEMPRE usar <code>jobId</code> para idempotência em pagamentos e lembretes diários</li>
+<li>SEMPRE usar <code>$transaction</code> do Prisma ao processar pagamentos</li>
+<li>SEMPRE retornar 200 no webhook ANTES de processar (processar na fila)</li>
+<li>SEMPRE validar HMAC do Mercado Pago antes de enfileirar</li>
+<li>Registrar no <code>AuditLog</code> toda falha que esgotou as tentativas</li>
+<li><code>crypto.timingSafeEqual()</code> na comparação HMAC (prevenir timing attacks)</li>
+<li>Proteger <code>/admin/queues</code> com autenticação — nunca expor publicamente
+```</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

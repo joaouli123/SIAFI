@@ -1,0 +1,3380 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+        <link rel="prev" href="../04_DATABASE/">
+      
+      
+        <link rel="next" href="../06_APRESENTACAO/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Manual do Usuário - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-manual-do-usuario" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Manual do Usuário
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sumario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SUMÁRIO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-geral-acesso-e-primeiros-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO GERAL — Acesso e Primeiros Passos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO GERAL — Acesso e Primeiros Passos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-acesso-ao-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Acesso ao Sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-primeiro-acesso-e-troca-de-senha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Primeiro Acesso e Troca de Senha
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-configuracao-da-autenticacao-em-dois-fatores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Configuração da Autenticação em Dois Fatores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-navegacao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Navegação Geral
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-como-sair-do-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Como Sair do Sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-suporte-tecnico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Suporte Técnico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-1-manual-do-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 1 — MANUAL DO CONSULTOR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 1 — MANUAL DO CONSULTOR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-dashboard-da-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Dashboard da Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-cadastrar-novo-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Cadastrar Novo Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-minha-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Minha Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-detalhe-do-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Detalhe do Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-criar-intencao-de-emprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Criar Intenção de Empréstimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-acompanhar-intencao-de-emprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Acompanhar Intenção de Empréstimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-solicitacoes-ao-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Solicitações ao Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-cobrancas-da-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 Cobranças da Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-gerar-pix-para-o-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 Gerar PIX para o Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-comunicador-interno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 Comunicador Interno
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-duvidas-frequentes-do-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 Dúvidas Frequentes do Consultor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-2-manual-do-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 2 — MANUAL DO FINANCEIRO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 2 — MANUAL DO FINANCEIRO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-dashboard-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Dashboard Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-analisar-intencao-de-emprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Analisar Intenção de Empréstimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-liberacoes-pendentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Liberações Pendentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-solicitacoes-dos-consultores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Solicitações dos Consultores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-criar-contrato-direto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Criar Contrato Direto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-simulador-de-reparcelamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Simulador de Reparcelamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-reparcelamento-segunda-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Reparcelamento — Segunda Instância
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-configuracoes-por-contrato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Configurações por Contrato
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-gerenciar-clientes-e-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 Gerenciar Clientes e Portal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-carteira-global-e-inadimplentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 Carteira Global e Inadimplentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-relatorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Relatórios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213-comunicador-e-notificacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 Comunicador e Notificações
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#214-duvidas-frequentes-do-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 Dúvidas Frequentes do Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-3-manual-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 3 — MANUAL DO CAIXA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 3 — MANUAL DO CAIXA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-dashboard-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Dashboard do Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-liberar-capital" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Liberar Capital ⚠️
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-registrar-pagamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Registrar Pagamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-entender-encargos-em-parcelas-atrasadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Entender Encargos em Parcelas Atrasadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-pagamento-parcial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Pagamento Parcial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-recibo-pos-pagamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Recibo Pós-Pagamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-parcelas-do-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Parcelas do Dia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-consultar-cliente-somente-leitura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Consultar Cliente (Somente Leitura)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-saldo-e-movimentacoes-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Saldo e Movimentações do Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-lancamentos-manuais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Lançamentos Manuais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-duvidas-frequentes-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 Dúvidas Frequentes do Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-4-manual-do-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 4 — MANUAL DO ADMINISTRADOR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 4 — MANUAL DO ADMINISTRADOR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-gerenciar-operadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Gerenciar Operadores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-criar-consultor-e-vincular-a-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Criar Consultor e Vincular à Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-configuracoes-do-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Configurações do Sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-templates-de-e-mail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Templates de E-mail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-auditoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Auditoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-configuracoes-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Configurações de Integração
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-duvidas-frequentes-do-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Dúvidas Frequentes do Administrador
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-5-manual-do-cliente-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 5 — MANUAL DO CLIENTE (PORTAL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 5 — MANUAL DO CLIENTE (PORTAL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-acesso-ao-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Acesso ao Portal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-autenticacao-em-dois-fatores-para-clientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Autenticação em Dois Fatores para Clientes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-meus-contratos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Meus Contratos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-ver-parcelas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Ver Parcelas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-pagar-com-pix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Pagar com PIX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-solicitar-reparcelamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Solicitar Reparcelamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-solicitar-boleto-atualizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Solicitar Boleto Atualizado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-historico-de-pagamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Histórico de Pagamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-abrir-chamado-de-suporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Abrir Chamado de Suporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#510-meu-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.10 Meu Perfil
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#511-duvidas-frequentes-do-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11 Dúvidas Frequentes do Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sumario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SUMÁRIO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-geral-acesso-e-primeiros-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO GERAL — Acesso e Primeiros Passos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO GERAL — Acesso e Primeiros Passos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-acesso-ao-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Acesso ao Sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-primeiro-acesso-e-troca-de-senha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Primeiro Acesso e Troca de Senha
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-configuracao-da-autenticacao-em-dois-fatores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Configuração da Autenticação em Dois Fatores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-navegacao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Navegação Geral
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-como-sair-do-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Como Sair do Sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-suporte-tecnico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Suporte Técnico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-1-manual-do-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 1 — MANUAL DO CONSULTOR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 1 — MANUAL DO CONSULTOR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-dashboard-da-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Dashboard da Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-cadastrar-novo-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Cadastrar Novo Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-minha-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Minha Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-detalhe-do-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Detalhe do Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-criar-intencao-de-emprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Criar Intenção de Empréstimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-acompanhar-intencao-de-emprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Acompanhar Intenção de Empréstimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-solicitacoes-ao-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Solicitações ao Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-cobrancas-da-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 Cobranças da Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-gerar-pix-para-o-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 Gerar PIX para o Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-comunicador-interno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 Comunicador Interno
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-duvidas-frequentes-do-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 Dúvidas Frequentes do Consultor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-2-manual-do-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 2 — MANUAL DO FINANCEIRO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 2 — MANUAL DO FINANCEIRO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-dashboard-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Dashboard Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-analisar-intencao-de-emprestimo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Analisar Intenção de Empréstimo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-liberacoes-pendentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Liberações Pendentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-solicitacoes-dos-consultores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Solicitações dos Consultores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-criar-contrato-direto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Criar Contrato Direto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-simulador-de-reparcelamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Simulador de Reparcelamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-reparcelamento-segunda-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Reparcelamento — Segunda Instância
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-configuracoes-por-contrato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Configurações por Contrato
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-gerenciar-clientes-e-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 Gerenciar Clientes e Portal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-carteira-global-e-inadimplentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 Carteira Global e Inadimplentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-relatorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Relatórios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12 Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#213-comunicador-e-notificacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.13 Comunicador e Notificações
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#214-duvidas-frequentes-do-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.14 Dúvidas Frequentes do Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-3-manual-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 3 — MANUAL DO CAIXA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 3 — MANUAL DO CAIXA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-dashboard-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Dashboard do Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-liberar-capital" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Liberar Capital ⚠️
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-registrar-pagamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Registrar Pagamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-entender-encargos-em-parcelas-atrasadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Entender Encargos em Parcelas Atrasadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-pagamento-parcial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Pagamento Parcial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-recibo-pos-pagamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Recibo Pós-Pagamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-parcelas-do-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Parcelas do Dia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-consultar-cliente-somente-leitura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Consultar Cliente (Somente Leitura)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-saldo-e-movimentacoes-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Saldo e Movimentações do Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-lancamentos-manuais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Lançamentos Manuais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-duvidas-frequentes-do-caixa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 Dúvidas Frequentes do Caixa
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-4-manual-do-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 4 — MANUAL DO ADMINISTRADOR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 4 — MANUAL DO ADMINISTRADOR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-gerenciar-operadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Gerenciar Operadores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-criar-consultor-e-vincular-a-carteira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Criar Consultor e Vincular à Carteira
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-configuracoes-do-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Configurações do Sistema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-templates-de-e-mail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Templates de E-mail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-auditoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Auditoria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-configuracoes-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Configurações de Integração
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-duvidas-frequentes-do-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Dúvidas Frequentes do Administrador
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secao-5-manual-do-cliente-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEÇÃO 5 — MANUAL DO CLIENTE (PORTAL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SEÇÃO 5 — MANUAL DO CLIENTE (PORTAL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-acesso-ao-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Acesso ao Portal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-autenticacao-em-dois-fatores-para-clientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Autenticação em Dois Fatores para Clientes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-meus-contratos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Meus Contratos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-ver-parcelas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Ver Parcelas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-pagar-com-pix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Pagar com PIX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-solicitar-reparcelamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Solicitar Reparcelamento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-solicitar-boleto-atualizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Solicitar Boleto Atualizado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-historico-de-pagamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Histórico de Pagamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-abrir-chamado-de-suporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Abrir Chamado de Suporte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#510-meu-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.10 Meu Perfil
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#511-duvidas-frequentes-do-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11 Dúvidas Frequentes do Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-manual-do-usuario">SIAFI 2.0 — Manual do Usuário</h1>
+<p><strong>Versão 3.0 · Maio 2026 · Lidera Tecnologia e Gestão Ltda.</strong></p>
+<blockquote>
+<p>Encontre sua seção pelo perfil de acesso. Cada seção é independente — leia apenas a sua.</p>
+</blockquote>
+<hr />
+<h2 id="sumario">SUMÁRIO</h2>
+<ul>
+<li><a href="#seção-geral--acesso-e-primeiros-passos">Seção Geral — Acesso e Primeiros Passos</a></li>
+<li><a href="#seção-1--manual-do-consultor">Seção 1 — Manual do Consultor</a></li>
+<li><a href="#seção-2--manual-do-financeiro">Seção 2 — Manual do Financeiro</a></li>
+<li><a href="#seção-3--manual-do-caixa">Seção 3 — Manual do Caixa</a></li>
+<li><a href="#seção-4--manual-do-administrador">Seção 4 — Manual do Administrador</a></li>
+<li><a href="#seção-5--manual-do-cliente-portal">Seção 5 — Manual do Cliente (Portal)</a></li>
+</ul>
+<hr />
+<h2 id="secao-geral-acesso-e-primeiros-passos">SEÇÃO GERAL — Acesso e Primeiros Passos</h2>
+<p><em>Leia esta seção antes de qualquer outra. Vale para todos os perfis de acesso.</em></p>
+<h3 id="1-acesso-ao-sistema">1. Acesso ao Sistema</h3>
+<p><strong>Endereço de acesso (operadores internos):</strong> <code>https://siafi.app.br</code>
+<strong>Endereço de acesso (clientes):</strong> <code>https://siafi.app.br/portal</code></p>
+<p><strong>Fazer login com e-mail e senha:</strong></p>
+<ol>
+<li>Acesse o endereço do sistema no navegador.</li>
+<li>Digite seu <strong>e-mail</strong> no campo indicado.</li>
+<li>Digite sua <strong>senha</strong>.</li>
+<li>Clique em <strong>Entrar</strong>.</li>
+<li>Se for seu primeiro acesso, o sistema solicitará a troca de senha obrigatória (veja a seção 2).</li>
+<li>Se a autenticação em dois fatores estiver ativa, o sistema pedirá o código de 6 dígitos do aplicativo.</li>
+</ol>
+<p><strong>Fazer login com Google:</strong></p>
+<ol>
+<li>Na tela de login, clique em <strong>Entrar com Google</strong>.</li>
+<li>Selecione ou confirme a conta Google vinculada ao seu cadastro no SIAFI.</li>
+<li>Se o e-mail da conta Google não estiver cadastrado no sistema, o acesso será negado.</li>
+</ol>
+<p>ℹ️ O login com Google só está disponível se o administrador tiver vinculado seu cadastro a uma conta Google.</p>
+<hr />
+<h3 id="2-primeiro-acesso-e-troca-de-senha">2. Primeiro Acesso e Troca de Senha</h3>
+<ol>
+<li>Digite o e-mail e a senha provisória recebida.</li>
+<li>O sistema exibirá automaticamente a tela de <strong>Troca de Senha</strong>.</li>
+<li>Digite a nova senha — mínimo de 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.</li>
+<li>Repita a nova senha no campo <strong>Confirmar nova senha</strong>.</li>
+<li>Clique em <strong>Salvar nova senha</strong>.</li>
+<li>O sistema redirecionará para a tela inicial.</li>
+</ol>
+<p>⚠️ Nunca compartilhe sua senha. Cada operador deve ter seu próprio acesso individual.</p>
+<hr />
+<h3 id="3-configuracao-da-autenticacao-em-dois-fatores">3. Configuração da Autenticação em Dois Fatores</h3>
+<p>A autenticação em dois fatores (2FA) exige um código gerado pelo aplicativo <strong>Google Authenticator</strong> além da senha.</p>
+<p><strong>Prazo obrigatório por perfil:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Quando configurar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>No primeiro acesso</td>
+</tr>
+<tr>
+<td>Financeiro</td>
+<td>No primeiro acesso</td>
+</tr>
+<tr>
+<td>Consultor</td>
+<td>No primeiro acesso</td>
+</tr>
+<tr>
+<td>Caixa</td>
+<td>Até o 5º login</td>
+</tr>
+<tr>
+<td>Cliente (portal)</td>
+<td>Até o 5º login</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>Instale o <strong>Google Authenticator</strong> no celular (App Store ou Google Play — gratuito).</li>
+<li>Faça login no SIAFI. O sistema exibirá um <strong>QR Code</strong>.</li>
+<li>Abra o Google Authenticator → toque em <strong>+</strong> → <strong>Escanear QR Code</strong>.</li>
+<li>Aponte a câmera para o QR Code na tela.</li>
+<li>O aplicativo criará uma entrada <strong>SIAFI</strong> com um código de 6 dígitos.</li>
+<li>Digite esse código no campo <strong>Código de verificação</strong> no SIAFI.</li>
+<li>Clique em <strong>Confirmar</strong>.</li>
+<li>Guarde o <strong>código de recuperação</strong> exibido em seguida em local seguro.</li>
+<li>Clique em <strong>Concluir configuração</strong>.</li>
+</ol>
+<p>✅ O código muda a cada 30 segundos. Digite-o assim que visualizá-lo.</p>
+<p>⚠️ Se perder o acesso ao celular, entre em contato com o administrador do sistema para resetar a autenticação.</p>
+<hr />
+<h3 id="4-navegacao-geral">4. Navegação Geral</h3>
+<p><strong>Menu lateral:</strong> exibe as opções disponíveis para o seu perfil. Em telas menores, pode ser recolhido clicando no ícone ☰.</p>
+<p><strong>Barra superior (topbar):</strong> exibe seu nome, o ícone de notificações com o contador de alertas não lidos, e o botão para sair.</p>
+<p><strong>Notificações:</strong> clique no ícone de sino para ver alertas recentes do sistema.</p>
+<hr />
+<h3 id="5-como-sair-do-sistema">5. Como Sair do Sistema</h3>
+<ol>
+<li>Clique no seu nome ou ícone de usuário no canto superior direito.</li>
+<li>Selecione <strong>Sair</strong>.</li>
+<li>O sistema encerrará a sessão e redirecionará para a tela de login.</li>
+</ol>
+<p>⚠️ Sempre saia do sistema ao terminar o uso, especialmente em computadores compartilhados.</p>
+<hr />
+<h3 id="6-suporte-tecnico">6. Suporte Técnico</h3>
+<p>O contato de suporte técnico é definido pelo administrador do sistema. Acesse <strong>Ajuda</strong> no menu lateral para ver o contato atualizado, ou consulte seu gestor.</p>
+<hr />
+<h2 id="secao-1-manual-do-consultor">SEÇÃO 1 — MANUAL DO CONSULTOR</h2>
+<p><em>Esta seção é destinada exclusivamente ao perfil </em><em>Consultor</em><em>.</em></p>
+<hr />
+<h3 id="11-dashboard-da-carteira">1.1 Dashboard da Carteira</h3>
+<p>Ao fazer login, o consultor acessa o <strong>Dashboard</strong>, que exibe um resumo das atividades do dia.</p>
+<table>
+<thead>
+<tr>
+<th>Card</th>
+<th>O que representa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clientes ativos</td>
+<td>Total de clientes com contratos em andamento na sua carteira</td>
+</tr>
+<tr>
+<td>Cobranças urgentes</td>
+<td>Parcelas atrasadas que precisam de contato imediato</td>
+</tr>
+<tr>
+<td>Intenções pendentes</td>
+<td>Solicitações de empréstimo aguardando resposta do financeiro</td>
+</tr>
+<tr>
+<td>Ações do dia</td>
+<td>Tarefas prioritárias</td>
+</tr>
+</tbody>
+</table>
+<p>Clique em qualquer card para ir direto à lista correspondente.</p>
+<hr />
+<h3 id="12-cadastrar-novo-cliente">1.2 Cadastrar Novo Cliente</h3>
+<ol>
+<li>No menu lateral, clique em <strong>Clientes</strong> → <strong>Novo Cliente</strong>.</li>
+<li>Preencha os dados pessoais: nome completo, CPF, data de nascimento, telefone, e-mail.</li>
+<li>Preencha o endereço completo: CEP, rua, número, bairro, cidade, estado.</li>
+<li>Anexe os documentos obrigatórios:</li>
+<li>Foto do cliente (JPG ou PNG)</li>
+<li>Documento de identidade — RG ou CNH (frente e verso)</li>
+<li>Comprovante de residência recente (conta de luz, água ou telefone)</li>
+<li>Clique em <strong>Salvar Cliente</strong>.</li>
+</ol>
+<p>ℹ️ Os dados do cliente são protegidos pela LGPD. Não compartilhe informações de clientes por canais não autorizados.</p>
+<p>✅ Após cadastrar, ative o portal do cliente para que ele possa acompanhar os contratos pelo celular.</p>
+<hr />
+<h3 id="13-minha-carteira">1.3 Minha Carteira</h3>
+<p>Acesse <strong>Clientes</strong> no menu para ver todos os clientes vinculados ao seu perfil.</p>
+<table>
+<thead>
+<tr>
+<th>Filtro</th>
+<th>O que mostra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Todos</td>
+<td>Todos os clientes da carteira</td>
+</tr>
+<tr>
+<td>Ativos</td>
+<td>Clientes com contratos em andamento</td>
+</tr>
+<tr>
+<td>Atrasados</td>
+<td>Clientes com parcelas vencidas</td>
+</tr>
+<tr>
+<td>Quitados</td>
+<td>Clientes sem contratos em aberto</td>
+</tr>
+</tbody>
+</table>
+<p>Digite o nome ou CPF no campo de busca para localizar rapidamente.</p>
+<hr />
+<h3 id="14-detalhe-do-cliente">1.4 Detalhe do Cliente</h3>
+<p>Clique em um cliente para acessar o perfil completo:</p>
+<ul>
+<li><strong>Dados pessoais</strong> — nome, CPF, contato, endereço</li>
+<li><strong>Documentos</strong> — arquivos enviados no cadastro</li>
+<li><strong>Contratos</strong> — lista com status e progresso de cada contrato</li>
+<li><strong>Score de crédito</strong> — pontuação interna de risco (0 a 100)</li>
+<li><strong>Histórico de cobranças</strong> — contatos registrados anteriormente</li>
+</ul>
+<p><strong>Ativar o portal do cliente:</strong>
+1. Na tela de detalhe do cliente, clique em <strong>Ativar Portal</strong>.
+2. O sistema enviará um e-mail de boas-vindas ao cliente com o link e as instruções de primeiro acesso.</p>
+<p>ℹ️ O portal só pode ser ativado após o cadastro completo com documentos.</p>
+<hr />
+<h3 id="15-criar-intencao-de-emprestimo">1.5 Criar Intenção de Empréstimo</h3>
+<p>A intenção é a solicitação formal para que o financeiro analise e aprove um novo contrato.</p>
+<ol>
+<li>Acesse o perfil do cliente ou clique em <strong>Intenções</strong> → <strong>Nova Intenção</strong>.</li>
+<li>Selecione o cliente.</li>
+<li>Preencha:</li>
+<li>Valor do capital solicitado</li>
+<li>Número de parcelas desejadas</li>
+<li>Dia de vencimento preferido</li>
+<li>Finalidade do empréstimo</li>
+<li>Observações relevantes</li>
+<li>Clique em <strong>Enviar para Análise</strong>.</li>
+</ol>
+<p>⚠️ O financeiro tem até <strong>24 horas</strong> para analisar. Após esse prazo, a intenção expira automaticamente e é necessário criar uma nova.</p>
+<hr />
+<h3 id="16-acompanhar-intencao-de-emprestimo">1.6 Acompanhar Intenção de Empréstimo</h3>
+<p>Acesse <strong>Intenções</strong> no menu para ver todas as suas solicitações.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aguardando análise</td>
+<td>Na fila do financeiro</td>
+</tr>
+<tr>
+<td>Em análise</td>
+<td>O financeiro está revisando</td>
+</tr>
+<tr>
+<td>Aprovada</td>
+<td>Contrato gerado, aguardando assinatura do cliente</td>
+</tr>
+<tr>
+<td>Rejeitada</td>
+<td>Não aprovada — o motivo está registrado na tela</td>
+</tr>
+<tr>
+<td>Expirada</td>
+<td>Prazo de 24h passou sem resposta — crie uma nova</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Se a intenção for rejeitada:</strong> clique nela para ver o motivo, ajuste as condições e crie uma nova intenção.</p>
+<p><strong>Se a intenção expirar:</strong> crie uma nova. O histórico da expirada é mantido para referência.</p>
+<hr />
+<h3 id="17-solicitacoes-ao-financeiro">1.7 Solicitações ao Financeiro</h3>
+<p>Use este módulo para pedidos que não se encaixam no fluxo de intenção de empréstimo.</p>
+<p><strong>Tipos disponíveis:</strong> análise de crédito especial, reparcelamento urgente, consulta sobre contrato, outros assuntos operacionais.</p>
+<ol>
+<li>Clique em <strong>Solicitações</strong> → <strong>Nova Solicitação</strong>.</li>
+<li>Selecione o tipo e a urgência: Normal, Alta ou Urgente.</li>
+<li>Descreva o pedido com detalhes.</li>
+<li>Clique em <strong>Enviar</strong>.</li>
+</ol>
+<p>Acompanhe as respostas do financeiro na mesma tela.</p>
+<hr />
+<h3 id="18-cobrancas-da-carteira">1.8 Cobranças da Carteira</h3>
+<p>A tela <strong>Cobranças</strong> lista as parcelas atrasadas dos seus clientes com prioridade de contato.</p>
+<p><strong>Registrar um contato de cobrança:</strong>
+1. Clique na parcela atrasada → <strong>Registrar Contato</strong>.
+2. Selecione o canal: telefone, WhatsApp ou visita presencial.
+3. Registre o resultado:
+   - Cliente contactado — pagamento prometido para [data]
+   - Sem contato — tentar novamente
+   - Cliente solicitou reparcelamento
+4. Clique em <strong>Salvar</strong>.</p>
+<p>✅ Mantenha o histórico de cobranças atualizado. O financeiro monitora as tentativas ao analisar pedidos de reparcelamento.</p>
+<hr />
+<h3 id="19-gerar-pix-para-o-cliente">1.9 Gerar PIX para o Cliente</h3>
+<ol>
+<li>Acesse o perfil do cliente ou a tela <strong>PIX</strong> no menu.</li>
+<li>Selecione o cliente e a parcela desejada.</li>
+<li>Clique em <strong>Gerar QR Code PIX</strong>.</li>
+<li>Compartilhe o QR Code ou o código copia-e-cola com o cliente.</li>
+</ol>
+<p>ℹ️ O QR Code PIX é válido por 24 horas. Após esse prazo, gere um novo.</p>
+<hr />
+<h3 id="110-comunicador-interno">1.10 Comunicador Interno</h3>
+<p>O comunicador permite trocar mensagens com outros operadores (financeiro, admin, caixa).</p>
+<ol>
+<li>Clique em <strong>Mensagens</strong> no menu lateral.</li>
+<li>Clique em <strong>Nova Conversa</strong> e selecione o destinatário.</li>
+<li>Digite a mensagem e pressione <strong>Enter</strong> ou clique em <strong>Enviar</strong>.</li>
+<li>Para anexar um documento, clique no ícone de clipe e selecione o arquivo.</li>
+</ol>
+<p>ℹ️ O comunicador é exclusivamente para uso interno — não é visível para clientes.</p>
+<hr />
+<h3 id="111-duvidas-frequentes-do-consultor">1.11 Dúvidas Frequentes do Consultor</h3>
+<p><strong>O cliente não recebeu o e-mail de ativação do portal. O que fazer?</strong>
+Acesse o perfil do cliente e clique em <strong>Reenviar e-mail de ativação</strong>. Se persistir, verifique se o e-mail cadastrado está correto.</p>
+<p><strong>Posso editar uma intenção de empréstimo após enviar?</strong>
+Não. Após o envio, a intenção entra na fila do financeiro e não pode ser editada. Se precisar de alterações, use o Comunicador Interno ou aguarde a resposta para criar uma nova intenção.</p>
+<p><strong>Como sei se o cliente assinou o contrato?</strong>
+No perfil do cliente, o status do contrato muda para <strong>Ativo</strong> após a assinatura e a liberação do capital. Enquanto aguarda a assinatura, aparece como <strong>Aguardando aceite</strong>.</p>
+<p><strong>O score do cliente está baixo. Posso criar uma intenção mesmo assim?</strong>
+Sim. O score é um indicador de risco, mas a decisão é do financeiro. Inclua nas observações informações que justifiquem a aprovação.</p>
+<p><strong>Como solicitar reparcelamento para um cliente?</strong>
+Acesse <strong>Reparcelamentos</strong> → <strong>Nova Solicitação</strong>, selecione o cliente e o contrato, descreva as condições desejadas. O financeiro analisará e enviará uma proposta.</p>
+<p><strong>A cobrança automática foi enviada mas o cliente diz que não recebeu. O que fazer?</strong>
+Verifique no perfil do cliente se o e-mail e o WhatsApp estão corretos. Se desatualizados, corrija o cadastro e solicite ao financeiro o reenvio manual.</p>
+<hr />
+<h2 id="secao-2-manual-do-financeiro">SEÇÃO 2 — MANUAL DO FINANCEIRO</h2>
+<p><em>Esta seção é destinada ao perfil </em><em>Financeiro</em><em>.</em></p>
+<hr />
+<h3 id="21-dashboard-financeiro">2.1 Dashboard Financeiro</h3>
+<table>
+<thead>
+<tr>
+<th>Card</th>
+<th>O que mostra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intenções pendentes</td>
+<td>Solicitações de novos contratos aguardando análise, com SLA visível</td>
+</tr>
+<tr>
+<td>Liberações pendentes</td>
+<td>Contratos assinados aguardando confirmação de entrega do capital</td>
+</tr>
+<tr>
+<td>Contratos em atraso</td>
+<td>Total de contratos com parcelas vencidas</td>
+</tr>
+<tr>
+<td>Faturamento do mês</td>
+<td>Total recebido no mês corrente</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fila SLA:</strong> exibe intenções ordenadas pelo tempo restante para análise. Itens próximos do prazo aparecem em amarelo ou vermelho.</p>
+<p><strong>Liberações pendentes:</strong> lista contratos já assinados pelo cliente que aguardam confirmação da entrega do capital pelo caixa.</p>
+<hr />
+<h3 id="22-analisar-intencao-de-emprestimo">2.2 Analisar Intenção de Empréstimo</h3>
+<ol>
+<li>Acesse <strong>Intenções</strong> → clique em uma intenção com status <strong>Aguardando análise</strong>.</li>
+<li>Revise: dados do cliente, score de crédito (com histórico de pontualidade), valor solicitado, parcelas, dia de vencimento, observações do consultor.</li>
+</ol>
+<p><strong>Para aprovar:</strong>
+1. Clique em <strong>Aprovar</strong>.
+2. Defina os termos finais: valor do capital, valor da parcela, número de parcelas, dia de vencimento, dias de antecedência para cobrança automática.
+3. Clique em <strong>Confirmar aprovação</strong>.
+4. O sistema gera o contrato e o envia ao cliente para assinatura digital.</p>
+<p><strong>Para rejeitar:</strong>
+1. Clique em <strong>Rejeitar</strong>.
+2. Selecione o motivo:
+   - Score de risco insuficiente
+   - Capacidade de pagamento comprometida
+   - Documentação incompleta
+   - Contrato anterior em aberto
+   - Outros (campo livre)
+3. Clique em <strong>Confirmar rejeição</strong>. O consultor recebe notificação com o motivo.</p>
+<p><strong>Critérios de aprovação sugeridos:</strong>
+- Score acima de 60 pontos
+- Sem parcelas em atraso em contratos ativos
+- Documentação completa e atualizada
+- Capacidade de pagamento compatível com o valor da parcela</p>
+<hr />
+<h3 id="23-liberacoes-pendentes">2.3 Liberações Pendentes</h3>
+<p>Após a assinatura digital do cliente, o contrato entra em <strong>Aguardando liberação</strong>. O caixa confirma a entrega; o financeiro acompanha e orienta o processo.</p>
+<p>Para ver: acesse <strong>Dashboard</strong> → card <strong>Liberações pendentes</strong>, ou filtre em <strong>Contratos</strong> por <strong>Aguardando liberação</strong>.</p>
+<p>⚠️ A saída de capital no caixa é registrada <strong>automaticamente</strong> quando o caixa confirma a entrega. Não é necessário lançamento manual separado.</p>
+<hr />
+<h3 id="24-solicitacoes-dos-consultores">2.4 Solicitações dos Consultores</h3>
+<ol>
+<li>Acesse <strong>Solicitações</strong> no menu → clique na solicitação.</li>
+<li>Leia o pedido e clique em <strong>Responder</strong>.</li>
+<li>Digite o retorno e, se necessário, mude o status para <strong>Em análise</strong> ou <strong>Resolvida</strong>.</li>
+<li>O consultor recebe notificação com a resposta.</li>
+</ol>
+<hr />
+<h3 id="25-criar-contrato-direto">2.5 Criar Contrato Direto</h3>
+<p>Para criar um contrato sem passar pelo fluxo de intenção:</p>
+<ol>
+<li>Acesse <strong>Empréstimos</strong> → <strong>Novo Contrato</strong>.</li>
+<li>Selecione o cliente.</li>
+<li>Preencha:</li>
+<li><strong>Capital a ser entregue</strong> — valor que o cliente receberá</li>
+<li><strong>Valor da parcela</strong> — define o acréscimo total automaticamente</li>
+<li><strong>Número de parcelas</strong></li>
+<li><strong>Data de início</strong> (primeira parcela)</li>
+<li><strong>Dia de vencimento fixo</strong></li>
+<li><strong>Dias de antecedência para cobrança</strong> (editável, padrão do sistema)</li>
+<li><strong>Observações</strong></li>
+<li>Confira o resumo no simulador inline (parcelas, total a receber, acréscimo).</li>
+<li>Clique em <strong>Criar Contrato</strong>.</li>
+</ol>
+<p>ℹ️ Os valores internos de divisão do contrato são gerenciados pelo sistema. O caixa visualiza apenas o valor total de cada parcela.</p>
+<hr />
+<h3 id="26-simulador-de-reparcelamento">2.6 Simulador de Reparcelamento</h3>
+<ol>
+<li>Acesse <strong>Reparcelamentos</strong> → <strong>Nova Proposta</strong> (ou abra um reparcelamento existente).</li>
+<li>O sistema exibe o saldo devedor atual e os encargos acumulados.</li>
+<li>Informe o novo número de parcelas e o novo valor de parcela.</li>
+<li>O simulador exibe o novo total a receber e a variação em relação ao contrato original.</li>
+<li>Clique em <strong>Enviar proposta</strong> para encaminhar ao cliente.</li>
+</ol>
+<hr />
+<h3 id="27-reparcelamento-segunda-instancia">2.7 Reparcelamento — Segunda Instância</h3>
+<p>Reparcelamentos que excedem limites configuráveis precisam de uma segunda aprovação.</p>
+<ol>
+<li>Acesse <strong>Reparcelamentos</strong> → filtre por <strong>Aguardando 2ª aprovação</strong>.</li>
+<li>Revise a proposta.</li>
+<li>Aprove ou rejeite com justificativa.</li>
+<li>Após aprovação final, o sistema aguarda o aceite digital do cliente para executar.</li>
+</ol>
+<hr />
+<h3 id="28-configuracoes-por-contrato">2.8 Configurações por Contrato</h3>
+<p>Cada contrato pode ter parâmetros individuais diferentes do padrão global.</p>
+<table>
+<thead>
+<tr>
+<th>Parâmetro</th>
+<th>O que define</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multa por atraso</td>
+<td>% aplicada no 1º dia de atraso</td>
+</tr>
+<tr>
+<td>Mora diária</td>
+<td>% aplicada por dia adicional de atraso</td>
+</tr>
+<tr>
+<td>Dia de vencimento</td>
+<td>Dia fixo das parcelas</td>
+</tr>
+<tr>
+<td>Dias de antecedência</td>
+<td>Quando enviar a cobrança automática antes do vencimento</td>
+</tr>
+</tbody>
+</table>
+<p>Para alterar: acesse o contrato → <strong>Configurações do contrato</strong> → altere e salve.</p>
+<hr />
+<h3 id="29-gerenciar-clientes-e-portal">2.9 Gerenciar Clientes e Portal</h3>
+<ul>
+<li><strong>Ativar portal:</strong> perfil do cliente → <strong>Ativar Portal</strong> → confirme.</li>
+<li><strong>Desativar portal:</strong> mesma tela → <strong>Desativar Portal</strong> → confirme.</li>
+</ul>
+<p>⚠️ Ao desativar, o cliente perde o acesso imediatamente.</p>
+<hr />
+<h3 id="210-carteira-global-e-inadimplentes">2.10 Carteira Global e Inadimplentes</h3>
+<p>Acesse <strong>Inadimplentes</strong> para ver todos os clientes com parcelas vencidas, independentemente do consultor responsável.</p>
+<p>Filtros disponíveis: por consultor, faixa de dias em atraso, valor em aberto.</p>
+<hr />
+<h3 id="211-relatorios">2.11 Relatórios</h3>
+<table>
+<thead>
+<tr>
+<th>Relatório</th>
+<th>O que mostra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Carteira</td>
+<td>Capital total em carteira, valor a receber, capital em risco</td>
+</tr>
+<tr>
+<td>Faturamento</td>
+<td>Recebimentos por mês, com detalhamento por consultor</td>
+</tr>
+<tr>
+<td>Aging de inadimplência</td>
+<td>Distribuição dos atrasos por faixa (0–30, 31–60, 61–90, 90+ dias)</td>
+</tr>
+<tr>
+<td>Movimentação</td>
+<td>Entradas e saídas do caixa no período</td>
+</tr>
+<tr>
+<td>Contratos</td>
+<td>Lista de contratos com filtro por status</td>
+</tr>
+</tbody>
+</table>
+<p>Cada relatório tem um botão <strong>Exportar</strong> (PDF ou Excel).</p>
+<hr />
+<h3 id="212-caixa">2.12 Caixa</h3>
+<ol>
+<li>Acesse <strong>Caixa</strong> no menu.</li>
+<li>O painel exibe saldo atual, entradas e saídas do dia e total do mês.</li>
+<li><strong>Novo lançamento manual:</strong> clique em <strong>Novo Lançamento</strong> → selecione tipo (entrada/saída) → descreva o motivo → confirme.</li>
+<li><strong>Conciliação:</strong> acesse a aba <strong>Conciliação</strong> e marque as transações conferidas.</li>
+</ol>
+<hr />
+<h3 id="213-comunicador-e-notificacoes">2.13 Comunicador e Notificações</h3>
+<ul>
+<li><strong>Comunicador:</strong> acesse <strong>Mensagens</strong> para trocar mensagens com consultores e demais operadores.</li>
+<li><strong>Notificações:</strong> ícone de sino na topbar — alertas automáticos de pagamentos recebidos, intenções enviadas e reparcelamentos pendentes.</li>
+</ul>
+<hr />
+<h3 id="214-duvidas-frequentes-do-financeiro">2.14 Dúvidas Frequentes do Financeiro</h3>
+<p><strong>Como identificar intenções próximas do prazo?</strong>
+A seção <strong>Fila SLA</strong> no Dashboard exibe intenções ordenadas por tempo restante. Menos de 2 horas aparece em vermelho.</p>
+<p><strong>O que acontece se uma intenção expirar sem análise?</strong>
+O sistema cancela automaticamente e notifica o consultor. Nenhum contrato é gerado. O consultor deve criar uma nova intenção.</p>
+<p><strong>Posso alterar o valor da parcela de um contrato após a assinatura?</strong>
+Não. Após a assinatura digital, os valores são imutáveis. Para alterar condições, é necessário um reparcelamento.</p>
+<p><strong>Como registrar um pagamento recebido fora do sistema (dinheiro/TED)?</strong>
+Acesse <strong>Pagamentos</strong> → <strong>Novo Pagamento</strong> → selecione o cliente, o contrato e a parcela → informe o valor e o método de pagamento → confirme.</p>
+<p><strong>Como calcular os encargos por atraso de uma parcela?</strong>
+O sistema calcula automaticamente. Ao abrir a parcela atrasada, o valor exibido já inclui multa e mora acumulada até o dia atual.</p>
+<p><strong>Como conceder desconto nos encargos por atraso?</strong>
+Registre o pagamento pelo valor acordado. Se inferior ao calculado, o sistema registrará o saldo devedor restante. Isenções globais são configuradas pelo administrador.</p>
+<hr />
+<h2 id="secao-3-manual-do-caixa">SEÇÃO 3 — MANUAL DO CAIXA</h2>
+<p><em>Esta seção é destinada ao perfil </em><em>Caixa</em><em>.</em></p>
+<hr />
+<h3 id="31-dashboard-do-caixa">3.1 Dashboard do Caixa</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Liberações pendentes</td>
+<td>Contratos aguardando confirmação de entrega do capital</td>
+</tr>
+<tr>
+<td>Parcelas do dia</td>
+<td>Vencimentos de hoje e parcelas em atraso</td>
+</tr>
+<tr>
+<td>Saldo atual</td>
+<td>Saldo disponível em tempo real</td>
+</tr>
+<tr>
+<td>Últimas movimentações</td>
+<td>Entradas e saídas recentes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="32-liberar-capital">3.2 Liberar Capital ⚠️</h3>
+<p>A liberação confirma que o dinheiro foi entregue ao cliente. Esta ação é <strong>irreversível</strong> — a saída é registrada automaticamente no caixa no momento da confirmação.</p>
+<p><strong>Quando liberar:</strong> somente após o cliente ter assinado digitalmente o contrato. O sistema só exibe contratos com status <strong>Aguardando liberação</strong>.</p>
+<p><strong>Passo a passo:</strong></p>
+<ol>
+<li>No Dashboard ou em <strong>Contratos</strong>, filtre por <strong>Aguardando liberação</strong>.</li>
+<li>Clique no contrato desejado e verifique o valor do capital a ser entregue.</li>
+<li>Clique em <strong>Confirmar entrega do capital</strong>.</li>
+<li>Selecione o método de entrega: dinheiro em espécie, TED/PIX ou outros.</li>
+<li>Informe a <strong>data efetiva da entrega</strong> (pode diferir da data atual se a entrega já ocorreu).</li>
+<li>Opcionalmente, anexe o comprovante de transferência.</li>
+<li>Clique em <strong>Confirmar liberação</strong>.</li>
+</ol>
+<p>⚠️ A saída de capital é registrada automaticamente. Confirme apenas após a entrega ter ocorrido de fato. Esta ação não pode ser desfeita sem o administrador.</p>
+<p>✅ O sistema envia notificação automática ao cliente confirmando o início do contrato e a data da primeira parcela.</p>
+<hr />
+<h3 id="33-registrar-pagamento">3.3 Registrar Pagamento</h3>
+<ol>
+<li>Acesse <strong>Pagamentos</strong> → <strong>Novo Pagamento</strong>.</li>
+<li>Busque o cliente pelo CPF ou nome.</li>
+<li>Selecione o contrato (se houver mais de um em aberto).</li>
+<li>Selecione a parcela a ser paga (exibidas em ordem de vencimento).</li>
+<li>Verifique o valor:</li>
+<li>Parcela em dia: valor normal da parcela.</li>
+<li>Parcela atrasada: valor com <strong>encargos por atraso</strong> já calculados.</li>
+<li>Informe o valor recebido.</li>
+<li>Selecione o método: dinheiro, PIX, TED ou boleto.</li>
+<li>Clique em <strong>Registrar pagamento</strong>.</li>
+<li>O sistema confirma e exibe o recibo.</li>
+</ol>
+<hr />
+<h3 id="34-entender-encargos-em-parcelas-atrasadas">3.4 Entender Encargos em Parcelas Atrasadas</h3>
+<p>O sistema calcula automaticamente — você não precisa calcular manualmente.</p>
+<p>O valor exibido já inclui:
+- <strong>Valor original da parcela</strong> — valor fixo do contrato
+- <strong>Multa por atraso</strong> — percentual aplicado uma única vez no 1º dia de atraso
+- <strong>Mora diária</strong> — percentual aplicado por cada dia adicional de atraso</p>
+<hr />
+<h3 id="35-pagamento-parcial">3.5 Pagamento Parcial</h3>
+<p>Se o cliente pagar menos que o valor integral:</p>
+<ol>
+<li>No campo <strong>Valor recebido</strong>, informe o valor parcial.</li>
+<li>O sistema registra o pagamento e atribui o status <strong>Parcialmente pago</strong> à parcela.</li>
+<li>O <strong>saldo devedor</strong> restante é exibido na parcela.</li>
+<li>A mora continua acumulando sobre o saldo devedor até a quitação total.</li>
+</ol>
+<p>ℹ️ O cliente pode ver o saldo devedor pelo portal. O sistema atualiza automaticamente.</p>
+<hr />
+<h3 id="36-recibo-pos-pagamento">3.6 Recibo Pós-Pagamento</h3>
+<ul>
+<li><strong>Imediato:</strong> após confirmar o pagamento, clique em <strong>Imprimir recibo</strong> ou <strong>Baixar PDF</strong>.</li>
+<li><strong>Pagamentos anteriores:</strong> acesse <strong>Pagamentos</strong> no menu → localize o pagamento → <strong>Ver recibo</strong>.</li>
+</ul>
+<hr />
+<h3 id="37-parcelas-do-dia">3.7 Parcelas do Dia</h3>
+<p>Acesse <strong>Parcelas</strong> no menu para ver os vencimentos de hoje e as parcelas em atraso.</p>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cliente</td>
+<td>Nome do cliente</td>
+</tr>
+<tr>
+<td>Parcela</td>
+<td>Número da parcela no contrato</td>
+</tr>
+<tr>
+<td>Vencimento</td>
+<td>Data de vencimento</td>
+</tr>
+<tr>
+<td>Valor</td>
+<td>Valor a cobrar (com encargos, se atrasada)</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Pendente / Atrasada / Parcialmente pago</td>
+</tr>
+</tbody>
+</table>
+<p>Clique em qualquer parcela para registrar o pagamento diretamente.</p>
+<hr />
+<h3 id="38-consultar-cliente-somente-leitura">3.8 Consultar Cliente (Somente Leitura)</h3>
+<p>O caixa pode consultar o perfil do cliente, mas não pode editar dados cadastrais.</p>
+<p><strong>O que o caixa vê:</strong> dados pessoais, contratos, parcelas, histórico de pagamentos.</p>
+<p><strong>O que o caixa não vê:</strong> valores internos de divisão do contrato, score de crédito, intenções e solicitações de empréstimo.</p>
+<hr />
+<h3 id="39-saldo-e-movimentacoes-do-caixa">3.9 Saldo e Movimentações do Caixa</h3>
+<p>Acesse <strong>Caixa</strong> no menu:</p>
+<ul>
+<li><strong>Saldo atual</strong> — valor disponível em tempo real</li>
+<li><strong>Entradas do dia</strong> — pagamentos recebidos e lançamentos de entrada</li>
+<li><strong>Saídas do dia</strong> — liberações de capital e lançamentos de saída</li>
+<li><strong>Extrato</strong> — histórico completo com filtro por data</li>
+</ul>
+<hr />
+<h3 id="310-lancamentos-manuais">3.10 Lançamentos Manuais</h3>
+<p>Para entradas e saídas que não são pagamentos de parcelas nem liberações de capital:</p>
+<ol>
+<li>Acesse <strong>Caixa</strong> → <strong>Novo Lançamento</strong>.</li>
+<li>Selecione o tipo: <strong>Entrada</strong> ou <strong>Saída</strong>.</li>
+<li>Informe o valor e descreva o motivo (obrigatório).</li>
+<li>Clique em <strong>Confirmar</strong>.</li>
+</ol>
+<hr />
+<h3 id="311-duvidas-frequentes-do-caixa">3.11 Dúvidas Frequentes do Caixa</h3>
+<p><strong>Como sei quais contratos aguardam liberação de capital?</strong>
+O card <strong>Liberações pendentes</strong> no Dashboard exibe a lista. Também é possível filtrar em <strong>Contratos</strong> por <strong>Aguardando liberação</strong>.</p>
+<p><strong>Confirmei uma liberação com a data errada. O que fazer?</strong>
+Informe o financeiro ou administrador imediatamente. A data afeta os vencimentos das parcelas e não pode ser alterada pelo caixa.</p>
+<p><strong>O cliente pagou o valor errado e o pagamento já foi registrado. Como corrigir?</strong>
+O caixa não pode estornar pagamentos. Solicite o estorno ao financeiro ou administrador via <strong>Mensagens</strong>, informando urgência.</p>
+<p><strong>A parcela tem encargos, mas o cliente quer pagar só o valor original. O que fazer?</strong>
+Somente o financeiro ou administrador pode autorizar desconto em encargos. Registre o valor recebido normalmente — o sistema calculará o saldo devedor.</p>
+<p><strong>Como emitir o recibo de um pagamento feito ontem?</strong>
+Acesse <strong>Pagamentos</strong> no menu, localize pelo nome do cliente ou data, clique no pagamento → <strong>Ver recibo</strong>.</p>
+<p><strong>O PIX foi pago mas não apareceu confirmado. O que fazer?</strong>
+A confirmação automática pode levar alguns minutos. Se após 15 minutos não aparecer, informe o financeiro via <strong>Mensagens</strong> para verificar a integração.</p>
+<hr />
+<h2 id="secao-4-manual-do-administrador">SEÇÃO 4 — MANUAL DO ADMINISTRADOR</h2>
+<p><em>O administrador tem acesso a todas as funcionalidades do financeiro (Seção 2) mais as funções exclusivas documentadas aqui.</em></p>
+<hr />
+<h3 id="41-gerenciar-operadores">4.1 Gerenciar Operadores</h3>
+<p>Acesse <strong>Usuários</strong> no menu para ver todos os operadores cadastrados.</p>
+<p><strong>Criar novo operador:</strong>
+1. Clique em <strong>Novo Usuário</strong>.
+2. Preencha: nome completo, e-mail, perfil de acesso (financeiro, caixa, consultor ou administrador).
+3. Uma senha provisória é gerada e enviada por e-mail ao operador.
+4. Clique em <strong>Criar usuário</strong>.</p>
+<p><strong>Editar operador:</strong> clique no nome → altere os dados → <strong>Salvar alterações</strong>.</p>
+<p><strong>Ativar/desativar:</strong>
+- Desativar: clique no operador → <strong>Desativar conta</strong> → confirme.
+- Reativar: mesma tela → <strong>Reativar conta</strong>.</p>
+<p><strong>Resetar senha:</strong> clique no operador → <strong>Resetar senha</strong> → nova senha provisória enviada por e-mail.</p>
+<p>⚠️ Desativar um operador bloqueia o acesso imediatamente. Dados e histórico são mantidos.</p>
+<p><strong>Monitorar autenticação em dois fatores:</strong> a coluna <strong>2FA</strong> na lista indica quem já configurou. Operadores sem 2FA dentro do prazo são bloqueados automaticamente.</p>
+<hr />
+<h3 id="42-criar-consultor-e-vincular-a-carteira">4.2 Criar Consultor e Vincular à Carteira</h3>
+<ol>
+<li>Acesse <strong>Usuários</strong> → <strong>Novo Usuário</strong> → selecione o perfil <strong>Consultor</strong>.</li>
+<li>Preencha os dados e crie o usuário.</li>
+<li>Acesse o perfil do consultor criado → aba <strong>Carteira</strong>.</li>
+<li>Vincule os clientes manualmente ou transfira de outro consultor.</li>
+</ol>
+<p>ℹ️ Clientes sem consultor vinculado ficam na carteira geral, visível apenas para financeiro e admin.</p>
+<hr />
+<h3 id="43-configuracoes-do-sistema">4.3 Configurações do Sistema</h3>
+<p>Acesse <strong>Configurações</strong> no menu para gerenciar os parâmetros globais.</p>
+<table>
+<thead>
+<tr>
+<th>Parâmetro</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multa por atraso</td>
+<td>% aplicada no 1º dia de atraso</td>
+</tr>
+<tr>
+<td>Mora diária</td>
+<td>% por dia de atraso após o 1º</td>
+</tr>
+<tr>
+<td>SLA de intenção</td>
+<td>Horas para o financeiro analisar uma intenção</td>
+</tr>
+<tr>
+<td>SLA de aceite</td>
+<td>Dias para o cliente assinar o contrato</td>
+</tr>
+<tr>
+<td>SLA de escalonamento</td>
+<td>Horas para alertar a 2ª instância</td>
+</tr>
+<tr>
+<td>Limite de reparcelamentos</td>
+<td>Máximo por contrato</td>
+</tr>
+<tr>
+<td>Contratos por cliente</td>
+<td>Máximo de contratos ativos simultâneos</td>
+</tr>
+<tr>
+<td>Dias de antecedência de cobrança</td>
+<td>Padrão de envio antes do vencimento</td>
+</tr>
+<tr>
+<td>Contato de suporte</td>
+<td>E-mail/telefone exibido na tela de ajuda</td>
+</tr>
+</tbody>
+</table>
+<p>Para alterar: clique no campo → altere → <strong>Salvar configurações</strong>.</p>
+<p>⚠️ Alterações globais afetam novos contratos. Contratos existentes mantêm os parâmetros vigentes na criação, exceto quando alterados individualmente no contrato.</p>
+<hr />
+<h3 id="44-templates-de-e-mail">4.4 Templates de E-mail</h3>
+<p>O sistema envia e-mails automáticos em 13 situações. O administrador pode personalizar cada template.</p>
+<ol>
+<li>Acesse <strong>Configurações</strong> → <strong>Templates de E-mail</strong>.</li>
+<li>Selecione o template (ex: Boas-vindas, Cobrança, Aprovação de contrato).</li>
+<li>Edite o assunto e o corpo no editor.</li>
+<li>Use as <strong>variáveis disponíveis</strong> listadas na lateral:</li>
+<li><code>{{nome_cliente}}</code> — nome do cliente</li>
+<li><code>{{valor_parcela}}</code> — valor da próxima parcela</li>
+<li><code>{{data_vencimento}}</code> — data de vencimento</li>
+<li><code>{{link_portal}}</code> — link do portal do cliente</li>
+<li>Clique em <strong>Visualizar</strong> para conferir como ficará o e-mail.</li>
+<li>Clique em <strong>Enviar teste</strong> para receber o e-mail no seu endereço.</li>
+<li>Clique em <strong>Salvar template</strong>.</li>
+</ol>
+<hr />
+<h3 id="45-auditoria">4.5 Auditoria</h3>
+<p>Acesse <strong>Auditoria</strong> para ver o registro completo de todas as ações realizadas no sistema.</p>
+<table>
+<thead>
+<tr>
+<th>Filtro</th>
+<th>Opções</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuário</td>
+<td>Selecionar operador específico</td>
+</tr>
+<tr>
+<td>Ação</td>
+<td>Criar, editar, excluir, aprovar, rejeitar, etc.</td>
+</tr>
+<tr>
+<td>Entidade</td>
+<td>Cliente, contrato, parcela, pagamento, etc.</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Período inicial e final</td>
+</tr>
+</tbody>
+</table>
+<p>ℹ️ O log de auditoria é imutável. Nenhuma ação registrada pode ser alterada ou excluída.</p>
+<hr />
+<h3 id="46-configuracoes-de-integracao">4.6 Configurações de Integração</h3>
+<p>Acesse <strong>Configurações</strong> → <strong>Integrações</strong>.</p>
+<p><strong>WhatsApp (Evolution API):</strong> URL da API, chave de API, nome da instância.</p>
+<p><strong>Mercado Pago (PIX):</strong> Access Token de produção e URL do webhook (configurar também no painel do Mercado Pago).</p>
+<p><strong>E-mail (SMTP):</strong> servidor, porta, e-mail remetente e senha.</p>
+<p>✅ Use o botão <strong>Testar conexão</strong> após salvar para verificar se cada integração está funcionando.</p>
+<hr />
+<h3 id="47-duvidas-frequentes-do-administrador">4.7 Dúvidas Frequentes do Administrador</h3>
+<p><strong>Como desativar o acesso de um operador que saiu da empresa?</strong>
+Acesse <strong>Usuários</strong> → clique no operador → <strong>Desativar conta</strong>. O acesso é bloqueado imediatamente. Dados e histórico são mantidos.</p>
+<p><strong>Um operador não está recebendo e-mails do sistema. O que verificar?</strong>
+Confirme as configurações SMTP em <strong>Configurações</strong> → <strong>Integrações</strong> → <strong>E-mail</strong> e verifique se o e-mail do operador está correto no cadastro.</p>
+<p><strong>Como alterar o contato de suporte exibido para os usuários?</strong>
+Acesse <strong>Configurações</strong> → campo <strong>Contato de suporte</strong> → atualize e salve.</p>
+<p><strong>Posso ter mais de um administrador no sistema?</strong>
+Sim. Basta criar o usuário com o perfil <strong>Administrador</strong>. Todos os administradores têm acesso completo.</p>
+<p><strong>Como exportar o log de auditoria?</strong>
+Na tela de <strong>Auditoria</strong>, aplique os filtros desejados e clique em <strong>Exportar</strong> (CSV ou PDF).</p>
+<hr />
+<h2 id="secao-5-manual-do-cliente-portal">SEÇÃO 5 — MANUAL DO CLIENTE (PORTAL)</h2>
+<p><em>Esta seção é destinada ao </em><em>Cliente</em><em> que acessa o portal de autoatendimento.</em></p>
+<hr />
+<h3 id="51-acesso-ao-portal">5.1 Acesso ao Portal</h3>
+<p><strong>Endereço do portal:</strong> <code>https://siafi.app.br/portal</code></p>
+<p>Você recebe o acesso por e-mail quando a empresa ativa sua conta. O e-mail contém o link e as instruções de primeiro acesso.</p>
+<p><strong>Primeiro acesso:</strong>
+1. Acesse o link recebido por e-mail ou o endereço do portal diretamente.
+2. Digite o e-mail e a senha temporária informada no e-mail.
+3. O sistema solicitará a troca de senha: mínimo de 8 caracteres, com letras maiúsculas, minúsculas e números.
+4. Confirme a nova senha e clique em <strong>Salvar</strong>.
+5. O sistema redirecionará para a tela inicial do portal.</p>
+<p><strong>Logins seguintes:</strong> acesse o portal, digite e-mail e senha. Se a autenticação em dois fatores estiver ativa, insira o código do aplicativo.</p>
+<p>⚠️ Se não recebeu o e-mail de acesso, verifique a pasta de spam. Se não encontrar, entre em contato com a empresa.</p>
+<hr />
+<h3 id="52-autenticacao-em-dois-fatores-para-clientes">5.2 Autenticação em Dois Fatores para Clientes</h3>
+<p>A autenticação em dois fatores (2FA) protege sua conta contra acessos não autorizados. <strong>Você tem até 5 logins para configurar.</strong> Após esse prazo, o acesso é bloqueado até a configuração ser concluída.</p>
+<p><strong>Como configurar:</strong>
+1. Instale o <strong>Google Authenticator</strong> no celular (App Store ou Google Play — gratuito).
+2. Faça login no portal. O sistema exibirá um <strong>QR Code</strong>.
+3. Abra o Google Authenticator → toque em <strong>+</strong> → <strong>Escanear QR Code</strong>.
+4. Aponte a câmera para o QR Code na tela.
+5. O aplicativo exibirá um código de 6 dígitos com o nome <strong>SIAFI</strong>.
+6. Digite o código no campo indicado e clique em <strong>Confirmar</strong>.
+7. Guarde o <strong>código de recuperação</strong> em local seguro.</p>
+<p><strong>Se perder o acesso ao celular:</strong> entre em contato com a empresa para que o administrador possa resetar sua autenticação.</p>
+<hr />
+<h3 id="53-meus-contratos">5.3 Meus Contratos</h3>
+<p>A tela inicial do portal exibe todos os seus contratos.</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Situação</td>
+<td>Ativo, Aguardando aceite, Quitado, Cancelado</td>
+</tr>
+<tr>
+<td>Progresso</td>
+<td>Barra com % das parcelas já pagas</td>
+</tr>
+<tr>
+<td>Próximo vencimento</td>
+<td>Data e valor da próxima parcela</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aguardando aceite</td>
+<td>Aprovado, mas precisa da sua assinatura digital</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Em andamento, com parcelas a pagar</td>
+</tr>
+<tr>
+<td>Quitado</td>
+<td>Todas as parcelas foram pagas</td>
+</tr>
+<tr>
+<td>Cancelado</td>
+<td>O contrato foi cancelado</td>
+</tr>
+</tbody>
+</table>
+<p>Clique em qualquer contrato para ver os detalhes e a lista completa de parcelas.</p>
+<hr />
+<h3 id="54-ver-parcelas">5.4 Ver Parcelas</h3>
+<p>Na tela de detalhe do contrato, a aba <strong>Parcelas</strong> exibe todas as parcelas.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pendente</td>
+<td>Ainda não venceu</td>
+</tr>
+<tr>
+<td>Pago</td>
+<td>Pago integralmente</td>
+</tr>
+<tr>
+<td>Parcialmente pago</td>
+<td>Pagamento parcial registrado — há saldo devedor</td>
+</tr>
+<tr>
+<td>Atrasado</td>
+<td>Passou do vencimento sem pagamento integral</td>
+</tr>
+</tbody>
+</table>
+<p>Parcelas atrasadas exibem o <strong>valor atualizado com encargos</strong>, calculado automaticamente.</p>
+<hr />
+<h3 id="55-pagar-com-pix">5.5 Pagar com PIX</h3>
+<ol>
+<li>Acesse o contrato → clique na parcela que deseja pagar.</li>
+<li>Clique em <strong>Gerar QR Code PIX</strong>.</li>
+<li>O sistema exibirá o QR Code, o <strong>código copia-e-cola</strong>, o valor total e o prazo de validade (24 horas).</li>
+<li>Abra o aplicativo do seu banco.</li>
+<li>Escolha pagar com PIX: escaneie o QR Code <strong>ou</strong> cole o código copia-e-cola.</li>
+<li>Confirme o pagamento no aplicativo do banco.</li>
+<li>O sistema confirmará automaticamente em alguns minutos.</li>
+</ol>
+<p>ℹ️ Após o pagamento, a parcela muda para <strong>Pago</strong> no portal. Se demorar mais de 15 minutos, entre em contato com a empresa.</p>
+<p>⚠️ O QR Code expira em 24 horas. Se expirar, gere um novo na mesma tela.</p>
+<hr />
+<h3 id="56-solicitar-reparcelamento">5.6 Solicitar Reparcelamento</h3>
+<p>Se estiver com dificuldades para pagar as parcelas no valor atual:</p>
+<ol>
+<li>Acesse o contrato → clique em <strong>Solicitar Reparcelamento</strong>.</li>
+<li>Descreva sua situação e o que propõe (novo valor de parcela, novo número de parcelas).</li>
+<li>Clique em <strong>Enviar solicitação</strong>.</li>
+<li>Quando receber a proposta, acesse <strong>Reparcelamentos</strong> → visualize os novos termos → clique em <strong>Aceitar</strong> ou <strong>Recusar</strong>.</li>
+</ol>
+<p>ℹ️ A aceitação é feita digitalmente e tem validade legal. Leia os novos termos com atenção antes de aceitar.</p>
+<hr />
+<h3 id="57-solicitar-boleto-atualizado">5.7 Solicitar Boleto Atualizado</h3>
+<ol>
+<li>Acesse o contrato → clique na parcela desejada.</li>
+<li>Clique em <strong>Solicitar boleto</strong>.</li>
+<li>O boleto é gerado e disponibilizado para download em PDF.</li>
+</ol>
+<p>ℹ️ O boleto já inclui todos os encargos calculados até a data de vencimento do boleto. Pague até a data indicada para que o valor seja válido.</p>
+<hr />
+<h3 id="58-historico-de-pagamentos">5.8 Histórico de Pagamentos</h3>
+<p>Acesse <strong>Meus Pagamentos</strong> no menu do portal para ver todos os pagamentos registrados.</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data</td>
+<td>Data em que o pagamento foi registrado</td>
+</tr>
+<tr>
+<td>Parcela</td>
+<td>Qual parcela foi paga</td>
+</tr>
+<tr>
+<td>Valor pago</td>
+<td>Valor registrado</td>
+</tr>
+<tr>
+<td>Método</td>
+<td>PIX, dinheiro, TED, boleto</td>
+</tr>
+</tbody>
+</table>
+<p>Clique em qualquer pagamento para ver o comprovante.</p>
+<hr />
+<h3 id="59-abrir-chamado-de-suporte">5.9 Abrir Chamado de Suporte</h3>
+<ol>
+<li>Acesse <strong>Suporte</strong> → <strong>Novo Chamado</strong>.</li>
+<li>Selecione o tipo:</li>
+<li>Dúvida sobre meu contrato</li>
+<li>Problema com pagamento PIX</li>
+<li>Erro no portal</li>
+<li>Solicitação de boleto</li>
+<li>Outros</li>
+<li>Descreva o problema com detalhes.</li>
+<li>Clique em <strong>Enviar chamado</strong>.</li>
+<li>Acompanhe o status e as respostas em <strong>Suporte</strong> → <strong>Meus chamados</strong>.</li>
+</ol>
+<hr />
+<h3 id="510-meu-perfil">5.10 Meu Perfil</h3>
+<p>Acesse <strong>Perfil</strong> no menu do portal.</p>
+<ul>
+<li><strong>Alterar senha:</strong> clique em <strong>Alterar senha</strong> → informe a senha atual → defina e confirme a nova → salve.</li>
+<li><strong>Autenticação em dois fatores:</strong> desativar ou reconfigurar o Google Authenticator.</li>
+<li><strong>Preferências de notificação:</strong> escolha como receber alertas (e-mail, WhatsApp ou ambos).</li>
+</ul>
+<hr />
+<h3 id="511-duvidas-frequentes-do-cliente">5.11 Dúvidas Frequentes do Cliente</h3>
+<p><strong>Não recebi o e-mail de ativação do portal. O que fazer?</strong>
+Verifique a pasta de spam. Se não encontrar, entre em contato com a empresa para que reenviem o e-mail de acesso.</p>
+<p><strong>Esqueci minha senha. Como recuperar?</strong>
+Na tela de login do portal, clique em <strong>Esqueci minha senha</strong>, informe seu e-mail cadastrado e siga as instruções enviadas.</p>
+<p><strong>O QR Code PIX expirou. O que fazer?</strong>
+Acesse a parcela novamente e clique em <strong>Gerar QR Code PIX</strong> para criar um novo.</p>
+<p><strong>Paguei mas a parcela ainda aparece como "Atrasada". O que fazer?</strong>
+A confirmação do PIX pode levar alguns minutos. Se após 15 minutos a parcela não mudar de status, abra um chamado de suporte com o comprovante do pagamento.</p>
+<p><strong>Como assinar digitalmente meu contrato?</strong>
+Quando o contrato estiver com status <strong>Aguardando aceite</strong>, acesse o contrato → clique em <strong>Revisar e Assinar</strong> → leia os termos → clique em <strong>Assinar contrato</strong>. Você receberá confirmação por e-mail.</p>
+<p><strong>Posso ter mais de um contrato ativo ao mesmo tempo?</strong>
+Isso depende da política da empresa. Em caso de dúvida, abra um chamado de suporte.</p>
+<p><strong>Como saber quanto ainda devo no meu contrato?</strong>
+Acesse o contrato → aba <strong>Parcelas</strong> → o sistema exibe todas as parcelas pendentes e o valor total em aberto. Parcelas <strong>Parcialmente pagas</strong> exibem o saldo devedor individual.</p>
+<p><strong>Meus dados de contato mudaram. Como atualizar?</strong>
+Abra um chamado de suporte com os novos dados. A atualização do cadastro é feita pela empresa.</p>
+<hr />
+<p><em>Manual do Usuário SIAFI 2.0 · Versão 3.0 · Maio 2026</em>
+<em>Lidera Tecnologia e Gestão Ltda. · Mantido pela equipe SIAFI</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

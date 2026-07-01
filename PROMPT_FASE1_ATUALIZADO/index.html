@@ -1,0 +1,1494 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SIAFI 2.0 — Fase 1: Autenticação, Roles e Painel do Consultor - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-fase-1-autenticacao-roles-e-painel-do-consultor" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SIAFI 2.0 — Fase 1: Autenticação, Roles e Painel do Consultor
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-fase-1-autenticacao-roles-e-painel-do-consultor">SIAFI 2.0 — Fase 1: Autenticação, Roles e Painel do Consultor</h1>
+<h1 id="versao-revisada-maio-2026">Versão revisada — Maio 2026</h1>
+<p>Cole este prompt em uma nova conversa com o Claude junto com os arquivos
+01_ARQUITETURA.md, 02_BACKEND.md, 03_FRONTEND.md e 04_DATABASE.md.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior especializado em NestJS, Next.js e
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Supabase Auth. Analise a documentação completa do SIAFI 2.0 e implemente a
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Fase 1: sistema de autenticação restritivo, controle de acesso por roles e
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>o painel completo do Consultor.
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>REGRA DE OURO
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>O sistema NUNCA permite que um desconhecido crie conta ou acesse o sistema.
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Todo acesso depende de um cadastro prévio feito pelo administrador.
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>O Supabase Auth é usado apenas como provedor de tokens — a fonte da verdade
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>de quem pode acessar é SEMPRE o banco de dados do SIAFI (tabelas `users`
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>e `clients`).
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>PARTE 1 — ROLES DO SISTEMA
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>O sistema possui 5 roles. A role `usuario` foi REMOVIDA do projeto.
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>┌──────────────┬────────────────────────────────────────────────────┐
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│ Role         │ Descrição                                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>├──────────────┼────────────────────────────────────────────────────┤
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│ admin        │ Acesso total. Gerencia usuários, configurações,    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│              │ auditoria e todas as funções financeiras.          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>├──────────────┼────────────────────────────────────────────────────┤
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│ financeiro   │ Operação completa: clientes, empréstimos,          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│              │ pagamentos, caixa, renegociações, relatórios.      │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│              │ Aprova/rejeita solicitações do consultor.          │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>├──────────────┼────────────────────────────────────────────────────┤
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│ consultor    │ Carteira própria de clientes. Cadastra clientes,   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│              │ colhe documentação, registra intenção de           │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│              │ empréstimo, gera boletos, envia cobranças.         │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│              │ Envia solicitações de desconto/reparcelamento ao   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│              │ financeiro. Comunica com todos os setores.         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>├──────────────┼────────────────────────────────────────────────────┤
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│ caixa        │ Registra pagamentos e lançamentos de caixa.        │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│              │ Leitura de clientes para identificação.            │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>├──────────────┼────────────────────────────────────────────────────┤
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│ cliente      │ Acesso exclusivo ao Portal do Cliente (/portal/*). │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│              │ Vê seus contratos, parcelas e gera PIX.            │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└──────────────┴────────────────────────────────────────────────────┘
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>Atualize o enum no Prisma:
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>```prisma
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>enum UserRole {
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>  admin
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>  financeiro
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>  consultor
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>  caixa
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>  cliente
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>}
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 2 — SCHEMA PRISMA: NOVOS CAMPOS E VÍNCULOS
+═══════════════════════════════════════════════════════════════════</p>
+<h3 id="21-model-user-atualizado">2.1 — Model User (atualizado)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>model User {
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  id                Int       @id @default(autoincrement())
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  nome              String
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  username          String    @unique
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  password          String
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  role              UserRole  @default(caixa)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  email             String?   @unique
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  active            Boolean   @default(true)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  supabaseId        String?   @unique @map(&quot;supabase_id&quot;)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  mfaEnabled        Boolean   @default(false) @map(&quot;mfa_enabled&quot;)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  mfaLoginCount     Int       @default(0) @map(&quot;mfa_login_count&quot;)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  mfaDecidedAt      DateTime? @map(&quot;mfa_decided_at&quot;)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  createdAt         DateTime  @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  updatedAt         DateTime  @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  auditLogs         AuditLog[]
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  transactions      Transaction[]
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  clientesCarteira  Client[]   @relation(&quot;ClienteConsultor&quot;)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  solicitacoes      ConsultorSolicitacao[]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  @@map(&quot;users&quot;)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>}
+</code></pre></div>
+<h3 id="22-model-client-atualizado-vinculo-com-consultor">2.2 — Model Client (atualizado — vínculo com consultor)</h3>
+<p>Adicione os seguintes campos ao model Client existente:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>model Client {
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  // ... todos os campos existentes ...
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  // Novos campos:
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  supabaseId          String?   @unique @map(&quot;supabase_id&quot;)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  portalAtivo         Boolean   @default(false) @map(&quot;portal_ativo&quot;)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  portalAtivadoEm     DateTime? @map(&quot;portal_ativado_em&quot;)
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  portalAtivadoPor    Int?      @map(&quot;portal_ativado_por&quot;)
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  senhaTemporaria     Boolean   @default(false) @map(&quot;senha_temporaria&quot;)
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  primeiroAcesso      Boolean   @default(true) @map(&quot;primeiro_acesso&quot;)
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  mfaEnabled          Boolean   @default(false) @map(&quot;mfa_enabled&quot;)
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  mfaLoginCount       Int       @default(0) @map(&quot;mfa_login_count&quot;)
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  mfaDecidedAt        DateTime? @map(&quot;mfa_decided_at&quot;)
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  // Vínculo com consultor responsável (nullable — cliente pode existir sem consultor)
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  consultorId         Int?      @map(&quot;consultor_id&quot;)
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  consultor           User?     @relation(&quot;ClienteConsultor&quot;, fields: [consultorId], references: [id])
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  @@map(&quot;clients&quot;)
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>}
+</code></pre></div></p>
+<h3 id="23-model-consultorsolicitacao-novo">2.3 — Model ConsultorSolicitacao (NOVO)</h3>
+<p>Tabela para solicitações enviadas pelo consultor ao financeiro:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>model ConsultorSolicitacao {
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  id              Int       @id @default(autoincrement())
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  consultorId     Int       @map(&quot;consultor_id&quot;)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  clientId        Int       @map(&quot;client_id&quot;)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  loanId          Int?      @map(&quot;loan_id&quot;)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  tipo            String    @db.VarChar(30)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  // tipos: &#39;desconto&#39; | &#39;reparcelamento&#39; | &#39;intencao_emprestimo&#39; | &#39;outro&#39;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  descricao       String    @db.Text
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  valorSolicitado Decimal?  @db.Decimal(10,2) @map(&quot;valor_solicitado&quot;)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  status          String    @default(&quot;pendente&quot;) @db.VarChar(20)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  // status: &#39;pendente&#39; | &#39;aprovado&#39; | &#39;rejeitado&#39;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  respostaFinanceiro String? @db.Text @map(&quot;resposta_financeiro&quot;)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  respondidoPor   Int?      @map(&quot;respondido_por&quot;)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  respondidoEm    DateTime? @map(&quot;respondido_em&quot;)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  createdAt       DateTime  @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  updatedAt       DateTime  @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  consultor   User    @relation(fields: [consultorId], references: [id])
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  client      Client  @relation(fields: [clientId], references: [id])
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>  loan        Loan?   @relation(fields: [loanId], references: [id])
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  @@index([consultorId])
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  @@index([clientId])
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  @@index([status])
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>  @@map(&quot;consultor_solicitacoes&quot;)
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>}
+</code></pre></div></p>
+<h3 id="24-model-intencaoemprestimo-novo">2.4 — Model IntencaoEmprestimo (NOVO)</h3>
+<p>Intenção de empréstimo registrada pelo consultor antes da aprovação:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>model IntencaoEmprestimo {
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  id              Int       @id @default(autoincrement())
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  clientId        Int       @map(&quot;client_id&quot;)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  consultorId     Int       @map(&quot;consultor_id&quot;)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  valorSolicitado Decimal   @db.Decimal(10,2) @map(&quot;valor_solicitado&quot;)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  numeroParcelas  Int       @map(&quot;numero_parcelas&quot;)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  finalidade      String?   @db.Text
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  status          String    @default(&quot;aguardando&quot;) @db.VarChar(20)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  // status: &#39;aguardando&#39; | &#39;aprovado&#39; | &#39;rejeitado&#39; | &#39;convertido&#39;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  observacoes     String?   @db.Text
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  aprovadoPor     Int?      @map(&quot;aprovado_por&quot;)
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  aprovadoEm      DateTime? @map(&quot;aprovado_em&quot;)
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  loanId          Int?      @unique @map(&quot;loan_id&quot;)
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  // loan_id preenchido quando convertido em empréstimo real
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  createdAt       DateTime  @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  updatedAt       DateTime  @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  client      Client  @relation(fields: [clientId], references: [id])
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  consultor   User    @relation(fields: [consultorId], references: [id])
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>  @@index([consultorId])
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>  @@index([status])
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  @@map(&quot;intencoes_emprestimo&quot;)
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>}
+</code></pre></div></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 3 — FLUXO DE AUTENTICAÇÃO (ATUALIZADO)
+═══════════════════════════════════════════════════════════════════</p>
+<h3 id="31-roles-operacionais-admin-financeiro-consultor-caixa">3.1 — Roles operacionais (admin, financeiro, consultor, caixa)</h3>
+<ul>
+<li>Cadastro EXCLUSIVAMENTE pelo Administrador no painel Users</li>
+<li>O admin informa: nome, username, email, role e senha inicial</li>
+<li>Sistema cria no Supabase Auth via Admin SDK + vincula supabaseId no Prisma</li>
+<li>Email no Supabase Auth: <code>${username}@siafi.local</code> (fictício — não enviar confirmação)</li>
+<li>Salvar role e prismaId em <code>app_metadata</code> (não user_metadata — só backend grava app_metadata)
+  Exemplo: <code>{ email: username+'@siafi.local', app_metadata: { role, prismaId: user.id } }</code></li>
+<li>Login: username+senha OU email+senha</li>
+<li>AuthService.login() deve seguir exatamente:</li>
+<li>Buscar user por username + validar bcrypt</li>
+<li>Se supabaseId == null: criar no Supabase Auth (auto-sync) com email fictício</li>
+<li><code>supabase.auth.signInWithPassword({ email: username+'@siafi.local', password })</code></li>
+<li>Verificar AAL: se MFA ativo e AAL &lt; aal2 → retornar <code>{ needsMfa: true, factorId }</code></li>
+<li>Retornar <code>{ accessToken (JWT Supabase), user }</code> — refreshToken em httpOnly cookie</li>
+<li>Frontend AuthContext usa <code>completeMfa(factorId, code)</code> para elevar para aal2</li>
+<li>Login Google: SOMENTE se email Google = email em <code>users</code>. Nunca criar
+  registro automaticamente via OAuth.</li>
+<li>Role <code>consultor</code>: MFA obrigatório imediato (igual a admin e financeiro)
+  — consultor lida com dados sensíveis de clientes</li>
+</ul>
+<h3 id="32-role-cliente">3.2 — Role CLIENTE</h3>
+<ul>
+<li>Cadastro pelo operador (admin/financeiro/consultor) na tabela <code>clients</code></li>
+<li>Portal ativado manualmente via "Habilitar acesso ao portal"</li>
+<li>Login por: CPF+senha, email+senha ou Google OAuth (email idêntico)</li>
+<li>Nunca acessar dados de outro cliente</li>
+</ul>
+<h3 id="33-jwtauthguard-dupla-verificacao-estender-o-guard-existente">3.3 — JwtAuthGuard (dupla verificação — estender o guard existente)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// ATENÇÃO: esta lógica deve ser adicionada DENTRO do JwtAuthGuard existente</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="c1">// NÃO criar um novo guard — estender o validate() do JwtAuthGuard atual</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">validateUser</span><span class="p">(</span><span class="nx">supabaseId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="c1">// 1. Verificar em `users` (roles operacionais)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">operador</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabaseId</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">operador</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">operador</span><span class="p">,</span><span class="w"> </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;operador&#39;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="c1">// 2. Verificar em `clients` (role cliente)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cliente</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabaseId</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cliente</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">cliente</span><span class="p">,</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="c1">// 3. Não encontrado — acesso negado + registrar tentativa no AuditLog</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">auditLog</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">acao</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ACESSO_NEGADO_DESCONHECIDO&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">dados</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabaseId</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="s1">&#39;Conta não autorizada. Acesso restrito a usuários cadastrados.&#39;</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="34-mfa-por-role">3.4 — MFA por role</h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Comportamento MFA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>admin</td>
+<td>Obrigatório imediato — sem prazo de 5 logins</td>
+</tr>
+<tr>
+<td>financeiro</td>
+<td>Obrigatório imediato — sem prazo de 5 logins</td>
+</tr>
+<tr>
+<td>consultor</td>
+<td>Obrigatório imediato — sem prazo de 5 logins</td>
+</tr>
+<tr>
+<td>caixa</td>
+<td>Prazo de 5 logins para configurar</td>
+</tr>
+<tr>
+<td>cliente</td>
+<td>Prazo de 5 logins para configurar</td>
+</tr>
+</tbody>
+</table>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 4 — PAINEL DO CONSULTOR (MÓDULO COMPLETO)
+═══════════════════════════════════════════════════════════════════</p>
+<h3 id="41-principio-de-isolamento-da-carteira">4.1 — Princípio de isolamento da carteira</h3>
+<p>O consultor enxerga APENAS os clientes onde <code>client.consultorId = user.id</code>.
+Toda query do ConsultorService deve filtrar por <code>consultorId</code> do JWT.
+Nunca retornar clientes de outros consultores, mesmo que o ID seja passado
+diretamente na URL.</p>
+<h3 id="42-rotas-do-painel-do-consultor-nextjs">4.2 — Rotas do painel do consultor (Next.js)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>src/app/(dashboard)/
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>└── consultor/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    ├── page.tsx                    ← dashboard do consultor (KPIs da carteira)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    ├── minha-carteira/
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    │   ├── page.tsx                ← lista de clientes da carteira
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    │   └── [clientId]/page.tsx     ← detalhe do cliente + contratos
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    ├── clientes/
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    │   ├── novo/page.tsx           ← cadastrar novo cliente + upload docs
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    │   └── [id]/editar/page.tsx    ← editar cliente
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    ├── intencoes/
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    │   ├── page.tsx                ← lista de intenções de empréstimo
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    │   ├── nova/page.tsx           ← registrar nova intenção
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    │   └── [id]/page.tsx           ← detalhe da intenção
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    ├── solicitacoes/
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    │   ├── page.tsx                ← solicitações enviadas ao financeiro
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    │   └── nova/page.tsx           ← enviar solicitação (desconto/reparcel.)
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    ├── cobrancas/
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    │   └── page.tsx                ← parcelas em atraso da carteira
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    └── comunicados/
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>        └── page.tsx                ← mensagens recebidas do financeiro/admin
+</code></pre></div>
+<h3 id="43-dashboard-do-consultor-consultor">4.3 — Dashboard do Consultor (<code>/consultor</code>)</h3>
+<p>Cards KPI exclusivos da carteira do consultor:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│ Meus Clientes    │ │ Contratos Ativos │ │ Em Atraso        │
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│      12          │ │       8          │ │       2          │
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>└──────────────────┘ └──────────────────┘ └──────────────────┘
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│ Intenções        │ │ Solicitações     │ │ Comissão Mês     │
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│ Aguardando: 3    │ │ Pendentes: 1     │ │  R$ 1.240,00     │
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>└──────────────────┘ └──────────────────┘ └──────────────────┘
+</code></pre></div></p>
+<p>Seções abaixo dos cards:
+- Lista de clientes com parcela vencendo nos próximos 3 dias
+- Últimas solicitações enviadas ao financeiro (com status)
+- Intenções de empréstimo aguardando aprovação</p>
+<h3 id="44-minha-carteira-consultorminha-carteira">4.4 — Minha Carteira (<code>/consultor/minha-carteira</code>)</h3>
+<p>Lista de clientes vinculados ao consultor logado:
+- Busca por nome/CPF
+- Filtro por status do contrato: Todos / Ativos / Atrasados / Quitados
+- Coluna "Situação": badge colorido com status do contrato mais recente
+- Botões por linha: Ver cliente / Registrar cobrança / Nova intenção</p>
+<h3 id="45-cadastro-de-cliente-pelo-consultor">4.5 — Cadastro de Cliente pelo Consultor</h3>
+<p>O consultor pode cadastrar novos clientes com as mesmas regras do admin,
+porém:
+- <code>consultorId</code> é preenchido AUTOMATICAMENTE com o ID do consultor logado
+- O consultor NÃO pode alterar o <code>consultorId</code> de um cliente
+- Upload de documentos (RG, comprovante renda, foto) via Supabase Storage
+- Campos obrigatórios para intenção de empréstimo: igual ao formulário
+  padrão mais o campo "Finalidade do empréstimo"</p>
+<h3 id="46-intencao-de-emprestimo-consultorintencoes">4.6 — Intenção de Empréstimo (<code>/consultor/intencoes</code>)</h3>
+<p>Fluxo da intenção:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Consultor registra intenção
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>         ↓
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Status: &quot;aguardando&quot;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>         ↓
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Financeiro/Admin recebe notificação
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>         ↓
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>   ┌─────┴─────┐
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Aprova       Rejeita
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>   ↓             ↓
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Status:       Status:
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>&quot;aprovado&quot;   &quot;rejeitado&quot;
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>   ↓
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Consultor/Financeiro converte em
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>empréstimo real (Loan) →
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Status: &quot;convertido&quot; + loanId preenchido
+</code></pre></div></p>
+<p>Formulário de nova intenção:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>│  Nova Intenção de Empréstimo                        │
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>├─────────────────────────────────────────────────────┤
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│  Cliente:          [ Selecione da sua carteira ▼ ]  │
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│  Valor solicitado: [ R$ _____________ ]             │
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>│  Nº de parcelas:   [ ___ ]                          │
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>│  Finalidade:       [ _______________________ ]      │
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>│  Observações:      [ _______________________ ]      │
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>│                    [ _______________________ ]      │
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>│                                                     │
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>│  [ Cancelar ]          [ Enviar para aprovação ]    │
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div></p>
+<h3 id="47-solicitacoes-ao-financeiro-consultorsolicitacoes">4.7 — Solicitações ao Financeiro (<code>/consultor/solicitacoes</code>)</h3>
+<p>O consultor pode enviar solicitações formais ao setor financeiro:</p>
+<p>Tipos de solicitação:
+- <code>desconto</code>: solicitar desconto em parcela(s) para cliente
+- <code>reparcelamento</code>: solicitar novo parcelamento de dívida
+- <code>intencao_emprestimo</code>: formalizar pedido de novo empréstimo
+- <code>outro</code>: comunicado livre com descrição</p>
+<p>Formulário:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>│  Nova Solicitação ao Financeiro                     │
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>├─────────────────────────────────────────────────────┤
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>│  Tipo:     [ Selecione ▼ ]                          │
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>│  Cliente:  [ Selecione da sua carteira ▼ ]          │
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>│  Contrato: [ Selecione ▼ ] (opcional)               │
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>│  Valor:    [ R$ ________ ] (se aplicável)           │
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>│  Descrição:[ _____________________________________ ] │
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>│            [ _____________________________________ ] │
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>│                                                     │
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>│  [ Cancelar ]              [ Enviar solicitação ]   │
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Status das solicitações:
+- 🟡 Pendente — aguardando análise do financeiro
+- ✅ Aprovada — financeiro aprovou, com resposta
+- ❌ Rejeitada — financeiro rejeitou, com justificativa</p>
+<h3 id="48-cobrancas-da-carteira-consultorcobrancas">4.8 — Cobranças da Carteira (<code>/consultor/cobrancas</code>)</h3>
+<p>Lista de parcelas atrasadas dos clientes da carteira do consultor:
+- Filtro por dias em atraso: todos / 1-30 / 31-60 / 60+
+- Por linha: nome cliente, contrato, dias em atraso, valor, botões:
+  - "Enviar WhatsApp" → enfileira job de cobrança manual
+  - "Gerar PIX" → gera QR Code para a parcela
+  - "Registrar contato" → abre modal para anotar tentativa de cobrança</p>
+<p>Modal "Registrar contato":
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>│  Registrar tentativa de contato                     │
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>├─────────────────────────────────────────────────────┤
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>│  Canal:  ○ WhatsApp  ○ Ligação  ○ Presencial        │
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>│  Resultado:                                         │
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>│  ○ Prometeu pagar em: [ data ]                      │
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>│  ○ Não atendeu                                      │
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>│  ○ Número incorreto                                 │
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>│  ○ Outro: [ ________ ]                              │
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>│  Observação: [ ____________________________ ]       │
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>│                                                     │
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>│  [ Cancelar ]              [ Salvar contato ]       │
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Salvar em nova tabela <code>cobranca_contatos</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>model CobrancaContato {
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  id              Int      @id @default(autoincrement())
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  installmentId   Int      @map(&quot;installment_id&quot;)
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  clientId        Int      @map(&quot;client_id&quot;)
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  consultorId     Int      @map(&quot;consultor_id&quot;)
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  canal           String   @db.VarChar(20)
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  resultado       String   @db.VarChar(50)
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  prometeuPagarEm DateTime? @map(&quot;prometeu_pagar_em&quot;)
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  observacao      String?  @db.Text
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>  createdAt       DateTime @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  @@index([installmentId])
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  @@index([clientId])
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>  @@index([consultorId])
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>  @@map(&quot;cobranca_contatos&quot;)
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>}
+</code></pre></div></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 5 — PERMISSÕES POR RECURSO (ATUALIZADA)
+═══════════════════════════════════════════════════════════════════</p>
+<p>Matriz completa de permissões:</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>admin</th>
+<th>financeiro</th>
+<th>consultor</th>
+<th>caixa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard geral</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (carteira)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Clientes (todos)</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>👁️ ler</td>
+</tr>
+<tr>
+<td>Clientes (carteira)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Cadastrar cliente</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Empréstimos (todos)</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Criar empréstimo</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Intenção de empréstimo</td>
+<td>✅</td>
+<td>✅ aprovar</td>
+<td>✅ criar</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Solicitações consultor</td>
+<td>✅</td>
+<td>✅ aprovar</td>
+<td>✅ criar</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Pagamentos</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Gerar boleto/PIX</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (carteira)</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Cobrança WhatsApp</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (carteira)</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Caixa</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Renegociações</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌ (solicita)</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Relatórios gerais</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (carteira)</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Usuários</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Configurações</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Auditoria</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rolesguard-aplicacao-nos-controllers">RolesGuard — aplicação nos controllers</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// Exemplos de proteção nos controllers:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1">// ConsultorController — acesso à carteira</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;consultor&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="kd">@Get</span><span class="p">(</span><span class="s1">&#39;minha-carteira&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nx">getCarteira</span><span class="p">(</span><span class="kd">@CurrentUser</span><span class="p">()</span><span class="w"> </span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="c1">// Se consultor: filtrar por consultorId = user.id</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span><span class="c1">// Se admin/financeiro: retornar todos</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">}</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1">// IntencaoEmprestimoController</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;consultor&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="kd">@Post</span><span class="p">(</span><span class="s1">&#39;intencoes&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="nx">criarIntencao</span><span class="p">(</span><span class="kd">@CurrentUser</span><span class="p">()</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="kd">@Body</span><span class="p">()</span><span class="w"> </span><span class="nx">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">  </span><span class="c1">// Se consultor: dto.consultorId = user.id (forçado)</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">  </span><span class="c1">// Se admin/financeiro: pode criar para qualquer consultor</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="p">}</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="c1">// Aprovação de intenção — apenas financeiro e admin</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;financeiro&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="kd">@Patch</span><span class="p">(</span><span class="s1">&#39;intencoes/:id/aprovar&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="nx">aprovarIntencao</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="c1">// SolicitacoesController — consultor cria, financeiro aprova</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="kd">@Roles</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;consultor&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="kd">@Post</span><span class="p">(</span><span class="s1">&#39;solicitacoes&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="nx">criarSolicitacao</span><span class="p">(</span><span class="kd">@CurrentUser</span><span class="p">()</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="kd">@Body</span><span class="p">()</span><span class="w"> </span><span class="nx">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">role</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;consultor&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="w">    </span><span class="nx">dto</span><span class="p">.</span><span class="nx">consultorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span><span class="w"> </span><span class="c1">// forçado</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 6 — SIDEBAR ATUALIZADA (FRONTEND)
+═══════════════════════════════════════════════════════════════════</p>
+<p>Atualize <code>src/components/layout/sidebar.tsx</code> com os novos grupos:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">menuGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Principal&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Dashboard&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/dashboard&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;consultor&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}]</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Minha Carteira&#39;</span><span class="p">,</span><span class="w">         </span><span class="c1">// visível apenas para consultor</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;consultor&#39;</span><span class="p">],</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Dashboard&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/consultor&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;consultor&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Minha Carteira&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/consultor/minha-carteira&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;consultor&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Intenções&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/consultor/intencoes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;consultor&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Solicitações&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/consultor/solicitacoes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;consultor&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Cobranças&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/consultor/cobrancas&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;consultor&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">    </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Operacional&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">    </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">],</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Clientes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/clientes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Empréstimos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/emprestimos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Parcelas&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/parcelas&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Pagamentos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/pagamentos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Inadimplentes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/inadimplentes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Intenções&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/intencoes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Solicitações&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/solicitacoes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">    </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Financeiro&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="w">    </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">],</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Caixa&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/caixa&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Renegociações&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/renegociacoes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Conciliação&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/conciliacao&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;PIX&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/pix&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="w">    </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Relatórios&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="w">    </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;consultor&#39;</span><span class="p">],</span>
+<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Relatórios&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/relatorios&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;consultor&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-14-46" name="__codelineno-14-46" href="#__codelineno-14-46"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-47" name="__codelineno-14-47" href="#__codelineno-14-47"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-14-48" name="__codelineno-14-48" href="#__codelineno-14-48"></a><span class="w">    </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Comunicação&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-49" name="__codelineno-14-49" href="#__codelineno-14-49"></a><span class="w">    </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;consultor&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">],</span>
+<a id="__codelineno-14-50" name="__codelineno-14-50" href="#__codelineno-14-50"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-51" name="__codelineno-14-51" href="#__codelineno-14-51"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Notificações&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/notificacoes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;consultor&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-52" name="__codelineno-14-52" href="#__codelineno-14-52"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Suporte&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/suporte&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;financeiro&#39;</span><span class="p">,</span><span class="s1">&#39;consultor&#39;</span><span class="p">,</span><span class="s1">&#39;caixa&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-53" name="__codelineno-14-53" href="#__codelineno-14-53"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-14-54" name="__codelineno-14-54" href="#__codelineno-14-54"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-55" name="__codelineno-14-55" href="#__codelineno-14-55"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-14-56" name="__codelineno-14-56" href="#__codelineno-14-56"></a><span class="w">    </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Administração&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-57" name="__codelineno-14-57" href="#__codelineno-14-57"></a><span class="w">    </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">],</span>
+<a id="__codelineno-14-58" name="__codelineno-14-58" href="#__codelineno-14-58"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-59" name="__codelineno-14-59" href="#__codelineno-14-59"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Usuários&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/usuarios&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-60" name="__codelineno-14-60" href="#__codelineno-14-60"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Configurações&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/configuracoes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-61" name="__codelineno-14-61" href="#__codelineno-14-61"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Auditoria&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/auditoria&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">roles</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-62" name="__codelineno-14-62" href="#__codelineno-14-62"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-14-63" name="__codelineno-14-63" href="#__codelineno-14-63"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-64" name="__codelineno-14-64" href="#__codelineno-14-64"></a><span class="p">]</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 7 — NOTIFICAÇÕES PARA O FINANCEIRO
+═══════════════════════════════════════════════════════════════════</p>
+<p>Quando um consultor enviar intenção de empréstimo ou solicitação:
+1. Criar registro na tabela <code>notifications</code> com tipo <code>interno</code>
+2. Destinatário: todos os usuários com role <code>financeiro</code> e <code>admin</code>
+3. Exibir badge de notificação no menu lateral para financeiro/admin
+4. Implementar via Supabase Realtime:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nx">supabase</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="s1">&#39;solicitacoes-financeiro&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;postgres_changes&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT&#39;</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="nx">table</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;consultor_solicitacoes&#39;</span><span class="p">,</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="sb">`status=eq.pendente`</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="nx">handleNovaSolicitacao</span><span class="p">)</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="p">.</span><span class="nx">subscribe</span><span class="p">()</span>
+</code></pre></div></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 8 — ENTREGÁVEIS DA FASE 1 (em ordem)
+═══════════════════════════════════════════════════════════════════</p>
+<ol>
+<li>
+<p>Migration Prisma com TODOS os novos campos e models:</p>
+<ul>
+<li>User (supabaseId, mfa*, email)</li>
+<li>Client (supabaseId, portal<em>, mfa</em>, consultorId)</li>
+<li>ConsultorSolicitacao (novo model)</li>
+<li>IntencaoEmprestimo (novo model)</li>
+<li>CobrancaContato (novo model)</li>
+<li>Enum UserRole sem <code>usuario</code>, com <code>consultor</code></li>
+</ul>
+</li>
+<li>
+<p>AuthService atualizado:</p>
+<ul>
+<li>loginComEmailOuCpf(identificador, senha)</li>
+<li>loginComGoogle(token) com validação restritiva</li>
+<li>verificarPrazoMfa(userId, role) — consultor obrigatório imediato</li>
+<li>setupMfa / confirmarMfa / challengeMfa</li>
+</ul>
+</li>
+<li>
+<p>JwtAuthGuard com dupla verificação + AuditLog em acesso negado</p>
+</li>
+<li>
+<p>ConsultorModule completo:</p>
+<ul>
+<li>ConsultorService (todos os métodos com filtro por consultorId)</li>
+<li>ConsultorController (endpoints abaixo)</li>
+<li>Validação de ownership em todo endpoint</li>
+</ul>
+</li>
+<li>
+<p>Endpoints do consultor:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>GET    /api/consultor/dashboard
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>GET    /api/consultor/carteira
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>GET    /api/consultor/carteira/:clientId
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>POST   /api/clients                    (cria com consultorId automático)
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>POST   /api/consultor/intencoes
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>GET    /api/consultor/intencoes
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>GET    /api/consultor/intencoes/:id
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>POST   /api/consultor/solicitacoes
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>GET    /api/consultor/solicitacoes
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>GET    /api/consultor/cobrancas
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>POST   /api/consultor/cobrancas/:installmentId/contato
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>POST   /api/consultor/cobrancas/:installmentId/whatsapp
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>GET    /api/pix/gerar/:installmentId   (com validação de carteira)
+</code></pre></div></p>
+</li>
+<li>
+<p>Endpoints do financeiro para aprovação:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>GET    /api/intencoes                  (todas pendentes)
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>PATCH  /api/intencoes/:id/aprovar
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>PATCH  /api/intencoes/:id/rejeitar
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>GET    /api/solicitacoes              (todas pendentes)
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>PATCH  /api/solicitacoes/:id/aprovar
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>PATCH  /api/solicitacoes/:id/rejeitar
+</code></pre></div></p>
+</li>
+<li>
+<p>Sidebar atualizada com grupos condicionais por role</p>
+</li>
+<li>
+<p>Painel do consultor (Next.js — todas as páginas listadas no item 4.2)</p>
+</li>
+<li>
+<p>Tela de login unificada (CPF/email + Google + detecção automática)</p>
+</li>
+<li>
+<p>Telas de MFA (setup + challenge + modal de prazo)</p>
+</li>
+<li>
+<p>Painel do financeiro atualizado com aba "Solicitações do Consultor"</p>
+</li>
+</ol>
+<p>═══════════════════════════════════════════════════════════════════
+REGRAS TÉCNICAS OBRIGATÓRIAS
+═══════════════════════════════════════════════════════════════════
+- Todo endpoint do ConsultorModule filtra por consultorId do JWT
+- $transaction do Prisma em toda criação de usuário no Supabase + banco
+- Nunca expor SUPABASE_SERVICE_ROLE_KEY no frontend
+- Consultor NÃO pode alterar o consultorId de um cliente existente
+- Consultor NÃO pode ver clientes de outros consultores
+- Registrar no AuditLog: toda criação de intenção, solicitação e contato
+- Mensagens de erro genéricas ao usuário (nunca revelar se email existe)
+- CPF armazenado apenas como números (sem formatação)
+- Seguir LGPD: documentos de clientes no Supabase Storage (bucket privado)
+```</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

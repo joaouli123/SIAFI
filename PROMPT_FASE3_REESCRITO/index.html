@@ -1,0 +1,1843 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SIAFI 2.0 — Fase 3: Portal do Cliente (Experiência Completa) - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-fase-3-portal-do-cliente-experiencia-completa" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SIAFI 2.0 — Fase 3: Portal do Cliente (Experiência Completa)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-fase-3-portal-do-cliente-experiencia-completa">SIAFI 2.0 — Fase 3: Portal do Cliente (Experiência Completa)</h1>
+<h1 id="versao-revisada-maio-2026">Versão revisada — Maio 2026</h1>
+<p>Cole este prompt em uma nova conversa com o Claude junto com os arquivos
+01_ARQUITETURA.md, 02_BACKEND.md, 03_FRONTEND.md, 04_DATABASE.md
+e os resultados das Fases 1 e 2 já implementadas.</p>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior e Especialista em UX/UI para sistemas
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>financeiros. As Fases 1 e 2 do SIAFI já estão implementadas (auth, roles,
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Supabase, ativação do portal). Implemente agora a Fase 3 completa: todas as
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>telas e a lógica do Portal do Cliente — a experiência que o cliente final vê
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ao acessar https://financeiro.lidera.app.br/portal.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>CONTEXTO E PREMISSAS
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- Stack: Next.js 16 (App Router), Tailwind CSS, shadcn/ui, React Query,
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  Supabase SSR, Supabase Realtime
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>- Antes de implementar: verificar se `type UserRole` no AuthContext foi atualizado
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  para incluir &#39;consultor&#39; e remover &#39;usuario&#39;:
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  `type UserRole = &#39;admin&#39; | &#39;financeiro&#39; | &#39;consultor&#39; | &#39;caixa&#39; | &#39;cliente&#39;`
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>- O ClientPortalGuard e todos os endpoints /api/portal/* já existem
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  (implementados na Fase 2)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>- O middleware.ts de /portal/* já existe (Fase 2)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>- Foco desta fase: implementar TODAS as páginas e componentes do portal
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>- Design: mobile first — o cliente acessa pelo celular
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>- Paleta: mesma do sistema (Slate/dark) mas mais acolhedora, menos técnica
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>- Acessibilidade: WCAG AA mínimo em todas as telas
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>PARTE 1 — ARQUITETURA FRONTEND DO PORTAL
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>## 1.1 — Estrutura completa de arquivos
+</code></pre></div>
+src/app/
+├── (auth)/
+│   └── login/page.tsx                    ← já implementado (Fase 1)
+│
+├── auth/
+│   └── callback/route.ts                 ← já implementado (Fase 1)
+│
+├── portal/                               ← telas de onboarding (fora do layout)
+│   ├── primeiro-acesso/page.tsx          ← troca de senha obrigatória
+│   ├── mfa-setup/page.tsx                ← setup Google Authenticator
+│   └── mfa-challenge/page.tsx            ← desafio TOTP no login
+│
+└── (portal)/                             ← grupo com layout do portal
+    ├── layout.tsx                        ← header + footer + Realtime
+    └── portal/
+        ├── page.tsx                      ← home (resumo financeiro)
+        ├── contratos/
+        │   ├── page.tsx                  ← lista com progresso
+        │   └── [id]/
+        │       └── page.tsx              ← detalhe + parcelas
+        ├── pagamentos/
+        │   ├── page.tsx                  ← histórico agrupado por mês
+        │   └── pix/
+        │       └── [installmentId]/
+        │           └── page.tsx          ← QR Code + polling + sucesso
+        ├── suporte/
+        │   ├── page.tsx                  ← lista de tickets
+        │   ├── [id]/page.tsx             ← detalhe do ticket + resposta
+        │   └── novo/page.tsx             ← abrir novo chamado
+        └── perfil/
+            └── page.tsx                  ← dados + segurança + notificações</p>
+<p>src/components/portal/
+├── portal-layout/
+│   ├── portal-header.tsx                 ← logo + nome + badge + sair
+│   └── portal-footer.tsx                 ← dados da empresa + links
+├── portal-home/
+│   ├── resumo-cards.tsx                  ← 3 cards KPI
+│   ├── alerta-banner.tsx                 ← banner contextual de alerta
+│   └── ultimas-movimentacoes.tsx         ← lista dos últimos pagamentos
+├── portal-contratos/
+│   ├── contrato-card.tsx                 ← card com barra de progresso
+│   └── parcela-row.tsx                   ← linha da tabela de parcelas
+├── portal-pix/
+│   ├── qr-code-display.tsx               ← imagem + copia e cola + timer
+│   └── pix-sucesso.tsx                   ← tela de confirmação animada
+├── portal-suporte/
+│   ├── ticket-card.tsx                   ← card do ticket na lista
+│   └── ticket-detalhe.tsx                ← conversa + resposta
+└── portal-perfil/
+    ├── dados-pessoais.tsx                ← dados read-only
+    ├── seguranca-section.tsx             ← senha + MFA
+    └── notificacoes-section.tsx          ← toggles WhatsApp/Email</p>
+<p>src/hooks/portal/
+├── use-portal-home.ts                    ← React Query para home
+├── use-portal-contratos.ts               ← React Query para contratos
+├── use-portal-pix.ts                     ← polling do PIX
+├── use-portal-suporte.ts                 ← React Query para tickets
+└── use-realtime-portal.ts                ← Supabase Realtime</p>
+<p>src/lib/portal/
+├── portal-api.ts                         ← funções axios para /api/portal/*
+└── portal-types.ts                       ← interfaces TypeScript do portal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## 1.2 — Interfaces TypeScript (`src/lib/portal/portal-types.ts`)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```typescript
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>// Dados retornados pelo /api/portal/home
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>export interface PortalHome {
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  contratosAtivos: number
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  proximaParcela: {
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    installmentId: number
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    loanId: number
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    loanNumero: number
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    numeroParcela: number
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    totalParcelas: number
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    valor: number
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    dataVencimento: string
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    diasParaVencer: number
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    status: &#39;pendente&#39; | &#39;atrasado&#39;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  } | null
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  totalEmAberto: number
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  ultimosPagamentos: UltimoPagamento[]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  alertas: Alerta[]
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>}
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>export interface Alerta {
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  tipo: &#39;vencida&#39; | &#39;vencendo&#39; | &#39;em_dia&#39; | &#39;mfa_pendente&#39;
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  mensagem: string
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  installmentId?: number
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  loanId?: number
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  diasAtraso?: number
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  loginsRestantesMfa?: number
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>}
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>export interface UltimoPagamento {
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  id: number
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  valorPago: number
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  dataPagamento: string
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  metodoPagamento: string
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  numeroParcela: number
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  totalParcelas: number
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  loanNumero: number
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>}
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>// Contrato simplificado para o portal (sem campos internos)
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>export interface PortalContrato {
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  id: number
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>  numero: number           // sequencial por cliente (Contrato #1, #2...)
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>  totalParcelas: number
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>  parcelasPagas: number
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>  valorTotal: number       // soma das parcelas (não valorInvestido)
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>  totalPago: number
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>  saldoRestante: number
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>  dataInicio: string
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>  metodoPagamento: string
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>  status: &#39;ativo&#39; | &#39;quitado&#39; | &#39;inadimplente&#39; | &#39;cancelado&#39;
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>  progressoPercentual: number
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>  proximaParcela: {
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>    id: number
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>    numero: number
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>    valor: number
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>    dataVencimento: string
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>    status: &#39;pendente&#39; | &#39;atrasado&#39;
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>  } | null
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>  // NUNCA incluir: valorInvestido, taxaJuros, observacoes, consultorId
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>}
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>export interface PortalParcela {
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>  id: number
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>  numero: number
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>  valor: number
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>  dataVencimento: string
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>  status: &#39;pendente&#39; | &#39;pago&#39; | &#39;atrasado&#39; | &#39;cancelado&#39;
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>  totalPago: number
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>  dataPagamento?: string
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>  metodoPagamento?: string
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>}
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>export interface PixStatus {
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>  pixId: number
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>  status: &#39;pendente&#39; | &#39;aprovado&#39; | &#39;expirado&#39; | &#39;cancelado&#39;
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>  qrCode: string
+<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>  qrImage: string
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>  valor: number
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>  expiresAt: string
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>  paidAt?: string
+<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>}
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>export interface SupportTicket {
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>  id: number
+<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>  assunto: string
+<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>  mensagem: string
+<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>  status: &#39;aberto&#39; | &#39;respondido&#39; | &#39;fechado&#39;
+<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>  resposta?: string
+<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>  createdAt: string
+<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>  updatedAt: string
+<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>  lido: boolean
+<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>}
+</code></pre></div></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 2 — LAYOUT DO PORTAL
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="21-portallayouttsx">2.1 — <code>(portal)/layout.tsx</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Responsabilidades:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">// 1. Verificar sessão Supabase (client-side) — redirecionar se expirada</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">// 2. Montar header com nome do cliente e badge de notificações</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">// 3. Montar footer</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">// 4. Inicializar hook useRealtimePortal</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// 5. Prover QueryClient do React Query para as páginas filhas</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">PortalLayout</span><span class="p">({</span><span class="w"> </span><span class="nx">children</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">cliente</span><span class="p">,</span><span class="w"> </span><span class="nx">isLoading</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">usePortalCliente</span><span class="p">()</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">notificacoes</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useRealtimePortal</span><span class="p">(</span><span class="nx">cliente</span><span class="o">?</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isLoading</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">PortalSkeleton</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950&quot;</span><span class="o">&gt;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">PortalHeader</span><span class="w"> </span><span class="nx">cliente</span><span class="o">=</span><span class="p">{</span><span class="nx">cliente</span><span class="p">}</span><span class="w"> </span><span class="nx">notificacoes</span><span class="o">=</span><span class="p">{</span><span class="nx">notificacoes</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">main</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex-1 container max-w-2xl mx-auto px-4 py-6&quot;</span><span class="o">&gt;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span><span class="p">{</span><span class="nx">children</span><span class="p">}</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="o">&lt;</span><span class="err">/main&gt;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">PortalFooter</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="p">)</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="22-portal-headertsx">2.2 — <code>portal-header.tsx</code></h2>
+<p>Especificação visual (mobile):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│  [LOGO]  Lidera                    🔔2  [Sair]   │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│          Olá, João da Silva                      │
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<ul>
+<li>Logo: usar <code>next/image</code> com <code>src</code> da configuração <code>site_settings</code></li>
+<li>Badge 🔔: número de notificações não lidas (tickets respondidos +
+  parcelas próximas). Usar <code>useRealtimePortal</code> para atualizar em tempo real</li>
+<li>Botão Sair: chamar <code>supabase.auth.signOut()</code> + redirecionar para <code>/login</code></li>
+<li>Nome: extrair do JWT (<code>user_metadata.nome</code>)</li>
+<li>Sticky no topo: <code>position: sticky; top: 0; z-index: 50</code></li>
+<li>Altura: 60px em mobile, 64px em desktop</li>
+</ul>
+<h2 id="23-use-realtime-portalts">2.3 — <code>use-realtime-portal.ts</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">useRealtimePortal</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">notificacoes</span><span class="p">,</span><span class="w"> </span><span class="nx">setNotificacoes</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="o">&lt;</span><span class="nx">Notificacao</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">([])</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">qc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useQueryClient</span><span class="p">()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">clientId</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">supabase</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="sb">`portal-</span><span class="si">${</span><span class="nx">clientId</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="c1">// Ticket respondido → badge + invalidar cache</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;postgres_changes&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">        </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;UPDATE&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">        </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">        </span><span class="nx">table</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;support_tickets&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="sb">`client_id=eq.</span><span class="si">${</span><span class="nx">clientId</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="p">},</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="ow">new</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;respondido&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">          </span><span class="nx">setNotificacoes</span><span class="p">(</span><span class="nx">prev</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">[...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">            </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ticket_respondido&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">            </span><span class="nx">ticketId</span><span class="o">:</span><span class="w"> </span><span class="kt">payload.new.id</span><span class="p">,</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">            </span><span class="nx">assunto</span><span class="o">:</span><span class="w"> </span><span class="kt">payload.new.assunto</span><span class="p">,</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">          </span><span class="p">}])</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">          </span><span class="nx">qc</span><span class="p">.</span><span class="nx">invalidateQueries</span><span class="p">({</span><span class="w"> </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;portal&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;suporte&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">      </span><span class="p">})</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">      </span><span class="c1">// Pagamento confirmado → invalidar contratos e home</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">      </span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;postgres_changes&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">        </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">        </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">        </span><span class="nx">table</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;payments&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">      </span><span class="p">},</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">        </span><span class="c1">// Filtrar no handler — Supabase Realtime não suporta subqueries em filtros</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">        </span><span class="c1">// clientLoanIds: Set&lt;number&gt; com os IDs dos loans do cliente</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">        </span><span class="c1">// Buscar na inicialização: const loans = await portalApi.getContratos()</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">        </span><span class="c1">// const clientLoanIds = new Set(loans.map(l =&gt; l.id))</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">clientLoanIds</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="ow">new</span><span class="o">?</span><span class="p">.</span><span class="nx">loan_id</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">        </span><span class="nx">qc</span><span class="p">.</span><span class="nx">invalidateQueries</span><span class="p">({</span><span class="w"> </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;portal&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;home&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">        </span><span class="nx">qc</span><span class="p">.</span><span class="nx">invalidateQueries</span><span class="p">({</span><span class="w"> </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;portal&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;contratos&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">      </span><span class="p">})</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">      </span><span class="p">.</span><span class="nx">subscribe</span><span class="p">()</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">    </span><span class="c1">// Cleanup obrigatório — evitar memory leak e conexões duplicadas</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">removeChannel</span><span class="p">(</span><span class="nx">channel</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">[</span><span class="nx">clientId</span><span class="p">,</span><span class="w"> </span><span class="nx">qc</span><span class="p">])</span>
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">notificacoes</span><span class="p">,</span><span class="w"> </span><span class="nx">limparNotificacoes</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">setNotificacoes</span><span class="p">([])</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 3 — HOME DO PORTAL (<code>/portal/page.tsx</code>)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="31-hook-use-portal-homets">3.1 — Hook <code>use-portal-home.ts</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">usePortalHome</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">useQuery</span><span class="p">({</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;portal&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;home&#39;</span><span class="p">],</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nx">queryFn</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">portalApi</span><span class="p">.</span><span class="nx">getHome</span><span class="p">(),</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nx">staleTime</span><span class="o">:</span><span class="w"> </span><span class="kt">30_000</span><span class="p">,</span><span class="w">     </span><span class="c1">// 30s — dados frescos o suficiente</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nx">refetchOnWindowFocus</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="32-layout-da-home-mobile-first">3.2 — Layout da home (mobile first)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│  Olá, João!                         Maio 2026    │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│  Bem-vindo ao seu portal financeiro              │
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>└──────────────────────────────────────────────────┘
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>[BANNER DE ALERTA — condicional, máximo 1 visível]
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>┌────────────┐ ┌────────────┐ ┌────────────┐
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│ Contratos  │ │Próx.parcela│ │Em aberto   │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│ ativos     │ │            │ │            │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│     2      │ │ R$ 280,00  │ │R$ 1.400,00 │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│            │ │ em 25/05   │ │            │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>└────────────┘ └────────────┘ └────────────┘
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│  Últimas movimentações              [Ver tudo →] │
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│  ✅ Parc. 2/5 · Contrato #2 · R$280 · 10/05     │
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│  ✅ Parc. 1/5 · Contrato #2 · R$280 · 10/04     │
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│  ✅ Parc. 5/5 · Contrato #1 · R$200 · 05/04     │
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="33-banners-de-alerta-componente-alerta-bannertsx">3.3 — Banners de alerta (componente <code>alerta-banner.tsx</code>)</h2>
+<p>Lógica de prioridade — mostrar apenas o banner mais urgente:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">resolverAlerta</span><span class="p">(</span><span class="nx">alertas</span><span class="o">:</span><span class="w"> </span><span class="kt">Alerta</span><span class="p">[])</span><span class="o">:</span><span class="w"> </span><span class="nx">Alerta</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="c1">// Prioridade 1: parcela vencida</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">vencida</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">alertas</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">tipo</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;vencida&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">vencida</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">vencida</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="c1">// Prioridade 2: parcela vencendo em até 3 dias</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">vencendo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">alertas</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">tipo</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;vencendo&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">vencendo</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">vencendo</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="c1">// Prioridade 3: MFA pendente</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">mfa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">alertas</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">tipo</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;mfa_pendente&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">mfa</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">mfa</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="c1">// Nenhum: mostrar banner &quot;em dia&quot;</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;em_dia&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">mensagem</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Você está em dia com seus pagamentos.&#39;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="p">}</span>
+</code></pre></div>
+<p>Variantes visuais dos banners:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>// Vencida (vermelho)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│ ● Parcela em atraso — {X} dias                   │
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│ Contrato #{n} · Parcela {p}/{t} · R$ {v}         │
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│ [ Regularizar agora → ]                          │
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>└──────────────────────────────────────────────────┘
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>border-left: 3px solid var(--color-border-danger)
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>background: var(--color-background-danger)
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>// Vencendo (amarelo)
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│ ● Parcela vence em {X} dia(s)                    │
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│ Contrato #{n} · R$ {v} · Vence {data}            │
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│ [ Pagar com PIX agora → ]                        │
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>└──────────────────────────────────────────────────┘
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>border-left: 3px solid var(--color-border-warning)
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>background: var(--color-background-warning)
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>// MFA pendente (cinza)
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>│ ⚠ Proteja sua conta                              │
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>│ Configure o Google Authenticator.                │
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>│ Você tem {X} acesso(s) antes de ser obrigatório. │
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>│ [ Configurar agora ]    [ Depois ]               │
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>└──────────────────────────────────────────────────┘
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>// Em dia (verde)
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>│ ✓ Tudo certo! Você está em dia.                  │
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>└──────────────────────────────────────────────────┘
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>border-left: 3px solid var(--color-border-success)
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>background: var(--color-background-success)
+</code></pre></div></p>
+<h2 id="34-cards-kpi-resumo-cardstsx">3.4 — Cards KPI (<code>resumo-cards.tsx</code>)</h2>
+<p>Grid responsivo de 3 colunas:
+- Contratos ativos: número inteiro, link para <code>/portal/contratos</code>
+- Próxima parcela: valor formatado (R$) + data relativa ("em 5 dias" /
+  "vence hoje" / "atrasada há 3 dias"). Cor condicional por urgência.
+  Link direto para PIX se atrasada ou vencendo em até 3 dias.
+- Total em aberto: soma de todas as parcelas pendentes + atrasadas.</p>
+<p>Se <code>proximaParcela === null</code> (sem contratos ativos): mostrar card vazio
+com mensagem "Nenhuma parcela pendente".</p>
+<h2 id="35-ultimas-movimentacoes">3.5 — Últimas movimentações</h2>
+<ul>
+<li>Listar últimos 5 pagamentos em ordem decrescente</li>
+<li>Formato: "Parc. {n}/{t} · Contrato #{num} · R$ {v} · {data}"</li>
+<li>Link "Ver tudo →" para <code>/portal/pagamentos</code></li>
+<li>Se sem pagamentos: estado vazio com mensagem neutra</li>
+</ul>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 4 — CONTRATOS (<code>/portal/contratos</code>)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="41-lista-de-contratos-pagetsx">4.1 — Lista de contratos (<code>page.tsx</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">usePortalContratos</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">useQuery</span><span class="p">({</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;portal&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;contratos&#39;</span><span class="p">],</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nx">queryFn</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">portalApi</span><span class="p">.</span><span class="nx">getContratos</span><span class="p">(),</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nx">staleTime</span><span class="o">:</span><span class="w"> </span><span class="kt">60_000</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>Card de contrato (<code>contrato-card.tsx</code>):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>│  Contrato #2                     [ Ativo ]       │
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>│  R$ 1.400,00 · 5 parcelas · Mar 2026             │
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>│                                                  │
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>│  ████████░░░░░░░░░░░░ 40% (2 de 5 pagas)        │
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>│                                                  │
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>│  Próxima: R$ 280,00 · vence 25/05/2026           │
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>│                              [ Ver detalhes → ]  │
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Regras visuais do badge de status:
+- <code>ativo</code> → azul (<code>b-info</code>)
+- <code>quitado</code> → verde (<code>b-ok</code>)
+- <code>inadimplente</code> → vermelho (<code>b-danger</code>)
+- <code>cancelado</code> → cinza (<code>b-gray</code>)</p>
+<p>Barra de progresso:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// Cálculo: parcelasPagas / totalParcelas * 100</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">// Cor da barra:</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">// progressoPercentual === 100 → verde</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">// status === &#39;inadimplente&#39; → vermelho</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">// default → azul</span>
+</code></pre></div></p>
+<p>Estado vazio (nenhum contrato):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>│        Nenhum contrato encontrado.               │
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>│        Em caso de dúvidas, entre em contato.     │
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>│        [ Abrir chamado de suporte ]              │
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<h2 id="42-detalhe-do-contrato-portalcontratosidpagetsx">4.2 — Detalhe do contrato (<code>/portal/contratos/[id]/page.tsx</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">usePortalContratoDetalhe</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">useQuery</span><span class="p">({</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nx">queryKey</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;portal&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;contratos&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">],</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="nx">queryFn</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">portalApi</span><span class="p">.</span><span class="nx">getContratoDetalhe</span><span class="p">(</span><span class="nx">id</span><span class="p">),</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="o">!!</span><span class="nx">id</span><span class="p">,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>Layout:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>│  ← Voltar        Contrato #2      [ Ativo ]      │
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>│  RESUMO FINANCEIRO                               │
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>│  Valor emprestado     R$ 1.000,00                │
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>│  Total a pagar        R$ 1.400,00                │
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>│  Total pago           R$   560,00                │
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>│  Saldo restante       R$   840,00                │
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>│  Início               01/03/2026                 │
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>│  Pagamento            PIX                        │
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>│                                                  │
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>│  ████████░░░░░░░░░░░░ 40% concluído             │
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>│  PARCELAS                                        │
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>│  1/5  01/04/26  R$280  ✅ Pago  10/04/26         │
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>│  2/5  01/05/26  R$280  ✅ Pago  10/05/26         │
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>│  3/5  01/06/26  R$280  🔵 Pendente               │
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>│                        [ Pagar com PIX → ]       │
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>│  4/5  01/07/26  R$280  ⏳ Aguardando            │
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>│  5/5  01/08/26  R$280  ⏳ Aguardando            │
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Componente <code>parcela-row.tsx</code> — regras de exibição:
+- <code>pago</code>: mostrar data do pagamento. Sem ações.
+- <code>pendente</code>: botão "Pagar com PIX →" que navega para
+  <code>/portal/pagamentos/pix/[installmentId]</code>
+- <code>atrasado</code>: mesmo botão do pendente, mas com texto em vermelho e
+  badge "Atrasada" destacado
+- <code>cancelado</code>: texto riscado, sem ações
+- Status futuro (data &gt; hoje + status pendente): exibir como
+  "Aguardando" sem botão de ação</p>
+<p>Campos NUNCA exibidos: <code>valorInvestido</code>, <code>taxaJuros</code>, <code>observacoes</code>,
+<code>consultorId</code>, <code>modoTaxa</code></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 5 — PAGAMENTO PIX (<code>/portal/pagamentos/pix/[installmentId]</code>)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="51-hook-use-portal-pixts">5.1 — Hook <code>use-portal-pix.ts</code></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">usePortalPix</span><span class="p">(</span><span class="nx">installmentId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">pixData</span><span class="p">,</span><span class="w"> </span><span class="nx">setPixData</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="o">&lt;</span><span class="nx">PixStatus</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">fase</span><span class="p">,</span><span class="w"> </span><span class="nx">setFase</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="o">&lt;</span><span class="s1">&#39;carregando&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;qrcode&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;sucesso&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;expirado&#39;</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">&#39;carregando&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">pollingRef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useRef</span><span class="o">&lt;</span><span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="o">&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="c1">// Gerar ou reutilizar QR Code ao montar</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">iniciarPix</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">portalApi</span><span class="p">.</span><span class="nx">gerarPix</span><span class="p">(</span><span class="nx">installmentId</span><span class="p">)</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">      </span><span class="nx">setPixData</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">      </span><span class="nx">setFase</span><span class="p">(</span><span class="s1">&#39;qrcode&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">      </span><span class="nx">iniciarPolling</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">pixId</span><span class="p">)</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">    </span><span class="nx">iniciarPix</span><span class="p">()</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">    </span><span class="c1">// Cleanup obrigatório ao desmontar</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">pollingRef</span><span class="p">.</span><span class="nx">current</span><span class="p">)</span><span class="w"> </span><span class="nx">clearInterval</span><span class="p">(</span><span class="nx">pollingRef</span><span class="p">.</span><span class="nx">current</span><span class="p">)</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">[</span><span class="nx">installmentId</span><span class="p">])</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">iniciarPolling</span><span class="p">(</span><span class="nx">pixId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">    </span><span class="nx">pollingRef</span><span class="p">.</span><span class="nx">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">setInterval</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">portalApi</span><span class="p">.</span><span class="nx">getPixStatus</span><span class="p">(</span><span class="nx">pixId</span><span class="p">)</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;aprovado&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">        </span><span class="nx">clearInterval</span><span class="p">(</span><span class="nx">pollingRef</span><span class="p">.</span><span class="nx">current</span><span class="o">!</span><span class="p">)</span>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="w">        </span><span class="nx">setPixData</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="w">        </span><span class="nx">setFase</span><span class="p">(</span><span class="s1">&#39;sucesso&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;expirado&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a><span class="w">        </span><span class="nx">clearInterval</span><span class="p">(</span><span class="nx">pollingRef</span><span class="p">.</span><span class="nx">current</span><span class="o">!</span><span class="p">)</span>
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a><span class="w">        </span><span class="nx">setFase</span><span class="p">(</span><span class="s1">&#39;expirado&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="mf">10</span><span class="nx">_000</span><span class="p">)</span><span class="w"> </span><span class="c1">// polling a cada 10 segundos</span>
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a>
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">regenerar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">pollingRef</span><span class="p">.</span><span class="nx">current</span><span class="p">)</span><span class="w"> </span><span class="nx">clearInterval</span><span class="p">(</span><span class="nx">pollingRef</span><span class="p">.</span><span class="nx">current</span><span class="p">)</span>
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a><span class="w">    </span><span class="nx">setFase</span><span class="p">(</span><span class="s1">&#39;carregando&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a><span class="w">    </span><span class="c1">// Força geração de novo QR Code</span>
+<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a><span class="w">    </span><span class="nx">portalApi</span><span class="p">.</span><span class="nx">gerarPix</span><span class="p">(</span><span class="nx">installmentId</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">forcar</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a><span class="w">      </span><span class="nx">setPixData</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+<a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a><span class="w">      </span><span class="nx">setFase</span><span class="p">(</span><span class="s1">&#39;qrcode&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a><span class="w">      </span><span class="nx">iniciarPolling</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">pixId</span><span class="p">)</span>
+<a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a>
+<a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pixData</span><span class="p">,</span><span class="w"> </span><span class="nx">fase</span><span class="p">,</span><span class="w"> </span><span class="nx">regenerar</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-15-51" name="__codelineno-15-51" href="#__codelineno-15-51"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="52-tela-do-qr-code">5.2 — Tela do QR Code</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>│  ← Voltar              Pagar com PIX             │
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│  Contrato #2 · Parcela 3/5                       │
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│  Vencimento: 01/06/2026                          │
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>│                                                  │
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>│  Valor a pagar                                   │
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>│  R$ 280,00                                       │
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>│                                                  │
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>│  ┌────────────────────────────────┐              │
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>│  │                                │              │
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>│  │     [QR CODE — 200×200px]      │              │
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>│  │     next/image, alt descritivo │              │
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>│  │                                │              │
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>│  └────────────────────────────────┘              │
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>│                                                  │
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>│  Copia e cola PIX:                               │
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>│  ┌──────────────────────────────┐ [📋 Copiar]   │
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>│  │ 00020126580014br.gov.bcb...  │               │
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>│  └──────────────────────────────┘               │
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>│                                                  │
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>│  ⏱ Válido por 28 minutos                        │
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>│  (timer regressivo atualizado a cada segundo)    │
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>│                                                  │
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>│  [ 📤 Compartilhar ]    [ 🔄 Novo QR Code ]      │
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>│                                                  │
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>│  ✓ Confirmação automática em até 5 minutos       │
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>│    após o pagamento ser aprovado.                │
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Detalhes técnicos:
+- Timer regressivo: <code>useEffect</code> com <code>setInterval</code> de 1s calculando
+  <code>expiresAt - now</code>. Ao zerar: setar <code>fase = 'expirado'</code>
+- Botão "Copiar": usar <code>navigator.clipboard.writeText()</code>. Feedback:
+  texto do botão muda para "Copiado!" por 2s
+- Botão "Compartilhar": usar <code>navigator.share()</code> (Web Share API).
+  Fallback: copiar para clipboard se API não disponível
+- QR Code image: <code>&lt;img src={pixData.qrImage} alt="QR Code PIX para pagamento de R$ {valor}"/&gt;</code></p>
+<h2 id="53-tela-de-qr-code-expirado">5.3 — Tela de QR Code expirado</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>│  ← Voltar              Pagar com PIX             │
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│                                                  │
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>│         ⏱ QR Code expirado                      │
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>│                                                  │
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>│   O código PIX de R$ 280,00 expirou.             │
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>│   Gere um novo para continuar.                   │
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>│                                                  │
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>│        [ 🔄 Gerar novo QR Code ]                 │
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>│                                                  │
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="54-tela-de-sucesso-pix-sucessotsx">5.4 — Tela de sucesso (<code>pix-sucesso.tsx</code>)</h2>
+<p>Exibida quando <code>fase === 'sucesso'</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>│                                                  │
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>│           ✅  Pagamento confirmado!              │
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>│                                                  │
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>│   Parcela 3/5 do Contrato #2                    │
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>│   R$ 280,00                                      │
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│   Pago em 20/05/2026 às 14:32                   │
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│                                                  │
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>│   Redirecionando em 3s...                        │
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>│                                                  │
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>│        [ Ver meu contrato ]                      │
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>│                                                  │
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Comportamento:
+- Animação de entrada: escala de 0.8 → 1.0 com fade-in (CSS transition)
+- <code>useEffect</code> com <code>setTimeout(3000)</code> → <code>router.push('/portal/contratos/[id]')</code>
+- Invalidar React Query: <code>qc.invalidateQueries(['portal', 'home'])</code>
+  e <code>qc.invalidateQueries(['portal', 'contratos'])</code>
+- Cleanup do timeout se o usuário clicar no botão antes dos 3s</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 6 — HISTÓRICO DE PAGAMENTOS (<code>/portal/pagamentos/page.tsx</code>)
+═══════════════════════════════════════════════════════════════════</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">// Filtros disponíveis</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">FiltrosPagamentos</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="nx">contratoId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;todos&#39;</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span><span class="nx">mes</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;todos&#39;</span><span class="w">  </span><span class="c1">// formato: &#39;YYYY-MM&#39;</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>Layout com agrupamento por mês:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>│  Histórico de Pagamentos                         │
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>│  [ Todos os contratos ▼ ]   [ Mês ▼ ]           │
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>│  Maio 2026                                       │
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>│  10/05  Parc. 2/5 · Contrato #2  R$280  PIX ✅  │
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>│  Abril 2026                                      │
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>│  10/04  Parc. 1/5 · Contrato #2  R$280  PIX ✅  │
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>│  05/04  Parc. 5/5 · Contrato #1  R$200  PIX ✅  │
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Agrupamento no frontend (não no backend):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">agruparPorMes</span><span class="p">(</span><span class="nx">pagamentos</span><span class="o">:</span><span class="w"> </span><span class="kt">UltimoPagamento</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">pagamentos</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">pag</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">chave</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">format</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">pag</span><span class="p">.</span><span class="nx">dataPagamento</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;MMMM yyyy&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">locale</span><span class="o">:</span><span class="w"> </span><span class="kt">ptBR</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">acc</span><span class="p">[</span><span class="nx">chave</span><span class="p">])</span><span class="w"> </span><span class="nx">acc</span><span class="p">[</span><span class="nx">chave</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="nx">acc</span><span class="p">[</span><span class="nx">chave</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">pag</span><span class="p">)</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">acc</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">UltimoPagamento</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">)</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="p">}</span>
+</code></pre></div></p>
+<p>Rótulo do método de pagamento:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">labelMetodo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="nx">pix</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;PIX&#39;</span><span class="p">,</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="nx">dinheiro</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Dinheiro&#39;</span><span class="p">,</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="nx">cartao</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Cartão&#39;</span><span class="p">,</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span><span class="nx">transferencia</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Transferência&#39;</span><span class="p">,</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">  </span><span class="nx">cheque</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Cheque&#39;</span><span class="p">,</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">  </span><span class="nx">mercadopago</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Mercado Pago&#39;</span><span class="p">,</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="p">}</span>
+</code></pre></div></p>
+<p>Estado vazio: "Nenhum pagamento registrado ainda."</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 7 — SUPORTE (<code>/portal/suporte</code>)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="71-lista-de-tickets-pagetsx">7.1 — Lista de tickets (<code>page.tsx</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>│  Suporte                   [ + Novo chamado ]    │
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>│  #003  Dúvida sobre parcela                      │
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>│        Aberto em 18/05/2026       🟡 Aguardando  │
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>│  #002  Erro no QR Code PIX         ● NÃO LIDO   │
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>│        Aberto em 10/05/2026       ✅ Respondido  │
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>│                            [ Ver resposta → ]    │
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>│  #001  Solicitação de renegociação               │
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>│        Aberto em 01/04/2026       ✅ Resolvido   │
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Badge "● NÃO LIDO": visível quando <code>ticket.status === 'respondido'</code>
+e <code>ticket.lido === false</code>. Ao clicar no ticket: chamar endpoint
+<code>PATCH /api/portal/suporte/:id/lido</code> + remover badge.</p>
+<p>Cor dos badges de status:
+- <code>aberto</code> → amarelo
+- <code>respondido</code> → azul
+- <code>fechado</code> / <code>resolvido</code> → verde</p>
+<p>Estado vazio:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>│  Nenhum chamado aberto.                          │
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>│  [ Abrir meu primeiro chamado ]                  │
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<h2 id="72-detalhe-do-ticket-portalsuporteidpagetsx">7.2 — Detalhe do ticket (<code>/portal/suporte/[id]/page.tsx</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>│  ← Voltar        Ticket #002                     │
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>│                               ✅ Respondido      │
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>│  Assunto: Erro no QR Code PIX                    │
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>│  Aberto em: 10/05/2026 às 09:15                  │
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>│  Contrato: #2 (se vinculado)                     │
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>│  Sua mensagem                                    │
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>│  &quot;Tentei gerar o QR Code mas apareceu um        │
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>│   erro na tela. Pode verificar?&quot;                 │
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>│  Resposta da equipe Lidera                       │
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>│  &quot;Olá, João! O problema foi identificado e      │
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>│   corrigido. Por favor, tente novamente.&quot;        │
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>│                           Respondido em 11/05    │
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Ao carregar a página: chamar <code>PATCH /api/portal/suporte/:id/lido</code>
+automaticamente se <code>ticket.lido === false</code>.</p>
+<h2 id="73-novo-ticket-portalsuportenovopagetsx">7.3 — Novo ticket (<code>/portal/suporte/novo/page.tsx</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>│  ← Voltar        Novo chamado de suporte         │
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>│  Assunto *                                       │
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>│  ┌────────────────────────────────────────────┐  │
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>│  │ Selecione o assunto ▼                      │  │
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>│  │ • Dúvida sobre parcela                     │  │
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>│  │ • Problema com pagamento PIX               │  │
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>│  │ • Solicitação de renegociação              │  │
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>│  │ • Atualização de dados cadastrais          │  │
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>│  │ • Outro                                    │  │
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>│  └────────────────────────────────────────────┘  │
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a>│                                                  │
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>│  Contrato relacionado (opcional)                 │
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>│  ┌────────────────────────────────────────────┐  │
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>│  │ Selecione o contrato ▼                     │  │
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a>│  └────────────────────────────────────────────┘  │
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>│                                                  │
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a>│  Mensagem *                                      │
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>│  ┌────────────────────────────────────────────┐  │
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>│  │                                            │  │
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a>│  │                                            │  │
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a>│  │                             0 / 500 chars  │  │
+<a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a>│  └────────────────────────────────────────────┘  │
+<a id="__codelineno-26-25" name="__codelineno-26-25" href="#__codelineno-26-25"></a>│                                                  │
+<a id="__codelineno-26-26" name="__codelineno-26-26" href="#__codelineno-26-26"></a>│  [ Cancelar ]          [ Enviar chamado → ]      │
+<a id="__codelineno-26-27" name="__codelineno-26-27" href="#__codelineno-26-27"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Validação client-side (react-hook-form + zod):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span><span class="nx">assunto</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Selecione um assunto&#39;</span><span class="p">),</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span><span class="nx">loanId</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span><span class="nx">mensagem</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">()</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="w">    </span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Mensagem muito curta&#39;</span><span class="p">)</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="w">    </span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">500</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Máximo 500 caracteres&#39;</span><span class="p">),</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="p">})</span>
+</code></pre></div></p>
+<p>Após envio bem-sucedido:
+- Invalidar cache: <code>qc.invalidateQueries(['portal', 'suporte'])</code>
+- Redirecionar para <code>/portal/suporte</code>
+- Exibir toast: "Chamado enviado! Nossa equipe responderá em breve."</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 8 — PERFIL E SEGURANÇA (<code>/portal/perfil/page.tsx</code>)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="81-layout-completo">8.1 — Layout completo</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>│  Meu Perfil                                      │
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>│  DADOS PESSOAIS                                  │
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>│  Nome          João da Silva                     │
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>│  CPF           123.456.789-00                    │
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>│  Email         joao@email.com                    │
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>│  Telefone      (65) 99999-9999                   │
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>│                                                  │
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>│  ⚠ Para alterar seus dados, entre em contato     │
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>│    com a Lidera Financeira pelo suporte.         │
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>│    [ Abrir chamado de suporte ]                  │
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>│  SEGURANÇA                                       │
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a>│  Senha         ••••••••••••                      │
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>│                [ Alterar senha ]                 │
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a>│                                                  │
+<a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a>│  Autenticação em dois fatores                    │
+<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a>│  Google Authenticator                            │
+<a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a>│                                                  │
+<a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a>│  [Estado A] ⚠ Não configurado                   │
+<a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a>│  Você tem 3 acesso(s) antes de ser obrigatório.  │
+<a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a>│  [ Configurar Google Authenticator ]             │
+<a id="__codelineno-28-26" name="__codelineno-28-26" href="#__codelineno-28-26"></a>│                                                  │
+<a id="__codelineno-28-27" name="__codelineno-28-27" href="#__codelineno-28-27"></a>│  [Estado B] ✅ Ativo e configurado               │
+<a id="__codelineno-28-28" name="__codelineno-28-28" href="#__codelineno-28-28"></a>│  [ Remover autenticação em dois fatores ]        │
+<a id="__codelineno-28-29" name="__codelineno-28-29" href="#__codelineno-28-29"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-28-30" name="__codelineno-28-30" href="#__codelineno-28-30"></a>│  NOTIFICAÇÕES                                    │
+<a id="__codelineno-28-31" name="__codelineno-28-31" href="#__codelineno-28-31"></a>│  ──────────────────────────────────────────────  │
+<a id="__codelineno-28-32" name="__codelineno-28-32" href="#__codelineno-28-32"></a>│  WhatsApp    Lembretes e confirmações  [ ● ON ]  │
+<a id="__codelineno-28-33" name="__codelineno-28-33" href="#__codelineno-28-33"></a>│  Email       Confirmações de pagamento [ ● ON ]  │
+<a id="__codelineno-28-34" name="__codelineno-28-34" href="#__codelineno-28-34"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="82-modal-de-alteracao-de-senha">8.2 — Modal de alteração de senha</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>│  Alterar senha                                   │
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>├──────────────────────────────────────────────────┤
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>│  Senha atual *                                   │
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>│  [ ____________________ ] 👁                    │
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>│                                                  │
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>│  Nova senha *                                    │
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>│  [ ____________________ ] 👁                    │
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>│                                                  │
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>│  Confirmar nova senha *                          │
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>│  [ ____________________ ] 👁                    │
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>│                                                  │
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>│  Requisitos:                                     │
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>│  ✅ Mínimo 8 caracteres                          │
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>│  ✅ Uma letra maiúscula                          │
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>│  ✅ Um número                                    │
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>│  ✅ Um caractere especial                        │
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>│                                                  │
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>│  [ Cancelar ]           [ Salvar senha ]         │
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Implementação:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">alterarSenha</span><span class="p">(</span><span class="nx">senhaAtual</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">novaSenha</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span><span class="c1">// NOTA: este fluxo é apenas para clientes do portal (email real)</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span><span class="c1">// Operadores usam email fictício username@siafi.local internamente</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">  </span><span class="c1">// 1. Verificar senha atual — reautenticar no Supabase</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithPassword</span><span class="p">({</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.email</span><span class="p">,</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="w">    </span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">senhaAtual</span><span class="p">,</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Senha atual incorreta.&#39;</span><span class="p">)</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="w">  </span><span class="c1">// 2. Atualizar senha</span>
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">updateUser</span><span class="p">({</span><span class="w"> </span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">novaSenha</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a><span class="w">  </span><span class="c1">// 3. Atualizar flag no backend</span>
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">portalApi</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s1">&#39;/perfil/primeiro-acesso&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a><span class="w">    </span><span class="nx">senhaTemporaria</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a><span class="w">    </span><span class="nx">primeiroAcesso</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-30-19" name="__codelineno-30-19" href="#__codelineno-30-19"></a><span class="p">}</span>
+</code></pre></div></p>
+<h2 id="83-secao-de-notificacoes">8.3 — Seção de notificações</h2>
+<p>Dois toggles independentes com <code>PATCH /api/portal/notificacoes</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">PreferenciasNotificacao</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nx">notificacoesWhatsapp</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="nx">notificacoesEmail</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="p">}</span>
+</code></pre></div></p>
+<p>Feedback otimista: atualizar UI imediatamente, reverter em caso de erro.</p>
+<h2 id="84-secao-mfa">8.4 — Seção MFA</h2>
+<p>Usar o estado <code>mfaEnabled</code> do cliente para renderizar:</p>
+<p>Estado A (não configurado + dentro do prazo):
+- Mostrar contagem regressiva: "X acesso(s) restantes"
+- Botão "Configurar Google Authenticator" → navegar para <code>/portal/mfa-setup</code></p>
+<p>Estado B (não configurado + prazo esgotado):
+- Não deve chegar aqui pois o middleware já redirecionou — mas como
+  fallback: mostrar banner de urgência + botão de configuração</p>
+<p>Estado C (configurado):
+- Badge verde "Ativo"
+- Botão "Remover autenticação em dois fatores" com confirmação modal</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 9 — TELAS DE ONBOARDING (fora do layout do portal)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="91-primeiro-acesso-portalprimeiro-acessopagetsx">9.1 — Primeiro acesso (<code>/portal/primeiro-acesso/page.tsx</code>)</h2>
+<p>Layout centralizado sem header/footer do portal:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>│           [LOGO LIDERA]                          │
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>│                                                  │
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>│      Bem-vindo ao Portal Lidera! 🎉              │
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>│                                                  │
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>│  Por segurança, defina sua senha pessoal         │
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>│  antes de continuar.                             │
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>│                                                  │
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>│  Nova senha *                                    │
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>│  [ ____________________ ] 👁                    │
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>│                                                  │
+<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>│  Confirmar senha *                               │
+<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>│  [ ____________________ ] 👁                    │
+<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>│                                                  │
+<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>│  Força da senha:  [████████░░] Boa              │
+<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>│                                                  │
+<a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>│  ✅ 8+ caracteres   ✅ Maiúscula                 │
+<a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>│  ✅ Número          ✅ Especial                  │
+<a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>│                                                  │
+<a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>│  [ Salvar senha e continuar → ]                  │
+<a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Indicador de força da senha (PasswordStrength):
+- Fraca (1): apenas letras → vermelho
+- Média (2): letras + número → amarelo
+- Boa (3): 3 requisitos → azul
+- Forte (4): todos os requisitos → verde</p>
+<p>Após salvar:
+1. <code>supabase.auth.updateUser({ password: novaSenha })</code>
+2. <code>PATCH /api/portal/perfil/primeiro-acesso</code>
+3. Verificar se MFA obrigatório → <code>/portal/mfa-setup</code>
+4. Senão → <code>/portal</code> com toast de boas-vindas</p>
+<h2 id="92-setup-mfa-portalmfa-setuppagetsx">9.2 — Setup MFA (<code>/portal/mfa-setup/page.tsx</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>│           [LOGO LIDERA]                          │
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>│                                                  │
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>│      Configure o Google Authenticator            │
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>│                                                  │
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>│  1. Instale o app Google Authenticator           │
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>│     no seu celular                               │
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>│                                                  │
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>│  2. Escaneie o QR Code abaixo:                   │
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>│                                                  │
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>│     ┌─────────────────────┐                      │
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>│     │   [QR CODE TOTP]    │                      │
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>│     └─────────────────────┘                      │
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>│                                                  │
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>│     Ou use o código manual:                      │
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>│     JBSWY3DPEHPK3PXP  [ 📋 Copiar ]             │
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>│                                                  │
+<a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>│  3. Digite o código gerado pelo app:             │
+<a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a>│                                                  │
+<a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a>│     [ _ ][ _ ][ _ ][ _ ][ _ ][ _ ]              │
+<a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a>│            (6 dígitos)                           │
+<a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>│                                                  │
+<a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a>│  [ Voltar ]        [ Ativar proteção → ]         │
+<a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a>│                                                  │
+<a id="__codelineno-33-25" name="__codelineno-33-25" href="#__codelineno-33-25"></a>│  {Se prazo ainda válido: }                       │
+<a id="__codelineno-33-26" name="__codelineno-33-26" href="#__codelineno-33-26"></a>│  [ Configurar depois ({X} acessos restantes) ]   │
+<a id="__codelineno-33-27" name="__codelineno-33-27" href="#__codelineno-33-27"></a>└──────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Input OTP de 6 dígitos:
+- 6 <code>&lt;input type="text" maxLength={1}&gt;</code> separados
+- Auto-focus para próximo campo ao digitar
+- Auto-submit ao completar os 6 dígitos
+- Suporte a colar código completo (split nos campos)
+- Acessibilidade: <code>aria-label="Dígito {n} do código de autenticação"</code></p>
+<p>Ao confirmar:
+1. <code>supabase.auth.mfa.challengeAndVerify({ factorId, code })</code>
+2. <code>PATCH /api/portal/perfil/mfa</code> → <code>{ mfaEnabled: true }</code>
+3. Navegar para <code>/portal</code> com toast "Conta protegida!"</p>
+<h2 id="93-challenge-mfa-portalmfa-challengepagetsx">9.3 — Challenge MFA (<code>/portal/mfa-challenge/page.tsx</code>)</h2>
+<p>Exibida após login quando usuário tem MFA ativo:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>┌──────────────────────────────────────────────────┐
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>│           [LOGO LIDERA]                          │
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>│                                                  │
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>│      Verificação em dois fatores                 │
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>│                                                  │
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>│  Abra o Google Authenticator e digite            │
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>│  o código de 6 dígitos:                          │
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>│                                                  │
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>│     [ _ ][ _ ][ _ ][ _ ][ _ ][ _ ]              │
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>│                                                  │
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>│  O código se renova a cada 30 segundos.          │
+<a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>│                                                  │
+<a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>│                    [ Verificar → ]               │
+<a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>│                                                  │
+<a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>│  Não consigo acessar meu autenticador            │
+<a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>│  → abre novo ticket de suporte                  │
+<a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a>└──────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 10 — BACKEND: ENDPOINTS ADICIONAIS DA FASE 3
+═══════════════════════════════════════════════════════════════════</p>
+<p>Os endpoints da Fase 2 já existem. Adicionar apenas:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>PATCH /api/portal/suporte/:id/lido
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>      → marcar ticket como lido (lido: true)
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>      → ClientPortalGuard + validar ownership
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>PATCH /api/portal/perfil/mfa
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>      → { mfaEnabled: boolean } → atualizar no Prisma
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>GET   /api/portal/contratos/:id/parcelas
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>      → lista detalhada de parcelas de um contrato
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>      → validar ownership obrigatório
+</code></pre></div>
+<p><code>ClientPortalService</code> — adicionar método <code>marcarTicketLido</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">marcarTicketLido</span><span class="p">(</span><span class="nx">ticketId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ticket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">supportTicket</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">ticketId</span><span class="p">,</span><span class="w"> </span><span class="nx">clientId</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">ticket</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span><span class="s1">&#39;Acesso negado.&#39;</span><span class="p">);</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">supportTicket</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">ticketId</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">lido</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="p">}</span>
+</code></pre></div></p>
+<p>Adicionar campo <code>lido</code> no model <code>SupportTicket</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>model SupportTicket {
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>  // ... campos existentes ...
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>  lido      Boolean @default(false)
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>}
+</code></pre></div></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 11 — ACESSIBILIDADE E UX MOBILE
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="111-requisitos-de-acessibilidade-wcag-aa">11.1 — Requisitos de acessibilidade (WCAG AA)</h2>
+<ul>
+<li>Contraste mínimo 4.5:1 para texto normal, 3:1 para texto grande</li>
+<li>Todo elemento interativo acessível via teclado (<code>Tab</code>, <code>Enter</code>, <code>Space</code>)</li>
+<li><code>aria-label</code> em ícones sem texto: <code>&lt;button aria-label="Copiar código PIX"&gt;</code></li>
+<li><code>aria-live="polite"</code> no banner de alerta (atualiza dinamicamente)</li>
+<li><code>aria-live="assertive"</code> no toast de sucesso do pagamento</li>
+<li><code>role="status"</code> nos estados de loading</li>
+<li>Imagem do QR Code: <code>alt="QR Code PIX para pagamento de R$ {valor}"</code></li>
+<li>Input OTP: <code>aria-label="Dígito {n} do código de autenticação"</code></li>
+<li>Foco visível em todos os elementos interativos</li>
+</ul>
+<h2 id="112-estados-de-loading">11.2 — Estados de loading</h2>
+<p>Cada página deve ter skeleton loading adequado:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1">// Skeleton da home</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">HomeSkeleton</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;space-y-4&quot;</span><span class="o">&gt;</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;grid grid-cols-3 gap-3&quot;</span><span class="o">&gt;</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="w">        </span><span class="p">{[...</span><span class="nb">Array</span><span class="p">(</span><span class="mf">3</span><span class="p">)].</span><span class="nx">map</span><span class="p">((</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="w">          </span><span class="o">&lt;</span><span class="nx">Skeleton</span><span class="w"> </span><span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;h-20 rounded-lg&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="w">        </span><span class="p">))}</span>
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">Skeleton</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;h-12 rounded-lg&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a><span class="w">      </span><span class="o">&lt;</span><span class="nx">Skeleton</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;h-32 rounded-lg&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="w">    </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a><span class="w">  </span><span class="p">)</span>
+<a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a><span class="p">}</span>
+</code></pre></div></p>
+<h2 id="113-toast-notifications">11.3 — Toast notifications</h2>
+<p>Implementar com shadcn/ui <code>&lt;Sonner&gt;</code> ou similar:
+- Sucesso: verde, 4s, ícone ✓
+- Erro: vermelho, 6s, ícone ✕, mensagem genérica para o cliente
+- Info: azul, 3s, ícone ℹ</p>
+<h2 id="114-tratamento-de-erros">11.4 — Tratamento de erros</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1">// ErrorBoundary para cada rota do portal</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="c1">// Em caso de erro 401: redirecionar para /login</span>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="c1">// Em caso de erro 403: exibir mensagem &quot;Acesso não autorizado&quot;</span>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1">// Em caso de erro 500: exibir mensagem genérica + botão &quot;Tentar novamente&quot;</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="c1">// NUNCA exibir mensagens técnicas do Prisma ou Supabase para o cliente</span>
+</code></pre></div>
+<h2 id="115-performance-mobile">11.5 — Performance mobile</h2>
+<ul>
+<li><code>next/image</code> com <code>loading="lazy"</code> em todas as imagens exceto LCP</li>
+<li><code>React.lazy</code> + <code>Suspense</code> para componentes pesados</li>
+<li><code>staleTime</code> adequado em cada query (home: 30s, contratos: 60s)</li>
+<li>Evitar re-renders desnecessários: memoizar callbacks com <code>useCallback</code></li>
+</ul>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 12 — ENTREGÁVEIS DA FASE 3 (em ordem de dependência)
+═══════════════════════════════════════════════════════════════════</p>
+<h3 id="pre-requisito-obrigatorio-entregar-antes-de-tudo">Pré-requisito obrigatório (entregar antes de tudo)</h3>
+<ol>
+<li>Instalar e configurar Supabase SSR:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>npm<span class="w"> </span>install<span class="w"> </span>@supabase/ssr<span class="w"> </span>@supabase/supabase-js
+</code></pre></div>
+    Criar:<ul>
+<li><code>src/lib/supabase/client.ts</code> → <code>createBrowserClient(url, anonKey)</code></li>
+<li><code>src/lib/supabase/server.ts</code> → <code>createServerClient(url, anonKey, { cookies })</code></li>
+<li>Estas funções já devem existir da Fase 1 — verificar antes de recriar</li>
+</ul>
+</li>
+</ol>
+<h3 id="infraestrutura-entregar-primeiro">Infraestrutura (entregar primeiro)</h3>
+<ol>
+<li><code>src/lib/portal/portal-types.ts</code> — todas as interfaces TypeScript</li>
+<li><code>src/lib/portal/portal-api.ts</code> — funções axios para /api/portal/*</li>
+<li><code>src/hooks/portal/use-realtime-portal.ts</code> — Realtime + cleanup</li>
+<li><code>src/hooks/portal/use-portal-home.ts</code></li>
+<li><code>src/hooks/portal/use-portal-contratos.ts</code></li>
+<li><code>src/hooks/portal/use-portal-pix.ts</code> — polling + cleanup + regenerar</li>
+<li><code>src/hooks/portal/use-portal-suporte.ts</code></li>
+</ol>
+<h3 id="layout-e-componentes-base">Layout e componentes base</h3>
+<ol>
+<li><code>(portal)/layout.tsx</code> — QueryClient + header + footer + Realtime init</li>
+<li><code>portal-header.tsx</code> — sticky, badge, sair</li>
+<li><code>portal-footer.tsx</code></li>
+</ol>
+<h3 id="onboarding-sem-layout-do-portal">Onboarding (sem layout do portal)</h3>
+<ol>
+<li><code>/portal/primeiro-acesso/page.tsx</code> — com PasswordStrength</li>
+<li><code>/portal/mfa-setup/page.tsx</code> — QR Code + input OTP 6 dígitos</li>
+<li><code>/portal/mfa-challenge/page.tsx</code> — input OTP + link suporte</li>
+</ol>
+<h3 id="paginas-do-portal">Páginas do portal</h3>
+<ol>
+<li><code>/portal/page.tsx</code> — home com cards, banners e movimentações</li>
+<li><code>/portal/contratos/page.tsx</code> — lista com skeleton e estado vazio</li>
+<li><code>/portal/contratos/[id]/page.tsx</code> — detalhe + tabela de parcelas</li>
+<li><code>/portal/pagamentos/pix/[installmentId]/page.tsx</code> — QR + polling + timer + sucesso + expirado</li>
+<li><code>/portal/pagamentos/page.tsx</code> — histórico agrupado por mês</li>
+<li><code>/portal/suporte/page.tsx</code> — lista + badge não lido</li>
+<li><code>/portal/suporte/[id]/page.tsx</code> — detalhe + marcar lido automático</li>
+<li><code>/portal/suporte/novo/page.tsx</code> — formulário com validação zod</li>
+<li><code>/portal/perfil/page.tsx</code> — dados + senha + MFA + notificações</li>
+</ol>
+<h3 id="backend-adicional">Backend adicional</h3>
+<ol>
+<li>Migration: campo <code>lido</code> em <code>SupportTicket</code></li>
+<li><code>PATCH /api/portal/suporte/:id/lido</code> endpoint</li>
+<li><code>PATCH /api/portal/perfil/mfa</code> endpoint</li>
+</ol>
+<p>═══════════════════════════════════════════════════════════════════
+REGRAS TÉCNICAS OBRIGATÓRIAS
+═══════════════════════════════════════════════════════════════════
+- Mobile first em TODAS as telas — testar em viewport 375px
+- TODA query filtra por clientId do JWT — sem exceção em nenhum endpoint
+- Polling do PIX: cleanup no return do useEffect — sem memory leak
+- Realtime: supabase.removeChannel() no return do useEffect
+- NUNCA exibir para o cliente: valorInvestido, taxaJuros, observacoes,
+  consultorId, dados internos do sistema
+- Erros de API: mensagem genérica ao cliente, nunca stack trace
+- QR Code: reutilizar se não expirado, gerar novo apenas quando necessário
+- Acessibilidade WCAG AA: aria-labels, contraste, navegação por teclado
+- Toast feedback em toda ação do usuário (sucesso e erro)
+- Skeleton loading em toda página com dados assíncronos
+- Estado vazio tratado em toda listagem
+- react-hook-form + zod em todo formulário
+- useCallback e useMemo onde evitar re-renders importa (polling, Realtime)
+```</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

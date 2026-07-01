@@ -1,0 +1,1374 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PROMPT REMODELAGEM TELAS PERFIS - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PROMPT REMODELAGEM TELAS PERFIS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>PROMPT REMODELAGEM TELAS PERFIS</h1>
+
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior e Designer de UX especializado
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>em sistemas financeiros. Analise toda a documentação do SIAFI 2.0 e
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>todos os fluxos de negócio já definidos.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Sua missão é remontar as telas, menus, formulários e dashboards de
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cada perfil operacional para que estejam em perfeita conformidade
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>com os fluxos implementados — sem telas desnecessárias, sem campos
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>faltando, sem ações que o perfil não deveria ter.
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>PROTOCOLO OBRIGATÓRIO: antes de implementar cada perfil, apresente
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>um PLANEJAMENTO DETALHADO para minha aprovação. Só implemente após
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>eu confirmar. Siga a ordem: Consultor → Financeiro → Caixa → Admin.
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>CONTEXTO DO SISTEMA
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>O SIAFI é um sistema financeiro de factoring e empréstimos com os
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>seguintes fluxos já implementados e documentados:
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>FLUXO PRINCIPAL:
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  Consultor cadastra cliente → registra intenção de empréstimo →
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  Financeiro aprova/rejeita (com SLA de 24h) →
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  Se aprovado: contrato gerado com split (principal_payback + net_gain)
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>             + portal do cliente ativado automaticamente →
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  Cliente assina digitalmente (SLA de 7 dias) →
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  Caixa confirma entrega do capital (dinheiro/PIX/TED) →
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  Parcelas geradas com dia fixo de vencimento →
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  Cobrança antecipada automática X dias antes (WhatsApp + email + portal) →
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  Cliente paga → Split registrado no caixa →
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  Se não pagar: parcela vira atrasado → mora diária sobre saldo devedor →
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  Cliente pode solicitar reparcelamento via portal →
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  Financeiro define novos termos → 2ª instância aprova →
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>  Contrato original cancelado + novo contrato criado.
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>MÓDULOS ATIVOS:
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>  - ConsultorModule: carteira, intenções, solicitações, cobranças
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>  - IntencaoEmprestimo: aguardando → aprovado/rejeitado → convertido
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>  - SolicitacaoReparcelamento: pendente → em_analise → aprovado/executado
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>  - Comunicador interno: conversas com contexto vinculado
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>  - Split de parcela: principal_payback + net_gain por parcela
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>  - Cobrança antecipada: diasAntecedenciaCobranca por contrato
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>  - Encargos individuais: multaPercentual + moraDiariaPercentual por contrato
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>  - LoanStatus: aguardando_aceite → aguardando_liberacao → ativo → quitado
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>  - EmailTemplates: painel de controle de emails no admin
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>ROLES ATIVOS (sem &#39;usuario&#39;):
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>  admin | financeiro | consultor | caixa | cliente
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>INSTRUÇÕES PARA O PLANEJAMENTO DE CADA PERFIL
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>Para cada perfil, antes de implementar, apresente:
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>1. ANÁLISE DO ESTADO ATUAL
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>   - O que o perfil tem hoje (menus, telas, formulários)
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>   - O que está sobrando (telas sem uso no novo fluxo)
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>   - O que está faltando (telas novas necessárias para o fluxo)
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>   - O que precisa ser reformulado (campos, formulários desatualizados)
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>2. MAPA DE NAVEGAÇÃO PROPOSTO
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>   - Árvore completa de rotas que este perfil terá acesso
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>   - Itens do menu lateral organizados por grupo
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>   - Indicar: [NOVO] [REFORMULADO] [REMOVIDO] [MANTIDO]
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>3. DASHBOARD PROPOSTO
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>   - KPIs específicos do perfil
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>   - Listas de ações pendentes (o que o perfil precisa fazer agora)
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>   - Alertas e urgências
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>4. FORMULÁRIOS CRÍTICOS
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>   - Listar todos os formulários com campos exatos
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>   - Indicar validações obrigatórias
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>   - Indicar campos calculados automaticamente
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>   - Indicar campos que dependem de outros
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>5. TELAS A REMOVER
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>   - Justificar por que cada tela removida não se aplica ao perfil
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>Aguarde confirmação antes de implementar.
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>PERFIL 1 — CONSULTOR
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>## Contexto do consultor no fluxo
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>O consultor é o ponto de entrada do negócio. Ele:
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>- Prospecta e cadastra clientes (sua carteira pessoal)
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>- Colhe documentação e registra intenção de empréstimo
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>- Acompanha a análise do financeiro
+<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>- Informa o cliente sobre aprovação ou rejeição
+<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>- Após aprovação: acompanha o portal do cliente, gera cobranças,
+<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>  registra contatos de cobrança, envia WhatsApp/PIX
+<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>- Solicita descontos ou reparcelamentos ao financeiro
+<a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>- Usa o comunicador interno para se comunicar com financeiro e admin
+<a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>
+<a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>## O que o consultor NÃO faz (remover ou ocultar):
+<a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>
+<a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>- NÃO cria empréstimos diretamente (apenas intenções)
+<a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>- NÃO acessa caixa nem fluxo de caixa global
+<a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>- NÃO faz renegociações (solicita ao financeiro)
+<a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>- NÃO vê clientes de outros consultores
+<a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>- NÃO acessa relatórios financeiros globais
+<a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>- NÃO acessa configurações do sistema
+<a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>- NÃO gerencia usuários
+<a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>- NÃO vê auditoria global
+<a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a>- NÃO acessa conciliação bancária
+<a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a>
+<a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a>## Telas que o consultor precisa (novo mapa):
+</code></pre></div>
+MENU DO CONSULTOR:
+├── 🏠 Início (Dashboard da carteira)
+│
+├── 👥 Minha Carteira
+│   ├── Lista de clientes (filtra por consultorId)
+│   ├── Cadastrar novo cliente      [REFORMULADO]
+│   ├── Detalhe do cliente          [REFORMULADO]
+│   └── Editar cliente
+│
+├── 📋 Intenções de Empréstimo      [NOVO]
+│   ├── Lista de intenções (status: aguardando/aprovado/rejeitado)
+│   ├── Nova intenção               [NOVO]
+│   └── Detalhe da intenção         [NOVO]
+│
+├── 💬 Solicitações ao Financeiro   [NOVO]
+│   ├── Lista de solicitações
+│   └── Nova solicitação (desconto, reparcelamento)
+│
+├── ⚠️ Cobranças                    [NOVO]
+│   ├── Parcelas atrasadas da carteira
+│   └── Registrar contato de cobrança
+│
+├── 💰 PIX / Boleto                 [REFORMULADO]
+│   └── Gerar para clientes da carteira
+│
+├── 📊 Relatórios da Carteira       [NOVO]
+│   └── Faturamento e inadimplência da carteira
+│
+└── 💬 Mensagens                    [NOVO]
+    └── Comunicador interno
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Formulários do consultor que precisam de especificação:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### F1 — Cadastrar novo cliente
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Campos obrigatórios:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Nome completo *
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- CPF (com máscara — único) *
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Data de nascimento *
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- WhatsApp (com máscara) *
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Email (validar formato)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- RG
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Telefone fixo
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- Endereço completo (CEP com autocomplete → preencher cidade/estado)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Upload de documentos: foto, RG frente/verso, comprovante renda
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  (Supabase Storage — bucket client-documents)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Observações
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- Campo oculto: consultorId = ID do consultor logado (nunca exibir)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- Campo informativo (read-only): &quot;Este cliente será vinculado à sua carteira&quot;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Validações:
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>- CPF: formato + algoritmo de validação
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>- Não permitir duplicata de CPF
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>- Máximo 10MB por arquivo de documento
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>- Tipos aceitos: JPEG, PNG, PDF
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>### F2 — Nova intenção de empréstimo
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Campos:
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>- Cliente: select filtrado pela carteira do consultor *
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>- Valor solicitado (R$) * — com formatação monetária
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>- Número de parcelas * (1-360)
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>- Finalidade do empréstimo * (select: Capital de giro, Consumo pessoal,
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  Quitação de dívidas, Reforma, Veículo, Outro)
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>- Descrição complementar (textarea)
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>- Observações para o financeiro
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>Exibir ao lado (calculado, não editável):
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>- Valor estimado da parcela (baseado no lucro padrão configurado)
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>- Score de risco do cliente
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>### F3 — Registrar contato de cobrança
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>Campos:
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>- Canal: WhatsApp / Ligação / Presencial / Email *
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>- Resultado *:
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>  ○ Prometeu pagar em: [data]
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  ○ Não atendeu / não encontrado
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>  ○ Número/email incorreto
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>  ○ Negou a dívida
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>  ○ Outro: [texto livre]
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>- Observação (textarea)
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>- Parcela relacionada (preenchida automaticamente pelo contexto)
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>### F4 — Nova solicitação ao financeiro
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>Campos:
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>- Tipo *: Desconto / Reparcelamento / Comunicado / Outro
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>- Cliente * (select da carteira)
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>- Contrato relacionado (select — opcional)
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>- Valor envolvido (R$) — se aplicável
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>- Descrição detalhada * (textarea)
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>- Urgência: Normal / Alta
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>## Dashboard do consultor:
+</code></pre></div>
+Linha 1 — KPIs da carteira:
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│ Meus Clientes│ │ Intenções    │ │ Em Atraso    │ │ Solicitações │
+│     12       │ │ Aguardando:3 │ │      2       │ │ Pendentes: 1 │
+└──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘</p>
+<p>Linha 2 — Ações pendentes (o que o consultor precisa fazer AGORA):
+┌─────────────────────────────────────────────────────────────────┐
+│ ⚡ Ações necessárias                                            │
+│ • Intenção #15 aprovada — informar João da Silva               │
+│ • Intenção #12 rejeitada — informar Maria Souza               │
+│ • 3 clientes com parcela vencendo em 3 dias                    │
+│ • 2 clientes em atraso sem contato registrado nos últimos 7d  │
+└─────────────────────────────────────────────────────────────────┘</p>
+<p>Linha 3 — Cobranças urgentes:
+Lista de parcelas atrasadas da carteira com:
+Nome do cliente, dias de atraso, valor, botão "Registrar contato"</p>
+<p>Linha 4 — Últimas mensagens não lidas (comunicador)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>PERFIL 2 — FINANCEIRO
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>## Contexto do financeiro no fluxo
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>O financeiro é o analista e aprovador. Ele:
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>- Analisa intenções de empréstimo (principal função)
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>- Aprova ou rejeita com motivo
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>- Define termos de reparcelamento (com simulador)
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>- Aprova solicitações dos consultores
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>- Gerencia os contratos: confirma liberação de capital
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>- Visualiza inadimplência e carteira global
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>- Acessa relatórios financeiros completos
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>- Usa o comunicador com consultores, admin e caixa
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>## O que o financeiro NÃO faz:
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>- NÃO cria usuários operacionais
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>- NÃO acessa configurações do sistema
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>- NÃO acessa auditoria global
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>- NÃO tem carteira própria de clientes (vê todos)
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>## Telas do financeiro (novo mapa):
+</code></pre></div>
+MENU DO FINANCEIRO:
+├── 🏠 Dashboard financeiro
+│
+├── 📋 Intenções de Empréstimo      [NOVO — fila de análise]
+│   ├── Fila de análise (status: aguardando)
+│   ├── Histórico (aprovadas/rejeitadas)
+│   └── Detalhe com score de risco + aprovar/rejeitar
+│
+├── ⏳ Liberações Pendentes         [NOVO]
+│   └── Contratos aguardando confirmação de entrega de capital
+│
+├── 💬 Solicitações dos Consultores [NOVO]
+│   ├── Pendentes (fila de análise)
+│   ├── Histórico
+│   └── Detalhe + aprovar/rejeitar + simulador de reparcelamento
+│
+├── 👥 Clientes                     [MANTIDO — acesso total]
+│   ├── Lista geral
+│   ├── Cadastrar / Editar
+│   └── Detalhe + ativar portal
+│
+├── 📄 Contratos                    [REFORMULADO]
+│   ├── Lista com todos os status (novo: aguardando_aceite, aguardando_liberacao)
+│   ├── Novo contrato (acesso direto, sem intenção)
+│   ├── Detalhe + split por parcela
+│   └── Liberar capital [NOVO]
+│
+├── 💳 Parcelas e Pagamentos
+│   ├── Parcelas em atraso (global)
+│   ├── Histórico de pagamentos
+│   └── Registrar pagamento manual
+│
+├── ⚠️ Inadimplentes               [MANTIDO]
+│   └── Carteira inadimplente global
+│
+├── 🔄 Reparcelamentos              [REFORMULADO]
+│   ├── Lista de renegociações (novo: solicitacoes_reparcelamento)
+│   └── Simulador + executar
+│
+├── 💵 Caixa                        [MANTIDO]
+│   ├── Saldo e movimentações
+│   └── Lançamentos manuais
+│
+├── 📊 Relatórios                   [REFORMULADO]
+│   ├── Aba: Carteira (principal_amount, target_profit, net_gain)
+│   ├── Aba: Faturamento mensal (net_gain realizado x previsto)
+│   ├── Aba: Inadimplência (aging: 1-30 / 31-60 / 61-90 / 90+)
+│   ├── Aba: Clientes
+│   └── Aba: Contratos
+│
+├── 📧 Cobranças                    [NOVO]
+│   └── Histórico de cobranças enviadas + reenvio manual
+│
+├── 🔔 Notificações                 [MANTIDO]
+│
+└── 💬 Mensagens                    [NOVO]
+    └── Comunicador interno
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>## Formulários críticos do financeiro:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>### F1 — Análise de intenção de empréstimo
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Exibir:
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- Dados do cliente: nome, CPF, score de risco (visual com barras)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>- Dados solicitados: valor, parcelas, finalidade
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>- Documentos do cliente (links para Supabase Storage)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>- Histórico de contratos do cliente
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>- Histórico de cobranças e atrasos
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Ações disponíveis:
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>- [ Aprovar ] → modal com: observação opcional + confirmar
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>- [ Rejeitar ] → modal com: motivo tipo (select predefinido) + motivo livre (obrigatório)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>- [ Pedir mais informações ] → abre conversa no comunicador
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>Motivos de rejeição (select predefinido):
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>- Score de crédito baixo
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>- Documentação incompleta
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>- Renda insuficiente para o valor solicitado
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>- Limite de contratos atingido
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>- Cliente com histórico de inadimplência
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>- Outro (campo livre obrigatório)
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>### F2 — Confirmar liberação de capital [NOVO]
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>Campos:
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>- Contrato: exibido (read-only) — cliente, valor, parcelas
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>- Método de entrega *:
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  ○ Dinheiro em espécie
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  ○ PIX
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>  ○ TED / Transferência bancária
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>- Data de liberação * (padrão: hoje)
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>- Comprovante (upload opcional — PDF/imagem)
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>- Observação
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>- Aviso: &quot;Esta ação iniciará a contagem das parcelas a partir da data informada.&quot;
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>### F3 — Simulador e termos de reparcelamento
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>Seção 1 — Situação atual (read-only):
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>- Saldo devedor atual
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>- Dias em atraso
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>- Multa calculada (X%)
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>- Mora acumulada (Y dias × Z%/dia)
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>- Total de encargos
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>Seção 2 — Novos termos (editável):
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>- Novo capital (principal_amount) *
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>- Novo lucro alvo (target_profit) *
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>- Número de parcelas *
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>- Data de início *
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>- Encargos a aplicar: Multa [✓] Mora [✓] (checkboxes)
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>- Observação para o cliente
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>Preview ao vivo (calculado em tempo real):
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>- Novo valor da parcela
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>- Total a receber
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>- Comparação antes/depois
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>### F4 — Novo contrato (criação direta)
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>Todos os campos do prompt SPLIT_PARCELA mais:
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>- Seção &quot;Configurações de cobrança&quot; do prompt COBRANCA_ANTECIPADA:
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>  * Dia fixo de vencimento (1-28)
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>  * Dias de antecedência para cobrança (padrão: 10)
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>  * Canais: WhatsApp / Email / Portal
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>  * Multa %
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>  * Mora % ao dia
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a>
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a>## Dashboard do financeiro:
+</code></pre></div>
+Linha 1 — KPIs globais:
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│ Intenções    │ │ Lib.         │ │ Inadimpl.    │ │ Fat. do Mês  │
+│ Aguardando:5 │ │ Pendentes: 2 │ │ R$ 12.400    │ │ R$ 8.640,00  │
+└──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘</p>
+<p>Linha 2 — Fila de análise (prioridade por SLA):
+┌─────────────────────────────────────────────────────────────────┐
+│ 📋 Intenções aguardando análise                    [Ver todas →]│
+│ ⚠️ #18 · João da Silva · R$5.000 · Vence SLA em 2h            │
+│    #17 · Maria Costa  · R$2.000 · Vence SLA em 8h            │
+│    #15 · Pedro Lima   · R$1.500 · Vence SLA em 14h           │
+└─────────────────────────────────────────────────────────────────┘</p>
+<p>Linha 3 — Liberações pendentes:
+┌─────────────────────────────────────────────────────────────────┐
+│ ⏳ Aguardando confirmação de entrega               [Ver todas →]│
+│    Contrato #42 · R$2.000 · Aceite: 20/05 14:32               │
+│    Contrato #43 · R$1.500 · Aceite: 20/05 16:10               │
+└─────────────────────────────────────────────────────────────────┘</p>
+<p>Linha 4 — Gráfico de aging (inadimplência por faixa):
+Barras: 1-30 dias / 31-60 / 61-90 / 90+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>PERFIL 3 — CAIXA
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>## Contexto do caixa no fluxo
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>O caixa é o executor financeiro do dia a dia. Ele:
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>- Confirma a entrega física do capital ao cliente
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>- Registra pagamentos recebidos (dinheiro, PIX, cartão)
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>- Gerencia o fluxo de caixa (entradas e saídas manuais)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>- Consulta clientes para identificação (somente leitura)
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>- Confirma pagamentos de parcelas
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>## O que o caixa NÃO faz:
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>- NÃO cria clientes
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>- NÃO cria contratos nem intenções
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>- NÃO acessa relatórios gerenciais
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>- NÃO faz renegociações
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>- NÃO acessa comunicador geral
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>- NÃO vê split financeiro (principal_payback / net_gain)
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>- NÃO acessa configurações, usuários ou auditoria
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>- NÃO vê dados financeiros estratégicos da empresa
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>## Telas do caixa (novo mapa):
+</code></pre></div>
+MENU DO CAIXA:
+├── 🏠 Dashboard do caixa
+│
+├── ⏳ Liberar Capital              [NOVO — prioridade máxima]
+│   └── Fila de contratos aguardando confirmação de entrega
+│
+├── 💳 Registrar Pagamento          [REFORMULADO]
+│   ├── Busca rápida por CPF ou nome → seleciona parcela
+│   └── Formulário simplificado de pagamento
+│
+├── 💵 Caixa                        [MANTIDO]
+│   ├── Saldo do dia
+│   ├── Movimentações do dia
+│   └── Lançamento manual
+│
+├── 🔍 Consultar Cliente            [NOVO — leitura apenas]
+│   └── Busca por CPF/nome → exibe contratos e parcelas (sem editar)
+│
+└── 📋 Parcelas do Dia              [NOVO]
+    └── Parcelas com vencimento hoje + vencidas não pagas
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>## Formulários do caixa:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>### F1 — Confirmar liberação de capital [IGUAL ao do financeiro]
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Tela simples e direta:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>- Card do contrato: cliente, valor, aceite em
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>- Método de entrega *
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>- Data de liberação * (padrão: hoje)
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>- Comprovante (upload)
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>- [ Confirmar entrega ]
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>### F2 — Registrar pagamento (fluxo otimizado para agilidade)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Passo 1: Identificar
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>- Campo único: CPF ou nome do cliente (auto-complete)
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>- Ao selecionar: exibir contratos ativos do cliente
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>Passo 2: Selecionar parcela
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>- Lista de parcelas pendentes/atrasadas/parcialmente_pagas
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>- Mostrar: número, vencimento, valor, saldo devedor, encargos (se atrasada)
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>Passo 3: Registrar
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>- Valor pago * (pré-preenchido com saldo devedor + encargos)
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>- Data do pagamento * (padrão: hoje)
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>- Método *: Dinheiro / PIX / Cartão / Cheque / Transferência
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>- Observação
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>- [ Confirmar pagamento ]
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>Regras:
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>- Mostrar claramente se há encargos (multa + mora) sobre o valor
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>- Permitir pagamento parcial com aviso visual
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>- Após confirmar: exibir recibo em tela com opção de imprimir
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>### F3 — Lançamento no caixa
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>Campos:
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>- Tipo *: Entrada / Saída
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>- Descrição * (texto livre)
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>- Categoria * (select: Operacional, Despesa, Outras)
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>- Valor * (R$)
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>- Data * (padrão: hoje)
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>- Comprovante (upload)
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>## Dashboard do caixa:
+</code></pre></div>
+Foco total em operações do dia:</p>
+<p>┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│ Lib. Pendentes│ │ Pgtos Hoje   │ │ Saldo do Dia │
+│      2       │ │      7       │ │ R$ 4.320,00  │
+└──────────────┘ └──────────────┘ └──────────────┘</p>
+<p>Liberações pendentes (vermelho se &gt; 4h):
+Lista de contratos aguardando entrega de capital</p>
+<p>Parcelas vencendo hoje:
+Lista com nome, valor, botão "Registrar pagamento"</p>
+<p>Últimos pagamentos do dia (linha do tempo):
+14:32 · João da Silva · R$ 280,00 · PIX
+13:45 · Maria Costa  · R$ 500,00 · Dinheiro
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>PERFIL 4 — ADMIN
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>## Contexto do admin no fluxo
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>O admin tem acesso total. Além de todas as funções do financeiro, ele:
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>- Gerencia usuários (criar, editar, ativar/desativar)
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>- Define configurações do sistema
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>- Acessa auditoria completa
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>- Gerencia templates de email
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>- Define configurações financeiras globais (multa, mora, SLA, etc.)
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>## Telas do admin (acréscimo sobre o financeiro):
+</code></pre></div>
+MENU DO ADMIN:
+├── [tudo que o financeiro tem]
+│
+└── ⚙️ Administração
+    ├── Usuários
+    │   ├── Lista de operadores
+    │   ├── Criar operador        [REFORMULADO — inclui role consultor]
+    │   └── Editar operador
+    │
+    ├── Configurações             [REFORMULADO]
+    │   ├── Empresa (nome, logo, CNPJ, contato)
+    │   ├── Financeiro (multa global, mora global, SLA, limites)
+    │   ├── WhatsApp (Evolution API)
+    │   ├── Mercado Pago (tokens, webhook)
+    │   └── SMTP (credenciais de email)
+    │
+    ├── Templates de Email        [NOVO — siafi-email-system]
+    │   ├── Lista de templates
+    │   └── Editor por tipo
+    │
+    └── Auditoria                 [MANTIDO]
+        └── Log de ações do sistema
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>## Formulários críticos do admin:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>### F1 — Criar/editar operador [REFORMULADO]
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Campos:
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>- Nome completo *
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>- Username * (apenas letras, números, ponto, underline)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>- Email * (usado no Supabase Auth e para login com Google)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>- Senha inicial * (gerada automaticamente com botão &quot;Gerar&quot;)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  (deixar em branco no edit para manter a atual)
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>- Perfil (role) *:
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  ○ Administrador
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  ○ Financeiro
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>  ○ Consultor    ← NOVO
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>  ○ Caixa
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>- Status: Ativo / Inativo
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>- MFA: exibir status (configurado / não configurado) — somente leitura
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>Aviso ao criar consultor:
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>&quot;O perfil Consultor terá acesso apenas aos clientes que cadastrar.
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a> MFA será obrigatório no primeiro login.&quot;
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>### F2 — Configurações financeiras [NOVO]
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>Agrupado em cards:
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Card &quot;Encargos globais&quot; (fallback para contratos sem configuração individual):
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>- Multa por atraso (%): input decimal com tooltip explicativo
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>- Mora diária (%/dia): input decimal
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>- Botão &quot;Calcular equivalente mensal&quot; → exibe X%/mês
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>Card &quot;SLAs operacionais&quot;:
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>- SLA de análise de intenção (horas): padrão 24h
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>- SLA de escalonamento para admin (horas): padrão 48h
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>- SLA de aceite pelo cliente (dias): padrão 7 dias
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>Card &quot;Limites&quot;:
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>- Máximo de reparcelamentos por contrato: padrão 3
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>- Máximo de contratos ativos por cliente: padrão 5
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>- Dias de antecedência para cobrança: padrão 10
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>IMPLEMENTAÇÃO — COMO PROCEDER
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>Para CADA perfil, siga exatamente esta ordem:
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>ETAPA 1 — PLANEJAMENTO (apresentar para aprovação):
+<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>  a. Análise do estado atual (o que tem hoje)
+<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a>  b. Mapa de navegação com [NOVO][REFORMULADO][REMOVIDO][MANTIDO]
+<a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a>  c. Dashboard proposto com mockup textual
+<a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a>  d. Lista de formulários com campos exatos
+<a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a>  e. Telas a remover com justificativa
+<a id="__codelineno-7-52" name="__codelineno-7-52" href="#__codelineno-7-52"></a>  → AGUARDAR CONFIRMAÇÃO
+<a id="__codelineno-7-53" name="__codelineno-7-53" href="#__codelineno-7-53"></a>
+<a id="__codelineno-7-54" name="__codelineno-7-54" href="#__codelineno-7-54"></a>ETAPA 2 — BACKEND:
+<a id="__codelineno-7-55" name="__codelineno-7-55" href="#__codelineno-7-55"></a>  a. Atualizar ROUTE_ROLES em (dashboard)/layout.tsx
+<a id="__codelineno-7-56" name="__codelineno-7-56" href="#__codelineno-7-56"></a>  b. Atualizar sidebar.tsx com novos grupos e itens por role
+<a id="__codelineno-7-57" name="__codelineno-7-57" href="#__codelineno-7-57"></a>  c. Novos endpoints necessários (se algum ainda não existe)
+<a id="__codelineno-7-58" name="__codelineno-7-58" href="#__codelineno-7-58"></a>
+<a id="__codelineno-7-59" name="__codelineno-7-59" href="#__codelineno-7-59"></a>ETAPA 3 — FRONTEND — Dashboard:
+<a id="__codelineno-7-60" name="__codelineno-7-60" href="#__codelineno-7-60"></a>  a. Dashboard específico do perfil
+<a id="__codelineno-7-61" name="__codelineno-7-61" href="#__codelineno-7-61"></a>  b. KPIs com dados reais da API
+<a id="__codelineno-7-62" name="__codelineno-7-62" href="#__codelineno-7-62"></a>  c. Seções de ações pendentes
+<a id="__codelineno-7-63" name="__codelineno-7-63" href="#__codelineno-7-63"></a>
+<a id="__codelineno-7-64" name="__codelineno-7-64" href="#__codelineno-7-64"></a>ETAPA 4 — FRONTEND — Telas e formulários:
+<a id="__codelineno-7-65" name="__codelineno-7-65" href="#__codelineno-7-65"></a>  a. Cada tela listada no mapa de navegação
+<a id="__codelineno-7-66" name="__codelineno-7-66" href="#__codelineno-7-66"></a>  b. Formulários com validação (react-hook-form + zod)
+<a id="__codelineno-7-67" name="__codelineno-7-67" href="#__codelineno-7-67"></a>  c. Estados vazios e loading skeletons
+<a id="__codelineno-7-68" name="__codelineno-7-68" href="#__codelineno-7-68"></a>
+<a id="__codelineno-7-69" name="__codelineno-7-69" href="#__codelineno-7-69"></a>ETAPA 5 — VALIDAÇÃO:
+<a id="__codelineno-7-70" name="__codelineno-7-70" href="#__codelineno-7-70"></a>  a. Testar que o perfil NÃO acessa rotas proibidas (403)
+<a id="__codelineno-7-71" name="__codelineno-7-71" href="#__codelineno-7-71"></a>  b. Testar que formulários validam campos obrigatórios
+<a id="__codelineno-7-72" name="__codelineno-7-72" href="#__codelineno-7-72"></a>  c. Testar que campos calculados funcionam em tempo real
+<a id="__codelineno-7-73" name="__codelineno-7-73" href="#__codelineno-7-73"></a>
+<a id="__codelineno-7-74" name="__codelineno-7-74" href="#__codelineno-7-74"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-7-75" name="__codelineno-7-75" href="#__codelineno-7-75"></a>REGRAS TÉCNICAS INVIOLÁVEIS
+<a id="__codelineno-7-76" name="__codelineno-7-76" href="#__codelineno-7-76"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-7-77" name="__codelineno-7-77" href="#__codelineno-7-77"></a>
+<a id="__codelineno-7-78" name="__codelineno-7-78" href="#__codelineno-7-78"></a>SEGURANÇA:
+<a id="__codelineno-7-79" name="__codelineno-7-79" href="#__codelineno-7-79"></a>- Toda query do Consultor filtra por consultorId do JWT — sem exceção
+<a id="__codelineno-7-80" name="__codelineno-7-80" href="#__codelineno-7-80"></a>- Caixa NÃO vê split (principal_payback / net_gain) — campos ocultos
+<a id="__codelineno-7-81" name="__codelineno-7-81" href="#__codelineno-7-81"></a>- Caixa NÃO vê target_profit — apenas valorTotal da parcela
+<a id="__codelineno-7-82" name="__codelineno-7-82" href="#__codelineno-7-82"></a>- Formulários validados no frontend (zod) E no backend (class-validator)
+<a id="__codelineno-7-83" name="__codelineno-7-83" href="#__codelineno-7-83"></a>- Nenhum campo sensível financeiro exposto ao caixa via API
+<a id="__codelineno-7-84" name="__codelineno-7-84" href="#__codelineno-7-84"></a>
+<a id="__codelineno-7-85" name="__codelineno-7-85" href="#__codelineno-7-85"></a>UX:
+<a id="__codelineno-7-86" name="__codelineno-7-86" href="#__codelineno-7-86"></a>- Mobile first em todos os formulários (caixa usa tablet/celular)
+<a id="__codelineno-7-87" name="__codelineno-7-87" href="#__codelineno-7-87"></a>- Estados de loading skeleton em toda listagem
+<a id="__codelineno-7-88" name="__codelineno-7-88" href="#__codelineno-7-88"></a>- Estados vazios com mensagem e ação sugerida
+<a id="__codelineno-7-89" name="__codelineno-7-89" href="#__codelineno-7-89"></a>- Feedback toast em toda ação de sucesso e erro
+<a id="__codelineno-7-90" name="__codelineno-7-90" href="#__codelineno-7-90"></a>- Confirmação modal em ações destrutivas ou irreversíveis
+<a id="__codelineno-7-91" name="__codelineno-7-91" href="#__codelineno-7-91"></a>
+<a id="__codelineno-7-92" name="__codelineno-7-92" href="#__codelineno-7-92"></a>FORMULÁRIOS:
+<a id="__codelineno-7-93" name="__codelineno-7-93" href="#__codelineno-7-93"></a>- CPF com máscara ao digitar (formatCpfCnpj)
+<a id="__codelineno-7-94" name="__codelineno-7-94" href="#__codelineno-7-94"></a>- Valores monetários com máscara R$ (decimal.js no cálculo)
+<a id="__codelineno-7-95" name="__codelineno-7-95" href="#__codelineno-7-95"></a>- Datas com datepicker nativo + validação min/max
+<a id="__codelineno-7-96" name="__codelineno-7-96" href="#__codelineno-7-96"></a>- Campos obrigatórios marcados com * na label
+<a id="__codelineno-7-97" name="__codelineno-7-97" href="#__codelineno-7-97"></a>- Mensagens de erro inline abaixo de cada campo (não toast)
+<a id="__codelineno-7-98" name="__codelineno-7-98" href="#__codelineno-7-98"></a>- Botão de submit desabilitado durante loading (evitar duplo clique)
+<a id="__codelineno-7-99" name="__codelineno-7-99" href="#__codelineno-7-99"></a>
+<a id="__codelineno-7-100" name="__codelineno-7-100" href="#__codelineno-7-100"></a>FLUXO:
+<a id="__codelineno-7-101" name="__codelineno-7-101" href="#__codelineno-7-101"></a>- Toda ação que muda status de contrato ou parcela:
+<a id="__codelineno-7-102" name="__codelineno-7-102" href="#__codelineno-7-102"></a>  confirmação modal com resumo do que vai acontecer
+<a id="__codelineno-7-103" name="__codelineno-7-103" href="#__codelineno-7-103"></a>- Aprovação/rejeição de intenção: sempre exige motivo
+<a id="__codelineno-7-104" name="__codelineno-7-104" href="#__codelineno-7-104"></a>- Liberação de capital: sempre exige método de entrega
+<a id="__codelineno-7-105" name="__codelineno-7-105" href="#__codelineno-7-105"></a>- Reparcelamento: sempre exige segunda instância de aprovação
+<a id="__codelineno-7-106" name="__codelineno-7-106" href="#__codelineno-7-106"></a>
+<a id="__codelineno-7-107" name="__codelineno-7-107" href="#__codelineno-7-107"></a>CONSISTÊNCIA COM PROMPTS ANTERIORES:
+<a id="__codelineno-7-108" name="__codelineno-7-108" href="#__codelineno-7-108"></a>- Nomenclatura: principal_amount, target_profit, net_gain,
+<a id="__codelineno-7-109" name="__codelineno-7-109" href="#__codelineno-7-109"></a>  principal_payback, installment_amount (não usar nomes antigos)
+<a id="__codelineno-7-110" name="__codelineno-7-110" href="#__codelineno-7-110"></a>- LoanStatus: aguardando_aceite, aguardando_liberacao, ativo, quitado
+<a id="__codelineno-7-111" name="__codelineno-7-111" href="#__codelineno-7-111"></a>- InstallmentStatus: pendente, parcialmente_pago, pago, atrasado, cancelado
+<a id="__codelineno-7-112" name="__codelineno-7-112" href="#__codelineno-7-112"></a>- Sempre usar decimal.js para cálculos de preview em tempo real
+</code></pre></div></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

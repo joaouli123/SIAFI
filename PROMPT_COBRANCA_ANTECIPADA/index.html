@@ -1,0 +1,1409 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SIAFI 2.0 — Cobrança Antecipada Configurável por Contrato - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-cobranca-antecipada-configuravel-por-contrato" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SIAFI 2.0 — Cobrança Antecipada Configurável por Contrato
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-cobranca-antecipada-configuravel-por-contrato">SIAFI 2.0 — Cobrança Antecipada Configurável por Contrato</h1>
+<h1 id="boletopix-com-envio-automatico-multa-e-mora-individuais-por-loan">Boleto/PIX com envio automático, multa e mora individuais por loan</h1>
+<h1 id="maio-2026">Maio 2026</h1>
+<p>Cole este prompt em uma nova conversa com o Claude junto com os arquivos
+01_ARQUITETURA.md, 02_BACKEND.md, 03_FRONTEND.md, 04_DATABASE.md
+e os resultados das Fases anteriores já implementadas.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior. Implemente as seguintes
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>melhorias no módulo de empréstimos do SIAFI. Leia toda a documentação
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>antes de começar. Entregue um grupo por vez e aguarde confirmação.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>CONTEXTO — O QUE PRECISA SER FEITO
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Cada contrato de empréstimo precisa ter:
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>1. CONFIGURAÇÃO INDIVIDUAL DE ENCARGOS: multa e mora próprias por
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>   contrato, independentes dos valores globais de site_settings.
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>2. ENVIO ANTECIPADO DE COBRANÇA: X dias antes do vencimento de cada
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>   parcela (configurável por contrato), o sistema envia automaticamente
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>   o boleto com código de barras ou QR Code PIX via:
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>   - WhatsApp (Evolution API)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>   - E-mail (SMTP com PDF anexado)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>   - Portal do cliente (disponível para download)
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>3. DATAS DE VENCIMENTO FIXAS POR CONTRATO: ao criar o empréstimo,
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>   o operador define o dia do mês para vencimento (ex: sempre dia 10).
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>   As parcelas são geradas respeitando esse dia fixo.
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>PARTE 1 — SCHEMA PRISMA: CAMPOS INDIVIDUAIS NO LOAN
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>## 1.1 — Novos campos em model Loan
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>Adicione ao model Loan os seguintes campos de configuração individual.
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>Quando não informados, o sistema usa os valores de site_settings como
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>fallback — mas o contrato sempre tem precedência.
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>```prisma
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>model Loan {
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>  // ... todos os campos existentes + campos dos prompts anteriores ...
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>  // ── Encargos individuais por contrato ──────────────────────────
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>  multaPercentual     Decimal?  @db.Decimal(5,4) @map(&quot;multa_percentual&quot;)
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>  // Ex: 0.0200 = 2%. Null = usar site_settings financeiro.multa_atraso_percentual
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>  moraDiariaPercentual Decimal? @db.Decimal(7,6) @map(&quot;mora_diaria_percentual&quot;)
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>  // Ex: 0.000333 = 0,0333%/dia (equivale a ~1%/mês). Null = usar site_settings
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>  // ── Configuração de cobrança antecipada ────────────────────────
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>  diasAntecedenciaCobranca Int   @default(10) @map(&quot;dias_antecedencia_cobranca&quot;)
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>  // Quantos dias antes do vencimento enviar boleto/PIX ao cliente
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>  // Padrão: 10 dias. Configurável por contrato entre 1 e 30 dias.
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>  diaVencimento       Int?      @map(&quot;dia_vencimento&quot;)
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>  // Dia fixo do mês para vencimento de todas as parcelas (1-28)
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>  // Ex: 10 = toda parcela vence no dia 10 do mês correspondente
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>  // Null = usar dataInicio + N meses (comportamento atual)
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>  // ── Canais de cobrança habilitados por contrato ─────────────────
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>  cobrarWhatsapp      Boolean   @default(true)  @map(&quot;cobrar_whatsapp&quot;)
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>  cobrarEmail         Boolean   @default(true)  @map(&quot;cobrar_email&quot;)
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>  cobrarPortal        Boolean   @default(true)  @map(&quot;cobrar_portal&quot;)
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>}
+</code></pre></div>
+<h2 id="12-novos-campos-em-model-installment">1.2 — Novos campos em model Installment</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>model Installment {
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  // ... campos existentes + saldoDevedor + moraAcumulada dos prompts anteriores ...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  // ── Cobrança antecipada ────────────────────────────────────────
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  cobrancaEnviadaEm   DateTime? @map(&quot;cobranca_enviada_em&quot;)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  // Timestamp do último envio de cobrança antecipada desta parcela
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  cobrancaWhatsappOk  Boolean   @default(false) @map(&quot;cobranca_whatsapp_ok&quot;)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  cobrancaEmailOk     Boolean   @default(false) @map(&quot;cobranca_email_ok&quot;)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  cobrancaPortalOk    Boolean   @default(false) @map(&quot;cobranca_portal_ok&quot;)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  // Flags individuais de entrega por canal
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  // ── Encargos calculados e aplicados ───────────────────────────
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  multaAplicada       Decimal   @default(0) @db.Decimal(10,2) @map(&quot;multa_aplicada&quot;)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  // Multa calculada no momento em que a parcela virou &quot;atrasado&quot;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  valorComEncargos    Decimal?  @db.Decimal(10,2) @map(&quot;valor_com_encargos&quot;)
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  // installmentAmount + multaAplicada + moraAcumulada
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  // Calculado e atualizado diariamente pelo cron para facilitar exibição
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  pixCobrancaId       Int?      @map(&quot;pix_cobranca_id&quot;)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  // FK para PixPayment gerado especificamente para cobrança antecipada
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>}
+</code></pre></div>
+<h2 id="13-seed-de-novas-configuracoes-globais-site_settings">1.3 — Seed de novas configurações globais (site_settings)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Valores globais — usados como fallback quando o contrato não define individualmente</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s1">&#39;financeiro.multa_atraso_percentual&#39;</span><span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="s1">&#39;2.00&#39;</span><span class="w">   </span><span class="c1">// 2%</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s1">&#39;financeiro.mora_dia_percentual&#39;</span><span class="w">       </span><span class="err">→</span><span class="w"> </span><span class="s1">&#39;0.0333&#39;</span><span class="w">  </span><span class="c1">// ~1%/mês</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s1">&#39;financeiro.dias_antecedencia_cobranca&#39;</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="s1">&#39;10&#39;</span><span class="w">     </span><span class="c1">// 10 dias antes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s1">&#39;financeiro.cobranca_whatsapp_ativo&#39;</span><span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">&#39;financeiro.cobranca_email_ativo&#39;</span><span class="w">      </span><span class="err">→</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 2 — GERAÇÃO DE PARCELAS COM DIA FIXO
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="21-logica-de-datavencimento-com-dia-fixo">2.1 — Lógica de dataVencimento com dia fixo</h2>
+<p>No <code>LoansService.createLoan()</code>, ao gerar as installments:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setDate</span><span class="p">,</span><span class="w"> </span><span class="nx">addMonths</span><span class="p">,</span><span class="w"> </span><span class="nx">getDaysInMonth</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;date-fns&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">calcularDataVencimento</span><span class="p">(</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nx">dataInicio</span><span class="o">:</span><span class="w"> </span><span class="kt">Date</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nx">numeroParcela</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nx">diaVencimento?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Date</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="c1">// Base: mês de referência desta parcela</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">mesBase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addMonths</span><span class="p">(</span><span class="nx">dataInicio</span><span class="p">,</span><span class="w"> </span><span class="nx">numeroParcela</span><span class="p">);</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">diaVencimento</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="c1">// Comportamento anterior: dataInicio + N meses</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">mesBase</span><span class="p">;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="c1">// Dia fixo: usar o dia configurado, respeitando meses curtos</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="c1">// Ex: dia 31 em fevereiro → dia 28 (último dia do mês)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">diasNoMes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getDaysInMonth</span><span class="p">(</span><span class="nx">mesBase</span><span class="p">);</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">diaReal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">diaVencimento</span><span class="p">,</span><span class="w"> </span><span class="nx">diasNoMes</span><span class="p">);</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">setDate</span><span class="p">(</span><span class="nx">mesBase</span><span class="p">,</span><span class="w"> </span><span class="nx">diaReal</span><span class="p">);</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="p">}</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1">// Ao gerar o array de installments:</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nx">installments</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span><span class="nx">numero</span><span class="o">:</span><span class="w">           </span><span class="kt">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span><span class="nx">installmentAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">...</span><span class="p">,</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span><span class="nx">principalPayback</span><span class="o">:</span><span class="w">  </span><span class="kt">...</span><span class="p">,</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span><span class="nx">netGain</span><span class="o">:</span><span class="w">           </span><span class="kt">...</span><span class="p">,</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="nx">dataVencimento</span><span class="o">:</span><span class="w">   </span><span class="kt">calcularDataVencimento</span><span class="p">(</span><span class="nx">dataInicio</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">loan</span><span class="p">.</span><span class="nx">diaVencimento</span><span class="p">),</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w">           </span><span class="s1">&#39;pendente&#39;</span><span class="p">,</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">  </span><span class="nx">totalPago</span><span class="o">:</span><span class="w">        </span><span class="kt">0</span><span class="p">,</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">  </span><span class="nx">saldoDevedor</span><span class="o">:</span><span class="w">     </span><span class="kt">installmentAmount</span><span class="p">,</span><span class="w">  </span><span class="c1">// começa igual ao valor total</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="p">})</span>
+</code></pre></div>
+<h2 id="22-dto-atualizado">2.2 — DTO atualizado</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CreateLoanDto</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="c1">// ... campos existentes ...</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="kd">@IsInt</span><span class="p">()</span><span class="w"> </span><span class="kd">@Min</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="kd">@Max</span><span class="p">(</span><span class="mf">28</span><span class="p">)</span><span class="w"> </span><span class="kd">@IsOptional</span><span class="p">()</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">diaVencimento?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="c1">// Se informado: todas as parcelas vencem neste dia do mês</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="c1">// Se não informado: dataInicio + N meses (comportamento atual)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="kd">@IsDecimal</span><span class="p">()</span><span class="w"> </span><span class="kd">@IsOptional</span><span class="p">()</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nx">multaPercentual?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="c1">// Ex: &#39;2.00&#39; = 2%. Deixar vazio para usar global</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="kd">@IsDecimal</span><span class="p">()</span><span class="w"> </span><span class="kd">@IsOptional</span><span class="p">()</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="nx">moraDiariaPercentual?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="c1">// Ex: &#39;0.0333&#39;. Deixar vazio para usar global</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="kd">@IsInt</span><span class="p">()</span><span class="w"> </span><span class="kd">@Min</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="kd">@Max</span><span class="p">(</span><span class="mf">30</span><span class="p">)</span><span class="w"> </span><span class="kd">@IsOptional</span><span class="p">()</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="nx">diasAntecedenciaCobranca?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="c1">// Padrão: 10. Quantos dias antes do vencimento enviar a cobrança</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="kd">@IsBoolean</span><span class="p">()</span><span class="w"> </span><span class="kd">@IsOptional</span><span class="p">()</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="nx">cobrarWhatsapp?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span><span class="kd">@IsBoolean</span><span class="p">()</span><span class="w"> </span><span class="kd">@IsOptional</span><span class="p">()</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span><span class="nx">cobrarEmail?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 3 — SERVIÇO DE COBRANÇA ANTECIPADA
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="31-cobrancaservice-novo-servico">3.1 — CobrancaService (novo serviço)</h2>
+<p>Criar <code>src/modules/cobranca/cobranca.service.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">@Injectable</span><span class="p">()</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CobrancaService</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="c1">// Método principal — chamado pelo cron</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">processarCobrancasAntecipadas</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">agora</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">();</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="c1">// Buscar todas as parcelas que precisam de cobrança hoje</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="c1">// Lógica: dataVencimento - diasAntecedenciaCobranca &lt;= hoje</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="c1">//         E ainda não foram enviadas (cobrancaEnviadaEm === null)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="c1">//         E status = pendente (não cobrar parcelas já atrasadas aqui)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">parcelas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">        </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pendente&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">        </span><span class="nx">cobrancaEnviadaEm</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="p">,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">        </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ativo&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">      </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">          </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">            </span><span class="nx">client</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">          </span><span class="p">}</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">    </span><span class="c1">// Filtrar as que entram no prazo hoje</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">paraEnviar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">parcelas</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">p</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">diasAnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">diasAntecedenciaCobranca</span><span class="p">;</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">dataEnvio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">subDays</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">,</span><span class="w"> </span><span class="nx">diasAnt</span><span class="p">);</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">isSameDay</span><span class="p">(</span><span class="nx">dataEnvio</span><span class="p">,</span><span class="w"> </span><span class="nx">agora</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">isBefore</span><span class="p">(</span><span class="nx">dataEnvio</span><span class="p">,</span><span class="w"> </span><span class="nx">agora</span><span class="p">);</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">parcela</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">paraEnviar</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">enviarCobranca</span><span class="p">(</span><span class="nx">parcela</span><span class="p">);</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">enviarCobranca</span><span class="p">(</span><span class="nx">parcela</span><span class="o">:</span><span class="w"> </span><span class="kt">InstallmentComLoan</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loan</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">parcela</span><span class="p">;</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cliente</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">loan</span><span class="p">.</span><span class="nx">client</span><span class="p">;</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="w">    </span><span class="c1">// 1. Gerar ou reutilizar QR Code PIX para esta parcela</span>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">pixData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">pixService</span><span class="p">.</span><span class="nx">gerarOuReutilizar</span><span class="p">(</span>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">      </span><span class="nx">parcela</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">      </span><span class="nx">cliente</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">      </span><span class="nx">parcela</span><span class="p">.</span><span class="nx">installmentAmount</span>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="w">    </span><span class="c1">// 2. Gerar PDF do boleto/cobrança</span>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">pdfBuffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">gerarPdfCobranca</span><span class="p">(</span><span class="nx">parcela</span><span class="p">,</span><span class="w"> </span><span class="nx">pixData</span><span class="p">,</span><span class="w"> </span><span class="nx">loan</span><span class="p">);</span>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="w">    </span><span class="c1">// 3. Enviar pelos canais habilitados no contrato</span>
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">resultados</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">allSettled</span><span class="p">([</span>
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="w">      </span><span class="nx">loan</span><span class="p">.</span><span class="nx">cobrarWhatsapp</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">cliente</span><span class="p">.</span><span class="nx">whatsapp</span>
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a><span class="w">        </span><span class="o">?</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">enviarWhatsapp</span><span class="p">(</span><span class="nx">parcela</span><span class="p">,</span><span class="w"> </span><span class="nx">pixData</span><span class="p">,</span><span class="w"> </span><span class="nx">loan</span><span class="p">,</span><span class="w"> </span><span class="nx">cliente</span><span class="p">)</span>
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a><span class="w">      </span><span class="nx">loan</span><span class="p">.</span><span class="nx">cobrarEmail</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">cliente</span><span class="p">.</span><span class="nx">email</span>
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a><span class="w">        </span><span class="o">?</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">enviarEmail</span><span class="p">(</span><span class="nx">parcela</span><span class="p">,</span><span class="w"> </span><span class="nx">pdfBuffer</span><span class="p">,</span><span class="w"> </span><span class="nx">pixData</span><span class="p">,</span><span class="w"> </span><span class="nx">loan</span><span class="p">,</span><span class="w"> </span><span class="nx">cliente</span><span class="p">)</span>
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="w">      </span><span class="nx">loan</span><span class="p">.</span><span class="nx">cobrarPortal</span>
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a><span class="w">        </span><span class="o">?</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">salvarNoPortal</span><span class="p">(</span><span class="nx">parcela</span><span class="p">,</span><span class="w"> </span><span class="nx">pdfBuffer</span><span class="p">,</span><span class="w"> </span><span class="nx">pixData</span><span class="p">)</span>
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="kc">false</span><span class="p">),</span>
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a><span class="w">    </span><span class="p">]);</span>
+<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a>
+<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a><span class="w">    </span><span class="c1">// 4. Atualizar flags de entrega na parcela</span>
+<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.id</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a><span class="w">        </span><span class="nx">cobrancaEnviadaEm</span><span class="o">:</span><span class="w">  </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span>
+<a id="__codelineno-5-72" name="__codelineno-5-72" href="#__codelineno-5-72"></a><span class="w">        </span><span class="nx">cobrancaWhatsappOk</span><span class="o">:</span><span class="w"> </span><span class="kt">resultados</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;fulfilled&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">resultados</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-5-73" name="__codelineno-5-73" href="#__codelineno-5-73"></a><span class="w">        </span><span class="nx">cobrancaEmailOk</span><span class="o">:</span><span class="w">    </span><span class="kt">resultados</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;fulfilled&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">resultados</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-5-74" name="__codelineno-5-74" href="#__codelineno-5-74"></a><span class="w">        </span><span class="nx">cobrancaPortalOk</span><span class="o">:</span><span class="w">   </span><span class="kt">resultados</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;fulfilled&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">resultados</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span><span class="nx">value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-5-75" name="__codelineno-5-75" href="#__codelineno-5-75"></a><span class="w">        </span><span class="nx">pixCobrancaId</span><span class="o">:</span><span class="w">      </span><span class="kt">pixData.id</span><span class="p">,</span>
+<a id="__codelineno-5-76" name="__codelineno-5-76" href="#__codelineno-5-76"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-5-77" name="__codelineno-5-77" href="#__codelineno-5-77"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-5-78" name="__codelineno-5-78" href="#__codelineno-5-78"></a>
+<a id="__codelineno-5-79" name="__codelineno-5-79" href="#__codelineno-5-79"></a><span class="w">    </span><span class="c1">// 5. Log de notificação</span>
+<a id="__codelineno-5-80" name="__codelineno-5-80" href="#__codelineno-5-80"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">notification</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-5-81" name="__codelineno-5-81" href="#__codelineno-5-81"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-82" name="__codelineno-5-82" href="#__codelineno-5-82"></a><span class="w">        </span><span class="nx">clientId</span><span class="o">:</span><span class="w">  </span><span class="kt">cliente.id</span><span class="p">,</span>
+<a id="__codelineno-5-83" name="__codelineno-5-83" href="#__codelineno-5-83"></a><span class="w">        </span><span class="nx">loanId</span><span class="o">:</span><span class="w">    </span><span class="kt">loan.id</span><span class="p">,</span>
+<a id="__codelineno-5-84" name="__codelineno-5-84" href="#__codelineno-5-84"></a><span class="w">        </span><span class="nx">tipo</span><span class="o">:</span><span class="w">      </span><span class="s1">&#39;cobranca_antecipada&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-85" name="__codelineno-5-85" href="#__codelineno-5-85"></a><span class="w">        </span><span class="nx">assunto</span><span class="o">:</span><span class="w">   </span><span class="sb">`Parcela </span><span class="si">${</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">numero</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">loan</span><span class="p">.</span><span class="nx">numeroParcelas</span><span class="si">}</span><span class="sb"> — vence </span><span class="si">${</span><span class="nx">format</span><span class="p">(</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dd/MM/yyyy&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<a id="__codelineno-5-86" name="__codelineno-5-86" href="#__codelineno-5-86"></a><span class="w">        </span><span class="nx">mensagem</span><span class="o">:</span><span class="w">  </span><span class="sb">`Cobrança enviada </span><span class="si">${</span><span class="nx">loan</span><span class="p">.</span><span class="nx">diasAntecedenciaCobranca</span><span class="si">}</span><span class="sb"> dias antes do vencimento.`</span><span class="p">,</span>
+<a id="__codelineno-5-87" name="__codelineno-5-87" href="#__codelineno-5-87"></a><span class="w">        </span><span class="nx">status</span><span class="o">:</span><span class="w">    </span><span class="s1">&#39;enviado&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-88" name="__codelineno-5-88" href="#__codelineno-5-88"></a><span class="w">        </span><span class="nx">sentAt</span><span class="o">:</span><span class="w">    </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span>
+<a id="__codelineno-5-89" name="__codelineno-5-89" href="#__codelineno-5-89"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-5-90" name="__codelineno-5-90" href="#__codelineno-5-90"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-5-91" name="__codelineno-5-91" href="#__codelineno-5-91"></a>
+<a id="__codelineno-5-92" name="__codelineno-5-92" href="#__codelineno-5-92"></a><span class="w">    </span><span class="c1">// 6. AuditLog</span>
+<a id="__codelineno-5-93" name="__codelineno-5-93" href="#__codelineno-5-93"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">auditLog</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-5-94" name="__codelineno-5-94" href="#__codelineno-5-94"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-95" name="__codelineno-5-95" href="#__codelineno-5-95"></a><span class="w">        </span><span class="nx">acao</span><span class="o">:</span><span class="w">       </span><span class="s1">&#39;COBRANCA_ANTECIPADA_ENVIADA&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-96" name="__codelineno-5-96" href="#__codelineno-5-96"></a><span class="w">        </span><span class="nx">entidade</span><span class="o">:</span><span class="w">   </span><span class="s1">&#39;installments&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-97" name="__codelineno-5-97" href="#__codelineno-5-97"></a><span class="w">        </span><span class="nx">entidadeId</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.id</span><span class="p">,</span>
+<a id="__codelineno-5-98" name="__codelineno-5-98" href="#__codelineno-5-98"></a><span class="w">        </span><span class="nx">dados</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-99" name="__codelineno-5-99" href="#__codelineno-5-99"></a><span class="w">          </span><span class="nx">canais</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-100" name="__codelineno-5-100" href="#__codelineno-5-100"></a><span class="w">            </span><span class="nx">whatsapp</span><span class="o">:</span><span class="w"> </span><span class="kt">resultados</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;fulfilled&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-101" name="__codelineno-5-101" href="#__codelineno-5-101"></a><span class="w">            </span><span class="nx">email</span><span class="o">:</span><span class="w">    </span><span class="kt">resultados</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;fulfilled&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-102" name="__codelineno-5-102" href="#__codelineno-5-102"></a><span class="w">            </span><span class="nx">portal</span><span class="o">:</span><span class="w">   </span><span class="kt">resultados</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;fulfilled&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-103" name="__codelineno-5-103" href="#__codelineno-5-103"></a><span class="w">          </span><span class="p">},</span>
+<a id="__codelineno-5-104" name="__codelineno-5-104" href="#__codelineno-5-104"></a><span class="w">          </span><span class="nx">diasAntecedencia</span><span class="o">:</span><span class="w"> </span><span class="kt">loan.diasAntecedenciaCobranca</span><span class="p">,</span>
+<a id="__codelineno-5-105" name="__codelineno-5-105" href="#__codelineno-5-105"></a><span class="w">          </span><span class="nx">valorCobrado</span><span class="o">:</span><span class="w">     </span><span class="kt">parcela.installmentAmount</span><span class="p">,</span>
+<a id="__codelineno-5-106" name="__codelineno-5-106" href="#__codelineno-5-106"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-107" name="__codelineno-5-107" href="#__codelineno-5-107"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-5-108" name="__codelineno-5-108" href="#__codelineno-5-108"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-5-109" name="__codelineno-5-109" href="#__codelineno-5-109"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-110" name="__codelineno-5-110" href="#__codelineno-5-110"></a>
+<a id="__codelineno-5-111" name="__codelineno-5-111" href="#__codelineno-5-111"></a><span class="w">  </span><span class="c1">// ── WhatsApp ──────────────────────────────────────────────────</span>
+<a id="__codelineno-5-112" name="__codelineno-5-112" href="#__codelineno-5-112"></a><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">enviarWhatsapp</span><span class="p">(</span>
+<a id="__codelineno-5-113" name="__codelineno-5-113" href="#__codelineno-5-113"></a><span class="w">    </span><span class="nx">parcela</span><span class="o">:</span><span class="w"> </span><span class="kt">Installment</span><span class="p">,</span>
+<a id="__codelineno-5-114" name="__codelineno-5-114" href="#__codelineno-5-114"></a><span class="w">    </span><span class="nx">pixData</span><span class="o">:</span><span class="w"> </span><span class="kt">PixPayment</span><span class="p">,</span>
+<a id="__codelineno-5-115" name="__codelineno-5-115" href="#__codelineno-5-115"></a><span class="w">    </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="kt">Loan</span><span class="p">,</span>
+<a id="__codelineno-5-116" name="__codelineno-5-116" href="#__codelineno-5-116"></a><span class="w">    </span><span class="nx">cliente</span><span class="o">:</span><span class="w"> </span><span class="kt">Client</span>
+<a id="__codelineno-5-117" name="__codelineno-5-117" href="#__codelineno-5-117"></a><span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-118" name="__codelineno-5-118" href="#__codelineno-5-118"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mensagem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">templateWhatsapp</span><span class="p">(</span><span class="nx">parcela</span><span class="p">,</span><span class="w"> </span><span class="nx">pixData</span><span class="p">,</span><span class="w"> </span><span class="nx">loan</span><span class="p">,</span><span class="w"> </span><span class="nx">cliente</span><span class="p">);</span>
+<a id="__codelineno-5-119" name="__codelineno-5-119" href="#__codelineno-5-119"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">notifQueue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;whatsapp.cobranca-antecipada&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-120" name="__codelineno-5-120" href="#__codelineno-5-120"></a><span class="w">      </span><span class="nx">clientId</span><span class="o">:</span><span class="w">        </span><span class="kt">cliente.id</span><span class="p">,</span>
+<a id="__codelineno-5-121" name="__codelineno-5-121" href="#__codelineno-5-121"></a><span class="w">      </span><span class="nx">clienteNome</span><span class="o">:</span><span class="w">     </span><span class="kt">cliente.nome</span><span class="p">,</span>
+<a id="__codelineno-5-122" name="__codelineno-5-122" href="#__codelineno-5-122"></a><span class="w">      </span><span class="nx">clienteWhatsapp</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.whatsapp</span><span class="p">,</span>
+<a id="__codelineno-5-123" name="__codelineno-5-123" href="#__codelineno-5-123"></a><span class="w">      </span><span class="nx">mensagem</span><span class="p">,</span>
+<a id="__codelineno-5-124" name="__codelineno-5-124" href="#__codelineno-5-124"></a><span class="w">      </span><span class="nx">pixCopiaECola</span><span class="o">:</span><span class="w">   </span><span class="kt">pixData.qrCode</span><span class="p">,</span>
+<a id="__codelineno-5-125" name="__codelineno-5-125" href="#__codelineno-5-125"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-5-126" name="__codelineno-5-126" href="#__codelineno-5-126"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-5-127" name="__codelineno-5-127" href="#__codelineno-5-127"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-128" name="__codelineno-5-128" href="#__codelineno-5-128"></a>
+<a id="__codelineno-5-129" name="__codelineno-5-129" href="#__codelineno-5-129"></a><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">templateWhatsapp</span><span class="p">(</span><span class="nx">p</span><span class="o">:</span><span class="w"> </span><span class="kt">Installment</span><span class="p">,</span><span class="w"> </span><span class="nx">pix</span><span class="o">:</span><span class="w"> </span><span class="kt">PixPayment</span><span class="p">,</span><span class="w"> </span><span class="nx">l</span><span class="o">:</span><span class="w"> </span><span class="kt">Loan</span><span class="p">,</span><span class="w"> </span><span class="nx">c</span><span class="o">:</span><span class="w"> </span><span class="kt">Client</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-130" name="__codelineno-5-130" href="#__codelineno-5-130"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-5-131" name="__codelineno-5-131" href="#__codelineno-5-131"></a><span class="w">      </span><span class="sb">`Olá, </span><span class="si">${</span><span class="nx">c</span><span class="p">.</span><span class="nx">nome</span><span class="si">}</span><span class="sb">! 👋`</span><span class="p">,</span>
+<a id="__codelineno-5-132" name="__codelineno-5-132" href="#__codelineno-5-132"></a><span class="w">      </span><span class="sb">``</span><span class="p">,</span>
+<a id="__codelineno-5-133" name="__codelineno-5-133" href="#__codelineno-5-133"></a><span class="w">      </span><span class="sb">`Lembramos que sua parcela está próxima do vencimento:`</span><span class="p">,</span>
+<a id="__codelineno-5-134" name="__codelineno-5-134" href="#__codelineno-5-134"></a><span class="w">      </span><span class="sb">``</span><span class="p">,</span>
+<a id="__codelineno-5-135" name="__codelineno-5-135" href="#__codelineno-5-135"></a><span class="w">      </span><span class="sb">`📋 *Parcela </span><span class="si">${</span><span class="nx">p</span><span class="p">.</span><span class="nx">numero</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">l</span><span class="p">.</span><span class="nx">numeroParcelas</span><span class="si">}</span><span class="sb">*`</span><span class="p">,</span>
+<a id="__codelineno-5-136" name="__codelineno-5-136" href="#__codelineno-5-136"></a><span class="w">      </span><span class="sb">`💰 Valor: *R$ </span><span class="si">${</span><span class="nx">formatDecimal</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">installmentAmount</span><span class="p">)</span><span class="si">}</span><span class="sb">*`</span><span class="p">,</span>
+<a id="__codelineno-5-137" name="__codelineno-5-137" href="#__codelineno-5-137"></a><span class="w">      </span><span class="sb">`📅 Vencimento: *</span><span class="si">${</span><span class="nx">format</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dd/MM/yyyy&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">*`</span><span class="p">,</span>
+<a id="__codelineno-5-138" name="__codelineno-5-138" href="#__codelineno-5-138"></a><span class="w">      </span><span class="sb">``</span><span class="p">,</span>
+<a id="__codelineno-5-139" name="__codelineno-5-139" href="#__codelineno-5-139"></a><span class="w">      </span><span class="sb">`Para pagar via PIX, use o código abaixo:`</span><span class="p">,</span>
+<a id="__codelineno-5-140" name="__codelineno-5-140" href="#__codelineno-5-140"></a><span class="w">      </span><span class="sb">``</span><span class="p">,</span>
+<a id="__codelineno-5-141" name="__codelineno-5-141" href="#__codelineno-5-141"></a><span class="w">      </span><span class="nx">pix</span><span class="p">.</span><span class="nx">qrCode</span><span class="p">,</span>
+<a id="__codelineno-5-142" name="__codelineno-5-142" href="#__codelineno-5-142"></a><span class="w">      </span><span class="sb">``</span><span class="p">,</span>
+<a id="__codelineno-5-143" name="__codelineno-5-143" href="#__codelineno-5-143"></a><span class="w">      </span><span class="sb">`Ou acesse o portal para baixar o boleto:`</span><span class="p">,</span>
+<a id="__codelineno-5-144" name="__codelineno-5-144" href="#__codelineno-5-144"></a><span class="w">      </span><span class="sb">`https://financeiro.lidera.app.br/portal`</span><span class="p">,</span>
+<a id="__codelineno-5-145" name="__codelineno-5-145" href="#__codelineno-5-145"></a><span class="w">      </span><span class="sb">``</span><span class="p">,</span>
+<a id="__codelineno-5-146" name="__codelineno-5-146" href="#__codelineno-5-146"></a><span class="w">      </span><span class="sb">`Em caso de dúvidas, entre em contato com seu consultor.`</span><span class="p">,</span>
+<a id="__codelineno-5-147" name="__codelineno-5-147" href="#__codelineno-5-147"></a><span class="w">    </span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-148" name="__codelineno-5-148" href="#__codelineno-5-148"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-149" name="__codelineno-5-149" href="#__codelineno-5-149"></a>
+<a id="__codelineno-5-150" name="__codelineno-5-150" href="#__codelineno-5-150"></a><span class="w">  </span><span class="c1">// ── E-mail ────────────────────────────────────────────────────</span>
+<a id="__codelineno-5-151" name="__codelineno-5-151" href="#__codelineno-5-151"></a><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">enviarEmail</span><span class="p">(</span>
+<a id="__codelineno-5-152" name="__codelineno-5-152" href="#__codelineno-5-152"></a><span class="w">    </span><span class="nx">parcela</span><span class="o">:</span><span class="w"> </span><span class="kt">Installment</span><span class="p">,</span>
+<a id="__codelineno-5-153" name="__codelineno-5-153" href="#__codelineno-5-153"></a><span class="w">    </span><span class="nx">pdfBuffer</span><span class="o">:</span><span class="w"> </span><span class="kt">Buffer</span><span class="p">,</span>
+<a id="__codelineno-5-154" name="__codelineno-5-154" href="#__codelineno-5-154"></a><span class="w">    </span><span class="nx">pixData</span><span class="o">:</span><span class="w"> </span><span class="kt">PixPayment</span><span class="p">,</span>
+<a id="__codelineno-5-155" name="__codelineno-5-155" href="#__codelineno-5-155"></a><span class="w">    </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="kt">Loan</span><span class="p">,</span>
+<a id="__codelineno-5-156" name="__codelineno-5-156" href="#__codelineno-5-156"></a><span class="w">    </span><span class="nx">cliente</span><span class="o">:</span><span class="w"> </span><span class="kt">Client</span>
+<a id="__codelineno-5-157" name="__codelineno-5-157" href="#__codelineno-5-157"></a><span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-158" name="__codelineno-5-158" href="#__codelineno-5-158"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">notifQueue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;email.cobranca-antecipada&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-159" name="__codelineno-5-159" href="#__codelineno-5-159"></a><span class="w">      </span><span class="nx">clientId</span><span class="o">:</span><span class="w">    </span><span class="kt">cliente.id</span><span class="p">,</span>
+<a id="__codelineno-5-160" name="__codelineno-5-160" href="#__codelineno-5-160"></a><span class="w">      </span><span class="nx">clienteNome</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.nome</span><span class="p">,</span>
+<a id="__codelineno-5-161" name="__codelineno-5-161" href="#__codelineno-5-161"></a><span class="w">      </span><span class="nx">clienteEmail</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.email</span><span class="p">,</span>
+<a id="__codelineno-5-162" name="__codelineno-5-162" href="#__codelineno-5-162"></a><span class="w">      </span><span class="nx">assunto</span><span class="o">:</span><span class="w">     </span><span class="sb">`Lembrete de vencimento — Parcela </span><span class="si">${</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">numero</span><span class="si">}</span><span class="sb">/</span><span class="si">${</span><span class="nx">loan</span><span class="p">.</span><span class="nx">numeroParcelas</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<a id="__codelineno-5-163" name="__codelineno-5-163" href="#__codelineno-5-163"></a><span class="w">      </span><span class="c1">// PDF em base64 para o worker de email anexar</span>
+<a id="__codelineno-5-164" name="__codelineno-5-164" href="#__codelineno-5-164"></a><span class="w">      </span><span class="nx">pdfBase64</span><span class="o">:</span><span class="w">   </span><span class="kt">pdfBuffer.toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">),</span>
+<a id="__codelineno-5-165" name="__codelineno-5-165" href="#__codelineno-5-165"></a><span class="w">      </span><span class="nx">pdfNome</span><span class="o">:</span><span class="w">     </span><span class="sb">`boleto_parcela_</span><span class="si">${</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">numero</span><span class="si">}</span><span class="sb">_</span><span class="si">${</span><span class="nx">format</span><span class="p">(</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">.pdf`</span><span class="p">,</span>
+<a id="__codelineno-5-166" name="__codelineno-5-166" href="#__codelineno-5-166"></a><span class="w">      </span><span class="nx">templateData</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-167" name="__codelineno-5-167" href="#__codelineno-5-167"></a><span class="w">        </span><span class="nx">nome</span><span class="o">:</span><span class="w">          </span><span class="kt">cliente.nome</span><span class="p">,</span>
+<a id="__codelineno-5-168" name="__codelineno-5-168" href="#__codelineno-5-168"></a><span class="w">        </span><span class="nx">numeroParcela</span><span class="o">:</span><span class="w"> </span><span class="kt">parcela.numero</span><span class="p">,</span>
+<a id="__codelineno-5-169" name="__codelineno-5-169" href="#__codelineno-5-169"></a><span class="w">        </span><span class="nx">totalParcelas</span><span class="o">:</span><span class="w"> </span><span class="kt">loan.numeroParcelas</span><span class="p">,</span>
+<a id="__codelineno-5-170" name="__codelineno-5-170" href="#__codelineno-5-170"></a><span class="w">        </span><span class="nx">valor</span><span class="o">:</span><span class="w">         </span><span class="kt">formatDecimal</span><span class="p">(</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">installmentAmount</span><span class="p">),</span>
+<a id="__codelineno-5-171" name="__codelineno-5-171" href="#__codelineno-5-171"></a><span class="w">        </span><span class="nx">vencimento</span><span class="o">:</span><span class="w">    </span><span class="kt">format</span><span class="p">(</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dd/MM/yyyy&#39;</span><span class="p">),</span>
+<a id="__codelineno-5-172" name="__codelineno-5-172" href="#__codelineno-5-172"></a><span class="w">        </span><span class="nx">pixCopiaECola</span><span class="o">:</span><span class="w"> </span><span class="kt">pixData.qrCode</span><span class="p">,</span>
+<a id="__codelineno-5-173" name="__codelineno-5-173" href="#__codelineno-5-173"></a><span class="w">        </span><span class="nx">portalUrl</span><span class="o">:</span><span class="w">     </span><span class="s1">&#39;https://financeiro.lidera.app.br/portal&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-174" name="__codelineno-5-174" href="#__codelineno-5-174"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-5-175" name="__codelineno-5-175" href="#__codelineno-5-175"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-5-176" name="__codelineno-5-176" href="#__codelineno-5-176"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-5-177" name="__codelineno-5-177" href="#__codelineno-5-177"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-178" name="__codelineno-5-178" href="#__codelineno-5-178"></a>
+<a id="__codelineno-5-179" name="__codelineno-5-179" href="#__codelineno-5-179"></a><span class="w">  </span><span class="c1">// ── Portal ────────────────────────────────────────────────────</span>
+<a id="__codelineno-5-180" name="__codelineno-5-180" href="#__codelineno-5-180"></a><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">salvarNoPortal</span><span class="p">(</span>
+<a id="__codelineno-5-181" name="__codelineno-5-181" href="#__codelineno-5-181"></a><span class="w">    </span><span class="nx">parcela</span><span class="o">:</span><span class="w"> </span><span class="kt">Installment</span><span class="p">,</span>
+<a id="__codelineno-5-182" name="__codelineno-5-182" href="#__codelineno-5-182"></a><span class="w">    </span><span class="nx">pdfBuffer</span><span class="o">:</span><span class="w"> </span><span class="kt">Buffer</span><span class="p">,</span>
+<a id="__codelineno-5-183" name="__codelineno-5-183" href="#__codelineno-5-183"></a><span class="w">    </span><span class="nx">pixData</span><span class="o">:</span><span class="w"> </span><span class="kt">PixPayment</span>
+<a id="__codelineno-5-184" name="__codelineno-5-184" href="#__codelineno-5-184"></a><span class="w">  </span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-185" name="__codelineno-5-185" href="#__codelineno-5-185"></a><span class="w">    </span><span class="c1">// Salvar PDF no Supabase Storage: bucket &#39;boletos-cobranca&#39; (privado)</span>
+<a id="__codelineno-5-186" name="__codelineno-5-186" href="#__codelineno-5-186"></a><span class="w">    </span><span class="c1">// Path: {clientId}/parcela_{loanId}_{numero}_{dataVencimento}.pdf</span>
+<a id="__codelineno-5-187" name="__codelineno-5-187" href="#__codelineno-5-187"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">clientId</span><span class="si">}</span><span class="sb">/parcela_</span><span class="si">${</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">loanId</span><span class="si">}</span><span class="sb">_</span><span class="si">${</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">numero</span><span class="si">}</span><span class="sb">_</span><span class="si">${</span><span class="nx">format</span><span class="p">(</span><span class="nx">parcela</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">.pdf`</span><span class="p">;</span>
+<a id="__codelineno-5-188" name="__codelineno-5-188" href="#__codelineno-5-188"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">uploadFile</span><span class="p">(</span><span class="s1">&#39;boletos-cobranca&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="nx">pdfBuffer</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;application/pdf&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-189" name="__codelineno-5-189" href="#__codelineno-5-189"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-5-190" name="__codelineno-5-190" href="#__codelineno-5-190"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-191" name="__codelineno-5-191" href="#__codelineno-5-191"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="32-geracao-do-pdf-de-cobranca">3.2 — Geração do PDF de cobrança</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">gerarPdfCobranca</span><span class="p">(</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">parcela</span><span class="o">:</span><span class="w"> </span><span class="kt">Installment</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">pixData</span><span class="o">:</span><span class="w"> </span><span class="kt">PixPayment</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="kt">Loan</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Buffer</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="c1">// Usar puppeteer ou @react-pdf/renderer (conforme implementado no projeto)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="c1">// O PDF deve conter:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="c1">// - Cabeçalho com logo da Lidera e dados da empresa</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="c1">// - Dados do cliente (nome, CPF formatado)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="c1">// - Dados do contrato (número, data de início)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="c1">// - Dados da parcela (número, valor, vencimento)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="c1">// - QR Code PIX (imagem pixData.qrImage em base64)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="c1">// - Código copia e cola (pixData.qrCode)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="c1">// - Tabela de encargos por atraso:</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="c1">//   &quot;Após o vencimento: multa de X% + mora de Y% ao dia&quot;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="c1">// - Rodapé: &quot;Em caso de dúvidas, contate seu consultor&quot;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 4 — CRON JOBS ATUALIZADOS
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="41-cron-envio-de-cobrancas-antecipadas-09h">4.1 — Cron: envio de cobranças antecipadas — 09h</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">@Cron</span><span class="p">(</span><span class="s1">&#39;0 9 * * *&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">enviarCobrancasAntecipadas</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="c1">// Chama CobrancaService.processarCobrancasAntecipadas()</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="c1">// Este job substitui o sendReminders genérico para parcelas pendentes</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="c1">// A lógica de &quot;dias antes&quot; é respeitada individualmente por contrato</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="42-cron-atualizar-valorcomencargos-08h-junto-com-markoverdue">4.2 — Cron: atualizar valorComEncargos — 08h (junto com markOverdue)</h2>
+<p>Após marcar parcelas como atrasadas, recalcular <code>valorComEncargos</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">atualizarEncargos</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">atrasadas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="ow">in</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;atrasado&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;parcialmente_pago&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">inst</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">atrasadas</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="c1">// Obter percentuais: usar contrato se definido, senão site_settings</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">multaPerc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">inst</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">multaPercentual</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">multaPercentual</span><span class="p">.</span><span class="nx">toString</span><span class="p">())</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;financeiro.multa_atraso_percentual&#39;</span><span class="p">));</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">moraPerc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">inst</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">moraDiariaPercentual</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">moraDiariaPercentual</span><span class="p">.</span><span class="nx">toString</span><span class="p">())</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;financeiro.mora_dia_percentual&#39;</span><span class="p">));</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">saldo</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">saldoDevedor</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">diasAtraso</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">differenceInDays</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span><span class="w"> </span><span class="nx">inst</span><span class="p">.</span><span class="nx">dataVencimento</span><span class="p">);</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span><span class="c1">// Multa: aplicada uma vez (somente no D+1, não acumula)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">multa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">inst</span><span class="p">.</span><span class="nx">multaAplicada</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;0&#39;</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="nx">saldo</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">multaPerc</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">))</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">multaAplicada</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">    </span><span class="c1">// Mora: diária sobre saldo devedor</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mora</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">saldo</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">moraPerc</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">)).</span><span class="nx">times</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">diasAtraso</span><span class="p">));</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">valorTotal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">saldo</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">multa</span><span class="p">).</span><span class="nx">plus</span><span class="p">(</span><span class="nx">mora</span><span class="p">);</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">inst.id</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="w">        </span><span class="nx">multaAplicada</span><span class="o">:</span><span class="w">    </span><span class="kt">multa.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">        </span><span class="nx">moraAcumulada</span><span class="o">:</span><span class="w">    </span><span class="kt">mora.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="w">        </span><span class="nx">valorComEncargos</span><span class="o">:</span><span class="w"> </span><span class="kt">valorTotal.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="43-cron-reenvio-de-cobranca-se-nao-houve-confirmacao-de-leitura">4.3 — Cron: reenvio de cobrança se não houve confirmação de leitura</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Rodar às 09h — 3 dias antes do vencimento (se ainda não pago)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">@Cron</span><span class="p">(</span><span class="s1">&#39;0 9 * * *&#39;</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">async</span><span class="w"> </span><span class="nx">reenviarCobrancaNaoLida</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">em3dias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addDays</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span><span class="w"> </span><span class="mf">3</span><span class="p">);</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">parcelas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pendente&#39;</span><span class="p">,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">      </span><span class="nx">cobrancaEnviadaEm</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">not</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">      </span><span class="c1">// Cobrar novamente se: enviou mas o cliente não pagou e vence em &lt;= 3 dias</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">      </span><span class="nx">dataVencimento</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">lte</span><span class="o">:</span><span class="w"> </span><span class="kt">em3dias</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">      </span><span class="nx">totalPago</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">client</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">p</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">parcelas</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="c1">// Só reenviar se passaram pelo menos 3 dias desde o envio anterior</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">diasDesdeEnvio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">differenceInDays</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">cobrancaEnviadaEm</span><span class="o">!</span><span class="p">);</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">diasDesdeEnvio</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cobrancaService</span><span class="p">.</span><span class="nx">enviarCobranca</span><span class="p">(</span><span class="nx">p</span><span class="p">);</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 5 — WORKERS BULLMQ ATUALIZADOS
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="51-whatsapp-worker-novo-job-type">5.1 — WhatsApp Worker: novo job type</h2>
+<p>Adicionar ao <code>whatsapp.worker.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">@Process</span><span class="p">(</span><span class="s1">&#39;whatsapp.cobranca-antecipada&#39;</span><span class="p">)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">handleCobrancaAntecipada</span><span class="p">(</span><span class="nx">job</span><span class="o">:</span><span class="w"> </span><span class="kt">Job</span><span class="o">&lt;</span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nx">clienteNome</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nx">clienteWhatsapp</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nx">mensagem</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nx">pixCopiaECola</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">clienteWhatsapp</span><span class="p">,</span><span class="w"> </span><span class="nx">mensagem</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">job</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="c1">// Enviar via Evolution API</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">evolutionApi</span><span class="p">.</span><span class="nx">sendText</span><span class="p">(</span><span class="nx">clienteWhatsapp</span><span class="p">,</span><span class="w"> </span><span class="nx">mensagem</span><span class="p">);</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="c1">// Aguardar 2s e enviar o código copia e cola separado (para o cliente copiar fácil)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">sleep</span><span class="p">(</span><span class="mf">2000</span><span class="p">);</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">evolutionApi</span><span class="p">.</span><span class="nx">sendText</span><span class="p">(</span><span class="nx">clienteWhatsapp</span><span class="p">,</span><span class="w"> </span><span class="nx">job</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">pixCopiaECola</span><span class="p">);</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="52-email-worker-job-com-pdf-anexado">5.2 — Email Worker: job com PDF anexado</h2>
+<p>Adicionar ao <code>email.worker.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">@Process</span><span class="p">(</span><span class="s1">&#39;email.cobranca-antecipada&#39;</span><span class="p">)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">handleCobrancaEmail</span><span class="p">(</span><span class="nx">job</span><span class="o">:</span><span class="w"> </span><span class="kt">Job</span><span class="o">&lt;</span><span class="p">{</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nx">clienteEmail</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nx">assunto</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nx">pdfBase64</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="nx">pdfNome</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nx">templateData</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">}</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">clienteEmail</span><span class="p">,</span><span class="w"> </span><span class="nx">assunto</span><span class="p">,</span><span class="w"> </span><span class="nx">pdfBase64</span><span class="p">,</span><span class="w"> </span><span class="nx">pdfNome</span><span class="p">,</span><span class="w"> </span><span class="nx">templateData</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">job</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">renderTemplateEmail</span><span class="p">(</span><span class="nx">templateData</span><span class="p">);</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">transporter</span><span class="p">.</span><span class="nx">sendMail</span><span class="p">({</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="nx">from</span><span class="o">:</span><span class="w">    </span><span class="kt">process.env.SMTP_FROM</span><span class="p">,</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="nx">to</span><span class="o">:</span><span class="w">      </span><span class="kt">clienteEmail</span><span class="p">,</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="nx">subject</span><span class="o">:</span><span class="w"> </span><span class="kt">assunto</span><span class="p">,</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">    </span><span class="nx">html</span><span class="p">,</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">    </span><span class="nx">attachments</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">      </span><span class="nx">filename</span><span class="o">:</span><span class="w"> </span><span class="kt">pdfNome</span><span class="p">,</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">      </span><span class="nx">content</span><span class="o">:</span><span class="w">  </span><span class="kt">Buffer.from</span><span class="p">(</span><span class="nx">pdfBase64</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;base64&#39;</span><span class="p">),</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">      </span><span class="nx">contentType</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/pdf&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">    </span><span class="p">}]</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="p">}</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="k">private</span><span class="w"> </span><span class="nx">renderTemplateEmail</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="sb">  &lt;div style=&quot;font-family:sans-serif;max-width:520px;margin:0 auto;color:#1a1a18&quot;&gt;</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="sb">    &lt;div style=&quot;border-bottom:2px solid #185FA5;padding-bottom:16px;margin-bottom:24px&quot;&gt;</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="sb">      &lt;h2 style=&quot;color:#185FA5;margin:0&quot;&gt;Lidera Financeira&lt;/h2&gt;</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="sb">    &lt;/div&gt;</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="sb">    &lt;p&gt;Olá, &lt;strong&gt;</span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">nome</span><span class="si">}</span><span class="sb">&lt;/strong&gt;!&lt;/p&gt;</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="sb">    &lt;p&gt;Sua parcela está próxima do vencimento:&lt;/p&gt;</span>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="sb">    &lt;table style=&quot;width:100%;border-collapse:collapse;margin:16px 0&quot;&gt;</span>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="sb">      &lt;tr style=&quot;background:#f5f5f3&quot;&gt;</span>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="sb">        &lt;td style=&quot;padding:10px;border:0.5px solid #d3d1c7&quot;&gt;Parcela&lt;/td&gt;</span>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="sb">        &lt;td style=&quot;padding:10px;border:0.5px solid #d3d1c7&quot;&gt;&lt;strong&gt;</span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">numeroParcela</span><span class="si">}</span><span class="sb"> de </span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">totalParcelas</span><span class="si">}</span><span class="sb">&lt;/strong&gt;&lt;/td&gt;</span>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="sb">      &lt;/tr&gt;</span>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="sb">      &lt;tr&gt;</span>
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="sb">        &lt;td style=&quot;padding:10px;border:0.5px solid #d3d1c7&quot;&gt;Valor&lt;/td&gt;</span>
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a><span class="sb">        &lt;td style=&quot;padding:10px;border:0.5px solid #d3d1c7&quot;&gt;&lt;strong&gt;R$ </span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">valor</span><span class="si">}</span><span class="sb">&lt;/strong&gt;&lt;/td&gt;</span>
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="sb">      &lt;/tr&gt;</span>
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="sb">      &lt;tr style=&quot;background:#f5f5f3&quot;&gt;</span>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="sb">        &lt;td style=&quot;padding:10px;border:0.5px solid #d3d1c7&quot;&gt;Vencimento&lt;/td&gt;</span>
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a><span class="sb">        &lt;td style=&quot;padding:10px;border:0.5px solid #d3d1c7&quot;&gt;&lt;strong&gt;</span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">vencimento</span><span class="si">}</span><span class="sb">&lt;/strong&gt;&lt;/td&gt;</span>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="sb">      &lt;/tr&gt;</span>
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a><span class="sb">    &lt;/table&gt;</span>
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a><span class="sb">    &lt;p style=&quot;color:#5F5E5A;font-size:13px&quot;&gt;O boleto está anexo a este e-mail.&lt;/p&gt;</span>
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a><span class="sb">    &lt;p style=&quot;color:#5F5E5A;font-size:13px&quot;&gt;Você também pode pagar via PIX usando o código abaixo:&lt;/p&gt;</span>
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a><span class="sb">    &lt;code style=&quot;display:block;background:#f5f5f3;padding:12px;border-radius:6px;font-size:11px;word-break:break-all;margin:8px 0&quot;&gt;</span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">pixCopiaECola</span><span class="si">}</span><span class="sb">&lt;/code&gt;</span>
+<a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a><span class="sb">    &lt;a href=&quot;</span><span class="si">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">portalUrl</span><span class="si">}</span><span class="sb">&quot; style=&quot;display:inline-block;background:#185FA5;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;margin-top:12px&quot;&gt;Acessar portal&lt;/a&gt;</span>
+<a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a><span class="sb">    &lt;p style=&quot;margin-top:24px;color:#888;font-size:12px&quot;&gt;Lidera Tecnologia e Gestão Ltda · Em caso de dúvidas, contate seu consultor.&lt;/p&gt;</span>
+<a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a><span class="sb">  &lt;/div&gt;`</span><span class="p">;</span>
+<a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 6 — PORTAL DO CLIENTE: DOWNLOAD DO BOLETO
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="61-endpoint-de-download">6.1 — Endpoint de download</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>GET /api/portal/parcelas/:id/boleto
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>→ Retorna URL assinada (1h) para o PDF no Supabase Storage
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>→ ClientPortalGuard + validação de ownership obrigatória
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>→ Se boleto não foi gerado ainda: gera on-demand e salva
+</code></pre></div>
+<h2 id="62-tela-da-parcela-no-portal">6.2 — Tela da parcela no portal</h2>
+<p>Na tabela de parcelas, adicionar botão de download:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Nº | Vencimento | Valor    | Status          | Ações
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>───┼────────────┼──────────┼─────────────────┼───────────────────────
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>3  | 10/06/26   | R$280,00 | 🔵 Pendente     | [Pagar PIX] [↓ Boleto]
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>4  | 10/07/26   | R$280,00 | ⏳ Aguardando   | [↓ Boleto disponível em 30/06]
+</code></pre></div>
+<p>Regras de exibição:
+- Botão "↓ Boleto": disponível quando <code>cobrancaPortalOk = true</code>
+- Se ainda não disponível: mostrar data prevista de disponibilidade
+  (<code>dataVencimento - diasAntecedenciaCobranca</code>)
+- Download abre URL assinada em nova aba (não forçar download)</p>
+<h2 id="63-notificacao-realtime-no-portal">6.3 — Notificação Realtime no portal</h2>
+<p>Quando o boleto for gerado e salvo no portal, disparar evento via
+Supabase Realtime para atualizar o badge de notificações do cliente:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">// A publication supabase_realtime já inclui a tabela installments</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1">// Frontend escuta UPDATE em installments onde cobrancaPortalOk muda para true</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">// Ao receber: mostrar toast &quot;Seu boleto está disponível para download!&quot;</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 7 — FRONTEND OPERACIONAL: CONFIGURAÇÃO NO FORMULÁRIO
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="71-secao-configuracoes-de-cobranca-no-formulario-de-novo-emprestimo">7.1 — Seção "Configurações de cobrança" no formulário de novo empréstimo</h2>
+<p>Adicionar seção expansível abaixo dos campos principais:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>│  Configurações de cobrança e encargos     [▼ Expandir]       │
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>├──────────────────────────────────────────────────────────────┤
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>│  Dia fixo de vencimento (opcional)                           │
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>│  [ __ ] Deixe em branco para usar dataInício + N meses       │
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>│  Ex: 10 = toda parcela vence no dia 10                       │
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>│                                                              │
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>│  Enviar cobrança antecipada                                  │
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>│  [ 10 ] dias antes do vencimento                             │
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>│                                                              │
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>│  Canais de cobrança                                          │
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>│  [✓] WhatsApp   [✓] E-mail   [✓] Portal                     │
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>│                                                              │
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>│  Encargos por atraso (deixe em branco para usar o padrão)    │
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>│  Multa:  [ _____ ] %   Padrão: 2,00%                        │
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>│  Mora:   [ _____ ] % ao dia   Padrão: 0,0333%/dia           │
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>│                                                              │
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>│  Preview de encargos:                                        │
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>│  Parcela de R$ 280,00 atrasada 30 dias:                      │
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>│  Multa: R$ 5,60 · Mora: R$ 2,80 · Total: R$ 288,40          │
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Preview de encargos calculado ao vivo com decimal.js:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">valorParcela</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">watch</span><span class="p">(</span><span class="s1">&#39;installmentAmount&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="p">);</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">multaPerc</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">watch</span><span class="p">(</span><span class="s1">&#39;multaPercentual&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">globalSettings</span><span class="p">.</span><span class="nx">multa</span><span class="p">);</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">moraPerc</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">watch</span><span class="p">(</span><span class="s1">&#39;moraDiariaPercentual&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">globalSettings</span><span class="p">.</span><span class="nx">mora</span><span class="p">);</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">diasExemplo</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">30</span><span class="p">;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">multa</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">valorParcela</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">multaPerc</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">));</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">mora</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nx">valorParcela</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">moraPerc</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">)).</span><span class="nx">times</span><span class="p">(</span><span class="nx">diasExemplo</span><span class="p">);</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">total</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">valorParcela</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">multa</span><span class="p">).</span><span class="nx">plus</span><span class="p">(</span><span class="nx">mora</span><span class="p">);</span>
+</code></pre></div></p>
+<h2 id="72-detalhe-do-contrato-painel-de-cobrancas">7.2 — Detalhe do contrato: painel de cobranças</h2>
+<p>Na tela <code>/emprestimos/[id]</code>, adicionar aba "Cobranças" ao lado de "Parcelas":</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>│  Histórico de cobranças enviadas                             │
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>├───┬────────────┬──────────────┬─────┬──────┬────────────────┤
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│ # │ Vencimento │ Enviada em   │ WA  │ Mail │ Portal         │
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>├───┼────────────┼──────────────┼─────┼──────┼────────────────┤
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>│ 1 │ 10/04/26   │ 31/03/26     │ ✅  │  ✅  │ ✅ Baixado     │
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>│ 2 │ 10/05/26   │ 30/04/26     │ ✅  │  ✅  │ ✅ Não baixado │
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>│ 3 │ 10/06/26   │ Agendada     │  -  │   -  │ -              │
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>└───┴────────────┴──────────────┴─────┴──────┴────────────────┘
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+ENTREGÁVEIS — ORDEM DE EXECUÇÃO
+═══════════════════════════════════════════════════════════════════</p>
+<p>GRUPO A — Schema e migration
+  1. Campos novos em Loan: multaPercentual, moraDiariaPercentual,
+     diasAntecedenciaCobranca, diaVencimento, cobrarWhatsapp,
+     cobrarEmail, cobrarPortal
+  2. Campos novos em Installment: cobrancaEnviadaEm,
+     cobrancaWhatsappOk, cobrancaEmailOk, cobrancaPortalOk,
+     multaAplicada, valorComEncargos, pixCobrancaId
+  3. Seed das novas chaves em site_settings
+  4. Criar bucket 'boletos-cobranca' no Supabase Storage (privado)</p>
+<p>GRUPO B — Lógica de geração de parcelas
+  5. calcularDataVencimento() com dia fixo (respeitando meses curtos)
+  6. CreateLoanDto com novos campos
+  7. LoansService.createLoan(): usar diaVencimento ao gerar parcelas
+     e inicializar saldoDevedor = installmentAmount</p>
+<p>GRUPO C — Serviço de cobrança
+  8. CobrancaModule + CobrancaService
+  9. enviarCobranca() com Promise.allSettled em 3 canais
+  10. gerarPdfCobranca() com QR Code + encargos no rodapé
+  11. salvarNoPortal() via Supabase Storage</p>
+<p>GRUPO D — Workers e crons
+  12. whatsapp.worker: job 'whatsapp.cobranca-antecipada'
+  13. email.worker: job 'email.cobranca-antecipada' com PDF anexado
+  14. CronService: enviarCobrancasAntecipadas (09h)
+  15. CronService: atualizarEncargos (08h, junto com markOverdue)
+  16. CronService: reenviarCobrancaNaoLida (09h, D-3 sem pagamento)</p>
+<p>GRUPO E — Portal do cliente
+  17. GET /api/portal/parcelas/:id/boleto (download URL assinada)
+  18. Botão "↓ Boleto" na tabela de parcelas
+  19. Data prevista de disponibilidade se ainda não gerado
+  20. Toast Realtime quando boleto ficar disponível</p>
+<p>GRUPO F — Frontend operacional
+  21. Seção "Configurações de cobrança" no formulário de novo empréstimo
+  22. Preview ao vivo de encargos por atraso
+  23. Aba "Cobranças" no detalhe do contrato com histórico</p>
+<p>═══════════════════════════════════════════════════════════════════
+REGRAS TÉCNICAS OBRIGATÓRIAS
+═══════════════════════════════════════════════════════════════════
+- decimal.js em TODO cálculo de multa, mora, valorComEncargos e preview
+- Fallback obrigatório: loan.multaPercentual ?? site_settings (nunca null sem default)
+- diaVencimento limitado a 1-28 (nunca 29, 30, 31 para evitar problemas em fev)
+- PDF gerado ANTES de enfileirar os jobs de WhatsApp e email
+- Promise.allSettled (não Promise.all) para não falhar tudo se um canal falhar
+- Falha em um canal: registrar no AuditLog mas continuar com os demais
+- cobrancaEnviadaEm atualizado mesmo se algum canal falhar
+- URL assinada do boleto: expirar em 1h (padrão Supabase Storage)
+- Bucket 'boletos-cobranca': privado, apenas PDF, 5MB max
+- Reenvio: mínimo 3 dias de intervalo entre envios (evitar spam)
+- Multa aplicada uma vez (D+1) — não acumular multa diariamente
+- Mora: diária, sobre saldoDevedor, acumula dia a dia
+- AuditLog em todo envio de cobrança (COBRANCA_ANTECIPADA_ENVIADA)
+```</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

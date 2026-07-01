@@ -1,0 +1,1589 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SIAFI 2.0 — Fluxo Completo: Intenção de Empréstimo, Reparcelamento e Comunicador Interno - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-fluxo-completo-intencao-de-emprestimo-reparcelamento-e-comunicador-interno" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SIAFI 2.0 — Fluxo Completo: Intenção de Empréstimo, Reparcelamento e Comunicador Interno
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-fluxo-completo-intencao-de-emprestimo-reparcelamento-e-comunicador-interno">SIAFI 2.0 — Fluxo Completo: Intenção de Empréstimo, Reparcelamento e Comunicador Interno</h1>
+<h1 id="prompt-de-arquitetura-e-negocio-maio-2026">Prompt de Arquitetura e Negócio — Maio 2026</h1>
+<p>Cole em uma nova conversa com os arquivos:
+01_ARQUITETURA.md, 02_BACKEND.md, 03_FRONTEND.md, 04_DATABASE.md
++ SKILL.md (siafi-roles-consultor)
++ Resultado do PROMPT_FASE1 (ConsultorModule já implementado)</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior e Arquiteto de Sistemas. Analise
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>toda a documentação do SIAFI 2.0 antes de escrever qualquer código.
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Vamos implementar três módulos interligados que formam o coração operacional
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>do sistema: o fluxo completo de intenção de empréstimo com aprovação pelo
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>financeiro, o fluxo de reparcelamento solicitado pelo cliente, e o
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>comunicador interno entre grupos e usuários com suporte a documentos.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Leia tudo. Pergunte se houver dúvida. Entregue um grupo por vez.
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>CONTEXTO — O QUE JÁ EXISTE
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Da Fase 1 já implementada:
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>- Model IntencaoEmprestimo: clientId, consultorId, valorSolicitado,
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  numeroParcelas, finalidade, status (aguardando|aprovado|rejeitado|convertido),
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  aprovadoPor, aprovadoEm, loanId?
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>- Model ConsultorSolicitacao: tipos desconto|reparcelamento|intencao|outro
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>- Endpoints GET/PATCH /api/intencoes e /api/solicitacoes (financeiro aprova)
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>- Endpoints POST /api/consultor/intencoes e /api/consultor/solicitacoes
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>O que ainda NÃO existe e vamos criar aqui:
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>- SLA automático com notificações por prazo
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>- Fluxo de ativação do portal vinculado à aprovação
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>- Aceite digital do cliente no portal
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>- Reparcelamento completo com cancelamento do contrato original
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>- Multa e mora configuráveis
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>- Score de risco interno do cliente
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>- Comunicador interno completo
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>- Simulador de reparcelamento para o financeiro
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>PARTE 1 — SCHEMA PRISMA: NOVOS MODELS E CAMPOS
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>## 1.1 — Atualizar model IntencaoEmprestimo
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>Adicionar os campos que faltam:
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>```prisma
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>model IntencaoEmprestimo {
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>  // ... campos existentes da Fase 1 ...
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>  // Novos campos
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>  motivoRejeicao      String?   @db.Text @map(&quot;motivo_rejeicao&quot;)
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>  motivoRejeicaoTipo  String?   @db.VarChar(50) @map(&quot;motivo_rejeicao_tipo&quot;)
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>  // Tipos predefinidos: &#39;score_baixo&#39; | &#39;documentacao_incompleta&#39; |
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>  //   &#39;limite_atingido&#39; | &#39;renda_insuficiente&#39; | &#39;outro&#39;
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>  prazoAnaliseHoras   Int       @default(24) @map(&quot;prazo_analise_horas&quot;)
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>  // Configurável por tipo — padrão 24h
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>  prazoExpiracaoEm    DateTime? @map(&quot;prazo_expiracao_em&quot;)
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>  // Calculado ao criar: createdAt + prazoAnaliseHoras
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>  slaNotificado       Boolean   @default(false) @map(&quot;sla_notificado&quot;)
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>  // true quando o cron enviou o alerta de prazo vencendo
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>  slaEscalonado       Boolean   @default(false) @map(&quot;sla_escalonado&quot;)
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>  // true quando escalou para admin
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>  // Feedback ao cliente
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>  feedbackEnviadoEm   DateTime? @map(&quot;feedback_enviado_em&quot;)
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>  feedbackEnviadoPor  Int?      @map(&quot;feedback_enviado_por&quot;)
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>  feedbackCanal       String?   @db.VarChar(20) @map(&quot;feedback_canal&quot;)
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>  // Canal: &#39;sistema&#39; | &#39;whatsapp&#39; | &#39;presencial&#39;
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>}
+</code></pre></div>
+<h2 id="12-atualizar-model-loan-para-reparcelamento">1.2 — Atualizar model Loan para reparcelamento</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>model Loan {
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  // ... campos existentes ...
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  // Rastreabilidade de reparcelamento
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  origemLoanId        Int?      @unique @map(&quot;origem_loan_id&quot;)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  // FK para o contrato que foi cancelado e originou este
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  // @unique porque um contrato cancelado gera exatamente 1 novo
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  reparcelamentoCount Int       @default(0) @map(&quot;reparcelamento_count&quot;)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  // Quantas vezes este contrato já foi reparcelado
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  // Herdado do contrato original no reparcelamento
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  aceiteClienteEm     DateTime? @map(&quot;aceite_cliente_em&quot;)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  aceiteClienteIp     String?   @db.VarChar(45) @map(&quot;aceite_cliente_ip&quot;)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  aceiteClienteHash   String?   @db.VarChar(64) @map(&quot;aceite_cliente_hash&quot;)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  // SHA-256 do documento aceito — prova legal do aceite
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  origemLoan          Loan?     @relation(&quot;ReparcelamentoOrigem&quot;,
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>                                  fields: [origemLoanId], references: [id])
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  reparcelado         Loan?     @relation(&quot;ReparcelamentoOrigem&quot;)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  @@map(&quot;loans&quot;)
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>}
+</code></pre></div>
+<h2 id="13-model-solicitacaoreparcelamento-novo-especifico-do-cliente">1.3 — Model SolicitacaoReparcelamento (novo — específico do cliente)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>model SolicitacaoReparcelamento {
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  id                  Int       @id @default(autoincrement())
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  clientId            Int       @map(&quot;client_id&quot;)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  loanId              Int       @map(&quot;loan_id&quot;)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  consultorId         Int?      @map(&quot;consultor_id&quot;)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  tipo                String    @db.VarChar(30) @map(&quot;tipo&quot;)
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  // &#39;reparcelamento&#39; | &#39;boleto_atualizado&#39;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  motivoCliente       String    @db.Text @map(&quot;motivo_cliente&quot;)
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  // Descrição do cliente sobre sua situação
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  dataPrevistaPagamento DateTime? @map(&quot;data_prevista_pagamento&quot;)
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  // Data informada pelo cliente para pagar
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  status              String    @default(&quot;pendente&quot;) @db.VarChar(20)
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  // &#39;pendente&#39; | &#39;em_analise&#39; | &#39;aprovado&#39; | &#39;rejeitado&#39; | &#39;cancelado&#39;
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  // Resposta do financeiro
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>  novoValorPrincipal  Decimal?  @db.Decimal(10,2) @map(&quot;novo_valor_principal&quot;)
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>  novoTargetProfit    Decimal?  @db.Decimal(10,2) @map(&quot;novo_target_profit&quot;)
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>  novoNumeroParcelas  Int?      @map(&quot;novo_numero_parcelas&quot;)
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>  novaDataInicio      DateTime? @map(&quot;nova_data_inicio&quot;)
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>  multaAplicada       Decimal?  @db.Decimal(10,2) @map(&quot;multa_aplicada&quot;)
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>  moraAplicada        Decimal?  @db.Decimal(10,2) @map(&quot;mora_aplicada&quot;)
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>  observacaoFinanceiro String?  @db.Text @map(&quot;observacao_financeiro&quot;)
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>  // Execução
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>  novoLoanId          Int?      @unique @map(&quot;novo_loan_id&quot;)
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>  // Preenchido após a criação do novo contrato
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>  respondidoPor       Int?      @map(&quot;respondido_por&quot;)
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>  respondidoEm        DateTime? @map(&quot;respondido_em&quot;)
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>  executadoPor        Int?      @map(&quot;executado_por&quot;)
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>  executadoEm         DateTime? @map(&quot;executado_em&quot;)
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>  // Aprovação em segunda instância (para reparcelamentos)
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>  aprovadoSegundaInstancia     Boolean   @default(false) @map(&quot;aprovado_segunda_instancia&quot;)
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>  aprovadoSegundaInstanciaPor  Int?      @map(&quot;aprovado_segunda_instancia_por&quot;)
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>  aprovadoSegundaInstanciaEm   DateTime? @map(&quot;aprovado_segunda_instancia_em&quot;)
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>  createdAt           DateTime  @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>  updatedAt           DateTime  @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>  client    Client  @relation(fields: [clientId], references: [id])
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>  loan      Loan    @relation(fields: [loanId], references: [id])
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>  consultor User?   @relation(fields: [consultorId], references: [id])
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a>  @@index([clientId])
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>  @@index([loanId])
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>  @@index([status])
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>  @@map(&quot;solicitacoes_reparcelamento&quot;)
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>}
+</code></pre></div>
+<h2 id="14-model-mensagem-comunicador-interno">1.4 — Model Mensagem (comunicador interno)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>model Mensagem {
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  id            Int      @id @default(autoincrement())
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  conversaId    Int      @map(&quot;conversa_id&quot;)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  remetenteId   Int      @map(&quot;remetente_id&quot;)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  // userId — quem enviou
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  conteudo      String   @db.Text
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  tipo          String   @db.VarChar(20) @default(&quot;texto&quot;)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  // &#39;texto&#39; | &#39;documento&#39; | &#39;sistema&#39;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  // &#39;sistema&#39;: mensagens automáticas (ex: &quot;Intenção #12 aprovada&quot;)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  arquivoPath   String?  @db.VarChar(500) @map(&quot;arquivo_path&quot;)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  // Path no Supabase Storage (bucket: &#39;mensagens-docs&#39;)
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  arquivoNome   String?  @db.VarChar(255) @map(&quot;arquivo_nome&quot;)
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  arquivoMime   String?  @db.VarChar(100) @map(&quot;arquivo_mime&quot;)
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>  lida          Boolean  @default(false)
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  lidaEm        DateTime? @map(&quot;lida_em&quot;)
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  createdAt     DateTime @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>  conversa  Conversa @relation(fields: [conversaId], references: [id])
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  remetente User     @relation(fields: [remetenteId], references: [id])
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  @@index([conversaId])
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>  @@index([remetenteId])
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>  @@map(&quot;mensagens&quot;)
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>}
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>model Conversa {
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>  id            Int      @id @default(autoincrement())
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  titulo        String?  @db.VarChar(255)
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>  // Opcional — gerado automaticamente se não informado
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  tipo          String   @db.VarChar(30) @default(&quot;direto&quot;)
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  // &#39;direto&#39;: entre dois usuários
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>  // &#39;grupo&#39;: múltiplos participantes
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>  // &#39;contexto&#39;: vinculada a uma entidade (intenção, contrato, solicitação)
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>  // Vínculo de contexto (opcional — pelo menos um deve ser preenchido
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>  // para conversas de tipo &#39;contexto&#39;)
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>  intencaoId    Int?     @map(&quot;intencao_id&quot;)
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>  loanId        Int?     @map(&quot;loan_id&quot;)
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>  solicitacaoId Int?     @map(&quot;solicitacao_id&quot;)
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>  clientId      Int?     @map(&quot;client_id&quot;)
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>  arquivada     Boolean  @default(false)
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>  createdAt     DateTime @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>  updatedAt     DateTime @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>  mensagens     Mensagem[]
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>  participantes ConversaParticipante[]
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>  @@index([intencaoId])
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>  @@index([loanId])
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>  @@map(&quot;conversas&quot;)
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>}
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>model ConversaParticipante {
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>  id          Int      @id @default(autoincrement())
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>  conversaId  Int      @map(&quot;conversa_id&quot;)
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>  userId      Int      @map(&quot;user_id&quot;)
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>  // Inclui tanto User (operadores) quanto pode ser expandido para Client
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>  role        String   @db.VarChar(20) @default(&quot;membro&quot;)
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>  // &#39;admin_conversa&#39; | &#39;membro&#39;
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>  silenciado  Boolean  @default(false)
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>  ultimaLeitura DateTime? @map(&quot;ultima_leitura&quot;)
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>  entradaEm   DateTime @default(now()) @map(&quot;entrada_em&quot;)
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a>
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a>  conversa Conversa @relation(fields: [conversaId], references: [id])
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a>  user     User     @relation(fields: [userId], references: [id])
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a>
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a>  @@unique([conversaId, userId])
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a>  @@map(&quot;conversa_participantes&quot;)
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>}
+</code></pre></div>
+<h2 id="15-model-scorerisco-score-interno-do-cliente">1.5 — Model ScoreRisco (score interno do cliente)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>model ScoreRisco {
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  id              Int      @id @default(autoincrement())
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  clientId        Int      @unique @map(&quot;client_id&quot;)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  // Componentes do score (0-100 cada)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  scorePontualidade     Int @default(100) @map(&quot;score_pontualidade&quot;)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  // Cai proporcionalmente a cada parcela atrasada
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  scoreReparcelamentos  Int @default(100) @map(&quot;score_reparcelamentos&quot;)
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  // Cai a cada reparcelamento solicitado
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  scoreQuitacoes        Int @default(50)  @map(&quot;score_quitacoes&quot;)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  // Sobe a cada contrato quitado em dia
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  scoreGeral            Int @default(75)  @map(&quot;score_geral&quot;)
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  // Média ponderada: pontualidade 50% + reparcelamentos 30% + quitações 20%
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  classificacao   String   @default(&quot;regular&quot;) @db.VarChar(20)
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  // &#39;excelente&#39; (85-100) | &#39;bom&#39; (70-84) | &#39;regular&#39; (50-69) | &#39;alto_risco&#39; (&lt;50)
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  totalEmprestimos      Int @default(0) @map(&quot;total_emprestimos&quot;)
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  totalQuitados         Int @default(0) @map(&quot;total_quitados&quot;)
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  totalReparcelamentos  Int @default(0) @map(&quot;total_reparcelamentos&quot;)
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>  totalParcelasAtrasadas Int @default(0) @map(&quot;total_parcelas_atrasadas&quot;)
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  calculadoEm   DateTime @default(now()) @map(&quot;calculado_em&quot;)
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  updatedAt     DateTime @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>  client Client @relation(fields: [clientId], references: [id])
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>  @@map(&quot;scores_risco&quot;)
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>}
+</code></pre></div>
+<h2 id="16-configuracoes-de-multamora-em-sitesetting">1.6 — Configurações de multa/mora em SiteSetting</h2>
+<p>Adicionar ao seed inicial as configurações financeiras:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Chaves a serem inseridas na tabela site_settings:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="s1">&#39;financeiro.multa_atraso_percentual&#39;</span><span class="w">  </span><span class="c1">// default: &#39;2.00&#39;  (2% sobre o valor)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s1">&#39;financeiro.mora_dia_percentual&#39;</span><span class="w">      </span><span class="c1">// default: &#39;0.033&#39; (1% ao mês / 30 dias)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s1">&#39;financeiro.max_reparcelamentos&#39;</span><span class="w">      </span><span class="c1">// default: &#39;3&#39;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s1">&#39;financeiro.sla_intencao_horas&#39;</span><span class="w">       </span><span class="c1">// default: &#39;24&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">&#39;financeiro.sla_escalona_horas&#39;</span><span class="w">       </span><span class="c1">// default: &#39;48&#39;</span>
+</code></pre></div></p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 2 — FLUXO DE INTENÇÃO DE EMPRÉSTIMO (COMPLETO)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="21-intencaoservice-criar-intencao-com-sla-automatico">2.1 — IntencaoService: criar intenção com SLA automático</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">criarIntencao</span><span class="p">(</span><span class="nx">dto</span><span class="o">:</span><span class="w"> </span><span class="kt">CreateIntencaoDto</span><span class="p">,</span><span class="w"> </span><span class="nx">consultor</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="c1">// 1. Validar que o cliente pertence à carteira do consultor</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="c1">// 2. Verificar limite de contratos ativos do cliente</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="c1">// 3. Calcular prazo de expiração a partir do site_settings</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">slaHoras</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;financeiro.sla_intencao_horas&#39;</span><span class="p">);</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">prazoExpiracaoEm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addHours</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">slaHoras</span><span class="p">));</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="c1">// 4. Criar IntencaoEmprestimo com status &#39;aguardando&#39;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="c1">// 5. Criar Conversa de contexto automaticamente:</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="c1">//    - tipo: &#39;contexto&#39;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="c1">//    - titulo: `Intenção #${id} — ${cliente.nome}`</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="c1">//    - participantes: consultor + todos os financeiros ativos + admin</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="c1">//    - intencaoId: id da intenção criada</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="c1">//    - mensagem automática de sistema:</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="c1">//      &quot;Intenção de empréstimo registrada pelo consultor {nome}.</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="c1">//       Valor: R$ {valor} | Parcelas: {n} | Finalidade: {finalidade}&quot;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span><span class="c1">// 6. Notificar financeiros via BullMQ (notif-queue)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span><span class="c1">// 7. AuditLog: INTENCAO_CRIADA</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="22-intencaoservice-aprovar-com-ativacao-do-portal">2.2 — IntencaoService: aprovar com ativação do portal</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">aprovarIntencao</span><span class="p">(</span><span class="nx">intencaoId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">financeiro</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$transaction</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">tx</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="c1">// 1. Atualizar status para &#39;aprovado&#39; + aprovadoPor + aprovadoEm</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="c1">// 2. Criar o Loan automaticamente com os dados da intenção</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="c1">//    (usando a lógica de split de parcela do PROMPT_SPLIT_PARCELA)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="c1">// 3. Atualizar intencao.loanId = loan.id + status = &#39;convertido&#39;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="c1">// 4. Verificar se o portal do cliente já está ativo:</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="c1">//    - Se NÃO: ativar automaticamente via PortalService.ativarPortal()</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="c1">//    - Se SIM: apenas notificar</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="c1">// 5. Enviar mensagem de sistema na Conversa da intenção:</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="c1">//    &quot;✅ Intenção aprovada por {financeiro.nome}.</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="c1">//     Contrato #{loan.id} gerado automaticamente.&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="c1">// 6. Notificar consultor via BullMQ:</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="c1">//    - WhatsApp do consultor com resumo da aprovação</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="c1">// 7. Notificar cliente via WhatsApp + email com:</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="c1">//    - &quot;Seu empréstimo foi aprovado! Acesse o portal.&quot;</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span><span class="c1">//    - Se portal acabou de ser ativado: incluir credenciais</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="c1">// 8. AuditLog: INTENCAO_APROVADA + snapshot do loan criado</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="23-intencaoservice-rejeitar-com-motivo">2.3 — IntencaoService: rejeitar com motivo</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">rejeitarIntencao</span><span class="p">(</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">intencaoId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">financeiro</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nx">motivoTipo</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">motivoTexto</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="c1">// 1. Atualizar status para &#39;rejeitado&#39; + motivo + respondidoPor</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="c1">// 2. Mensagem de sistema na Conversa:</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1">//    &quot;❌ Intenção rejeitada. Motivo: {motivo}&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="c1">// 3. Notificar consultor via BullMQ para repassar ao cliente</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="c1">// 4. AuditLog: INTENCAO_REJEITADA</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="c1">// Consultor decide como e quando informar o cliente (registra via feedbackEnviadoPor)</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="24-intencaoservice-registrar-feedback-ao-cliente">2.4 — IntencaoService: registrar feedback ao cliente</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">registrarFeedbackCliente</span><span class="p">(</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">intencaoId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">consultor</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">canal</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sistema&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;whatsapp&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;presencial&#39;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="c1">// Marca que o consultor informou o cliente</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="c1">// Atualiza feedbackEnviadoEm + feedbackEnviadoPor + feedbackCanal</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="c1">// Se canal = &#39;sistema&#39;: enfileira mensagem automática ao cliente</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="c1">//   via portal/WhatsApp com o resultado (aprovado/rejeitado + motivo)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="25-cron-job-verificacao-de-sla">2.5 — Cron Job: verificação de SLA</h2>
+<p>Adicionar em CronService:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// A cada 2 horas — verificar intenções com SLA vencendo</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kd">@Cron</span><span class="p">(</span><span class="s1">&#39;0 */2 * * *&#39;</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">async</span><span class="w"> </span><span class="nx">verificarSlaIntencoes</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">agora</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">();</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">em2horas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addHours</span><span class="p">(</span><span class="nx">agora</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="c1">// Notificar: vencendo em até 2 horas e ainda não notificado</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">vencendo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">intencaoEmprestimo</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;aguardando&#39;</span><span class="p">,</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">      </span><span class="nx">slaNotificado</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">      </span><span class="nx">prazoExpiracaoEm</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">lte</span><span class="o">:</span><span class="w"> </span><span class="kt">em2horas</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span><span class="c1">// Enfileirar notificação de urgência para todos os financeiros</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span><span class="c1">// Escalonar: SLA vencido há mais de (sla_escalona_horas - sla_intencao_horas)</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">slaEscalona</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;financeiro.sla_escalona_horas&#39;</span><span class="p">);</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">limiteEscalona</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">subHours</span><span class="p">(</span><span class="nx">agora</span><span class="p">,</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">slaEscalona</span><span class="p">));</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">vencidas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">intencaoEmprestimo</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;aguardando&#39;</span><span class="p">,</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">      </span><span class="nx">slaEscalonado</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">      </span><span class="nx">prazoExpiracaoEm</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">lte</span><span class="o">:</span><span class="w"> </span><span class="kt">limiteEscalona</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">  </span><span class="c1">// Notificar admin: &quot;Intenção #{id} está sem análise há {X}h&quot;</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 3 — FLUXO DE REPARCELAMENTO
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="31-portal-do-cliente-solicitar-reparcelamento-ou-boleto-atualizado">3.1 — Portal do cliente: solicitar reparcelamento ou boleto atualizado</h2>
+<p>Novo endpoint no ClientPortalService:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// POST /api/portal/reparcelamento</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">solicitarReparcelamento</span><span class="p">(</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nx">dto</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="nx">loanId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;reparcelamento&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;boleto_atualizado&#39;</span><span class="p">;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="nx">motivoCliente</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="nx">dataPrevistaPagamento?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="c1">// 1. Validar ownership: loan pertence ao cliente</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="c1">// 2. Validar que o loan está ativo ou inadimplente</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="c1">// 3. Verificar limite de reparcelamentos:</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">maxRepar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;financeiro.max_reparcelamentos&#39;</span><span class="p">);</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">loan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">dto.loanId</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">loan</span><span class="p">.</span><span class="nx">reparcelamentoCount</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">maxRepar</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BadRequestException</span><span class="p">(</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">      </span><span class="s1">&#39;Limite de reparcelamentos atingido para este contrato. &#39;</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">      </span><span class="s1">&#39;Entre em contato com seu consultor.&#39;</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">  </span><span class="c1">// 4. Verificar se já existe solicitação pendente para este loan</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">pendente</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">solicitacaoReparcelamento</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loanId</span><span class="o">:</span><span class="w"> </span><span class="kt">dto.loanId</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="ow">in</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;pendente&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;em_analise&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">pendente</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ConflictException</span><span class="p">(</span><span class="s1">&#39;Já existe uma solicitação em análise.&#39;</span><span class="p">);</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">  </span><span class="c1">// 5. Criar SolicitacaoReparcelamento</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">  </span><span class="c1">// 6. Criar Conversa de contexto:</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">  </span><span class="c1">//    - participantes: consultor do cliente + financeiros + admin</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="w">  </span><span class="c1">//    - NÃO incluir o cliente na conversa interna operacional</span>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">  </span><span class="c1">//    - mensagem de sistema com resumo da solicitação</span>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="w">  </span><span class="c1">// 7. Criar lembrete automático se dataPrevistaPagamento informada:</span>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="w">  </span><span class="c1">//    - Cron D-1: notificar caixa</span>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="w">  </span><span class="c1">//    - Cron D+1 sem pagamento: notificar consultor</span>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="w">  </span><span class="c1">// 8. Notificar consultor via WhatsApp/BullMQ</span>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="32-financeiroservice-propor-termos-do-reparcelamento">3.2 — FinanceiroService: propor termos do reparcelamento</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">// PATCH /api/solicitacoes-reparcelamento/:id/proposta</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">proporTermosReparcelamento</span><span class="p">(</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nx">solicitacaoId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="nx">financeiro</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="nx">dto</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="nx">novoValorPrincipal</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="nx">novoTargetProfit</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="nx">novoNumeroParcelas</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="nx">novaDataInicio</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="nx">observacaoFinanceiro</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">  </span><span class="c1">// 1. Calcular multa e mora automaticamente com base nas regras de site_settings</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">saldoDevedor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">calcularSaldoDevedor</span><span class="p">(</span><span class="nx">solicitacao</span><span class="p">.</span><span class="nx">loanId</span><span class="p">);</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">diasAtraso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">calcularDiasAtraso</span><span class="p">(</span><span class="nx">solicitacao</span><span class="p">.</span><span class="nx">loanId</span><span class="p">);</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">multaPerc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;financeiro.multa_atraso_percentual&#39;</span><span class="p">);</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">moraPerc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;financeiro.mora_dia_percentual&#39;</span><span class="p">);</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">multa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">saldoDevedor</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">multaPerc</span><span class="p">).</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">));</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">mora</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">saldoDevedor</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">moraPerc</span><span class="p">).</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">)).</span><span class="nx">times</span><span class="p">(</span><span class="nx">diasAtraso</span><span class="p">);</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">  </span><span class="c1">// 2. Salvar proposta na SolicitacaoReparcelamento</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">  </span><span class="c1">//    (novoValorPrincipal, novoTargetProfit, etc. + multaAplicada + moraAplicada)</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">  </span><span class="c1">// 3. Status → &#39;em_analise&#39;</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">  </span><span class="c1">// 4. Enviar proposta ao consultor para ele mostrar ao cliente:</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">  </span><span class="c1">//    - Mensagem na Conversa de contexto com simulação:</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">  </span><span class="c1">//      &quot;Proposta: {n} parcelas de R$ {valorParcela} | Multa: R$ {multa} | Mora: R$ {mora}&quot;</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="33-financeiroservice-executar-reparcelamento-2a-instancia">3.3 — FinanceiroService: executar reparcelamento (2ª instância)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// PATCH /api/solicitacoes-reparcelamento/:id/executar</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1">// Requer: aprovadoSegundaInstancia = true (outro financeiro ou admin confirma)</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">async</span><span class="w"> </span><span class="nx">executarReparcelamento</span><span class="p">(</span><span class="nx">solicitacaoId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">executor</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$transaction</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">tx</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">solicitacao</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">solicitacaoReparcelamento</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">solicitacaoId</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">      </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">installments</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">client</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="c1">// 1. Verificar segunda aprovação</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">solicitacao</span><span class="p">.</span><span class="nx">aprovadoSegundaInstancia</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">        </span><span class="s1">&#39;Reparcelamento requer confirmação de um segundo aprovador.&#39;</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">      </span><span class="p">);</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span><span class="c1">// 2. Snapshot imutável do contrato original ANTES de cancelar</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">snapshotOrigem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">      </span><span class="nx">loanId</span><span class="o">:</span><span class="w">            </span><span class="kt">solicitacao.loanId</span><span class="p">,</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">      </span><span class="nx">principalAmount</span><span class="o">:</span><span class="w">   </span><span class="kt">solicitacao.loan.principalAmount.toString</span><span class="p">(),</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">      </span><span class="nx">targetProfit</span><span class="o">:</span><span class="w">      </span><span class="kt">solicitacao.loan.targetProfit.toString</span><span class="p">(),</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">      </span><span class="nx">totalReceivable</span><span class="o">:</span><span class="w">   </span><span class="kt">solicitacao.loan.totalReceivable.toString</span><span class="p">(),</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">      </span><span class="nx">numeroParcelas</span><span class="o">:</span><span class="w">    </span><span class="kt">solicitacao.loan.numeroParcelas</span><span class="p">,</span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">      </span><span class="nx">parcelasPagas</span><span class="o">:</span><span class="w">     </span><span class="kt">solicitacao.loan.installments.filter</span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">i</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;pago&#39;</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">      </span><span class="nx">valorJaRecebido</span><span class="o">:</span><span class="w">   </span><span class="kt">solicitacao.loan.installments</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="w">        </span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">i</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;pago&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="w">        </span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">i</span><span class="p">.</span><span class="nx">totalPago</span><span class="p">.</span><span class="nx">toString</span><span class="p">()),</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="mf">0</span><span class="p">)).</span><span class="nx">toString</span><span class="p">(),</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="w">      </span><span class="nx">dataStatus</span><span class="o">:</span><span class="w">        </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="w">    </span><span class="p">};</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="w">    </span><span class="c1">// 3. Cancelar o empréstimo original + parcelas pendentes/atrasadas</span>
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">solicitacao.loanId</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cancelado&#39;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">updateMany</span><span class="p">({</span>
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a><span class="w">        </span><span class="nx">loanId</span><span class="o">:</span><span class="w"> </span><span class="kt">solicitacao.loanId</span><span class="p">,</span>
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a><span class="w">        </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="ow">in</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;pendente&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;atrasado&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cancelado&#39;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a><span class="w">    </span><span class="c1">// 4. Criar novo empréstimo usando split de parcela</span>
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a><span class="w">    </span><span class="c1">//    origemLoanId = solicitacao.loanId</span>
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a><span class="w">    </span><span class="c1">//    reparcelamentoCount = solicitacao.loan.reparcelamentoCount + 1</span>
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a><span class="w">    </span><span class="c1">//    observacoes = &quot;Reparcelamento do contrato #${origemLoanId}.</span>
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a><span class="w">    </span><span class="c1">//                   ${solicitacao.observacaoFinanceiro}&quot;</span>
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">novoLoan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">loansService</span><span class="p">.</span><span class="nx">createLoan</span><span class="p">({</span>
+<a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a><span class="w">      </span><span class="nx">clientId</span><span class="o">:</span><span class="w">       </span><span class="kt">solicitacao.clientId</span><span class="p">,</span>
+<a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a><span class="w">      </span><span class="nx">principalAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">solicitacao.novoValorPrincipal.toString</span><span class="p">(),</span>
+<a id="__codelineno-13-52" name="__codelineno-13-52" href="#__codelineno-13-52"></a><span class="w">      </span><span class="nx">targetProfit</span><span class="o">:</span><span class="w">    </span><span class="kt">solicitacao.novoTargetProfit.toString</span><span class="p">(),</span>
+<a id="__codelineno-13-53" name="__codelineno-13-53" href="#__codelineno-13-53"></a><span class="w">      </span><span class="nx">numeroParcelas</span><span class="o">:</span><span class="w">  </span><span class="kt">solicitacao.novoNumeroParcelas</span><span class="p">,</span>
+<a id="__codelineno-13-54" name="__codelineno-13-54" href="#__codelineno-13-54"></a><span class="w">      </span><span class="nx">dataInicio</span><span class="o">:</span><span class="w">      </span><span class="kt">solicitacao.novaDataInicio</span><span class="p">,</span>
+<a id="__codelineno-13-55" name="__codelineno-13-55" href="#__codelineno-13-55"></a><span class="w">      </span><span class="nx">origemLoanId</span><span class="o">:</span><span class="w">    </span><span class="kt">solicitacao.loanId</span><span class="p">,</span>
+<a id="__codelineno-13-56" name="__codelineno-13-56" href="#__codelineno-13-56"></a><span class="w">      </span><span class="nx">reparcelamentoCount</span><span class="o">:</span><span class="w"> </span><span class="kt">solicitacao.loan.reparcelamentoCount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<a id="__codelineno-13-57" name="__codelineno-13-57" href="#__codelineno-13-57"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="nx">executor</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">tx</span><span class="p">);</span>
+<a id="__codelineno-13-58" name="__codelineno-13-58" href="#__codelineno-13-58"></a>
+<a id="__codelineno-13-59" name="__codelineno-13-59" href="#__codelineno-13-59"></a><span class="w">    </span><span class="c1">// 5. Atualizar solicitação com novoLoanId + status executado</span>
+<a id="__codelineno-13-60" name="__codelineno-13-60" href="#__codelineno-13-60"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">solicitacaoReparcelamento</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<a id="__codelineno-13-61" name="__codelineno-13-61" href="#__codelineno-13-61"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">solicitacaoId</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-13-62" name="__codelineno-13-62" href="#__codelineno-13-62"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-63" name="__codelineno-13-63" href="#__codelineno-13-63"></a><span class="w">        </span><span class="nx">novoLoanId</span><span class="o">:</span><span class="w">  </span><span class="kt">novoLoan.id</span><span class="p">,</span>
+<a id="__codelineno-13-64" name="__codelineno-13-64" href="#__codelineno-13-64"></a><span class="w">        </span><span class="nx">status</span><span class="o">:</span><span class="w">      </span><span class="s1">&#39;aprovado&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-65" name="__codelineno-13-65" href="#__codelineno-13-65"></a><span class="w">        </span><span class="nx">executadoPor</span><span class="o">:</span><span class="w"> </span><span class="kt">executor.id</span><span class="p">,</span>
+<a id="__codelineno-13-66" name="__codelineno-13-66" href="#__codelineno-13-66"></a><span class="w">        </span><span class="nx">executadoEm</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(),</span>
+<a id="__codelineno-13-67" name="__codelineno-13-67" href="#__codelineno-13-67"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-13-68" name="__codelineno-13-68" href="#__codelineno-13-68"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-13-69" name="__codelineno-13-69" href="#__codelineno-13-69"></a>
+<a id="__codelineno-13-70" name="__codelineno-13-70" href="#__codelineno-13-70"></a><span class="w">    </span><span class="c1">// 6. AuditLog com snapshot completo</span>
+<a id="__codelineno-13-71" name="__codelineno-13-71" href="#__codelineno-13-71"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">auditLog</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-13-72" name="__codelineno-13-72" href="#__codelineno-13-72"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-73" name="__codelineno-13-73" href="#__codelineno-13-73"></a><span class="w">        </span><span class="nx">userId</span><span class="o">:</span><span class="w">     </span><span class="kt">executor.id</span><span class="p">,</span>
+<a id="__codelineno-13-74" name="__codelineno-13-74" href="#__codelineno-13-74"></a><span class="w">        </span><span class="nx">acao</span><span class="o">:</span><span class="w">       </span><span class="s1">&#39;REPARCELAMENTO_EXECUTADO&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-75" name="__codelineno-13-75" href="#__codelineno-13-75"></a><span class="w">        </span><span class="nx">entidade</span><span class="o">:</span><span class="w">   </span><span class="s1">&#39;loans&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-76" name="__codelineno-13-76" href="#__codelineno-13-76"></a><span class="w">        </span><span class="nx">entidadeId</span><span class="o">:</span><span class="w"> </span><span class="kt">novoLoan.id</span><span class="p">,</span>
+<a id="__codelineno-13-77" name="__codelineno-13-77" href="#__codelineno-13-77"></a><span class="w">        </span><span class="nx">dados</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-78" name="__codelineno-13-78" href="#__codelineno-13-78"></a><span class="w">          </span><span class="nx">snapshotOrigem</span><span class="p">,</span>
+<a id="__codelineno-13-79" name="__codelineno-13-79" href="#__codelineno-13-79"></a><span class="w">          </span><span class="nx">novoLoanId</span><span class="o">:</span><span class="w"> </span><span class="kt">novoLoan.id</span><span class="p">,</span>
+<a id="__codelineno-13-80" name="__codelineno-13-80" href="#__codelineno-13-80"></a><span class="w">          </span><span class="nx">solicitacaoId</span><span class="p">,</span>
+<a id="__codelineno-13-81" name="__codelineno-13-81" href="#__codelineno-13-81"></a><span class="w">          </span><span class="nx">multa</span><span class="o">:</span><span class="w"> </span><span class="kt">solicitacao.multaAplicada?.toString</span><span class="p">(),</span>
+<a id="__codelineno-13-82" name="__codelineno-13-82" href="#__codelineno-13-82"></a><span class="w">          </span><span class="nx">mora</span><span class="o">:</span><span class="w">  </span><span class="kt">solicitacao.moraAplicada?.toString</span><span class="p">(),</span>
+<a id="__codelineno-13-83" name="__codelineno-13-83" href="#__codelineno-13-83"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-13-84" name="__codelineno-13-84" href="#__codelineno-13-84"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-13-85" name="__codelineno-13-85" href="#__codelineno-13-85"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-13-86" name="__codelineno-13-86" href="#__codelineno-13-86"></a>
+<a id="__codelineno-13-87" name="__codelineno-13-87" href="#__codelineno-13-87"></a><span class="w">    </span><span class="c1">// 7. Notificar consultor e cliente:</span>
+<a id="__codelineno-13-88" name="__codelineno-13-88" href="#__codelineno-13-88"></a><span class="w">    </span><span class="c1">//    - &quot;Seu reparcelamento foi aprovado. Novo carnê disponível no portal.&quot;</span>
+<a id="__codelineno-13-89" name="__codelineno-13-89" href="#__codelineno-13-89"></a><span class="w">    </span><span class="c1">//    - Enfileirar geração do PDF do contrato (se implementado)</span>
+<a id="__codelineno-13-90" name="__codelineno-13-90" href="#__codelineno-13-90"></a>
+<a id="__codelineno-13-91" name="__codelineno-13-91" href="#__codelineno-13-91"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">novoLoan</span><span class="p">;</span>
+<a id="__codelineno-13-92" name="__codelineno-13-92" href="#__codelineno-13-92"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-13-93" name="__codelineno-13-93" href="#__codelineno-13-93"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="34-aceite-digital-no-portal-antes-de-ativar-contrato-reparcelado">3.4 — Aceite digital no portal (antes de ativar contrato reparcelado)</h2>
+<p>No portal do cliente, antes de o reparcelamento se tornar ativo, exibir:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">// PATCH /api/portal/reparcelamento/:solicitacaoId/aceitar</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">async</span><span class="w"> </span><span class="nx">aceitarTermosReparcelamento</span><span class="p">(</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="nx">solicitacaoId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="nx">ip</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="c1">// Verificar que a proposta foi feita e ainda aguarda aceite do cliente</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="c1">// Gerar hash SHA-256 do documento: JSON.stringify({ solicitacaoId, clientId,</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span><span class="c1">//   novoValorPrincipal, novoTargetProfit, novoNumeroParcelas, timestamp })</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="s1">&#39;sha256&#39;</span><span class="p">).</span><span class="nx">update</span><span class="p">(</span><span class="nx">docString</span><span class="p">).</span><span class="nx">digest</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">);</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span><span class="c1">// Atualizar o Loan recém-criado com aceiteClienteEm + aceiteClienteIp + aceiteClienteHash</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span><span class="c1">// Liberar o acesso ao novo carnê no portal</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">  </span><span class="c1">// AuditLog: ACEITE_REPARCELAMENTO_CLIENTE</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 4 — COMUNICADOR INTERNO
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="41-matriz-de-permissoes-de-comunicacao">4.1 — Matriz de permissões de comunicação</h2>
+<table>
+<thead>
+<tr>
+<th>Remetente</th>
+<th>Pode conversar com</th>
+<th>Pode criar grupo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>admin</td>
+<td>Qualquer usuário, qualquer grupo</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>financeiro</td>
+<td>admin, outros financeiros, consultores</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>consultor</td>
+<td>admin, financeiro, seus clientes</td>
+<td>Não</td>
+</tr>
+<tr>
+<td>caixa</td>
+<td>admin, financeiro</td>
+<td>Não</td>
+</tr>
+<tr>
+<td>cliente</td>
+<td>Seu consultor apenas</td>
+<td>Não</td>
+</tr>
+</tbody>
+</table>
+<p>Regras adicionais:
+- Cliente NÃO pode abrir conversa com financeiro diretamente
+- Toda conversa de contexto (vinculada a intenção/loan/solicitação)
+  é criada automaticamente pelo sistema — não manualmente
+- Consultor pode criar conversa direta com qualquer financeiro</p>
+<h2 id="42-mensagemservice">4.2 — MensagemService</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">// Endpoints:</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1">// GET  /api/mensagens/conversas               → lista conversas do usuário</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">// GET  /api/mensagens/conversas/:id           → mensagens da conversa (paginado)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1">// POST /api/mensagens/conversas               → criar nova conversa direta</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1">// POST /api/mensagens/conversas/:id/mensagens → enviar mensagem</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1">// POST /api/mensagens/conversas/:id/documentos → upload de doc</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1">// PATCH /api/mensagens/conversas/:id/lida     → marcar conversa como lida</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="k">async</span><span class="w"> </span><span class="nx">enviarMensagem</span><span class="p">(</span><span class="nx">conversaId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="nx">remetente</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">,</span><span class="w"> </span><span class="nx">dto</span><span class="o">:</span><span class="w"> </span><span class="kt">EnviarMensagemDto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span><span class="c1">// 1. Validar que remetente é participante da conversa</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="c1">// 2. Validar permissão de comunicação (matriz acima)</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span><span class="c1">// 3. Se dto.arquivo: upload via SupabaseService para bucket &#39;mensagens-docs&#39;</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">  </span><span class="c1">//    path: {conversaId}/{timestamp}_{nomeArquivo}</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span><span class="c1">//    Tipos permitidos: PDF, JPEG, PNG, WEBP (max 10MB)</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">  </span><span class="c1">// 4. Criar Mensagem</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">  </span><span class="c1">// 5. Atualizar conversa.updatedAt para ordenação por recência</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">  </span><span class="c1">// 6. Notificar participantes via Supabase Realtime (canal &#39;mensagens-{userId}&#39;)</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">  </span><span class="c1">// 7. Se algum participante tiver WhatsApp e a mensagem for urgente:</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">  </span><span class="c1">//    enfileirar notificação via notif-queue</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="43-frontend-comunicador-mensagens">4.3 — Frontend: Comunicador (/mensagens)</h2>
+<h3 id="layout-da-tela-principal">Layout da tela principal</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>┌──────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>│  CONVERSAS                                [+ Nova conversa]      │
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│  ─────────────────────────────────────────────────────────────── │
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│  🔵 Intenção #15 — João da Silva         Hoje 14:32  ●  (não lido)│
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│     &quot;Aprovação pendente há 2h...&quot;                                │
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>│  ─────────────────────────────────────────────────────────────── │
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>│     Contrato #8 — Reparcelamento         Ontem 09:15             │
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>│     &quot;Proposta enviada ao cliente...&quot;                             │
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>│  ─────────────────────────────────────────────────────────────── │
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>│     Carlos Financeiro                    20/05 17:40             │
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>│     &quot;Ok, vou analisar ainda hoje&quot;                                │
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>└──────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="layout-da-conversa-aberta">Layout da conversa aberta</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>┌──────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>│  ← Voltar   Intenção #15 — João da Silva                [Info]  │
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>│  ─────────────────────────────────────────────────────────────── │
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│                          [Mensagem de sistema]                   │
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>│  ┌─────────────────────────────────────────────────────────────┐ │
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>│  │ ⚙ Intenção registrada por João Consultor.                   │ │
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>│  │   Valor: R$ 2.000 | 6x | Finalidade: Capital de giro        │ │
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>│  └─────────────────────────────────────────────────────────────┘ │
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>│                                                                  │
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>│  João Consultor  14:30                                           │
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>│  ┌────────────────────────────────┐                             │
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>│  │ Cliente tem renda comprovada   │                             │
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>│  │ de R$ 4.500. Docs em anexo.    │                             │
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>│  └────────────────────────────────┘                             │
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>│  📎 comprovante_renda.pdf                                        │
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>│                                                                  │
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>│                       Maria Financeiro  14:45                    │
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>│              ┌─────────────────────────────────────┐            │
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>│              │ Recebido. Vou analisar até às 17h.   │            │
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>│              └─────────────────────────────────────┘            │
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>│                                                                  │
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>│  ─────────────────────────────────────────────────────────────── │
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>│  [  Digite sua mensagem...                 ] [📎] [  Enviar  ]  │
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>└──────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="realtime-de-mensagens">Realtime de mensagens</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">// hook useConversaRealtime(conversaId)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">supabase</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span><span class="p">.</span><span class="nx">channel</span><span class="p">(</span><span class="sb">`conversa-</span><span class="si">${</span><span class="nx">conversaId</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;postgres_changes&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">      </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT&#39;</span><span class="p">,</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">      </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;public&#39;</span><span class="p">,</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">      </span><span class="nx">table</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;mensagens&#39;</span><span class="p">,</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">      </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="sb">`conversa_id=eq.</span><span class="si">${</span><span class="nx">conversaId</span><span class="si">}</span><span class="sb">`</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">      </span><span class="c1">// Adicionar mensagem ao estado local sem re-fetch</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="w">      </span><span class="nx">setMensagens</span><span class="p">(</span><span class="nx">prev</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">[...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">.</span><span class="ow">new</span><span class="p">]);</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">      </span><span class="c1">// Scroll automático para o final</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="w">      </span><span class="nx">scrollRef</span><span class="p">.</span><span class="nx">current</span><span class="o">?</span><span class="p">.</span><span class="nx">scrollIntoView</span><span class="p">({</span><span class="w"> </span><span class="nx">behavior</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;smooth&#39;</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="w">    </span><span class="p">.</span><span class="nx">subscribe</span><span class="p">();</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">removeChannel</span><span class="p">(</span><span class="nx">channel</span><span class="p">)</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="p">},</span><span class="w"> </span><span class="p">[</span><span class="nx">conversaId</span><span class="p">]);</span>
+</code></pre></div>
+<h3 id="badge-no-menu-lateral">Badge no menu lateral</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">// hook useMensagensNaoLidas()</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1">// Subscreve ao canal &#39;mensagens-{userId}&#39; via Realtime</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1">// Retorna: { total: number, porConversa: Record&lt;number, number&gt; }</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1">// Exibir badge com número no item &quot;Mensagens&quot; do sidebar</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 5 — SCORE DE RISCO INTERNO
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="51-scoreriscoservice">5.1 — ScoreRiscoService</h2>
+<p>Calcular e atualizar o score após cada evento:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">recalcularScore</span><span class="p">(</span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">loans</span><span class="p">,</span><span class="w"> </span><span class="nx">parcelas</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">clientId</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}),</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">      </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">clientId</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">    </span><span class="p">})</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="p">]);</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">totalEmprestimos</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nx">loans</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">totalQuitados</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nx">loans</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">l</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">l</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;quitado&#39;</span><span class="p">).</span><span class="nx">length</span><span class="p">;</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">totalReparcelamentos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loans</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">l</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">l</span><span class="p">.</span><span class="nx">reparcelamentoCount</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">totalAtrasadas</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nx">parcelas</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">p</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;atrasado&#39;</span><span class="p">).</span><span class="nx">length</span><span class="p">;</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">totalPagas</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nx">parcelas</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">p</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">p</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;pago&#39;</span><span class="p">).</span><span class="nx">length</span><span class="p">;</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">  </span><span class="c1">// Fórmulas (escala 0-100):</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">scorePontualidade</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">totalPagas</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">    </span><span class="o">?</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="nx">totalAtrasadas</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="nx">totalPagas</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">totalAtrasadas</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">100</span><span class="p">)</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">;</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">scoreReparcelamentos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="nx">totalReparcelamentos</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">15</span><span class="p">));</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="w">  </span><span class="c1">// -15 pontos por reparcelamento</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">scoreQuitacoes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">totalEmprestimos</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a><span class="w">    </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="nx">totalQuitados</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">totalEmprestimos</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">100</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="kt">50</span><span class="p">;</span>
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">scoreGeral</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span>
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a><span class="w">    </span><span class="nx">scorePontualidade</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a><span class="w">    </span><span class="nx">scoreReparcelamentos</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.3</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a><span class="w">    </span><span class="nx">scoreQuitacoes</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.2</span>
+<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>
+<a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">classificacao</span><span class="w"> </span><span class="o">=</span>
+<a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a><span class="w">    </span><span class="nx">scoreGeral</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">85</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;excelente&#39;</span><span class="w"> </span><span class="o">:</span>
+<a id="__codelineno-20-35" name="__codelineno-20-35" href="#__codelineno-20-35"></a><span class="w">    </span><span class="nx">scoreGeral</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">70</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;bom&#39;</span><span class="w"> </span><span class="o">:</span>
+<a id="__codelineno-20-36" name="__codelineno-20-36" href="#__codelineno-20-36"></a><span class="w">    </span><span class="nx">scoreGeral</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">50</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;regular&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;alto_risco&#39;</span><span class="p">;</span>
+<a id="__codelineno-20-37" name="__codelineno-20-37" href="#__codelineno-20-37"></a>
+<a id="__codelineno-20-38" name="__codelineno-20-38" href="#__codelineno-20-38"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">scoreRisco</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+<a id="__codelineno-20-39" name="__codelineno-20-39" href="#__codelineno-20-39"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">clientId</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-20-40" name="__codelineno-20-40" href="#__codelineno-20-40"></a><span class="w">    </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">clientId</span><span class="p">,</span><span class="w"> </span><span class="nx">scorePontualidade</span><span class="p">,</span><span class="w"> </span><span class="nx">scoreReparcelamentos</span><span class="p">,</span>
+<a id="__codelineno-20-41" name="__codelineno-20-41" href="#__codelineno-20-41"></a><span class="w">              </span><span class="nx">scoreQuitacoes</span><span class="p">,</span><span class="w"> </span><span class="nx">scoreGeral</span><span class="p">,</span><span class="w"> </span><span class="nx">classificacao</span><span class="p">,</span>
+<a id="__codelineno-20-42" name="__codelineno-20-42" href="#__codelineno-20-42"></a><span class="w">              </span><span class="nx">totalEmprestimos</span><span class="p">,</span><span class="w"> </span><span class="nx">totalQuitados</span><span class="p">,</span><span class="w"> </span><span class="nx">totalReparcelamentos</span><span class="p">,</span>
+<a id="__codelineno-20-43" name="__codelineno-20-43" href="#__codelineno-20-43"></a><span class="w">              </span><span class="nx">totalParcelasAtrasadas</span><span class="o">:</span><span class="w"> </span><span class="kt">totalAtrasadas</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-20-44" name="__codelineno-20-44" href="#__codelineno-20-44"></a><span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">scorePontualidade</span><span class="p">,</span><span class="w"> </span><span class="nx">scoreReparcelamentos</span><span class="p">,</span>
+<a id="__codelineno-20-45" name="__codelineno-20-45" href="#__codelineno-20-45"></a><span class="w">              </span><span class="nx">scoreQuitacoes</span><span class="p">,</span><span class="w"> </span><span class="nx">scoreGeral</span><span class="p">,</span><span class="w"> </span><span class="nx">classificacao</span><span class="p">,</span>
+<a id="__codelineno-20-46" name="__codelineno-20-46" href="#__codelineno-20-46"></a><span class="w">              </span><span class="nx">totalEmprestimos</span><span class="p">,</span><span class="w"> </span><span class="nx">totalQuitados</span><span class="p">,</span><span class="w"> </span><span class="nx">totalReparcelamentos</span><span class="p">,</span>
+<a id="__codelineno-20-47" name="__codelineno-20-47" href="#__codelineno-20-47"></a><span class="w">              </span><span class="nx">totalParcelasAtrasadas</span><span class="o">:</span><span class="w"> </span><span class="kt">totalAtrasadas</span><span class="p">,</span>
+<a id="__codelineno-20-48" name="__codelineno-20-48" href="#__codelineno-20-48"></a><span class="w">              </span><span class="nx">calculadoEm</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-20-49" name="__codelineno-20-49" href="#__codelineno-20-49"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-20-50" name="__codelineno-20-50" href="#__codelineno-20-50"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="52-exibir-score-no-painel-de-analise-da-intencao">5.2 — Exibir score no painel de análise da intenção</h2>
+<p>No frontend, na tela do financeiro ao analisar uma intenção, exibir:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>│  Score de risco — João da Silva                      │
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>├──────────────────────────────────────────────────────┤
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>│  Score geral:  78/100   [ Bom ] ██████████░░░░        │
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>│  Pontualidade: 85/100   ████████████░░░               │
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>│  Reparcelamentos: 85/100  ████████████░░░             │
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>│  Histórico de quitações: 50/100  ███████░░░░░         │
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>├──────────────────────────────────────────────────────┤
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>│  3 contratos | 1 quitado | 0 reparcelamentos         │
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>│  2 parcelas atrasadas no histórico                   │
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>└──────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 6 — SIMULADOR DE REPARCELAMENTO (Frontend — Financeiro)
+═══════════════════════════════════════════════════════════════════</p>
+<p>Na tela de análise da SolicitacaoReparcelamento, implementar simulador
+interativo ANTES de o financeiro confirmar os termos:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1">// Campos editáveis pelo financeiro:</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1">// - Novo principal (pre-filled: saldo devedor atual)</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="c1">// - Novo lucro alvo (target_profit)</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1">// - Número de parcelas</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1">// - Data de início</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1">// Simulação ao vivo (usando decimal.js):</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">saldoDevedor</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">loan</span><span class="p">.</span><span class="nx">saldoDevedor</span><span class="p">);</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="kd">const</span><span class="w"> </span><span class="nx">diasAtraso</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nx">calcularDiasAtraso</span><span class="p">(</span><span class="nx">loan</span><span class="p">);</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">multa</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nx">saldoDevedor</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">settings</span><span class="p">.</span><span class="nx">multaPerc</span><span class="p">).</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">);</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="kd">const</span><span class="w"> </span><span class="nx">mora</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nx">saldoDevedor</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">settings</span><span class="p">.</span><span class="nx">moraPerc</span><span class="p">).</span><span class="nx">dividedBy</span><span class="p">(</span><span class="mf">100</span><span class="p">).</span><span class="nx">times</span><span class="p">(</span><span class="nx">diasAtraso</span><span class="p">);</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="kd">const</span><span class="w"> </span><span class="nx">totalEncargos</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nx">multa</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">mora</span><span class="p">);</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="kd">const</span><span class="w"> </span><span class="nx">totalAReceber</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nx">novoPrincipal</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">novoLucro</span><span class="p">);</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="kd">const</span><span class="w"> </span><span class="nx">valorParcela</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nx">totalAReceber</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="nx">novasParcelas</span><span class="p">);</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="c1">// Exibir em tempo real:</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="c1">// Saldo devedor atual: R$ {saldoDevedor}</span>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="c1">// Multa (2%):          R$ {multa}</span>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="c1">// Mora ({n} dias):     R$ {mora}</span>
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="c1">// Total encargos:      R$ {totalEncargos}</span>
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a><span class="c1">// ──────────────────────────────</span>
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="c1">// Novo total a receber: R$ {totalAReceber}</span>
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a><span class="c1">// Valor de cada parcela: R$ {valorParcela}</span>
+<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a><span class="c1">// Net gain total:        R$ {novoLucro}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+ENTREGÁVEIS — ORDEM DE EXECUÇÃO
+═══════════════════════════════════════════════════════════════════</p>
+<p>Implemente nesta ordem. Aguarde confirmação após cada grupo.</p>
+<p>GRUPO A — Schema
+  1. Todas as migrations das Partes 1.1 a 1.6
+  2. Seed das configurações financeiras em site_settings
+  3. Adicionar tabelas ao supabase_realtime publication:
+     mensagens (INSERT), solicitacoes_reparcelamento (UPDATE)</p>
+<p>GRUPO B — Score e configurações
+  4. ScoreRiscoService.recalcularScore()
+  5. Hook: recalcular após pagamento, quitação, atraso, reparcelamento
+  6. SettingsService: helper para get/set de site_settings com cache</p>
+<p>GRUPO C — Fluxo de intenção completo
+  7. IntencaoService: criar (com SLA + Conversa automática)
+  8. IntencaoService: aprovar (ativar portal automaticamente)
+  9. IntencaoService: rejeitar (com motivos predefinidos)
+  10. IntencaoService: registrarFeedback
+  11. CronService: verificarSlaIntencoes
+  12. Frontend: painel do financeiro com score de risco
+  13. Frontend: feedback do consultor com seleção de canal</p>
+<p>GRUPO D — Fluxo de reparcelamento
+  14. SolicitacaoReparcelamentoService completo
+  15. FinanceiroService: proporTermos com cálculo de multa/mora
+  16. FinanceiroService: confirmarSegundaInstancia
+  17. FinanceiroService: executarReparcelamento com $transaction
+  18. Portal cliente: solicitarReparcelamento + aceitarTermos
+  19. CronService: lembrete de dataPrevistaPagamento (D-1 e D+1)
+  20. Frontend financeiro: simulador interativo</p>
+<p>GRUPO E — Comunicador interno
+  21. Models Mensagem + Conversa + ConversaParticipante (já na migration do Grupo A)
+  22. MensagemService completo com upload de documentos
+  23. MensagemController com todos os endpoints
+  24. Bucket 'mensagens-docs' no Supabase Storage + políticas RLS
+  25. Frontend: tela /mensagens (lista + conversa aberta + input)
+  26. Hook useConversaRealtime + badge useMensagensNaoLidas
+  27. Integração automática: criar Conversa de contexto ao criar intenção
+      e ao criar solicitação de reparcelamento</p>
+<p>═══════════════════════════════════════════════════════════════════
+REGRAS TÉCNICAS INVIOLÁVEIS
+═══════════════════════════════════════════════════════════════════</p>
+<ul>
+<li>$transaction obrigatório no executarReparcelamento (cancelamento +
+  criação do novo loan deve ser atômica — ou ambos ocorrem ou nenhum)</li>
+<li>Snapshot do contrato original ANTES de cancelar — nunca depois</li>
+<li>Segunda instância obrigatória para executar reparcelamento</li>
+<li>Score calculado sempre após eventos financeiros — nunca stale</li>
+<li>decimal.js em todo cálculo de multa, mora e split de parcela</li>
+<li>Cliente NÃO pode abrir conversa direta com financeiro</li>
+<li>Bucket 'mensagens-docs': privado, 10MB, apenas PDF/JPEG/PNG/WEBP</li>
+<li>origemLoanId com @unique — um contrato cancelado gera exatamente 1 novo</li>
+<li>Aceite digital gravado com timestamp + IP + hash SHA-256</li>
+<li>AuditLog com snapshot em: INTENCAO_APROVADA, INTENCAO_REJEITADA,
+  REPARCELAMENTO_EXECUTADO, ACEITE_REPARCELAMENTO_CLIENTE</li>
+<li>Realtime cleanup no return de todo useEffect com supabase.removeChannel()
+```</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

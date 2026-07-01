@@ -1,0 +1,1450 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SIAFI 2.0 — Refatoração de Arquitetura: Split de Parcela e Consolidação Supabase - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-refatoracao-de-arquitetura-split-de-parcela-e-consolidacao-supabase" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SIAFI 2.0 — Refatoração de Arquitetura: Split de Parcela e Consolidação Supabase
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-refatoracao-de-arquitetura-split-de-parcela-e-consolidacao-supabase">SIAFI 2.0 — Refatoração de Arquitetura: Split de Parcela e Consolidação Supabase</h1>
+<h1 id="prompt-de-engenharia-senior-maio-2026">Prompt de Engenharia Sênior — Maio 2026</h1>
+<p>Cole este prompt em uma nova conversa com o Claude junto com os arquivos:
+01_ARQUITETURA.md, 02_BACKEND.md, 03_FRONTEND.md, 04_DATABASE.md</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior e Arquiteto de Sistemas com
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>expertise em sistemas financeiros, NestJS, Prisma e Supabase. Analise
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>a documentação completa do SIAFI 2.0 antes de escrever qualquer código.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>O SIAFI é o sistema financeiro da Lidera Tecnologia — uma empresa de
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>factoring e empréstimos. Precisamos realizar duas evoluções críticas e
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>interdependentes: a introdução da lógica de Split de Parcela (separação
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>entre recuperação de capital e faturamento real) e a consolidação de
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>todos os pontos de integração com o Supabase que ainda não foram
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>migrados.
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Leia todos os documentos antes de responder. Pergunte se houver
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ambiguidade antes de implementar. Entregue um grupo por vez e aguarde
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>confirmação para avançar.
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>CONTEXTO — O QUE EXISTE HOJE
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Estado atual do schema relevante:
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>model Loan {
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  valor          Decimal   // capital entregue ao cliente
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  valorInvestido Decimal?  // usado de forma inconsistente — às vezes
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                           // representa o custo de capital, às vezes
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                           // o lucro desejado
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  taxaJuros      Decimal   // taxa implícita — não decomposta por parcela
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  numeroParcelas Int
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>}
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>model Installment {
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  valor    Decimal   // valor total da parcela — caixa preta
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  totalPago Decimal  // quanto foi recebido
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>  // Problema: não há como saber quanto de cada parcela paga
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  // é recuperação do capital emprestado e quanto é lucro (faturamento)
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>}
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>O problema de negócio: o operador da Lidera não consegue responder
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>&quot;quanto eu realmente lucrei este mês?&quot; porque o sistema mistura
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>capital recuperado com faturamento em um único campo `valor`.
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>PARTE 1 — NOVA NOMENCLATURA E MODELO FINANCEIRO
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>## 1.1 — Glossário de termos (use exatamente estes nomes)
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>| Termo técnico         | Significado de negócio                              |
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>|-----------------------|-----------------------------------------------------|
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>| principal_amount      | Capital entregue ao cliente (sai do caixa)          |
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>| target_profit         | Lucro total que o operador deseja obter no contrato |
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>| total_receivable      | principal_amount + target_profit (total a receber)  |
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>| installment_amount    | Valor total de cada parcela                         |
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>| principal_payback     | Parcela da prestação que recupera o capital         |
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>| net_gain              | Parcela da prestação que representa lucro líquido   |
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>Relação invariável entre os campos:
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>  total_receivable    = principal_amount + target_profit
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>  installment_amount  = total_receivable / numero_parcelas
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>  principal_payback   = principal_amount / numero_parcelas
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>  net_gain            = target_profit    / numero_parcelas
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>  installment_amount  = principal_payback + net_gain  ← sempre verdadeiro
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>## 1.2 — Refatoração do schema Prisma (migration)
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>Gere a migration com as seguintes alterações:
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>### model Loan — campos a renomear e adicionar
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>```prisma
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>model Loan {
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>  id              Int        @id @default(autoincrement())
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>  clientId        Int        @map(&quot;client_id&quot;)
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>  consultorId     Int?       @map(&quot;consultor_id&quot;)   // FK para User (Fase 1)
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>  // ── Campos financeiros refatorados ──────────────────────────────
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>  principalAmount Decimal    @db.Decimal(10, 2) @map(&quot;principal_amount&quot;)
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>  // Renomeado de: valor
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>  // Representa: capital que saiu do caixa da Lidera
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>  targetProfit    Decimal    @db.Decimal(10, 2) @map(&quot;target_profit&quot;)
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>  // Renomeado de: valorInvestido
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>  // Representa: lucro total que o operador definiu para este contrato
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>  // ATENÇÃO: não é mais opcional — todo contrato DEVE ter um lucro alvo
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>  totalReceivable Decimal    @db.Decimal(10, 2) @map(&quot;total_receivable&quot;)
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>  // Novo campo: calculado = principalAmount + targetProfit
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>  // Armazenado para evitar recálculo e garantir integridade auditável
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>  numeroParcelas  Int        @map(&quot;numero_parcelas&quot;)
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>  dataInicio      DateTime   @map(&quot;data_inicio&quot;)
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>  status          LoanStatus @default(ativo)
+<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>  metodoPagamento PaymentMethod @default(dinheiro) @map(&quot;metodo_pagamento&quot;)
+<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>  observacoes     String?    @db.Text
+<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>
+<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>  // ── Campos removidos ─────────────────────────────────────────────
+<a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>  // taxaJuros e modoTaxa são REMOVIDOS do model Loan.
+<a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>  // O sistema não trabalha mais com taxa percentual — o operador
+<a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>  // define o lucro absoluto (target_profit), não uma taxa.
+<a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>  // Manter para leitura por compatibilidade mas marcar @deprecated:
+<a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>  taxaJuros       Decimal?   @db.Decimal(5, 2) @map(&quot;taxa_juros&quot;)
+<a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>  // @deprecated — manter apenas para dados históricos. Não usar em novos registros.
+<a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>
+<a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>  createdAt       DateTime   @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>  updatedAt       DateTime   @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>
+<a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>  client        Client         @relation(fields: [clientId], references: [id])
+<a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>  consultor     User?          @relation(&quot;LoanConsultor&quot;, fields: [consultorId], references: [id])
+<a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a>  installments  Installment[]
+<a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a>  renegociacoes Renegociacao[]
+<a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a>  mpPayments    MpPayment[]
+<a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>  notifications Notification[]
+<a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a>
+<a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>  @@index([clientId])
+<a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a>  @@index([consultorId])
+<a id="__codelineno-0-116" name="__codelineno-0-116" href="#__codelineno-0-116"></a>  @@index([status])
+<a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a>  @@map(&quot;loans&quot;)
+<a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a>}
+</code></pre></div>
+<h3 id="model-installment-campos-a-adicionar">model Installment — campos a adicionar</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>model Installment {
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  id              Int               @id @default(autoincrement())
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  loanId          Int               @map(&quot;loan_id&quot;)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  numero          Int
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  // ── Campos financeiros com Split ─────────────────────────────────
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  installmentAmount Decimal         @db.Decimal(10, 2) @map(&quot;installment_amount&quot;)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  // Renomeado de: valor
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  // Representa: valor total que o cliente deve pagar nesta parcela
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  principalPayback  Decimal         @db.Decimal(10, 2) @map(&quot;principal_payback&quot;)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  // Novo: quanto desta parcela recupera o capital emprestado
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  // Calculado na criação: principalAmount / numeroParcelas
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  // Na última parcela: recebe o ajuste de centavos do principal
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  netGain           Decimal         @db.Decimal(10, 2) @map(&quot;net_gain&quot;)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  // Novo: quanto desta parcela é faturamento/lucro líquido da Lidera
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  // Calculado na criação: targetProfit / numeroParcelas
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  // Na última parcela: recebe o ajuste de centavos do lucro
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  // ── Invariante que DEVE ser verificada ao gerar: ─────────────────
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  // installmentAmount === principalPayback + netGain
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  dataVencimento  DateTime          @map(&quot;data_vencimento&quot;)
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  status          InstallmentStatus @default(pendente)
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  totalPago       Decimal           @default(0) @db.Decimal(10, 2) @map(&quot;total_pago&quot;)
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  createdAt       DateTime          @default(now()) @map(&quot;created_at&quot;)
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  updatedAt       DateTime          @updatedAt @map(&quot;updated_at&quot;)
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  loan        Loan         @relation(fields: [loanId], references: [id])
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  payments    Payment[]
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  pixPayments PixPayment[]
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  mpPayments  MpPayment[]
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  @@index([loanId])
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  @@index([status])
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  @@index([dataVencimento])
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  @@map(&quot;installments&quot;)
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>}
+</code></pre></div>
+<h3 id="campos-de-compatibilidade-retroativa">Campos de compatibilidade retroativa</h3>
+<p>Para não quebrar dados históricos, a migration deve:
+1. Adicionar as colunas novas com valor DEFAULT temporário
+2. Executar UPDATE SET para popular os novos campos a partir dos antigos:
+   - principal_amount = valor (antigo)
+   - target_profit = COALESCE(valor_investido, 0)
+   - total_receivable = valor + COALESCE(valor_investido, 0)
+3. Para installments existentes: calcular principal_payback e net_gain
+   proporcionalmente com base no loan pai
+4. Após popular, setar NOT NULL onde aplicável</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 2 — LÓGICA DE SPLIT DE PARCELA (NestJS — LoansService)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="21-dto-de-criacao-de-emprestimo">2.1 — DTO de criação de empréstimo</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// create-loan.dto.ts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CreateLoanDto</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="kd">@IsInt</span><span class="p">()</span><span class="w"> </span><span class="kd">@Min</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="kd">@IsDecimal</span><span class="p">()</span><span class="w"> </span><span class="kd">@Min</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nx">principalAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w">  </span><span class="c1">// Decimal como string para evitar float</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="kd">@IsDecimal</span><span class="p">()</span><span class="w"> </span><span class="kd">@Min</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nx">targetProfit</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w">     </span><span class="c1">// Lucro total desejado — não mais taxa %</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="kd">@IsInt</span><span class="p">()</span><span class="w"> </span><span class="kd">@Min</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="kd">@Max</span><span class="p">(</span><span class="mf">360</span><span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nx">numeroParcelas</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="kd">@IsEnum</span><span class="p">(</span><span class="nx">PaymentMethod</span><span class="p">)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="nx">metodoPagamento</span><span class="o">:</span><span class="w"> </span><span class="kt">PaymentMethod</span><span class="p">;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="kd">@IsDateString</span><span class="p">()</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="nx">dataInicio</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="kd">@IsOptional</span><span class="p">()</span><span class="w"> </span><span class="kd">@IsString</span><span class="p">()</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="nx">observacoes?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="22-algoritmo-de-geracao-de-parcelas-com-split">2.2 — Algoritmo de geração de parcelas com Split</h2>
+<p>Implemente em <code>LoansService.createLoan()</code> usando a biblioteca <code>decimal.js</code>.
+Nunca usar <code>number</code> nativo para cálculos financeiros.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">Decimal</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;decimal.js&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nx">Decimal</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span><span class="w"> </span><span class="nx">precision</span><span class="o">:</span><span class="w"> </span><span class="kt">20</span><span class="p">,</span><span class="w"> </span><span class="nx">rounding</span><span class="o">:</span><span class="w"> </span><span class="kt">Decimal.ROUND_HALF_UP</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">async</span><span class="w"> </span><span class="nx">createLoan</span><span class="p">(</span><span class="nx">dto</span><span class="o">:</span><span class="w"> </span><span class="kt">CreateLoanDto</span><span class="p">,</span><span class="w"> </span><span class="nx">operadorId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Loan</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">principal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">dto</span><span class="p">.</span><span class="nx">principalAmount</span><span class="p">);</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">profit</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">dto</span><span class="p">.</span><span class="nx">targetProfit</span><span class="p">);</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">n</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nx">dto</span><span class="p">.</span><span class="nx">numeroParcelas</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">total</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nx">principal</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">profit</span><span class="p">);</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="c1">// ── Cálculo base de cada parcela ──────────────────────────────</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="c1">// Divisão inteira com arredondamento para baixo (floor)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="c1">// A diferença vai para a última parcela</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">baseInstallment</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">total</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="nx">n</span><span class="p">).</span><span class="nx">toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">.</span><span class="nx">ROUND_DOWN</span><span class="p">);</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">basePrincipal</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nx">principal</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="nx">n</span><span class="p">).</span><span class="nx">toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">.</span><span class="nx">ROUND_DOWN</span><span class="p">);</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">baseGain</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nx">profit</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="nx">n</span><span class="p">).</span><span class="nx">toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">.</span><span class="nx">ROUND_DOWN</span><span class="p">);</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="c1">// ── Cálculo dos ajustes de centavos (última parcela) ──────────</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="c1">// Garante que a soma de todas as parcelas seja EXATAMENTE igual ao total</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">somaInstallments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">baseInstallment</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">n</span><span class="p">);</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">somaPrincipal</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nx">basePrincipal</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">n</span><span class="p">);</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">somaGain</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nx">baseGain</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">n</span><span class="p">);</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ajusteInstallment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">total</span><span class="p">.</span><span class="nx">minus</span><span class="p">(</span><span class="nx">somaInstallments</span><span class="p">);</span><span class="w">       </span><span class="c1">// centavos sobrando</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ajustePrincipal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nx">principal</span><span class="p">.</span><span class="nx">minus</span><span class="p">(</span><span class="nx">somaPrincipal</span><span class="p">);</span><span class="w">      </span><span class="c1">// centavos do principal</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ajusteGain</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nx">profit</span><span class="p">.</span><span class="nx">minus</span><span class="p">(</span><span class="nx">somaGain</span><span class="p">);</span><span class="w">              </span><span class="c1">// centavos do lucro</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="c1">// ── Verificação de integridade antes de persistir ─────────────</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">  </span><span class="c1">// ajusteInstallment DEVE ser igual a ajustePrincipal + ajusteGain</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">ajusteCheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ajustePrincipal</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">ajusteGain</span><span class="p">);</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">ajusteCheck</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">ajusteInstallment</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InternalServerErrorException</span><span class="p">(</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">      </span><span class="s1">&#39;Erro de integridade no cálculo de split: ajuste de centavos inconsistente.&#39;</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">  </span><span class="c1">// ── Geração das parcelas ────────────────────────────────────────</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">installments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Array</span><span class="p">.</span><span class="kr">from</span><span class="p">({</span><span class="w"> </span><span class="nx">length</span><span class="o">:</span><span class="w"> </span><span class="kt">n</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">(</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">isUltima</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">installAmt</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nx">isUltima</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="nx">baseInstallment</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">ajusteInstallment</span><span class="p">)</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="nx">baseInstallment</span><span class="p">;</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">principalPay</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">isUltima</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="nx">basePrincipal</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">ajustePrincipal</span><span class="p">)</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="nx">basePrincipal</span><span class="p">;</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">gain</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nx">isUltima</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="nx">baseGain</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">ajusteGain</span><span class="p">)</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="nx">baseGain</span><span class="p">;</span>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="w">    </span><span class="c1">// Verificação de invariante por parcela</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">installAmt</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">principalPay</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">gain</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InternalServerErrorException</span><span class="p">(</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="w">        </span><span class="sb">`Invariante violada na parcela </span><span class="si">${</span><span class="nx">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="si">}</span><span class="sb">: `</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="w">        </span><span class="sb">`</span><span class="si">${</span><span class="nx">installAmt</span><span class="si">}</span><span class="sb"> !== </span><span class="si">${</span><span class="nx">principalPay</span><span class="si">}</span><span class="sb"> + </span><span class="si">${</span><span class="nx">gain</span><span class="si">}</span><span class="sb">`</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="w">      </span><span class="p">);</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a><span class="w">      </span><span class="nx">numero</span><span class="o">:</span><span class="w">           </span><span class="kt">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a><span class="w">      </span><span class="nx">installmentAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">installAmt.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a><span class="w">      </span><span class="nx">principalPayback</span><span class="o">:</span><span class="w">  </span><span class="kt">principalPay.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a><span class="w">      </span><span class="nx">netGain</span><span class="o">:</span><span class="w">           </span><span class="kt">gain.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a><span class="w">      </span><span class="nx">dataVencimento</span><span class="o">:</span><span class="w">    </span><span class="kt">addMonths</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">dto</span><span class="p">.</span><span class="nx">dataInicio</span><span class="p">),</span><span class="w"> </span><span class="nx">i</span><span class="p">),</span>
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w">            </span><span class="s1">&#39;pendente&#39;</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">InstallmentStatus</span><span class="p">,</span>
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a><span class="w">      </span><span class="nx">totalPago</span><span class="o">:</span><span class="w">         </span><span class="kt">0</span><span class="p">,</span>
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a><span class="w">    </span><span class="p">};</span>
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a>
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a><span class="w">  </span><span class="c1">// ── Persistir em $transaction ────────────────────────────────────</span>
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$transaction</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">tx</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">loan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a><span class="w">        </span><span class="nx">clientId</span><span class="o">:</span><span class="w">        </span><span class="kt">dto.clientId</span><span class="p">,</span>
+<a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a><span class="w">        </span><span class="nx">consultorId</span><span class="o">:</span><span class="w">     </span><span class="kt">operadorId</span><span class="p">,</span><span class="w"> </span><span class="c1">// se role = consultor</span>
+<a id="__codelineno-3-76" name="__codelineno-3-76" href="#__codelineno-3-76"></a><span class="w">        </span><span class="nx">principalAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">principal.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-3-77" name="__codelineno-3-77" href="#__codelineno-3-77"></a><span class="w">        </span><span class="nx">targetProfit</span><span class="o">:</span><span class="w">    </span><span class="kt">profit.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-3-78" name="__codelineno-3-78" href="#__codelineno-3-78"></a><span class="w">        </span><span class="nx">totalReceivable</span><span class="o">:</span><span class="w"> </span><span class="kt">total.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-3-79" name="__codelineno-3-79" href="#__codelineno-3-79"></a><span class="w">        </span><span class="nx">numeroParcelas</span><span class="o">:</span><span class="w">  </span><span class="kt">n</span><span class="p">,</span>
+<a id="__codelineno-3-80" name="__codelineno-3-80" href="#__codelineno-3-80"></a><span class="w">        </span><span class="nx">metodoPagamento</span><span class="o">:</span><span class="w"> </span><span class="kt">dto.metodoPagamento</span><span class="p">,</span>
+<a id="__codelineno-3-81" name="__codelineno-3-81" href="#__codelineno-3-81"></a><span class="w">        </span><span class="nx">dataInicio</span><span class="o">:</span><span class="w">      </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">dto</span><span class="p">.</span><span class="nx">dataInicio</span><span class="p">),</span>
+<a id="__codelineno-3-82" name="__codelineno-3-82" href="#__codelineno-3-82"></a><span class="w">        </span><span class="nx">observacoes</span><span class="o">:</span><span class="w">     </span><span class="kt">dto.observacoes</span><span class="p">,</span>
+<a id="__codelineno-3-83" name="__codelineno-3-83" href="#__codelineno-3-83"></a><span class="w">        </span><span class="nx">taxaJuros</span><span class="o">:</span><span class="w">       </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="c1">// @deprecated — manter por compatibilidade</span>
+<a id="__codelineno-3-84" name="__codelineno-3-84" href="#__codelineno-3-84"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-3-85" name="__codelineno-3-85" href="#__codelineno-3-85"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-3-86" name="__codelineno-3-86" href="#__codelineno-3-86"></a>
+<a id="__codelineno-3-87" name="__codelineno-3-87" href="#__codelineno-3-87"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">createMany</span><span class="p">({</span>
+<a id="__codelineno-3-88" name="__codelineno-3-88" href="#__codelineno-3-88"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">installments.map</span><span class="p">(</span><span class="nx">inst</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">inst</span><span class="p">,</span><span class="w"> </span><span class="nx">loanId</span><span class="o">:</span><span class="w"> </span><span class="kt">loan.id</span><span class="w"> </span><span class="p">})),</span>
+<a id="__codelineno-3-89" name="__codelineno-3-89" href="#__codelineno-3-89"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-3-90" name="__codelineno-3-90" href="#__codelineno-3-90"></a>
+<a id="__codelineno-3-91" name="__codelineno-3-91" href="#__codelineno-3-91"></a><span class="w">    </span><span class="c1">// AuditLog snapshot — estado inicial do contrato</span>
+<a id="__codelineno-3-92" name="__codelineno-3-92" href="#__codelineno-3-92"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">auditLog</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-3-93" name="__codelineno-3-93" href="#__codelineno-3-93"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-94" name="__codelineno-3-94" href="#__codelineno-3-94"></a><span class="w">        </span><span class="nx">userId</span><span class="o">:</span><span class="w">     </span><span class="kt">operadorId</span><span class="p">,</span>
+<a id="__codelineno-3-95" name="__codelineno-3-95" href="#__codelineno-3-95"></a><span class="w">        </span><span class="nx">acao</span><span class="o">:</span><span class="w">       </span><span class="s1">&#39;LOAN_CRIADO&#39;</span><span class="p">,</span>
+<a id="__codelineno-3-96" name="__codelineno-3-96" href="#__codelineno-3-96"></a><span class="w">        </span><span class="nx">entidade</span><span class="o">:</span><span class="w">   </span><span class="s1">&#39;loans&#39;</span><span class="p">,</span>
+<a id="__codelineno-3-97" name="__codelineno-3-97" href="#__codelineno-3-97"></a><span class="w">        </span><span class="nx">entidadeId</span><span class="o">:</span><span class="w"> </span><span class="kt">loan.id</span><span class="p">,</span>
+<a id="__codelineno-3-98" name="__codelineno-3-98" href="#__codelineno-3-98"></a><span class="w">        </span><span class="nx">dados</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-99" name="__codelineno-3-99" href="#__codelineno-3-99"></a><span class="w">          </span><span class="nx">snapshot</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-100" name="__codelineno-3-100" href="#__codelineno-3-100"></a><span class="w">            </span><span class="nx">principalAmount</span><span class="o">:</span><span class="w">  </span><span class="kt">principal.toString</span><span class="p">(),</span>
+<a id="__codelineno-3-101" name="__codelineno-3-101" href="#__codelineno-3-101"></a><span class="w">            </span><span class="nx">targetProfit</span><span class="o">:</span><span class="w">     </span><span class="kt">profit.toString</span><span class="p">(),</span>
+<a id="__codelineno-3-102" name="__codelineno-3-102" href="#__codelineno-3-102"></a><span class="w">            </span><span class="nx">totalReceivable</span><span class="o">:</span><span class="w">  </span><span class="kt">total.toString</span><span class="p">(),</span>
+<a id="__codelineno-3-103" name="__codelineno-3-103" href="#__codelineno-3-103"></a><span class="w">            </span><span class="nx">numeroParcelas</span><span class="o">:</span><span class="w">   </span><span class="kt">n</span><span class="p">,</span>
+<a id="__codelineno-3-104" name="__codelineno-3-104" href="#__codelineno-3-104"></a><span class="w">            </span><span class="nx">baseInstallment</span><span class="o">:</span><span class="w">  </span><span class="kt">baseInstallment.toString</span><span class="p">(),</span>
+<a id="__codelineno-3-105" name="__codelineno-3-105" href="#__codelineno-3-105"></a><span class="w">            </span><span class="nx">basePrincipal</span><span class="o">:</span><span class="w">    </span><span class="kt">basePrincipal.toString</span><span class="p">(),</span>
+<a id="__codelineno-3-106" name="__codelineno-3-106" href="#__codelineno-3-106"></a><span class="w">            </span><span class="nx">baseGain</span><span class="o">:</span><span class="w">         </span><span class="kt">baseGain.toString</span><span class="p">(),</span>
+<a id="__codelineno-3-107" name="__codelineno-3-107" href="#__codelineno-3-107"></a><span class="w">            </span><span class="nx">ajusteInstallment</span><span class="o">:</span><span class="w"> </span><span class="kt">ajusteInstallment.toString</span><span class="p">(),</span>
+<a id="__codelineno-3-108" name="__codelineno-3-108" href="#__codelineno-3-108"></a><span class="w">          </span><span class="p">}</span>
+<a id="__codelineno-3-109" name="__codelineno-3-109" href="#__codelineno-3-109"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-3-110" name="__codelineno-3-110" href="#__codelineno-3-110"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-3-111" name="__codelineno-3-111" href="#__codelineno-3-111"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-3-112" name="__codelineno-3-112" href="#__codelineno-3-112"></a>
+<a id="__codelineno-3-113" name="__codelineno-3-113" href="#__codelineno-3-113"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">loan</span><span class="p">;</span>
+<a id="__codelineno-3-114" name="__codelineno-3-114" href="#__codelineno-3-114"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-3-115" name="__codelineno-3-115" href="#__codelineno-3-115"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="23-validacao-pos-criacao-metodo-utilitario">2.3 — Validação pós-criação (método utilitário)</h2>
+<p>Adicione um método que pode ser chamado para verificar integridade
+de qualquer contrato existente no banco:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">verificarIntegridadeLoan</span><span class="p">(</span><span class="nx">loanId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">integro</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nx">divergencias</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[];</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">loan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">loan</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">loanId</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">installments</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">divergencias</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">loan</span><span class="p">.</span><span class="nx">totalReceivable</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">somaInstallments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loan</span><span class="p">.</span><span class="nx">installments</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">inst</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">installmentAmount</span><span class="p">.</span><span class="nx">toString</span><span class="p">()),</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">somaPrincipal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loan</span><span class="p">.</span><span class="nx">installments</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">inst</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">principalPayback</span><span class="p">.</span><span class="nx">toString</span><span class="p">()),</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">somaGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">loan</span><span class="p">.</span><span class="nx">installments</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">inst</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">netGain</span><span class="p">.</span><span class="nx">toString</span><span class="p">()),</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">somaInstallments</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">total</span><span class="p">))</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">    </span><span class="nx">divergencias</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="sb">`Soma parcelas (</span><span class="si">${</span><span class="nx">somaInstallments</span><span class="si">}</span><span class="sb">) ≠ totalReceivable (</span><span class="si">${</span><span class="nx">total</span><span class="si">}</span><span class="sb">)`</span><span class="p">);</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">somaPrincipal</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">loan</span><span class="p">.</span><span class="nx">principalAmount</span><span class="p">.</span><span class="nx">toString</span><span class="p">())))</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="nx">divergencias</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="sb">`Soma principal_payback ≠ principalAmount`</span><span class="p">);</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">somaGain</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">loan</span><span class="p">.</span><span class="nx">targetProfit</span><span class="p">.</span><span class="nx">toString</span><span class="p">())))</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">    </span><span class="nx">divergencias</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="sb">`Soma net_gain ≠ targetProfit`</span><span class="p">);</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">integro</span><span class="o">:</span><span class="w"> </span><span class="kt">divergencias.length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">divergencias</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 3 — RELATÓRIOS DE FATURAMENTO (ReportsService)
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="31-novos-endpoints-de-relatorio">3.1 — Novos endpoints de relatório</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>GET /api/reports/faturamento?mes=2026-05
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    → faturamento mensal detalhado
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>GET /api/reports/carteira
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    → atualizar para usar os novos campos
+</code></pre></div>
+<h2 id="32-reportsservicegetfaturamentomensal">3.2 — ReportsService.getFaturamentoMensal()</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">getFaturamentoMensal</span><span class="p">(</span><span class="nx">mes</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">FaturamentoMensalDto</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="c1">// mes no formato &#39;YYYY-MM&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">inicio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">startOfMonth</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">(</span><span class="nx">mes</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;-01&#39;</span><span class="p">));</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">fim</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nx">endOfMonth</span><span class="p">(</span><span class="nx">inicio</span><span class="p">);</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="c1">// Parcelas PAGAS no período</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">parcelasPagas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">      </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pago&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">      </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">gte</span><span class="o">:</span><span class="w"> </span><span class="kt">inicio</span><span class="p">,</span><span class="w"> </span><span class="nx">lte</span><span class="o">:</span><span class="w"> </span><span class="kt">fim</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w">               </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">      </span><span class="nx">installmentAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">      </span><span class="nx">principalPayback</span><span class="o">:</span><span class="w">  </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">      </span><span class="nx">netGain</span><span class="o">:</span><span class="w">           </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">      </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">        </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">          </span><span class="nx">clientId</span><span class="o">:</span><span class="w">       </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">          </span><span class="nx">principalAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">          </span><span class="nx">targetProfit</span><span class="o">:</span><span class="w">    </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">          </span><span class="nx">consultor</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">  </span><span class="c1">// Calcular totais com decimal.js — nunca number nativo</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">faturamentoBruto</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nx">parcelasPagas</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">    </span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">p</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">netGain</span><span class="p">.</span><span class="nx">toString</span><span class="p">()),</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">recuperacaoCapital</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">parcelasPagas</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">p</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">principalPayback</span><span class="p">.</span><span class="nx">toString</span><span class="p">()),</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">totalRecebido</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nx">parcelasPagas</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="w">    </span><span class="p">(</span><span class="nx">acc</span><span class="p">,</span><span class="w"> </span><span class="nx">p</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">acc</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">installmentAmount</span><span class="p">.</span><span class="nx">toString</span><span class="p">()),</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">  </span><span class="c1">// Verificação de integridade do relatório</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">totalRecebido</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">faturamentoBruto</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">recuperacaoCapital</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InternalServerErrorException</span><span class="p">(</span><span class="s1">&#39;Inconsistência nos dados de faturamento.&#39;</span><span class="p">);</span>
+<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a>
+<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-45" name="__codelineno-6-45" href="#__codelineno-6-45"></a><span class="w">    </span><span class="nx">mes</span><span class="p">,</span>
+<a id="__codelineno-6-46" name="__codelineno-6-46" href="#__codelineno-6-46"></a><span class="w">    </span><span class="nx">totalRecebido</span><span class="o">:</span><span class="w">      </span><span class="kt">totalRecebido.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-6-47" name="__codelineno-6-47" href="#__codelineno-6-47"></a><span class="w">    </span><span class="nx">faturamentoBruto</span><span class="o">:</span><span class="w">   </span><span class="kt">faturamentoBruto.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-6-48" name="__codelineno-6-48" href="#__codelineno-6-48"></a><span class="w">    </span><span class="nx">recuperacaoCapital</span><span class="o">:</span><span class="w"> </span><span class="kt">recuperacaoCapital.toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">).</span><span class="nx">toNumber</span><span class="p">(),</span>
+<a id="__codelineno-6-49" name="__codelineno-6-49" href="#__codelineno-6-49"></a><span class="w">    </span><span class="nx">quantidadeParcelas</span><span class="o">:</span><span class="w"> </span><span class="kt">parcelasPagas.length</span><span class="p">,</span>
+<a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a><span class="w">    </span><span class="c1">// Breakdown por consultor (se aplicável)</span>
+<a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a><span class="w">    </span><span class="nx">porConsultor</span><span class="o">:</span><span class="w"> </span><span class="kt">agruparPorConsultor</span><span class="p">(</span><span class="nx">parcelasPagas</span><span class="p">),</span>
+<a id="__codelineno-6-52" name="__codelineno-6-52" href="#__codelineno-6-52"></a><span class="w">  </span><span class="p">};</span>
+<a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="33-atualizar-get-apireportscarteira">3.3 — Atualizar GET /api/reports/carteira</h2>
+<p>Atualizar o retorno para incluir os novos campos e remover
+nomenclaturas antigas:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Antes:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nx">valorInvestido</span><span class="o">:</span><span class="w"> </span><span class="kt">...</span><span class="p">,</span><span class="w">      </span><span class="c1">// ← remover</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nx">valorTotalParcelado</span><span class="o">:</span><span class="w"> </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// ← renomear</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nx">valorRecebido</span><span class="o">:</span><span class="w"> </span><span class="kt">...</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nx">aReceber</span><span class="o">:</span><span class="w"> </span><span class="kt">...</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">// Depois:</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">{</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="c1">// Capital</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="nx">principalEmCarteira</span><span class="o">:</span><span class="w">     </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// soma principalAmount dos loans ativos</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="nx">principalRecuperado</span><span class="o">:</span><span class="w">     </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// soma principalPayback das parcelas pagas</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="nx">principalARecuperar</span><span class="o">:</span><span class="w">     </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// diferença</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span><span class="c1">// Faturamento</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="nx">targetProfitEmCarteira</span><span class="o">:</span><span class="w">  </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// soma targetProfit dos loans ativos</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span><span class="nx">faturamentoRealizado</span><span class="o">:</span><span class="w">    </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// soma netGain das parcelas pagas</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="nx">faturamentoAReceber</span><span class="o">:</span><span class="w">     </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// diferença</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">  </span><span class="c1">// Totais operacionais (manter para compatibilidade de dashboard)</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">  </span><span class="nx">totalReceivableAtivo</span><span class="o">:</span><span class="w">    </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// total_receivable dos loans ativos</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">  </span><span class="nx">totalRecebido</span><span class="o">:</span><span class="w">           </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// soma installment_amount das parcelas pagas</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">  </span><span class="nx">aReceber</span><span class="o">:</span><span class="w">                </span><span class="kt">...</span><span class="p">,</span><span class="w"> </span><span class="c1">// soma installment_amount das parcelas pendentes/atrasadas</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">  </span><span class="nx">totalAtivos</span><span class="o">:</span><span class="w">             </span><span class="kt">...</span><span class="p">,</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">  </span><span class="nx">totalAtrasados</span><span class="o">:</span><span class="w">          </span><span class="kt">...</span><span class="p">,</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 4 — CONSOLIDAÇÃO SUPABASE
+═══════════════════════════════════════════════════════════════════</p>
+<p>O Supabase Auth, Storage e Realtime já foram implementados nas Fases
+1, 2 e 3. Esta parte consolida os pontos que podem ainda não estar
+100% alinhados com a nova estrutura de campos.</p>
+<h2 id="41-rls-politicas-para-os-novos-campos">4.1 — RLS: políticas para os novos campos</h2>
+<p>No Supabase SQL Editor, revisar/criar as políticas de RLS para garantir
+que a role <code>cliente</code> (acessando via Portal) nunca veja campos internos:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- Política para loans: cliente vê apenas seus próprios contratos</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">-- E NUNCA vê: target_profit, principal_amount, consultor_id</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;cliente_ver_proprios_loans&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">ON</span><span class="w"> </span><span class="n">loans</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">SELECT</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">USING</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="n">client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">clients</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">supabase_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="p">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">);</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1">-- Política para installments: cliente vê apenas parcelas dos seus loans</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1">-- ATENÇÃO: net_gain e principal_payback são campos INTERNOS</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1">-- O portal deve buscar via backend que filtra os campos retornados</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1">-- NÃO expor net_gain e principal_payback via PostgREST direto</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;cliente_ver_proprias_installments&quot;</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="k">ON</span><span class="w"> </span><span class="n">installments</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">SELECT</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="k">USING</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="n">loan_id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">loans</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">      </span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">clients</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">      </span><span class="k">WHERE</span><span class="w"> </span><span class="n">supabase_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">uid</span><span class="p">()</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">      </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">    </span><span class="p">)</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">  </span><span class="p">)</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="p">);</span>
+</code></pre></div>
+<p>ATENÇÃO crítica: os campos <code>net_gain</code> e <code>principal_payback</code> são dados
+financeiros internos da Lidera. Eles nunca devem ser retornados pelos
+endpoints do portal (/api/portal/*). O ClientPortalService deve
+fazer SELECT explícito excluindo esses campos.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// ClientPortalService — CORRETO</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">parcelas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">installment</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">loanId</span><span class="p">,</span><span class="w"> </span><span class="nx">loan</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">clientId</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w">               </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nx">numero</span><span class="o">:</span><span class="w">           </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nx">installmentAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ exibir — é o que o cliente paga</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nx">dataVencimento</span><span class="o">:</span><span class="w">   </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="nx">status</span><span class="o">:</span><span class="w">           </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="nx">totalPago</span><span class="o">:</span><span class="w">        </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="c1">// principalPayback: NÃO  ← dado interno</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="c1">// netGain:          NÃO  ← dado interno</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">});</span>
+</code></pre></div>
+<h2 id="42-supabase-realtime-adicionar-installments-ao-split">4.2 — Supabase Realtime: adicionar installments ao split</h2>
+<p>A publication <code>supabase_realtime</code> já tem <code>installments</code>.
+Confirmar que os novos campos <code>principal_payback</code> e <code>net_gain</code> são
+incluídos nos eventos Realtime apenas para operadores — nunca no
+canal do portal do cliente.</p>
+<h2 id="43-supabase-storage-sem-alteracoes">4.3 — Supabase Storage: sem alterações</h2>
+<p>O bucket <code>client-documents</code> e o <code>SupabaseService</code> não precisam de
+alteração — esta parte é apenas confirmação de status.</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 5 — FRONTEND: ATUALIZAÇÃO DAS TELAS
+═══════════════════════════════════════════════════════════════════</p>
+<h2 id="51-formulario-de-novo-emprestimo-emprestimosnovo">5.1 — Formulário de novo empréstimo (/emprestimos/novo)</h2>
+<p>Substituir os campos atuais pelos novos:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ANTES                          DEPOIS
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>───────────────────────────    ──────────────────────────────────
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Valor do Empréstimo         →  Capital (principal_amount)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>                               Label: &quot;Valor entregue ao cliente&quot;
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Valor Investido             →  Lucro Alvo (target_profit)
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>                               Label: &quot;Lucro total desejado no contrato&quot;
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>Valor da Parcela            →  Calculado automaticamente (read-only)
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>                               Fórmula: (capital + lucro) / parcelas
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>Taxa de Juros               →  REMOVER — não existe mais no novo modelo
+</code></pre></div>
+<p>Simulação ao vivo atualizada (4 indicadores):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// Calcular em tempo real conforme o usuário digita</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">capital</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">watch</span><span class="p">(</span><span class="s1">&#39;principalAmount&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">lucroAlvo</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Decimal</span><span class="p">(</span><span class="nx">watch</span><span class="p">(</span><span class="s1">&#39;targetProfit&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">parcelas</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nx">watch</span><span class="p">(</span><span class="s1">&#39;numeroParcelas&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">totalAReceber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capital</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">lucroAlvo</span><span class="p">);</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">valorParcela</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nx">totalAReceber</span><span class="p">.</span><span class="nx">dividedBy</span><span class="p">(</span><span class="nx">parcelas</span><span class="p">).</span><span class="nx">toDecimalPlaces</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1">// Exibir:</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1">// Capital desembolsado:    R$ {capital}</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1">// Total a receber:         R$ {totalAReceber}</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1">// Valor de cada parcela:   R$ {valorParcela}</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1">// Lucro alvo total:        R$ {lucroAlvo}</span>
+</code></pre></div>
+<h2 id="52-detalhe-do-emprestimo-emprestimosid">5.2 — Detalhe do empréstimo (/emprestimos/[id])</h2>
+<p>Atualizar o resumo financeiro:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ANTES                          DEPOIS
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>───────────────────────────    ──────────────────────────────────
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Valor Emprestado            →  Capital Desembolsado
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Total a Pagar               →  Total a Receber
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Total Pago                  →  Total Recebido
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Pendente                    →  A Receber
+</code></pre></div>
+<p>Adicionar nova seção "Split do Contrato" (visível apenas para
+admin, financeiro e consultor — nunca para cliente):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>│  Split do Contrato                                   │
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>├──────────────────────────────────────────────────────┤
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>│  Capital desembolsado     R$ 1.000,00                │
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>│  Lucro alvo               R$   400,00                │
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>│  Total a receber          R$ 1.400,00                │
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>├──────────────────────────────────────────────────────┤
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>│  Recuperação de capital   R$   400,00  (40% recup.)  │
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>│  Faturamento realizado    R$   160,00  (40% do lucro)│
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>│  A faturar                R$   240,00                │
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>└──────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="53-tabela-de-parcelas-nova-coluna-split">5.3 — Tabela de parcelas — nova coluna Split</h2>
+<p>Na tabela de parcelas do detalhe do empréstimo, adicionar colunas
+visíveis apenas para admin/financeiro/consultor:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Nº  | Vencimento | Total    | Capital  | Lucro    | Status
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>────┼────────────┼──────────┼──────────┼──────────┼──────────
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>1   | 01/04/26   | R$280,00 | R$200,00 | R$80,00  | ✅ Pago
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>2   | 01/05/26   | R$280,00 | R$200,00 | R$80,00  | ✅ Pago
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>3   | 01/06/26   | R$280,00 | R$200,00 | R$80,00  | 🔵 Pendente
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>4   | 01/07/26   | R$280,00 | R$200,00 | R$80,00  | ⏳ Aguardando
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>5   | 01/08/26   | R$280,00 | R$200,00 | R$80,00  | ⏳ Aguardando
+</code></pre></div>
+<p>Tooltip ao passar o mouse sobre o valor de lucro de uma parcela paga:
+"R$ 80,00 de faturamento confirmado nesta parcela."</p>
+<h2 id="54-relatorios-relatorios-nova-aba-faturamento">5.4 — Relatórios (/relatorios) — nova aba Faturamento</h2>
+<p>Adicionar uma nova aba "Faturamento" ao lado das abas existentes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>│  Faturamento Mensal              Maio 2026 ▼         │
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>├──────────────────────────────────────────────────────┤
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ │
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>│  │ Total        │ │ Faturamento  │ │ Recuperação  │ │
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>│  │ Recebido     │ │ Bruto        │ │ de Capital   │ │
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>│  │ R$ 1.400,00  │ │ R$   400,00  │ │ R$ 1.000,00  │ │
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>│  └──────────────┘ └──────────────┘ └──────────────┘ │
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>│                                                      │
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>│  Verificação: R$400 + R$1.000 = R$1.400 ✅           │
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>│                                                      │
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>│  Parcelas pagas no período: 5                        │
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>├──────────────────────────────────────────────────────┤
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>│  Faturamento por Consultor          (se aplicável)   │
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>│  ──────────────────────────────────────────────────  │
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>│  João Consultor    3 parcelas   R$ 240,00 faturado  │
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>│  Maria Consultora  2 parcelas   R$ 160,00 faturado  │
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>└──────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Seletor de mês: input type="month" + botão "Gerar".
+Chamar GET /api/reports/faturamento?mes=2026-05.</p>
+<h2 id="55-dashboard-atualizar-card-emprestimos-ativos">5.5 — Dashboard: atualizar card "Empréstimos Ativos"</h2>
+<p>O card atual mostra apenas a quantidade. Adicionar um sub-indicador:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>┌──────────────────────────────────┐
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>│ Empréstimos Ativos               │
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│        8                         │
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│ ─────────────────────────────── │
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│ A faturar:  R$ 3.200,00          │
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>│ Capital em risco: R$ 8.000,00    │
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>└──────────────────────────────────┘
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 6 — AUDITORIA E SNAPSHOTS
+═══════════════════════════════════════════════════════════════════</p>
+<p>Ao registrar um pagamento (PaymentsService), criar snapshot imutável
+no AuditLog com o estado da parcela antes e depois do pagamento:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">tx</span><span class="p">.</span><span class="nx">auditLog</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span><span class="nx">userId</span><span class="o">:</span><span class="w">     </span><span class="kt">operadorId</span><span class="p">,</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span><span class="nx">acao</span><span class="o">:</span><span class="w">       </span><span class="s1">&#39;PAYMENT_REGISTRADO&#39;</span><span class="p">,</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="nx">entidade</span><span class="o">:</span><span class="w">   </span><span class="s1">&#39;installments&#39;</span><span class="p">,</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">    </span><span class="nx">entidadeId</span><span class="o">:</span><span class="w"> </span><span class="kt">installmentId</span><span class="p">,</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">    </span><span class="nx">dados</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">      </span><span class="nx">snapshot</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">        </span><span class="nx">antes</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">          </span><span class="nx">status</span><span class="o">:</span><span class="w">           </span><span class="kt">installment.status</span><span class="p">,</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">          </span><span class="nx">totalPago</span><span class="o">:</span><span class="w">        </span><span class="kt">installment.totalPago.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">          </span><span class="nx">installmentAmount</span><span class="o">:</span><span class="w"> </span><span class="kt">installment.installmentAmount.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">          </span><span class="nx">principalPayback</span><span class="o">:</span><span class="w">  </span><span class="kt">installment.principalPayback.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">          </span><span class="nx">netGain</span><span class="o">:</span><span class="w">           </span><span class="kt">installment.netGain.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">        </span><span class="nx">depois</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">          </span><span class="nx">status</span><span class="o">:</span><span class="w">    </span><span class="kt">novoStatus</span><span class="p">,</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">          </span><span class="nx">totalPago</span><span class="o">:</span><span class="w"> </span><span class="kt">novoTotalPago.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w">        </span><span class="nx">pagamento</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="w">          </span><span class="nx">valorPago</span><span class="o">:</span><span class="w">         </span><span class="kt">valorPago.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">          </span><span class="nx">metodoPagamento</span><span class="o">:</span><span class="w">   </span><span class="kt">metodo</span><span class="p">,</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="w">          </span><span class="nx">parcela_split</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="w">            </span><span class="nx">principalPayback</span><span class="o">:</span><span class="w"> </span><span class="kt">installment.principalPayback.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="w">            </span><span class="nx">netGain</span><span class="o">:</span><span class="w">          </span><span class="kt">installment.netGain.toString</span><span class="p">(),</span>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">          </span><span class="p">}</span>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a><span class="p">});</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+ENTREGÁVEIS — ORDEM DE EXECUÇÃO
+═══════════════════════════════════════════════════════════════════</p>
+<p>Implemente nesta ordem exata. Aguarde confirmação após cada grupo.</p>
+<p>GRUPO A — Schema e Migration
+  1. Migration Prisma:
+     - Renomear campos em Loan e Installment
+     - Adicionar principalPayback, netGain, totalReceivable
+     - Script de retrocompatibilidade para dados históricos
+     - Verificação: npx prisma migrate dev --name split_parcela</p>
+<p>GRUPO B — Lógica de Negócio (Backend)
+  2. Instalar decimal.js: npm install decimal.js
+  3. LoansService.createLoan() com algoritmo de split e ajuste de centavos
+  4. LoansService.verificarIntegridadeLoan() utilitário
+  5. LoansDto: CreateLoanDto com novos campos
+  6. Atualizar respostas de GET /api/loans e GET /api/loans/:id
+     para retornar os novos campos</p>
+<p>GRUPO C — Relatórios (Backend)
+  7. ReportsService.getFaturamentoMensal()
+  8. ReportsService.getCarteira() atualizado com nova nomenclatura
+  9. ReportsController: GET /api/reports/faturamento?mes=</p>
+<p>GRUPO D — Auditoria
+  10. PaymentsService: snapshot no AuditLog ao registrar pagamento
+  11. LoansService: snapshot no AuditLog ao criar empréstimo</p>
+<p>GRUPO E — RLS e Supabase
+  12. SQL Editor Supabase: políticas RLS para loans e installments
+  13. Confirmar que ClientPortalService exclui net_gain e
+      principal_payback dos SELECTs do portal</p>
+<p>GRUPO F — Frontend
+  14. Formulário novo empréstimo: campos atualizados + simulação
+  15. Detalhe do empréstimo: resumo + seção Split + tabela com colunas
+  16. Nova aba "Faturamento" em /relatorios
+  17. Card do dashboard: sub-indicadores de faturamento</p>
+<p>═══════════════════════════════════════════════════════════════════
+REGRAS TÉCNICAS INVIOLÁVEIS
+═══════════════════════════════════════════════════════════════════</p>
+<ul>
+<li>decimal.js em TODO cálculo financeiro — zero uso de number nativo
+  para principalAmount, targetProfit, principalPayback, netGain</li>
+<li>Invariante sempre verificada: installmentAmount = principalPayback + netGain</li>
+<li>Ajuste de centavos SEMPRE na última parcela — nunca distribuído</li>
+<li>$transaction do Prisma em toda criação de Loan + Installments</li>
+<li>AuditLog snapshot em criação de Loan e registro de Payment</li>
+<li>net_gain e principal_payback são campos INTERNOS — nunca retornar
+  em endpoints do portal (/api/portal/*)</li>
+<li>targetProfit é obrigatório — não há mais empréstimo sem lucro definido</li>
+<li>taxaJuros mantido no schema apenas para retrocompatibilidade de dados
+  históricos — não usar em novos registros</li>
+<li>Seguir nomenclatura exata deste prompt em todo o código gerado:
+  principalAmount, targetProfit, totalReceivable,
+  installmentAmount, principalPayback, netGain
+```</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

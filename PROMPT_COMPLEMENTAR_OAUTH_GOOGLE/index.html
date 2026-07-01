@@ -1,0 +1,1273 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>SIAFI 2.0 — Prompt Complementar - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20-prompt-complementar" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SIAFI 2.0 — Prompt Complementar
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_APRESENTACAO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20-prompt-complementar">SIAFI 2.0 — Prompt Complementar</h1>
+<h1 id="blindagem-oauth-google-zero-registro-espontaneo">Blindagem OAuth Google — Zero Registro Espontâneo</h1>
+<h1 id="maio-2026">Maio 2026</h1>
+<p>Cole este prompt em uma nova conversa com o Claude junto com os arquivos
+01_ARQUITETURA.md, 02_BACKEND.md, 03_FRONTEND.md e 04_DATABASE.md.
+As Fases 1, 2 e 3 já foram implementadas. Este prompt corrige e reforça
+um ponto crítico de segurança que precisa ser revisado.</p>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Você é um Engenheiro de Software Sênior especializado em segurança de
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>autenticação com Supabase Auth e Next.js. As Fases 1, 2 e 3 do SIAFI já
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>foram implementadas. Preciso que você revise e corrija especificamente
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>o fluxo de autenticação via Google OAuth para garantir uma regra
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>inviolável de negócio.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>O PROBLEMA QUE PRECISA SER RESOLVIDO
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>O Supabase Auth, por padrão, cria uma conta nova automaticamente quando
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>qualquer pessoa clica em &quot;Entrar com Google&quot; — mesmo que essa pessoa
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>não tenha nenhum vínculo com o sistema.
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Isso é inadmissível para o SIAFI. O sistema financeiro da Lidera não
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>permite auto-registro de nenhuma espécie. Toda conta precisa ser criada
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>por um operador autorizado antes de qualquer tentativa de acesso.
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>O comportamento correto é:
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  CENÁRIO PROIBIDO (deve ser bloqueado):
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  → João da Silva nunca usou o SIAFI
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  → João clica em &quot;Entrar com Google&quot;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  → Supabase cria uma conta para João automaticamente
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  → João acessa o sistema sem nunca ter sido cadastrado
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  ❌ ISTO NÃO PODE ACONTECER
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  CENÁRIO PERMITIDO — Cliente:
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  → Maria é cliente da Lidera
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  → O Consultor cadastrou Maria na tabela `clients`
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  → O Consultor ou Admin ativou o portal de Maria
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    (POST /api/clients/:id/portal/ativar)
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  → Ao ativar, o sistema criou a conta dela no Supabase Auth com o
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    email real dela e salvou o supabaseId em clients.supabase_id
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  → Maria clica em &quot;Entrar com Google&quot; usando o mesmo email
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>  → O email da conta Google bate com clients.email
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>  → O supabaseId já existe em clients.supabase_id
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>  ✅ ACESSO LIBERADO — Maria vai para o portal
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>  CENÁRIO PERMITIDO — Operador (admin, financeiro, consultor, caixa):
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>  → Pedro é operador da Lidera
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>  → O Admin criou a conta de Pedro na tabela `users`
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>  → Ao criar, o sistema registrou Pedro no Supabase Auth com email
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    fictício pedro@siafi.local e salvou o supabaseId em users.supabase_id
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>  → O Admin também salvou o email real de Pedro em users.email
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>  → Pedro clica em &quot;Entrar com Google&quot; usando seu email real
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>  → O email da conta Google bate com users.email
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>  ✅ ACESSO LIBERADO — Pedro vai para o dashboard
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>  CENÁRIO BLOQUEADO — Desconhecido:
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>  → Carlos nunca foi cadastrado no SIAFI
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>  → Carlos clica em &quot;Entrar com Google&quot;
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>  → Supabase cria uma conta para Carlos automaticamente
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>  → O sistema detecta que o email de Carlos não existe
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    nem em users.email nem em clients.email
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>  → O sistema DELETA imediatamente a conta Carlos do Supabase Auth
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>  → Carlos recebe a mensagem: &quot;Acesso não autorizado.&quot;
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>  → Carlos é redirecionado para /login com erro visível
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>  ❌ BLOQUEADO — sem acesso
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>PARTE 1 — CONFIGURAÇÃO DO SUPABASE (painel)
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>Explique ao desenvolvedor que antes de qualquer código é necessário
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>configurar no painel do Supabase:
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>Authentication → Settings → &quot;Allow new users to sign up&quot;
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>→ DESATIVAR esta opção
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>Isso impede que o Supabase crie contas novas via qualquer provider
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>(Google, email, etc.) para pessoas que não foram pré-cadastradas
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>pelo Admin SDK.
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>ATENÇÃO: esta configuração sozinha não é suficiente porque o Admin SDK
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>(service_role) bypassa esta restrição. Por isso o código de validação
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>abaixo ainda é obrigatório como segunda camada de segurança.
+<a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>
+<a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>PARTE 2 — BACKEND: ENDPOINT DE VALIDAÇÃO (NestJS)
+<a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>═══════════════════════════════════════════════════════════════════
+<a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>
+<a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>Crie o endpoint POST /api/auth/validate-google no AuthController.
+<a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>Este endpoint é chamado pelo frontend logo após o Supabase processar
+<a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>o callback do Google OAuth, antes de qualquer redirecionamento.
+<a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>
+<a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>### 2.1 — DTO
+<a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>
+<a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>```typescript
+<a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>// src/modules/auth/dto/validate-google.dto.ts
+<a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>import { IsEmail, IsString, IsUUID } from &#39;class-validator&#39;;
+<a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>
+<a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>export class ValidateGoogleDto {
+<a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>  @IsEmail()
+<a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>  email: string;
+<a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>
+<a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>  @IsUUID()
+<a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>  supabaseUserId: string;
+<a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>}
+</code></pre></div>
+<h3 id="22-authservicevalidategoogleoauth">2.2 — AuthService.validateGoogleOAuth()</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">validateGoogleOAuth</span><span class="p">(</span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">supabaseUserId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;operador&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">prismaId</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="c1">// 1. Verificar em `users` — roles operacionais</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">operador</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">supabaseId</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">operador</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="c1">// 1a. Vincular supabaseId se for o primeiro login com Google</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">operador</span><span class="p">.</span><span class="nx">supabaseId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">operador.id</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">        </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabaseId</span><span class="o">:</span><span class="w"> </span><span class="kt">supabaseUserId</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span><span class="p">});</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="c1">// Sincronizar app_metadata no Supabase Auth</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">admin</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">admin</span><span class="p">.</span><span class="nx">updateUserById</span><span class="p">(</span><span class="nx">supabaseUserId</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span><span class="nx">app_metadata</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">          </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">operador.role</span><span class="p">,</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">          </span><span class="nx">prismaId</span><span class="o">:</span><span class="w"> </span><span class="kt">operador.id</span><span class="p">,</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">          </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;operador&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="p">});</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="c1">// 1b. supabaseId já existe mas não bate com este token — conta suspeita</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">operador</span><span class="p">.</span><span class="nx">supabaseId</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">operador</span><span class="p">.</span><span class="nx">supabaseId</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">supabaseUserId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">revogarEAuditar</span><span class="p">(</span><span class="nx">supabaseUserId</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;GOOGLE_SUPABASE_ID_MISMATCH&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span><span class="s1">&#39;Acesso não autorizado.&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;operador&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">operador.role</span><span class="p">,</span><span class="w"> </span><span class="nx">prismaId</span><span class="o">:</span><span class="w"> </span><span class="kt">operador.id</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">  </span><span class="c1">// 2. Verificar em `clients` — role cliente</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cliente</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">findFirst</span><span class="p">({</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">portalAtivo</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">    </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">supabaseId</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cliente</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">    </span><span class="c1">// 2a. Vincular supabaseId se for o primeiro login com Google</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">cliente</span><span class="p">.</span><span class="nx">supabaseId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">        </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.id</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">        </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">supabaseId</span><span class="o">:</span><span class="w"> </span><span class="kt">supabaseUserId</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">      </span><span class="p">});</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">admin</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">admin</span><span class="p">.</span><span class="nx">updateUserById</span><span class="p">(</span><span class="nx">supabaseUserId</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">        </span><span class="nx">app_metadata</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">          </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">          </span><span class="nx">clientId</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.id</span><span class="p">,</span>
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">          </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">      </span><span class="p">});</span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">    </span><span class="c1">// 2b. supabaseId já existe mas não bate — conta suspeita</span>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cliente</span><span class="p">.</span><span class="nx">supabaseId</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">cliente</span><span class="p">.</span><span class="nx">supabaseId</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">supabaseUserId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">revogarEAuditar</span><span class="p">(</span><span class="nx">supabaseUserId</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;GOOGLE_SUPABASE_ID_MISMATCH_CLIENT&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span><span class="s1">&#39;Acesso não autorizado.&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">prismaId</span><span class="o">:</span><span class="w"> </span><span class="kt">cliente.id</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="w">  </span><span class="c1">// 3. Email não encontrado em nenhuma tabela — desconhecido</span>
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="w">  </span><span class="c1">// Deletar IMEDIATAMENTE a conta que o Supabase criou automaticamente</span>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">revogarEAuditar</span><span class="p">(</span><span class="nx">supabaseUserId</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;GOOGLE_EMAIL_NAO_CADASTRADO&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ForbiddenException</span><span class="p">(</span>
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a><span class="w">    </span><span class="s1">&#39;Acesso não autorizado. Esta conta Google não está cadastrada no sistema.&#39;</span>
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="p">}</span>
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="c1">// Método auxiliar: deletar do Supabase + registrar no AuditLog</span>
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">revogarEAuditar</span><span class="p">(</span>
+<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="w">  </span><span class="nx">supabaseUserId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="w">  </span><span class="nx">motivo</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="w">  </span><span class="c1">// Deletar a conta do Supabase Auth (não deixar rastro)</span>
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">supabase</span><span class="p">.</span><span class="nx">admin</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">admin</span><span class="p">.</span><span class="nx">deleteUser</span><span class="p">(</span><span class="nx">supabaseUserId</span><span class="p">);</span>
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a><span class="w">    </span><span class="c1">// Log de erro mas não relançar — o 403 já será lançado pelo caller</span>
+<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Falha ao deletar conta Supabase </span><span class="si">${</span><span class="nx">supabaseUserId</span><span class="si">}</span><span class="sb">:`</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">);</span>
+<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>
+<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a><span class="w">  </span><span class="c1">// Registrar no AuditLog para rastreabilidade</span>
+<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">prisma</span><span class="p">.</span><span class="nx">auditLog</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a><span class="w">      </span><span class="nx">acao</span><span class="o">:</span><span class="w"> </span><span class="kt">motivo</span><span class="p">,</span>
+<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a><span class="w">      </span><span class="nx">entidade</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;auth&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a><span class="w">      </span><span class="nx">dados</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a><span class="w">        </span><span class="nx">email</span><span class="p">,</span>
+<a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a><span class="w">        </span><span class="nx">supabaseUserId</span><span class="p">,</span>
+<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a><span class="w">        </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">(),</span>
+<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a><span class="w">      </span><span class="nx">ip</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="p">,</span><span class="w"> </span><span class="c1">// IP virá do interceptor se disponível</span>
+<a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="23-authcontroller">2.3 — AuthController</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">@Post</span><span class="p">(</span><span class="s1">&#39;validate-google&#39;</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">@HttpCode</span><span class="p">(</span><span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">async</span><span class="w"> </span><span class="nx">validateGoogle</span><span class="p">(</span><span class="kd">@Body</span><span class="p">()</span><span class="w"> </span><span class="nx">dto</span><span class="o">:</span><span class="w"> </span><span class="kt">ValidateGoogleDto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="c1">// Este endpoint NÃO usa JwtAuthGuard — é chamado antes da sessão existir</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// A segurança vem da validação interna do service</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">authService</span><span class="p">.</span><span class="nx">validateGoogleOAuth</span><span class="p">(</span><span class="nx">dto</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">dto</span><span class="p">.</span><span class="nx">supabaseUserId</span><span class="p">);</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>ATENÇÃO: este endpoint não deve ter JwtAuthGuard porque é chamado no
+momento em que a sessão ainda está sendo estabelecida. A proteção
+contra abuso é feita pelo rate limiter global (5 req/min por IP via
+@nestjs/throttler já configurado na aplicação).</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 3 — FRONTEND: CALLBACK ROUTE (Next.js)
+═══════════════════════════════════════════════════════════════════</p>
+<p>Refatore src/app/auth/callback/route.ts para chamar a validação
+do backend imediatamente após receber o código do Google.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// src/app/auth/callback/route.ts</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NextRequest</span><span class="p">,</span><span class="w"> </span><span class="nx">NextResponse</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;next/server&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createServerClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@supabase/ssr&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">cookies</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;next/headers&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">GET</span><span class="p">(</span><span class="nx">request</span><span class="o">:</span><span class="w"> </span><span class="kt">NextRequest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">searchParams</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">nextUrl</span><span class="p">;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">searchParams</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">);</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">origem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">searchParams</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;dashboard&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="c1">// `state` pode carregar de onde veio: &#39;dashboard&#39; ou &#39;portal&#39;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="c1">// Sem código — erro no fluxo OAuth</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">code</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">      </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="s1">&#39;/login?erro=oauth_falhou&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cookieStore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">cookies</span><span class="p">();</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">supabase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createServerClient</span><span class="p">(</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_URL</span><span class="o">!</span><span class="p">,</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_SUPABASE_ANON_KEY</span><span class="o">!</span><span class="p">,</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">cookies</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">get</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">cookieStore</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">                  </span><span class="nx">set</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">v</span><span class="p">,</span><span class="w"> </span><span class="nx">o</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">cookieStore</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">v</span><span class="p">,</span><span class="w"> </span><span class="nx">o</span><span class="p">),</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">                  </span><span class="nx">remove</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">n</span><span class="p">,</span><span class="w"> </span><span class="nx">o</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">cookieStore</span><span class="p">.</span><span class="ow">delete</span><span class="p">({</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">n</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">o</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span><span class="c1">// 1. Trocar o code do Google pela sessão Supabase</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">exchangeCodeForSession</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="nx">data</span><span class="o">?</span><span class="p">.</span><span class="nx">session</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">      </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="s1">&#39;/login?erro=oauth_falhou&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="nx">access_token</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">session</span><span class="p">;</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="w">  </span><span class="c1">// 2. Validar no backend ANTES de qualquer redirecionamento</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">  </span><span class="c1">//    Se o email não estiver cadastrado, o backend deleta a conta</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">  </span><span class="c1">//    do Supabase e retorna 403</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="w">      </span><span class="sb">`</span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_API_URL</span><span class="si">}</span><span class="sb">/auth/validate-google`</span><span class="p">,</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="w">        </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="w">        </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">({</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="w">          </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">user.email</span><span class="p">,</span>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="w">          </span><span class="nx">supabaseUserId</span><span class="o">:</span><span class="w"> </span><span class="kt">user.id</span><span class="p">,</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="w">        </span><span class="p">}),</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="w">      </span><span class="c1">// Backend negou — sessão inválida, limpar cookie</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signOut</span><span class="p">();</span>
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a><span class="w">        </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="s1">&#39;/login?erro=conta_nao_cadastrada&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a><span class="w">      </span><span class="p">);</span>
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">tipo</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a><span class="w">    </span><span class="c1">// 3. Redirecionar para o destino correto conforme tipo de usuário</span>
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">destino</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tipo</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;cliente&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;/portal&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/dashboard&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="nx">destino</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">));</span>
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a>
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a><span class="w">    </span><span class="c1">// Falha de rede ao chamar o backend — negar por precaução</span>
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signOut</span><span class="p">();</span>
+<a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">NextResponse</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+<a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a><span class="w">      </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="s1">&#39;/login?erro=erro_validacao&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span>
+<a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-76" name="__codelineno-3-76" href="#__codelineno-3-76"></a><span class="p">}</span>
+</code></pre></div>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 4 — FRONTEND: TELA DE LOGIN
+═══════════════════════════════════════════════════════════════════</p>
+<p>Refatore src/app/(auth)/login/page.tsx para:</p>
+<h3 id="41-botao-google-com-comportamento-correto">4.1 — Botão Google com comportamento correto</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">handleGoogleLogin</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">setLoadingGoogle</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">signInWithOAuth</span><span class="p">({</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;google&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nx">redirectTo</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="si">}</span><span class="sb">/auth/callback`</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="c1">// Não usar queryTypes: &#39;pkce&#39; separado — já é o padrão com SSR</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nx">setErro</span><span class="p">(</span><span class="s1">&#39;Não foi possível conectar com o Google. Tente novamente.&#39;</span><span class="p">);</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nx">setLoadingGoogle</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="c1">// Não setar loading false aqui — a página vai redirecionar</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="42-exibicao-de-erros-de-acesso-negado">4.2 — Exibição de erros de acesso negado</h3>
+<p>Verificar o parâmetro <code>erro</code> na URL e exibir mensagens claras:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">searchParams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useSearchParams</span><span class="p">();</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">codigoErro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">searchParams</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;erro&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">mensagensErro</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">conta_nao_cadastrada</span><span class="o">:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="s1">&#39;Esta conta Google não está cadastrada no sistema. &#39;</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="s1">&#39;Entre em contato com o administrador ou seu consultor.&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nx">oauth_falhou</span><span class="o">:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="s1">&#39;Não foi possível autenticar com o Google. Tente novamente.&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nx">erro_validacao</span><span class="o">:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="s1">&#39;Erro ao validar sua conta. Tente novamente ou use email e senha.&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">};</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1">// No JSX — exibir apenas se houver erro:</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">{</span><span class="nx">codigoErro</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">mensagensErro</span><span class="p">[</span><span class="nx">codigoErro</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="o">&lt;</span><span class="nx">div</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="nx">role</span><span class="o">=</span><span class="s2">&quot;alert&quot;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nx">aria</span><span class="o">-</span><span class="nx">live</span><span class="o">=</span><span class="s2">&quot;assertive&quot;</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;rounded-lg border border-red-200 bg-red-50 dark:bg-red-950</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s2">               dark:border-red-800 p-3 text-sm text-red-700 dark:text-red-300&quot;</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="o">&gt;</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="o">&lt;</span><span class="nx">i</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;ti ti-alert-triangle mr-2&quot;</span><span class="w"> </span><span class="nx">aria</span><span class="o">-</span><span class="nx">hidden</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="p">{</span><span class="nx">mensagensErro</span><span class="p">[</span><span class="nx">codigoErro</span><span class="p">]}</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">)}</span>
+</code></pre></div>
+<h3 id="43-separacao-visual-entre-metodos-de-login">4.3 — Separação visual entre métodos de login</h3>
+<p>O botão "Entrar com Google" deve ter um separador visual claro em relação
+ao formulário de email/CPF+senha, com o texto "ou" entre eles, deixando
+evidente que são dois caminhos distintos — ambos requerem cadastro prévio.</p>
+<p>Abaixo do botão Google, adicionar em texto pequeno e discreto:
+"Somente contas previamente cadastradas têm acesso."</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 5 — REGRAS DE NEGÓCIO COMPLEMENTARES
+═══════════════════════════════════════════════════════════════════</p>
+<h3 id="51-quem-pode-cadastrar-quem">5.1 — Quem pode cadastrar quem</h3>
+<p>Implemente ou revise os guards dos endpoints de criação para garantir:</p>
+<table>
+<thead>
+<tr>
+<th>Ação</th>
+<th>Quem pode executar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Criar operador (users)</td>
+<td>Somente admin</td>
+</tr>
+<tr>
+<td>Ativar portal do cliente</td>
+<td>Admin, financeiro, consultor (só carteira)</td>
+</tr>
+<tr>
+<td>Cadastrar novo cliente</td>
+<td>Admin, financeiro, consultor</td>
+</tr>
+<tr>
+<td>Criar outro admin</td>
+<td>Somente admin</td>
+</tr>
+</tbody>
+</table>
+<p>Nenhum desses endpoints aceita requisição não autenticada.
+Nenhum deles pode ser chamado pelo frontend do portal (/api/portal/*).</p>
+<h3 id="52-cliente-sem-portal-ativo-nao-pode-logar">5.2 — Cliente sem portal ativo não pode logar</h3>
+<p>No validateGoogleOAuth, a query de clientes já filtra <code>portalAtivo: true</code>.
+Reforçar o mesmo filtro no fluxo de login por email/CPF:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Em AuthService.loginComEmailOuCpf — se identificador for CPF ou email</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// e o resultado for um client:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">client</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">client</span><span class="p">.</span><span class="nx">portalAtivo</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnauthorizedException</span><span class="p">(</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="s1">&#39;Seu acesso ao portal ainda não foi ativado. &#39;</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="s1">&#39;Entre em contato com a Lidera Financeira.&#39;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="53-operador-inativo-nao-pode-logar">5.3 — Operador inativo não pode logar</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Em AuthService.login — antes de qualquer operação Supabase:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">active</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">UnauthorizedException</span><span class="p">(</span><span class="s1">&#39;Conta desativada. Contate o administrador.&#39;</span><span class="p">);</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="54-auditoria-de-toda-tentativa-de-acesso-negado">5.4 — Auditoria de toda tentativa de acesso negado</h3>
+<p>Toda rejeição deve gerar um registro em AuditLog com:
+- acao: 'ACESSO_NEGADO_GOOGLE_DESCONHECIDO' | 'CONTA_INATIVA' |
+        'PORTAL_NAO_ATIVO' | 'GOOGLE_SUPABASE_ID_MISMATCH'
+- dados: { email, supabaseUserId, motivo }
+- ip: extraído do header X-Forwarded-For via @Ip() decorator</p>
+<p>Isso permite que o Admin visualize na tela de Auditoria toda tentativa
+de acesso não autorizado, identificando possíveis ataques ou erros de
+cadastro.</p>
+<p>═══════════════════════════════════════════════════════════════════
+PARTE 6 — TESTES MANUAIS PARA VALIDAR A IMPLEMENTAÇÃO
+═══════════════════════════════════════════════════════════════════</p>
+<p>Após implementar, valide cada cenário manualmente:</p>
+<p>TESTE 1 — Desconhecido tentando logar com Google
+  1. Use uma conta Google que não existe em users nem clients
+  2. Clique em "Entrar com Google"
+  3. Autorize no popup do Google
+  ESPERADO:
+  - Redireciona para /login?erro=conta_nao_cadastrada
+  - Mensagem de erro exibida na tela de login
+  - No Supabase Dashboard → Authentication → Users: a conta NÃO aparece
+  - No AuditLog do SIAFI: registro de ACESSO_NEGADO_GOOGLE_DESCONHECIDO</p>
+<p>TESTE 2 — Cliente com portal ativo logando com Google
+  1. Cadastre um cliente com email real
+  2. Ative o portal dele
+  3. Use a conta Google desse email
+  ESPERADO:
+  - Redireciona para /portal
+  - clients.supabase_id preenchido após o primeiro login
+  - Acesso normal ao portal</p>
+<p>TESTE 3 — Operador logando com Google
+  1. Crie um operador com email real em users.email
+  2. Use a conta Google desse email
+  ESPERADO:
+  - Redireciona para /dashboard
+  - users.supabase_id preenchido após o primeiro login
+  - Acesso conforme a role do operador</p>
+<p>TESTE 4 — Cliente com portal INATIVO tentando logar com Google
+  1. Cadastre um cliente mas NÃO ative o portal
+  2. Use a conta Google do email desse cliente
+  ESPERADO:
+  - Redireciona para /login?erro=conta_nao_cadastrada
+  - Conta deletada do Supabase
+  - AuditLog registrado</p>
+<p>TESTE 5 — Mesma conta Google tentando múltiplos logins
+  1. Logue com sucesso (Teste 2 ou 3)
+  2. Saia do sistema
+  3. Logue novamente
+  ESPERADO:
+  - Segundo login funciona normalmente
+  - supabase_id já estava vinculado — não tenta vincular de novo</p>
+<p>═══════════════════════════════════════════════════════════════════
+ENTREGÁVEIS
+═══════════════════════════════════════════════════════════════════</p>
+<p>Implemente nesta ordem:</p>
+<ol>
+<li>Configuração no painel Supabase (instruir o desenvolvedor):</li>
+<li>Desativar "Allow new users to sign up"</li>
+<li>
+<p>Confirmar que Google OAuth está habilitado em Providers</p>
+</li>
+<li>
+<p>Backend:</p>
+</li>
+<li>ValidateGoogleDto</li>
+<li>AuthService.validateGoogleOAuth() com revogarEAuditar()</li>
+<li>AuthService: filtro portalAtivo no login por CPF/email de cliente</li>
+<li>AuthService: filtro active no login de operador</li>
+<li>
+<p>AuthController: POST /auth/validate-google (sem JwtAuthGuard)</p>
+</li>
+<li>
+<p>Frontend:</p>
+</li>
+<li>src/app/auth/callback/route.ts refatorado</li>
+<li>Tela de login: handleGoogleLogin() + mensagens de erro por código</li>
+<li>
+<p>Texto discreto "Somente contas previamente cadastradas têm acesso"</p>
+</li>
+<li>
+<p>Auditoria:</p>
+</li>
+<li>Confirmar que AuditLog registra todos os cenários de rejeição</li>
+<li>Testar no painel de Auditoria do SIAFI que os logs aparecem</li>
+</ol>
+<p>═══════════════════════════════════════════════════════════════════
+REGRAS TÉCNICAS OBRIGATÓRIAS
+═══════════════════════════════════════════════════════════════════</p>
+<ul>
+<li>
+<p>deleteUser no Supabase ANTES de lançar ForbiddenException — nunca
+  depois. Se lançar antes de deletar, a conta fica órfã no Supabase.</p>
+</li>
+<li>
+<p>O endpoint POST /auth/validate-google não tem JwtAuthGuard mas está
+  coberto pelo ThrottleGuard global (5 req/min por IP).</p>
+</li>
+<li>
+<p>Nunca retornar ao frontend se o email existe ou não no banco —
+  mensagem genérica "conta não cadastrada" para todos os casos de
+  rejeição (previne enumeração de usuários).</p>
+</li>
+<li>
+<p>app_metadata (não user_metadata) para role, prismaId e clientId
+  ao vincular o supabaseId pela primeira vez.</p>
+</li>
+<li>
+<p>O callback route deve usar try/catch em toda chamada ao backend —
+  qualquer exceção de rede deve negar o acesso por precaução, nunca
+  liberar.</p>
+</li>
+<li>
+<p>Rate limit no endpoint /auth/validate-google: já coberto pelo
+  ThrottleGuard global. Não criar rate limit separado.
+```</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

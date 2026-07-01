@@ -1,0 +1,1803 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação Oficial do Sistema Integrado de Administração Financeira">
+      
+      
+        <meta name="author" content="Lidera Tecnologia e Gestão">
+      
+      
+      
+        <link rel="prev" href="../05_MANUAL_USUARIO/">
+      
+      
+        <link rel="next" href="../07_FLUXOGRAMA_EMPRESTIMOS/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Apresentação Comercial - SIAFI 2.0 Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#siafi-20" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-header__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SIAFI 2.0 Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Apresentação Comercial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01_ARQUITETURA/" class="md-tabs__link">
+          
+  
+  
+  Visão Geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../05_MANUAL_USUARIO/" class="md-tabs__link">
+          
+  
+  
+  Uso e Operação
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SIAFI 2.0 Docs" class="md-nav__button md-logo" aria-label="SIAFI 2.0 Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SIAFI 2.0 Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão Geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão Geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_ARQUITETURA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_BACKEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_FRONTEND/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_DATABASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uso e Operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uso e Operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_MANUAL_USUARIO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manual do Usuário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apresentação Comercial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sistema-integrado-de-apoio-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sistema Integrado de Apoio Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-problema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O Problema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-solucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Solução
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferenciais-competitivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diferenciais Competitivos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diferenciais Competitivos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-em-camadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔐 Segurança em Camadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gestao-de-contratos-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💳 Gestão de Contratos Completa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score-de-risco-interno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Score de Risco Interno
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cobranca-multicanal-automatizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📱 Cobrança Multicanal Automatizada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reparcelamento-estruturado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Reparcelamento Estruturado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#portal-do-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👥 Portal do Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤝 Módulo Consultor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitetura-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitetura Técnica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automacao-diaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automação Diária
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perfis-de-acesso-comparativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perfis de Acesso Comparativo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#seguranca-e-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança e Compliance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Segurança e Compliance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança Técnica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conformidade-lgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conformidade LGPD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proximas-implementacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Próximas Implementações
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracoes-pendentes-producao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurações Pendentes (Produção)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#antes-depois" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Antes × Depois
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_FLUXOGRAMA_EMPRESTIMOS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fluxograma de Empréstimos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sistema-integrado-de-apoio-financeiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sistema Integrado de Apoio Financeiro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-problema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O Problema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-solucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Solução
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferenciais-competitivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diferenciais Competitivos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diferenciais Competitivos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-em-camadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔐 Segurança em Camadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gestao-de-contratos-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💳 Gestão de Contratos Completa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score-de-risco-interno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Score de Risco Interno
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cobranca-multicanal-automatizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📱 Cobrança Multicanal Automatizada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reparcelamento-estruturado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Reparcelamento Estruturado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#portal-do-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👥 Portal do Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulo-consultor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤝 Módulo Consultor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitetura-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitetura Técnica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automacao-diaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automação Diária
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perfis-de-acesso-comparativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perfis de Acesso Comparativo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#seguranca-e-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança e Compliance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Segurança e Compliance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança Técnica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conformidade-lgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conformidade LGPD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proximas-implementacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Próximas Implementações
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracoes-pendentes-producao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurações Pendentes (Produção)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#antes-depois" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Antes × Depois
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="siafi-20">SIAFI 2.0</h1>
+<h2 id="sistema-integrado-de-apoio-financeiro">Sistema Integrado de Apoio Financeiro</h2>
+<blockquote>
+<p><strong>Lidera</strong> · Gestão de Crédito e Empréstimos · 2026</p>
+</blockquote>
+<hr />
+<h2 id="o-problema">O Problema</h2>
+<p>A Lidera operava com:
+- Planilhas Excel fragmentadas por operador
+- Sem visibilidade em tempo real de inadimplência
+- Cálculos de juros e mora feitos manualmente (erros frequentes)
+- Sem rastreabilidade de ações (quem fez o quê, quando)
+- Clientes sem canal de consulta próprio
+- Notificações manuais por WhatsApp</p>
+<hr />
+<h2 id="a-solucao">A Solução</h2>
+<p><strong>SIAFI 2.0</strong> — plataforma web completa para gestão de crédito pessoal.</p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Módulos funcionais</td>
+<td>24</td>
+</tr>
+<tr>
+<td>Páginas no sistema</td>
+<td>35+</td>
+</tr>
+<tr>
+<td>Perfis de acesso</td>
+<td>5 (admin, financeiro, caixa, consultor, cliente)</td>
+</tr>
+<tr>
+<td>Jobs agendados</td>
+<td>10 crons diários</td>
+</tr>
+<tr>
+<td>Filas assíncronas</td>
+<td>2 (notificações + pagamentos)</td>
+</tr>
+<tr>
+<td>Modelos de dados</td>
+<td>24 tabelas</td>
+</tr>
+<tr>
+<td>Cobertura</td>
+<td>Contratos · Parcelas · Pagamentos · Caixa · Relatórios · Portal</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="diferenciais-competitivos">Diferenciais Competitivos</h2>
+<h3 id="seguranca-em-camadas">🔐 Segurança em Camadas</h3>
+<ul>
+<li>Autenticação Supabase GoTrue (padrão bancário)</li>
+<li>MFA obrigatório configurável (TOTP)</li>
+<li>JWT de curta duração (15min) com refresh automático</li>
+<li>Row Level Security — clientes só veem dados próprios</li>
+<li>Audit log completo de todas as ações</li>
+<li>bcrypt rounds=12 para senhas</li>
+</ul>
+<h3 id="gestao-de-contratos-completa">💳 Gestão de Contratos Completa</h3>
+<ul>
+<li>Fluxo digital: intenção → aceite → liberação → parcelas → quitação</li>
+<li>Aceite digital com hash SHA-256</li>
+<li>SLA de aceite configurável (cliente tem N dias para assinar)</li>
+<li>Liberação manual de capital com registro no caixa</li>
+<li>Dia fixo de vencimento (1–28) independente do mês</li>
+</ul>
+<h3 id="score-de-risco-interno">📊 Score de Risco Interno</h3>
+<ul>
+<li>Pontuação 0–100 calculada automaticamente</li>
+<li>Componentes: pontualidade (50%), reparcelamentos (30%), quitações (20%)</li>
+<li>Atualizado após cada pagamento, estorno ou marcação de atraso</li>
+</ul>
+<h3 id="cobranca-multicanal-automatizada">📱 Cobrança Multicanal Automatizada</h3>
+<ul>
+<li>Cobrança antecipada N dias antes do vencimento</li>
+<li>Canais configuráveis por contrato: WhatsApp, Email, Portal</li>
+<li>PDF boleto gerado automaticamente e enviado por email</li>
+<li>Reenvio automático para cobranças não visualizadas</li>
+<li>Mora diária + multa calculadas com precisão financeira (Decimal.js)</li>
+</ul>
+<h3 id="reparcelamento-estruturado">🔄 Reparcelamento Estruturado</h3>
+<ul>
+<li>Fluxo: solicitação → proposta → 2ª aprovação → execução atômica</li>
+<li>Simulador inline antes de confirmar</li>
+<li>Aceite digital do cliente</li>
+<li>Histórico de reparcelamentos vinculado ao score</li>
+</ul>
+<h3 id="portal-do-cliente">👥 Portal do Cliente</h3>
+<ul>
+<li>Acesso próprio com email e senha</li>
+<li>Visualização de contratos e parcelas</li>
+<li>Pagamento via PIX com QR Code</li>
+<li>Abertura de tickets de suporte</li>
+<li>Aceite digital de contratos</li>
+<li>MFA disponível</li>
+</ul>
+<h3 id="modulo-consultor">🤝 Módulo Consultor</h3>
+<ul>
+<li>Carteira própria com visão de clientes</li>
+<li>Criação de intenções de empréstimo</li>
+<li>Acompanhamento de cobranças</li>
+<li>Chat interno com financeiro</li>
+<li>Solicitações de reparcelamento</li>
+</ul>
+<hr />
+<h2 id="arquitetura-tecnica">Arquitetura Técnica</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                    HTTPS (Let&#39;s Encrypt)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                         │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              ┌──────────▼──────────┐
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              │     Nginx 1.28.0    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>              │   reverse proxy     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>              └──────┬──────────┬───┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                     │          │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>          ┌──────────▼──┐   ┌───▼──────────────┐
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>          │ NestJS :4010│   │ Next.js 16 :4011 │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>          │ 24 módulos  │   │ 35+ páginas       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>          └──────┬───┬──┘   └──────────────────┘
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                 │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>         ┌───────▼┐ ┌▼────────────────────┐
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>         │ Redis  │ │   Supabase (SA)     │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>         │ BullMQ │ │ PostgreSQL + Auth   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>         │Upstash │ │ Storage + Realtime  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>         └────────┘ └─────────────────────┘
+</code></pre></div>
+<p><strong>Stack completo:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Tecnologia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td>NestJS 10 · TypeScript 5 · Prisma 5</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>Next.js 16 · Tailwind CSS 4 · shadcn/ui</td>
+</tr>
+<tr>
+<td>Banco</td>
+<td>PostgreSQL 15 via Supabase (sa-east-1)</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Supabase GoTrue + JWT local</td>
+</tr>
+<tr>
+<td>Filas</td>
+<td>BullMQ + Redis Upstash</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>Nodemailer + Hostinger SMTP (porta 465 SSL)</td>
+</tr>
+<tr>
+<td>PIX</td>
+<td>Mercado Pago API</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>Evolution API</td>
+</tr>
+<tr>
+<td>Realtime</td>
+<td>Supabase Realtime (chat interno)</td>
+</tr>
+<tr>
+<td>Deploy</td>
+<td>NSSM + Nginx (Windows Server 2022)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="automacao-diaria">Automação Diária</h2>
+<table>
+<thead>
+<tr>
+<th>Horário</th>
+<th>Ação Automática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>02h00</td>
+<td>Conciliação de PIX pendentes no Mercado Pago</td>
+</tr>
+<tr>
+<td>07h00</td>
+<td>Alerta de SLA de aceite (D-2 cliente, D-1 consultor); cancela vencidos</td>
+</tr>
+<tr>
+<td>08h00</td>
+<td>Marca parcelas vencidas como atrasadas</td>
+</tr>
+<tr>
+<td>08h05</td>
+<td>Aplica multa (1x) + mora diária sobre saldo devedor</td>
+</tr>
+<tr>
+<td>09h00</td>
+<td>Envia lembretes de vencimento (email + WhatsApp)</td>
+</tr>
+<tr>
+<td>09h30</td>
+<td>Gera PDF boleto e envia cobrança antecipada</td>
+</tr>
+<tr>
+<td>10h00</td>
+<td>Notifica inadimplentes</td>
+</tr>
+<tr>
+<td>11h00</td>
+<td>Lembrete de reparcelamentos pendentes</td>
+</tr>
+<tr>
+<td>14h00</td>
+<td>Reenvio de cobranças não visualizadas no portal</td>
+</tr>
+<tr>
+<td>*/2h</td>
+<td>Verificação de SLA de intenções de empréstimo</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="perfis-de-acesso-comparativo">Perfis de Acesso Comparativo</h2>
+<table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Admin</th>
+<th>Financeiro</th>
+<th>Caixa</th>
+<th>Consultor</th>
+<th>Cliente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard geral</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CRUD Clientes</td>
+<td>✅</td>
+<td>✅</td>
+<td>ver</td>
+<td>ver carteira</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Contratos</td>
+<td>✅</td>
+<td>✅</td>
+<td>ver</td>
+<td>ver carteira</td>
+<td>ver próprios</td>
+</tr>
+<tr>
+<td>Pagamentos</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+<td>via PIX</td>
+</tr>
+<tr>
+<td>Caixa</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Relatórios</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Reparcelamento</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+<td>solicitar</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Intenções</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+<td>criar</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Score de risco</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+<td>ver</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Chat interno</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Auditoria</td>
+<td>✅</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Configurações</td>
+<td>✅</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Usuários</td>
+<td>✅</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Portal próprio</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="seguranca-e-compliance">Segurança e Compliance</h2>
+<h3 id="seguranca-tecnica">Segurança Técnica</h3>
+<ul>
+<li>✅ HTTPS com TLS 1.3 obrigatório</li>
+<li>✅ MFA disponível para todos os operadores</li>
+<li>✅ JWT de curta duração (15min) com refresh automático</li>
+<li>✅ Rate limiting (10 req/min no login)</li>
+<li>✅ Bloqueio de conta após 5 tentativas falhas</li>
+<li>✅ Auditoria completa de todas as ações</li>
+<li>✅ Row Level Security no banco de dados</li>
+<li>✅ Validação de entrada em todos os endpoints</li>
+<li>✅ Senhas hasheadas com bcrypt rounds=12</li>
+<li>✅ Secrets nunca expostos no frontend</li>
+</ul>
+<h3 id="conformidade-lgpd">Conformidade LGPD</h3>
+<ul>
+<li>✅ Dados no Brasil (sa-east-1, São Paulo)</li>
+<li>✅ Consentimento para notificações (<code>notificacoesEmail</code>)</li>
+<li>✅ Soft-delete (inativação) para direito ao esquecimento</li>
+<li>✅ Portal do cliente para acesso aos próprios dados</li>
+<li>✅ Log de auditoria para rastreabilidade</li>
+<li>⚠️ Política de privacidade — pendente publicação</li>
+<li>⚠️ DPO formalmente designado — pendente</li>
+</ul>
+<hr />
+<h2 id="roadmap">Roadmap</h2>
+<h3 id="proximas-implementacoes">Próximas Implementações</h3>
+<table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔴 Alta</td>
+<td>Geração de contratos em PDF com assinatura digital</td>
+</tr>
+<tr>
+<td>🔴 Alta</td>
+<td>Política de privacidade e LGPD compliant no portal</td>
+</tr>
+<tr>
+<td>🟡 Média</td>
+<td>Dashboard com gráficos (recharts) — evolução mensal, inadimplência</td>
+</tr>
+<tr>
+<td>🟡 Média</td>
+<td>Exportação de relatórios em Excel e PDF</td>
+</tr>
+<tr>
+<td>🟡 Média</td>
+<td>Notificações push (PWA)</td>
+</tr>
+<tr>
+<td>🟢 Baixa</td>
+<td>App mobile (React Native)</td>
+</tr>
+<tr>
+<td>🟢 Baixa</td>
+<td>Integração com bureaux de crédito (SPC/Serasa)</td>
+</tr>
+<tr>
+<td>🟢 Baixa</td>
+<td>Multa automática (campo existe, aplicação manual)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configuracoes-pendentes-producao">Configurações Pendentes (Produção)</h3>
+<ul>
+<li>[ ] <code>MP_ACCESS_TOKEN</code> — Mercado Pago real (produção)</li>
+<li>[ ] Evolution API — configurar instância WhatsApp real</li>
+<li>[ ] RLS Supabase — aplicar políticas via SQL Editor</li>
+<li>[ ] DPO designado — notificar ANPD</li>
+</ul>
+<hr />
+<h2 id="antes-depois">Antes × Depois</h2>
+<table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Antes</th>
+<th>Depois</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de contratos</td>
+<td>Planilhas Excel</td>
+<td>Sistema web em tempo real</td>
+</tr>
+<tr>
+<td>Cálculo de juros</td>
+<td>Manual (erros)</td>
+<td>Automatizado com Decimal.js</td>
+</tr>
+<tr>
+<td>Notificações</td>
+<td>WhatsApp manual</td>
+<td>Automático (email + WA + portal)</td>
+</tr>
+<tr>
+<td>Inadimplência</td>
+<td>Descoberta tardia</td>
+<td>Monitoramento diário às 08h</td>
+</tr>
+<tr>
+<td>Rastreabilidade</td>
+<td>Zero</td>
+<td>Auditoria completa de toda ação</td>
+</tr>
+<tr>
+<td>Acesso do cliente</td>
+<td>Ligação/WhatsApp</td>
+<td>Portal 24/7 com PIX</td>
+</tr>
+<tr>
+<td>Reparcelamento</td>
+<td>Acordo verbal</td>
+<td>Fluxo digital com aceite formal</td>
+</tr>
+<tr>
+<td>Score de crédito</td>
+<td>Inexistente</td>
+<td>Score interno atualizado em tempo real</td>
+</tr>
+<tr>
+<td>Segurança</td>
+<td>Senha única</td>
+<td>MFA + JWT + RLS + bcrypt</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>SIAFI 2.0 — Desenvolvido com NestJS + Next.js · Infraestrutura Supabase + Redis · Deploy Windows Server 2022</em>
+<em>Versão 2.0 · Maio 2026 · Lidera Tecnologia e Gestão</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
