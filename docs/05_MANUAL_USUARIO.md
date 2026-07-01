@@ -22,8 +22,8 @@
 
 ### 1. Acesso ao Sistema
 
-**Endereço de acesso (operadores internos):** `https://financeiro.lidera.app.br`
-**Endereço de acesso (clientes):** `https://financeiro.lidera.app.br/portal`
+**Endereço de acesso (operadores internos):** `https://siafi.app.br`
+**Endereço de acesso (clientes):** `https://siafi.app.br/portal`
 
 **Fazer login com e-mail e senha:**
 
@@ -788,7 +788,7 @@ Na tela de **Auditoria**, aplique os filtros desejados e clique em **Exportar** 
 
 ### 5.1 Acesso ao Portal
 
-**Endereço do portal:** `https://financeiro.lidera.app.br/portal`
+**Endereço do portal:** `https://siafi.app.br/portal`
 
 Você recebe o acesso por e-mail quando a empresa ativa sua conta. O e-mail contém o link e as instruções de primeiro acesso.
 

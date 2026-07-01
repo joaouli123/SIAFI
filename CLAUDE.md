@@ -11,7 +11,7 @@
 |-------|-------|
 | **Nome** | SIAFI — Sistema Integrado de Apoio Financeiro |
 | **Versão** | 2.0 (NestJS + Next.js) |
-| **URL Produção** | https://financeiro.lidera.app.br |
+| **URL Produção** | https://siafi.app.br |
 | **Empresa** | Lidera |
 | **Email** | lideraabrange@gmail.com |
 | **Servidor** | Windows Server 2022 + Nginx 1.28.0 |
