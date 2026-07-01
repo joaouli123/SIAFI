@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -10,6 +11,7 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { InstallmentsService } from './installments.service';
+import { InstallmentFilterDto } from './dto/installment-filter.dto';
 
 interface AuthUser {
   id: number;
@@ -21,6 +23,14 @@ interface AuthUser {
 @Controller('installments')
 export class InstallmentsController {
   constructor(private readonly installmentsService: InstallmentsService) {}
+
+  // Listagem geral com filtros (status, cliente, contrato, período) + paginação
+  @Get()
+  @Roles('admin', 'financeiro', 'caixa', 'consultor')
+  findAll(@Query() filters: InstallmentFilterDto, @CurrentUser() user: AuthUser) {
+    const consultorId = user?.role === 'consultor' ? user.id : undefined;
+    return this.installmentsService.findAll(filters, consultorId);
+  }
 
   @Get('overdue')
   @Roles('admin', 'financeiro', 'caixa', 'consultor')

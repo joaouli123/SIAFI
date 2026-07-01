@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
-import { BarChart2, RefreshCw, TrendingUp, Users, FileText, FileDown, DollarSign } from 'lucide-react'
+import { BarChart2, RefreshCw, TrendingUp, Users, FileText, FileDown, DollarSign, FileStack } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
@@ -24,6 +25,8 @@ interface FaturamentoConsultor {
   totalRecebido: number
   faturamentoBruto: number
   recuperacaoCapital: number
+  comissao?: number
+  lucroLiquido?: number
   quantidadeParcelas: number
 }
 
@@ -32,6 +35,8 @@ interface FaturamentoResponse {
   totalRecebido: number
   faturamentoBruto: number
   recuperacaoCapital: number
+  comissaoConsultores?: number
+  lucroLiquidoEmpresa?: number
   quantidadeParcelas: number
   porConsultor: FaturamentoConsultor[]
 }
@@ -118,6 +123,9 @@ export default function RelatoriosPage() {
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Análises e dados do sistema</p>
         </div>
+        <Link href="/relatorios/central">
+          <Button variant="outline" size="sm" className="gap-2"><FileStack className="size-4" />Central de Relatórios</Button>
+        </Link>
       </div>
 
       <div className="flex gap-2 flex-wrap">
@@ -243,6 +251,25 @@ export default function RelatoriosPage() {
                 </Card>
               </div>
 
+              {faturTotais.comissaoConsultores != null && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="bg-emerald-50 dark:bg-emerald-950/20">
+                    <CardContent className="pt-4">
+                      <p className="text-xs text-muted-foreground">Comissão dos Consultores</p>
+                      <p className="text-xl font-bold mt-1 text-emerald-700 dark:text-emerald-400">{formatCurrency(Number(faturTotais.comissaoConsultores))}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Parte do lucro repassada</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-indigo-50 dark:bg-indigo-950/20">
+                    <CardContent className="pt-4">
+                      <p className="text-xs text-muted-foreground">Lucro Líquido da Empresa</p>
+                      <p className="text-xl font-bold mt-1 text-indigo-700 dark:text-indigo-400">{formatCurrency(Number(faturTotais.lucroLiquidoEmpresa))}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Lucro − comissões</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
               {faturData?.porConsultor && faturData.porConsultor.length > 0 && (
                 <Card>
                   <CardHeader><CardTitle className="text-base">Faturamento por Consultor</CardTitle></CardHeader>
@@ -254,6 +281,8 @@ export default function RelatoriosPage() {
                           <th className="text-center px-4 py-2 font-medium text-muted-foreground hidden sm:table-cell">Parcelas</th>
                           <th className="text-right px-4 py-2 font-medium text-muted-foreground">Total Recebido</th>
                           <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden md:table-cell">Lucro</th>
+                          <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Comissão</th>
+                          <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Lucro Líq.</th>
                           <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden md:table-cell">Capital Rec.</th>
                         </tr>
                       </thead>
@@ -264,6 +293,8 @@ export default function RelatoriosPage() {
                             <td className="px-4 py-2.5 text-center text-muted-foreground hidden sm:table-cell">{row.quantidadeParcelas}</td>
                             <td className="px-4 py-2.5 text-right font-medium">{formatCurrency(Number(row.totalRecebido))}</td>
                             <td className="px-4 py-2.5 text-right text-orange-600 hidden md:table-cell">{formatCurrency(Number(row.faturamentoBruto))}</td>
+                            <td className="px-4 py-2.5 text-right text-emerald-700 dark:text-emerald-400 hidden lg:table-cell">{formatCurrency(Number(row.comissao ?? 0))}</td>
+                            <td className="px-4 py-2.5 text-right text-indigo-700 dark:text-indigo-400 hidden lg:table-cell">{formatCurrency(Number(row.lucroLiquido ?? row.faturamentoBruto))}</td>
                             <td className="px-4 py-2.5 text-right text-green-700 hidden md:table-cell">{formatCurrency(Number(row.recuperacaoCapital))}</td>
                           </tr>
                         ))}
@@ -274,6 +305,8 @@ export default function RelatoriosPage() {
                           <td className="px-4 py-2.5 text-center font-semibold hidden sm:table-cell">{faturTotais.quantidadeParcelas}</td>
                           <td className="px-4 py-2.5 text-right font-bold">{formatCurrency(Number(faturTotais.totalRecebido))}</td>
                           <td className="px-4 py-2.5 text-right font-bold text-orange-600 hidden md:table-cell">{formatCurrency(Number(faturTotais.faturamentoBruto))}</td>
+                          <td className="px-4 py-2.5 text-right font-bold text-emerald-700 dark:text-emerald-400 hidden lg:table-cell">{formatCurrency(Number(faturTotais.comissaoConsultores ?? 0))}</td>
+                          <td className="px-4 py-2.5 text-right font-bold text-indigo-700 dark:text-indigo-400 hidden lg:table-cell">{formatCurrency(Number(faturTotais.lucroLiquidoEmpresa ?? faturTotais.faturamentoBruto))}</td>
                           <td className="px-4 py-2.5 text-right font-bold text-green-700 hidden md:table-cell">{formatCurrency(Number(faturTotais.recuperacaoCapital))}</td>
                         </tr>
                       </tfoot>

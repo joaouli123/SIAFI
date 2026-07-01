@@ -15,6 +15,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
+import { QuitarContratoDto } from './dto/quitar-contrato.dto';
 
 interface AuthUser {
   id: number;
@@ -29,8 +30,8 @@ export class PaymentsController {
 
   @Get()
   @Roles('admin', 'financeiro', 'caixa')
-  findAll(@Query('search') search?: string) {
-    return this.paymentsService.findAll(search);
+  findAll(@CurrentUser() user: AuthUser, @Query('search') search?: string) {
+    return this.paymentsService.findAll(search, user?.role);
   }
 
   // Pagamentos registrados hoje — dashboard do caixa
@@ -44,6 +45,16 @@ export class PaymentsController {
   @Roles('admin', 'financeiro', 'caixa')
   create(@Body() dto: CreatePaymentDto, @CurrentUser() user: AuthUser) {
     return this.paymentsService.create(dto, user?.id);
+  }
+
+  @Post('quitar/:loanId')
+  @Roles('admin', 'financeiro')
+  quitarContrato(
+    @Param('loanId', ParseIntPipe) loanId: number,
+    @Body() dto: QuitarContratoDto,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.paymentsService.quitarContrato(loanId, dto, user?.id);
   }
 
   @Get('installment/:installmentId')

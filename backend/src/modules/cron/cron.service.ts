@@ -386,37 +386,43 @@ export class CronService {
     let multasAplicadas = 0;
     let moraAcumuladas  = 0;
 
+    // Fórmula ÚNICA do sistema (idem InstallmentsService.calcEncargos), idempotente:
+    // multa única sobre o valor da parcela + mora diária sobre o saldo × dias de atraso.
     for (const inst of vencidas) {
+      const venc = new Date(inst.dataVencimento);
+      venc.setHours(0, 0, 0, 0);
+      const diasAtraso = Math.max(
+        0,
+        Math.floor((today.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24)),
+      );
+
       const saldo    = new Decimal(inst.saldoDevedor.toString());
       const moraPerc = inst.loan.moraDiariaPercentual
         ? new Decimal(inst.loan.moraDiariaPercentual.toString())
         : moraDefault;
+      const multaPerc = inst.loan.multaPercentual
+        ? new Decimal(inst.loan.multaPercentual.toString())
+        : multaDefault;
 
-      // Mora diária sobre saldo devedor
-      const moraDia  = saldo.times(moraPerc.dividedBy(100));
-      const novaMora = new Decimal(inst.moraAcumulada.toString()).plus(moraDia);
+      // Mora: recalculada (set) a partir dos dias de atraso — não acumulada
+      const mora  = saldo.times(moraPerc.dividedBy(100)).times(diasAtraso).toDecimalPlaces(2);
+      // Multa: uma vez sobre o valor da parcela
+      const multa = new Decimal(inst.installmentAmount.toString()).times(multaPerc.dividedBy(100)).toDecimalPlaces(2);
+      const totalDevido = saldo.plus(multa).plus(mora).toDecimalPlaces(2);
 
-      const updateData: Record<string, unknown> = {
-        moraAcumulada: novaMora.toDecimalPlaces(2).toNumber(),
-      };
-
-      // Multa: aplicar uma única vez no D+1 (multaAplicada ainda zero)
       const multaJaAplicada = new Decimal(inst.multaAplicada.toString()).greaterThan(0);
-      if (!multaJaAplicada) {
-        const multaPerc = inst.loan.multaPercentual
-          ? new Decimal(inst.loan.multaPercentual.toString())
-          : multaDefault;
-        const multa = new Decimal(inst.installmentAmount.toString()).times(multaPerc.dividedBy(100));
-        updateData.multaAplicada    = multa.toDecimalPlaces(2).toNumber();
-        updateData.valorComEncargos = new Decimal(inst.installmentAmount.toString())
-          .plus(multa).plus(novaMora).toDecimalPlaces(2).toNumber();
-        multasAplicadas++;
-      } else {
-        updateData.valorComEncargos = new Decimal(inst.installmentAmount.toString())
-          .plus(inst.multaAplicada.toString()).plus(novaMora).toDecimalPlaces(2).toNumber();
-      }
+      if (!multaJaAplicada) multasAplicadas++;
 
-      await this.prisma.installment.update({ where: { id: inst.id }, data: updateData as any });
+      await this.prisma.installment.update({
+        where: { id: inst.id },
+        data: {
+          moraAcumulada:    mora.toNumber(),
+          valorMora:        mora.toNumber(),
+          multaAplicada:    multa.toNumber(),
+          valorMulta:       multa.toNumber(),
+          valorComEncargos: totalDevido.toNumber(),
+        },
+      });
       moraAcumuladas++;
     }
 

@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
+import { InstallmentsService } from '../installments/installments.service';
 import { GeneratePixDto, ChargeTipo } from './dto/generate-pix.dto';
 import type { RequestUser } from '../auth/guards/supabase-auth.guard';
 
@@ -47,7 +48,10 @@ type PixPaymentWithInstallment = Awaited<
 export class PixService {
   private readonly logger = new Logger(PixService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly installments: InstallmentsService,
+  ) {}
 
   async generate(dto: GeneratePixDto, user: RequestUser): Promise<unknown> {
     const tipo = dto.tipo ?? ChargeTipo.PIX;
@@ -59,8 +63,6 @@ export class PixService {
           select: {
             id: true,
             numeroParcelas: true,
-            taxaMora: true,
-            taxaMulta: true,
             client: {
               select: {
                 id: true,
@@ -179,8 +181,6 @@ export class PixService {
               select: {
                 id: true,
                 numeroParcelas: true,
-                taxaMora: true,
-                taxaMulta: true,
                 client: {
                   select: {
                     id: true,
@@ -225,27 +225,10 @@ export class PixService {
     const loan        = installment.loan;
     const client      = loan.client;
 
-    const saldo = new Decimal(installment.installmentAmount.toString()).minus(
-      installment.totalPago.toString(),
-    );
-
-    let valorEncargos = new Decimal(0);
-    const agora      = new Date();
-    const vencimento = new Date(installment.dataVencimento);
-
-    if (vencimento < agora) {
-      const daysOverdue = Math.max(
-        1,
-        Math.floor((agora.getTime() - vencimento.getTime()) / 86_400_000),
-      );
-      const taxaMulta = new Decimal(loan.taxaMulta?.toString() ?? '2');
-      const taxaMora  = new Decimal(loan.taxaMora?.toString() ?? '1');
-      const multa     = saldo.mul(taxaMulta).div(100);
-      const mora      = saldo.mul(taxaMora).div(100).div(30).mul(daysOverdue);
-      valorEncargos   = multa.add(mora).toDecimalPlaces(2);
-    }
-
-    const valorTotal         = saldo.add(valorEncargos).toDecimalPlaces(2);
+    // Encargos via fonte única do sistema (multa única + mora diária)
+    const enc = await this.installments.getEncargos(installment.id);
+    const valorEncargos = new Decimal(enc.valorMulta).plus(enc.valorMora).toDecimalPlaces(2);
+    const valorTotal    = new Decimal(enc.totalDevido).toDecimalPlaces(2);
     const tipo               = charge.tipo as ChargeTipo;
     const expiresAt          = this._computeExpiresAt(tipo, {}, installment.dataVencimento);
     const externalReference  = `SIAFI_INST_${installment.id}_LOAN_${installment.loanId}`;

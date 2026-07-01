@@ -17,32 +17,31 @@ import { Type } from 'class-transformer';
 import { PaymentMethod } from '@prisma/client';
 import { AvalistaDto } from './avalista.dto';
 
-export class CreateLoanDto {
-  @IsInt()
-  @IsPositive()
-  clientId: number;
-
-  // Capital entregue ao cliente — sai do caixa da Lidera
+// Edição de contrato. Campos financeiros (principalAmount, targetProfit,
+// numeroParcelas, dataInicio, diaVencimento) disparam regeneração das parcelas
+// PENDENTES/ATRASADAS — parcelas pagas/parciais/canceladas são preservadas.
+export class UpdateLoanDto {
+  @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
-  principalAmount: number;
+  principalAmount?: number;
 
-  // Lucro total absoluto desejado no contrato — obrigatório
+  @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  targetProfit: number;
+  targetProfit?: number;
 
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(360)
-  numeroParcelas: number;
+  numeroParcelas?: number;
 
-  // Data de início/assinatura do contrato (referência; saída do capital)
+  @IsOptional()
   @IsDateString()
-  dataInicio: string;
+  dataInicio?: string;
 
-  // Data de vencimento da 1ª parcela. Se omitida, usa o comportamento padrão
-  // (1 mês após dataInicio, respeitando diaVencimento).
+  // Redefine o vencimento da 1ª parcela pendente (regenera o cronograma pendente)
   @IsOptional()
   @IsDateString()
   dataPrimeiroVencimento?: string;
@@ -55,66 +54,51 @@ export class CreateLoanDto {
   @IsString()
   observacoes?: string;
 
-  // Dia fixo de vencimento (1–28); null = usa o dia de dataInicio
   @IsOptional()
   @IsInt()
   @Min(1)
   @Max(28)
   diaVencimento?: number;
 
-  // Multa por atraso override do empréstimo (% sobre saldo); null = fallback settings
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 4 })
   @Min(0)
   multaPercentual?: number;
 
-  // Mora diária override (% ao dia); null = fallback settings
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 6 })
   @Min(0)
   moraDiariaPercentual?: number;
 
-  // Comissão do consultor: % sobre o lucro (netGain) de cada parcela
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @Max(100)
   comissaoPercentual?: number;
 
-  // Desconto na quitação total do contrato (% sobre o lucro a vencer)
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @Max(100)
   descontoQuitacaoPercentual?: number;
 
-  // Antecedência para envio da cobrança (dias antes do vencimento)
   @IsOptional()
   @IsInt()
   @Min(1)
   @Max(60)
   diasAntecedenciaCobranca?: number;
 
-  @IsOptional()
-  @IsBoolean()
-  cobrarWhatsapp?: boolean;
+  @IsOptional() @IsBoolean() cobrarWhatsapp?: boolean;
+  @IsOptional() @IsBoolean() cobrarEmail?: boolean;
+  @IsOptional() @IsBoolean() cobrarPortal?: boolean;
 
-  @IsOptional()
-  @IsBoolean()
-  cobrarEmail?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  cobrarPortal?: boolean;
-
-  // ── Avalistas (por contrato; podem referenciar um cliente existente) ─────
+  // Substitui integralmente a lista de avalistas quando enviado
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AvalistaDto)
   avalistas?: AvalistaDto[];
 
-  // ── Referências de contato (por contrato) ────────────────────────────────
   @IsOptional() @IsString() @MaxLength(150)
   referencia1Nome?: string;
   @IsOptional() @IsString() @MaxLength(30)

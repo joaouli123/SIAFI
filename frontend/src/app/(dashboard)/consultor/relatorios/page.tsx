@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 import {
   TrendingUp, AlertTriangle, DollarSign, CreditCard,
-  RefreshCw, BarChart2,
+  RefreshCw, BarChart2, Percent,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -19,6 +19,8 @@ interface RelatorioResumo {
   totalAReceber: number
   totalRecebido: number
   totalEmAtraso: number
+  comissaoPrevista?: number
+  comissaoRealizada?: number
   inadimplentes: number
 }
 
@@ -59,6 +61,7 @@ const colorMap = {
   green: { bg: 'bg-green-50 dark:bg-green-950/30', icon: 'bg-green-100 dark:bg-green-900/40 text-green-600', value: 'text-green-700 dark:text-green-400' },
   red:   { bg: 'bg-red-50 dark:bg-red-950/30', icon: 'bg-red-100 dark:bg-red-900/40 text-red-600', value: 'text-red-700 dark:text-red-400' },
   amber: { bg: 'bg-amber-50 dark:bg-amber-950/30', icon: 'bg-amber-100 dark:bg-amber-900/40 text-amber-600', value: 'text-amber-700 dark:text-amber-400' },
+  emerald: { bg: 'bg-emerald-50 dark:bg-emerald-950/30', icon: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600', value: 'text-emerald-700 dark:text-emerald-400' },
 }
 type Color = keyof typeof colorMap
 
@@ -137,6 +140,12 @@ export default function ConsultorRelatoriosPage() {
             ? '—'
             : `${((data.resumo.totalEmAtraso / (data.resumo.totalAReceber || 1)) * 100).toFixed(1)}%`}
           icon={BarChart2} color="amber" loading={isLoading}
+        />
+        <KpiCard
+          title="Comissão Recebida"
+          value={isLoading ? '—' : formatCurrency(data?.resumo.comissaoRealizada ?? 0)}
+          icon={Percent} color="emerald" loading={isLoading}
+          sub={isLoading ? undefined : `Prevista (contratos ativos): ${formatCurrency(data?.resumo.comissaoPrevista ?? 0)}`}
         />
       </div>
 

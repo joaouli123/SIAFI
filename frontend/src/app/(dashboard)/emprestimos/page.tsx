@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   Plus, Search, RefreshCw, Eye, XCircle, CreditCard, TrendingUp,
   AlertTriangle, CheckCircle, Clock, MessageSquare, QrCode, FileText,
-  DollarSign, X, ExternalLink,
+  DollarSign, X, ExternalLink, Pencil,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -246,6 +246,14 @@ function LoanDetailSheet({
                       <FileText className="size-3.5" />
                       Ver Contrato
                     </a>
+                    {loan.status !== 'cancelado' && (
+                      <Link href={`/emprestimos/${loan.id}/editar`} onClick={onClose}>
+                        <Button variant="ghost" size="sm" className="gap-1">
+                          <Pencil className="size-3.5" />
+                          Editar
+                        </Button>
+                      </Link>
+                    )}
                     <Link href={`/emprestimos/${loan.id}`} onClick={onClose}>
                       <Button variant="ghost" size="sm" className="gap-1">
                         <ExternalLink className="size-3.5" />
@@ -426,10 +434,15 @@ function LoanDetailSheet({
                       {loan.installments.map((inst) => {
                         const ist = STATUS_INSTALLMENT[inst.status] ?? { label: inst.status, variant: 'outline' as const }
                         const encargos = toNumber(inst.multaAplicada) + toNumber(inst.moraAcumulada)
+                        const emAberto = inst.status !== 'pago' && inst.status !== 'cancelado'
+                        const hojeD = new Date(); hojeD.setHours(0, 0, 0, 0)
+                        const vencD = new Date(inst.dataVencimento); vencD.setHours(0, 0, 0, 0)
+                        const vencida = emAberto && vencD < hojeD
+                        const venceHoje = emAberto && vencD.getTime() === hojeD.getTime()
                         return (
                           <tr key={inst.id} className="border-b hover:bg-muted/20">
                             <td className="px-3 py-2 text-muted-foreground">{inst.numero}</td>
-                            <td className="px-3 py-2">{formatDateLocal(inst.dataVencimento)}</td>
+                            <td className={`px-3 py-2 font-medium ${vencida ? 'text-destructive' : venceHoje ? 'text-amber-600' : ''}`}>{formatDateLocal(inst.dataVencimento)}</td>
                             <td className="px-3 py-2 text-right font-medium">{formatCurrency(inst.installmentAmount)}</td>
                             <td className={`px-3 py-2 text-right ${toNumber(inst.totalPago) > 0 ? 'text-green-600 font-medium' : 'text-muted-foreground'}`}>
                               {formatCurrency(inst.totalPago)}
@@ -861,9 +874,22 @@ export default function EmprestimosPage() {
                               size="sm"
                               className="h-7 w-7 p-0"
                               onClick={() => openSheet(loan.id)}
+                              title="Ver detalhes"
                             >
                               <Eye className="size-3.5" />
                             </Button>
+                            {loan.status !== 'cancelado' && (
+                              <Link href={`/emprestimos/${loan.id}/editar`}>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 w-7 p-0"
+                                  title="Editar contrato"
+                                >
+                                  <Pencil className="size-3.5" />
+                                </Button>
+                              </Link>
+                            )}
                             {loan.status === 'ativo' && (
                               <Button
                                 variant="ghost"
@@ -871,6 +897,7 @@ export default function EmprestimosPage() {
                                 className="h-7 w-7 p-0 text-destructive hover:text-destructive"
                                 onClick={() => handleCancel(loan.id)}
                                 disabled={cancelMut.isPending && cancelMut.variables === loan.id}
+                                title="Cancelar contrato"
                               >
                                 <XCircle className="size-3.5" />
                               </Button>

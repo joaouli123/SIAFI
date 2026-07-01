@@ -1,12 +1,13 @@
-import { IsDateString, IsIn, IsInt, IsNumber, IsOptional, IsPositive } from 'class-validator';
+import { IsDateString, IsIn, IsInt, IsNumber, IsOptional, IsPositive, IsString, MaxLength, Min } from 'class-validator';
 
 export class CreatePaymentDto {
   @IsInt()
   @IsPositive()
   installmentId: number;
 
-  @IsNumber()
-  @IsPositive()
+  // 0 é permitido quando há desconto (ex.: perdão / quitação com desconto total)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
   valorPago: number;
 
   @IsDateString()
@@ -19,4 +20,23 @@ export class CreatePaymentDto {
 
   @IsOptional()
   observacao?: string;
+
+  // Conta/banco que recebeu a baixa manual (ex.: "Itaú PJ", "Caixa - dinheiro")
+  @IsOptional()
+  @IsString()
+  @MaxLength(150)
+  contaDestino?: string;
+
+  // Desconto concedido nesta baixa
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  desconto?: number;
+
+  @IsOptional()
+  @IsIn(['saldo', 'encargos'])
+  descontoTipo?: 'saldo' | 'encargos';
+
+  @IsOptional()
+  @IsString()
+  descontoMotivo?: string;
 }

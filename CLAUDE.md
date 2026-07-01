@@ -37,7 +37,7 @@ Supabase:  lvpseuaybpnmrneuyndi · https://lvpseuaybpnmrneuyndi.supabase.co
 ## Estrutura de Diretórios
 
 ```
-D:\LIDERA\SIAFI\
+d:\Sistemas\SIAFI\CLIENTE-001\
 ├── CLAUDE.md               ← Este arquivo
 ├── README.md               ← Documentação principal
 ├── docs/
@@ -70,8 +70,8 @@ D:\LIDERA\SIAFI\
 | auth | /api/auth | público | POST /login, /refresh, /logout · GET /me |
 | users | /api/users | admin | GET / · POST / · PATCH /:id · DELETE /:id |
 | clients | /api/clients | admin,financeiro,caixa | GET /,/stats,/quitados,/:id · POST / · PATCH /:id · DELETE /:id |
-| loans | /api/loans | admin,financeiro | GET /,/stats,/:id · POST / · PATCH /:id/cancel |
-| installments | /api/installments | admin,financeiro,caixa | GET /overdue,/:id · POST /mark-overdue |
+| loans | /api/loans | admin,financeiro | GET /,/stats,/pendentes-liberacao,/:id · POST / · PATCH /:id (editar) · PATCH /:id/cancel,/:id/liberar-capital,/:id/reenviar-aceite |
+| installments | /api/installments | admin,financeiro,caixa | GET / (lista+filtros),/overdue,/hoje,/:id,/:id/encargos |
 | payments | /api/payments | admin,financeiro,caixa | GET / · POST / · DELETE /:id/estornar |
 | transactions | /api/transactions | admin,financeiro,caixa | GET /,/saldo,/movimento · POST / |
 | renegociacoes | /api/renegociacoes | admin,financeiro | GET /?loanId= · POST / |
@@ -110,9 +110,23 @@ GET  /api/loans             → paginado (search, status, clientId, page, limit)
 GET  /api/loans/stats       → { totalAtivos, totalQuitados, valorEmCarteira, valorRecebidoMes }
 GET  /api/loans/:id         → detalhe com installments[] e client
 POST /api/loans             → criar com geração automática de parcelas
-                              Body: { clientId, valor, valorInvestido?, valorParcela (OU taxaJuros),
-                                      numeroParcelas, dataInicio, metodoPagamento?, observacoes? }
+                              Body: { clientId, principalAmount, targetProfit, numeroParcelas,
+                                      dataInicio, dataPrimeiroVencimento?, diaVencimento?,
+                                      metodoPagamento?, observacoes?,
+                                      multaPercentual?, moraDiariaPercentual?, comissaoPercentual?,
+                                      avalistas?: [{ clienteId?, nome, cpf?, telefone?, email?, parentesco? }],
+                                      referencia1Nome?/Telefone?/Vinculo?, referencia2... }
+                              dataPrimeiroVencimento define o venc. da 1ª parcela (senão: 1 mês após início)
+PATCH /api/loans/:id        → EDITAR contrato (campos financeiros regeneram parcelas pendentes;
+                              parcelas pagas/parciais/canceladas preservadas; auditado LOAN_UPDATED)
 PATCH /api/loans/:id/cancel → cancelar (status=cancelado, parcelas→cancelado)
+PATCH /api/loans/:id/liberar-capital → ativar contrato + saída no caixa
+POST  /api/loans/:id/comissao → registrar pagamento de comissão ao consultor (saída no caixa)
+DELETE /api/loans/:id/comissao/:pagamentoId → estornar pagamento de comissão
+POST  /api/payments/quitar/:loanId → quita todas as parcelas em aberto aplicando desconto
+                                      (descontoPercentual? sobrescreve loan.descontoQuitacaoPercentual)
+GET   /api/loans/:id → inclui comissaoResumo { percentual, prevista, realizada, paga, saldo, status }
+                       e comissaoPagamentos[] (preservados ao editar/regenerar o contrato)
 ```
 
 ## Endpoints Importantes — Relatórios
@@ -123,11 +137,30 @@ GET /api/reports/carteira       → { valorInvestido, valorTotalParcelado, valor
                                      principalEmCarteira, faturamentoAReceber, principalARecuperar }
 GET /api/reports/faturamento?mes=YYYY-MM
                                 → { mes, totalRecebido, faturamentoBruto, recuperacaoCapital,
-                                     quantidadeParcelas, porConsultor[] }
+                                     comissaoConsultores, lucroLiquidoEmpresa, quantidadeParcelas,
+                                     porConsultor[{ ..., comissao, lucroLiquido }] }
 GET /api/reports/clientes       → lista de clientes ativos com próxima parcela
 GET /api/reports/movimentacao?startDate=&endDate=
 GET /api/reports/contratos?status=
 ```
+
+## Central de Relatórios (matriz relatório × formato)
+
+```
+GET /api/reports/catalogo            → { relatorios[], formatos[] } (13 relatórios pré-definidos)
+GET /api/reports/gerar/:key?formato=pdf|xlsx|csv|xml|txt|html&startDate=&endDate=&mes=&status=&clientId=
+                                     → stream do arquivo no formato escolhido
+GET /api/reports/zip?formato=&startDate=&endDate=&status=
+                                     → ZIP com todos os relatórios (exceto os que exigem cliente)
+```
+Relatórios: carteira-contratos, aging-carteira, inadimplencia, provisao-pdd, clientes-risco,
+dre-periodo, fluxo-caixa, faturamento-consultor, recebimentos-metodo, projecao-recebiveis,
+renegociacoes-reparcelamentos, auditoria-operacoes, extrato-cliente (exige clientId).
+Arquitetura: `ReportGeneratorService` (providers de dados → `{colunas, linhas, totais, grafico?}`) +
+`ReportExportService` (motor único: PDF/HTML via PdfService/puppeteer com gráfico SVG de barras,
+XLSX via exceljs, CSV/XML/TXT, ZIP via jszip).
+Tela: `/relatorios/central` (matriz relatórios × formatos, filtro de período/status, seletor de
+cliente para o extrato, e "Baixar tudo em ZIP").
 
 ## Endpoints Importantes — Reparcelamento
 
@@ -274,14 +307,18 @@ sc.exe stop SIAFI-WEB; Start-Sleep 3; sc.exe start SIAFI-WEB
 ```powershell
 # Backend
 sc.exe stop SIAFI-API
-cd D:\LIDERA\SIAFI\backend && npm run build
+cd d:\Sistemas\SIAFI\CLIENTE-001\backend; npm run build
 sc.exe start SIAFI-API
 
 # Frontend
 sc.exe stop SIAFI-WEB
-cd D:\LIDERA\SIAFI\frontend && npm run build
+cd d:\Sistemas\SIAFI\CLIENTE-001\frontend; npm run build
 sc.exe start SIAFI-WEB
 ```
+
+> Migrações Prisma: o banco usa workflow `db push`/`db execute` (não há histórico `migrate` aplicado).
+> Para mudanças de schema: gerar SQL com `prisma migrate diff --from-url $DIRECT_URL --to-schema-datamodel`
+> e aplicar com `prisma db execute --file ...`. `prisma migrate dev` falha (shadow DB tenta usar schema `auth` do Supabase).
 
 ---
 
@@ -317,6 +354,18 @@ sc.exe start SIAFI-WEB
 - **Liberação manual de capital** — após aceite digital (`aguardando_liberacao`), caixa/financeiro confirma entrega via `PATCH /loans/:id/liberar-capital`; ativa contrato, reajusta datas das parcelas, registra saída no caixa, notifica cliente; painel "Liberações pendentes" no dashboard
 - **Pagamentos parciais** — status `parcialmente_pago`; `saldoDevedor` e `moraAcumulada` acumulam por dia sobre o saldo; tabela de parcelas exibe colunas Pago/Saldo/Mora; formulário de pagamento pré-preenchido com total para quitação; estorno recalcula saldo e status corretamente
 
+**Melhorias (implementadas Jun/2026):**
+- **Avalistas** — por contrato (`model Avalista`); podem referenciar um cliente existente (`clienteId`) ou ser pessoa avulsa; cadastrados em `/emprestimos/novo` e na edição
+- **Referências de contato** — `referencia1/2` (nome/telefone/vínculo) por contrato
+- **Edição de contrato** — `PATCH /loans/:id` + tela `/emprestimos/[id]/editar`: edita qualquer dado; campos financeiros regeneram as parcelas pendentes/atrasadas e preservam as pagas/parciais/canceladas; auditado
+- **Baixa manual** — `Payment.contaDestino` (conta/banco) + data do pagamento no formulário inline e no `/pagamentos/novo`
+- **`/parcelas` aba "Todas"** — `GET /installments` com filtros (status, cliente, contrato, período) + paginação
+- **`dataPrimeiroVencimento`** em `/emprestimos/novo` — separa início do contrato × 1º vencimento; Valor da Parcela editável com cálculo reverso (preenche Lucro Alvo) + detalhamento Capital/Lucro
+- **Descontos** — `Payment.desconto`/`descontoTipo` ('saldo' | 'encargos')/`descontoMotivo`. Desconto sobre **saldo** conta para quitar a parcela (reduz lucro/comissão; não entra no caixa); sobre **encargos** perdoa multa/mora. Quitação total: `Loan.descontoQuitacaoPercentual` (% sobre lucro a vencer) + `POST /payments/quitar/:loanId`. Exibido em /pagamentos, recibo PDF, KPI "Descontos no mês" no dashboard, DRE (linha "Descontos concedidos") e relatório **Descontos Concedidos**. `valorPago=0` permitido quando há desconto.
+- **Comissão do consultor** — `Loan.comissaoPercentual` (% sobre o lucro/netGain de cada parcela), definida no contrato com entrada bidirecional valor↔% (sobre o Lucro Alvo). Apuração **realizada** com regra **capital-primeiro** (lucro da parcela = `totalPago − principalPayback`); split por baixa em `GET /payments` (`split: { capital, lucro, comissao, lucroEmpresa }`, oculto para caixa), no relatório de faturamento (comissão + lucro líquido, total e por consultor) e no resumo da carteira do consultor (`GET /consultor/relatorio` → `comissaoPrevista`/`comissaoRealizada`). Visível a admin/financeiro e ao consultor (a sua). **Mantida fora dos PDFs do cliente** (contrato/recibo) por ser informação interna.
+- **Pagamento de comissão ao consultor** — `model ComissaoPagamento` (independente das parcelas; preservado ao editar/regenerar o contrato). Tela de detalhe do contrato mostra: resumo (prevista/realizada/paga/saldo + status paga/parcial/a pagar), tabela das parcelas quitadas com a parte do consultor, e lista de pagamentos com registrar/estornar (gera saída no caixa, categoria 'Comissão Consultor'). Endpoints `POST/DELETE /loans/:id/comissao`.
+- **Multa/mora unificada** — fórmula ÚNICA em `InstallmentsService.calcEncargos` (multa única sobre a parcela + mora diária sobre o saldo, fallback `financeiro.multa_atraso_percentual`/`mora_dia_percentual`), reutilizada pelo cron `atualizarEncargos`, `getEncargos`, `markOverdue` e PIX. Campos legados `taxaMulta`/`taxaMora` **removidos** do schema.
+
 ### ⚠️ Configurar em Produção
 - `MP_ACCESS_TOKEN` — Mercado Pago real
 - `WHATSAPP_API_URL` + `WHATSAPP_API_KEY` + `WHATSAPP_INSTANCE` — Evolution API
@@ -348,8 +397,7 @@ CREATE POLICY "cliente_ver_proprias_installments" ON installments
 - Dashboard com gráficos (recharts) — evolução mensal, inadimplência
 - Exportação de relatórios Excel/PDF
 - Notificações push (PWA)
-- Multa por atraso (taxa_multa já no schema, não aplicada automaticamente ainda)
 
 ---
 
-*Última atualização: 2026-05-21 | Mantido por: Claude Code + equipe Lidera*
+*Última atualização: 2026-06-01 | Mantido por: Claude Code + equipe Lidera*

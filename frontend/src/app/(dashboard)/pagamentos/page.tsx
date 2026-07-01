@@ -21,12 +21,18 @@ interface Payment {
   dataPagamento: string
   metodoPagamento: string
   observacao: string | null
+  desconto?: number | string | null
+  descontoTipo?: string | null
   estornado: boolean
   installment: {
     id: number
     numero: number
-    loan: { id: number; client: { nome: string } }
+    loan: { id: number; client: { nome: string }; consultor?: { id: number; nome: string } | null }
   }
+  split?: {
+    capital: number; lucro: number; comissao: number
+    lucroEmpresa: number; comissaoPercentual: number
+  } | null
 }
 
 interface PaymentsResponse {
@@ -56,6 +62,7 @@ export default function PagamentosPage() {
   const qc = useQueryClient()
   const { user } = useAuth()
   const canEstornar = user?.role === 'admin' || user?.role === 'financeiro'
+  const showSplit = user?.role !== 'caixa'
 
   const search = useDebounce(searchInput, 400)
   useEffect(() => { setPage(1) }, [search, startDate, endDate])
@@ -168,6 +175,10 @@ export default function PagamentosPage() {
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcela</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Desconto</th>
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Capital</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Comissão</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Lucro Empresa</th>}
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Método</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Data</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ação</th>
@@ -191,6 +202,26 @@ export default function PagamentosPage() {
                       <td className="px-4 py-3 text-right font-bold text-green-600">
                         {formatCurrency(p.valorPago)}
                       </td>
+                      <td className="px-4 py-3 text-right hidden lg:table-cell" title={p.descontoTipo === 'encargos' ? 'Desconto sobre encargos' : 'Desconto sobre saldo'}>
+                        {toNumber(p.desconto) > 0
+                          ? <span className="text-orange-600">{formatCurrency(toNumber(p.desconto))}</span>
+                          : <span className="text-muted-foreground">—</span>}
+                      </td>
+                      {showSplit && (
+                        <td className="px-4 py-3 text-right hidden xl:table-cell" title="Repõe o capital emprestado">
+                          {p.split ? formatCurrency(p.split.capital) : '—'}
+                        </td>
+                      )}
+                      {showSplit && (
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-emerald-700 dark:text-emerald-400" title={p.split ? `${p.split.comissaoPercentual}% do lucro · ${p.installment?.loan?.consultor?.nome ?? 'sem consultor'}` : ''}>
+                          {p.split && p.split.comissao > 0 ? formatCurrency(p.split.comissao) : '—'}
+                        </td>
+                      )}
+                      {showSplit && (
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-blue-700 dark:text-blue-400">
+                          {p.split && p.split.lucroEmpresa > 0 ? formatCurrency(p.split.lucroEmpresa) : '—'}
+                        </td>
+                      )}
                       <td className="px-4 py-3 hidden md:table-cell">
                         <Badge variant="outline">{METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}</Badge>
                       </td>

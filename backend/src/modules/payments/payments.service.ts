@@ -42,19 +42,38 @@ export class PaymentsService {
       const moraAcumulada     = new Decimal(installment.moraAcumulada.toString());
       const totalPagoAnt      = new Decimal(installment.totalPago.toString());
       const novoTotalPago     = totalPagoAnt.plus(valorPago);
-      const limiteMaximo      = installmentAmount.plus(moraAcumulada);
 
-      if (valorPago.lte(0)) {
-        throw new BadRequestException('Valor do pagamento deve ser positivo.');
+      // Desconto concedido nesta baixa: 'saldo' (abate o valor da parcela → quita com menos)
+      // ou 'encargos' (perdoa multa/mora; não conta para quitar o principal).
+      const desconto       = new Decimal((dto.desconto ?? 0).toString());
+      const descontoTipo   = desconto.gt(0) ? (dto.descontoTipo ?? 'saldo') : null;
+      const descontoSaldo  = descontoTipo === 'saldo' ? desconto : new Decimal(0);
+
+      if (valorPago.lt(0)) {
+        throw new BadRequestException('Valor do pagamento não pode ser negativo.');
       }
-      if (novoTotalPago.greaterThan(limiteMaximo)) {
+      if (valorPago.isZero() && desconto.lte(0)) {
+        throw new BadRequestException('Informe um valor pago ou um desconto.');
+      }
+
+      // Descontos de saldo já concedidos nesta parcela (baixas anteriores)
+      const descAnt = await tx.payment.aggregate({
+        where: { installmentId: dto.installmentId, descontoTipo: 'saldo' },
+        _sum: { desconto: true },
+      });
+      const totalDescontoSaldo = new Decimal(descAnt._sum.desconto?.toString() ?? '0').plus(descontoSaldo);
+
+      // Quitação considera o recebido + desconto sobre saldo
+      const efetivo      = novoTotalPago.plus(totalDescontoSaldo);
+      const limiteMaximo = installmentAmount.plus(moraAcumulada);
+      if (efetivo.greaterThan(limiteMaximo.plus(0.001))) {
         throw new BadRequestException(
-          `Valor pago (${novoTotalPago.toFixed(2)}) excede o saldo devedor com mora (${limiteMaximo.toFixed(2)}).`,
+          `Valor pago + desconto (${efetivo.toFixed(2)}) excede o devido com mora (${limiteMaximo.toFixed(2)}).`,
         );
       }
 
-      const novoSaldo     = installmentAmount.minus(novoTotalPago).clampedTo(0, Infinity);
-      const parcialmenteQuitado = novoTotalPago.greaterThanOrEqualTo(installmentAmount);
+      const novoSaldo           = installmentAmount.minus(efetivo).clampedTo(0, Infinity);
+      const parcialmenteQuitado = efetivo.greaterThanOrEqualTo(installmentAmount);
 
       // Status: pago (quitou o principal), parcialmente_pago, ou mantém atrasado se vencida
       let novoStatus: string;
@@ -84,6 +103,10 @@ export class PaymentsService {
           dataPagamento:   new Date(dto.dataPagamento),
           metodoPagamento: (dto.metodoPagamento ?? 'dinheiro') as PaymentMethod,
           observacao:      dto.observacao ?? null,
+          contaDestino:    dto.contaDestino ?? null,
+          desconto:        desconto.toDecimalPlaces(2).toNumber(),
+          descontoTipo:    descontoTipo,
+          descontoMotivo:  dto.descontoMotivo ?? null,
         },
       });
 
@@ -114,17 +137,19 @@ export class PaymentsService {
         }
       }
 
-      // 5. Criar Transaction financeira
-      await tx.transaction.create({
-        data: {
-          tipo:      'entrada',
-          valor:     valorPago.toDecimalPlaces(2).toNumber(),
-          descricao: `Pgto ${novoStatus === 'pago' ? 'total' : 'parcial'} parcela #${installment.numero} - ${installment.loan.client.nome}`,
-          categoria: 'Pagamento de Parcela',
-          data:      new Date(dto.dataPagamento),
-          userId:    userId ?? null,
-        },
-      });
+      // 5. Criar Transaction financeira (desconto não entra no caixa; pula se nada recebido)
+      if (valorPago.gt(0)) {
+        await tx.transaction.create({
+          data: {
+            tipo:      'entrada',
+            valor:     valorPago.toDecimalPlaces(2).toNumber(),
+            descricao: `Pgto ${novoStatus === 'pago' ? 'total' : 'parcial'} parcela #${installment.numero} - ${installment.loan.client.nome}${dto.contaDestino ? ` · ${dto.contaDestino}` : ''}`,
+            categoria: 'Pagamento de Parcela',
+            data:      new Date(dto.dataPagamento),
+            userId:    userId ?? null,
+          },
+        });
+      }
 
       // 6. AuditLog
       const snapshotDepois = {
@@ -173,8 +198,70 @@ export class PaymentsService {
     return payment.payment;
   }
 
-  async findAll(search?: string): Promise<unknown[]> {
-    return this.prisma.payment.findMany({
+  // Quitação total do contrato: dá baixa em todas as parcelas em aberto de uma vez,
+  // aplicando o desconto (% sobre o lucro a vencer) — do contrato ou informado.
+  async quitarContrato(
+    loanId: number,
+    dto: { dataPagamento: string; metodoPagamento?: string; contaDestino?: string; descontoPercentual?: number },
+    userId?: number,
+  ): Promise<unknown> {
+    const loan = await this.prisma.loan.findUnique({
+      where: { id: loanId },
+      include: {
+        installments: {
+          where: { status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] } },
+          orderBy: { numero: 'asc' },
+        },
+      },
+    });
+    if (!loan) throw new NotFoundException(`Empréstimo ${loanId} não encontrado`);
+    if (loan.status === 'cancelado' || loan.status === 'quitado') {
+      throw new BadRequestException('Contrato não está em aberto para quitação.');
+    }
+
+    const pct = dto.descontoPercentual != null
+      ? Number(dto.descontoPercentual)
+      : Number(loan.descontoQuitacaoPercentual ?? 0);
+
+    let totalRecebido = 0, totalDesconto = 0, parcelas = 0;
+    for (const inst of loan.installments) {
+      const saldoParc = Number(inst.installmentAmount) - Number(inst.totalPago);
+      if (saldoParc <= 0.005) continue;
+      const lucroRealizado = Math.max(0, Number(inst.totalPago) - Number(inst.principalPayback));
+      const remainingLucro = Math.max(0, Number(inst.netGain) - lucroRealizado);
+      let descontoParc = parseFloat(((remainingLucro * pct) / 100).toFixed(2));
+      if (descontoParc > saldoParc) descontoParc = saldoParc;
+      const valorPago = parseFloat((saldoParc - descontoParc).toFixed(2));
+
+      await this.create(
+        {
+          installmentId:   inst.id,
+          valorPago,
+          dataPagamento:   dto.dataPagamento,
+          metodoPagamento: (dto.metodoPagamento ?? 'dinheiro') as CreatePaymentDto['metodoPagamento'],
+          contaDestino:    dto.contaDestino,
+          desconto:        descontoParc > 0 ? descontoParc : undefined,
+          descontoTipo:    descontoParc > 0 ? 'saldo' : undefined,
+          descontoMotivo:  descontoParc > 0 ? 'Quitação total do contrato' : undefined,
+        },
+        userId,
+      );
+      totalRecebido += valorPago;
+      totalDesconto += descontoParc;
+      parcelas++;
+    }
+
+    return {
+      loanId,
+      parcelasQuitadas: parcelas,
+      totalRecebido: parseFloat(totalRecebido.toFixed(2)),
+      totalDesconto: parseFloat(totalDesconto.toFixed(2)),
+      percentual: pct,
+    };
+  }
+
+  async findAll(search?: string, role?: string): Promise<unknown[]> {
+    const payments = await this.prisma.payment.findMany({
       where: search
         ? {
             installment: {
@@ -186,14 +273,71 @@ export class PaymentsService {
         : undefined,
       include: {
         installment: {
-          include: {
-            loan: { include: { client: { select: { nome: true } } } },
+          select: {
+            id: true,
+            numero: true,
+            principalPayback: true,
+            installmentAmount: true,
+            loan: {
+              select: {
+                id: true,
+                comissaoPercentual: true,
+                consultor: { select: { id: true, nome: true } },
+                client: { select: { nome: true } },
+              },
+            },
+            // histórico para apurar a divisão capital/lucro de cada baixa (capital primeiro)
+            payments: {
+              select: { id: true, valorPago: true, createdAt: true },
+              orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+            },
           },
         },
       },
       orderBy: { dataPagamento: 'desc' },
       take: 100,
     });
+
+    // Caixa não enxerga lucro/comissão
+    const verSplit = role !== 'caixa';
+
+    return payments.map((p) => {
+      const inst = p.installment as unknown as {
+        principalPayback: unknown;
+        loan: { comissaoPercentual: unknown };
+        payments: Array<{ id: number; valorPago: unknown }>;
+      };
+      const split = verSplit ? this.splitPagamento(p.id, Number(p.valorPago), inst) : null;
+      // Remove o histórico auxiliar do payload
+      const { payments: _omit, ...instRest } = inst as Record<string, unknown>;
+      return { ...p, installment: instRest, split };
+    });
+  }
+
+  // Divisão de uma baixa em capital × lucro (capital primeiro) e comissão do consultor.
+  // lucro realizado da parcela = max(0, totalPago − principalPayback); a parte de lucro
+  // desta baixa é o incremento de lucro realizado que ela provocou.
+  private splitPagamento(
+    paymentId: number,
+    valorPago: number,
+    inst: { principalPayback: unknown; loan: { comissaoPercentual: unknown }; payments: Array<{ id: number; valorPago: unknown }> },
+  ): { capital: number; lucro: number; comissao: number; lucroEmpresa: number; comissaoPercentual: number } {
+    const principal = Number(inst.principalPayback);
+    const pct = Number(inst.loan.comissaoPercentual ?? 0);
+
+    let cumBefore = 0;
+    for (const x of inst.payments) {
+      if (x.id === paymentId) break;
+      cumBefore += Number(x.valorPago);
+    }
+    const cumAfter = cumBefore + valorPago;
+    const lucroBefore = Math.max(0, cumBefore - principal);
+    const lucroAfter = Math.max(0, cumAfter - principal);
+    const lucro = parseFloat((lucroAfter - lucroBefore).toFixed(2));
+    const capital = parseFloat((valorPago - lucro).toFixed(2));
+    const comissao = parseFloat(((lucro * pct) / 100).toFixed(2));
+    const lucroEmpresa = parseFloat((lucro - comissao).toFixed(2));
+    return { capital, lucro, comissao, lucroEmpresa, comissaoPercentual: pct };
   }
 
   async findByInstallment(installmentId: number): Promise<unknown[]> {
@@ -264,12 +408,20 @@ export class PaymentsService {
       // 2. Deletar o pagamento
       await tx.payment.delete({ where: { id } });
 
-      // 3. Recalcular totalPago restante
+      // 3. Recalcular totalPago e descontos de saldo restantes
       const remaining = await tx.payment.aggregate({
         where: { installmentId: installment.id },
         _sum:  { valorPago: true },
       });
-      const novoTotalPago = Number(remaining._sum.valorPago ?? 0);
+      const remainingDesc = await tx.payment.aggregate({
+        where: { installmentId: installment.id, descontoTipo: 'saldo' },
+        _sum:  { desconto: true },
+      });
+      const novoTotalPago    = Number(remaining._sum.valorPago ?? 0);
+      const descontoRestante = Number(remainingDesc._sum.desconto ?? 0);
+
+      const installmentAmount = new Decimal(installment.installmentAmount.toString());
+      const efetivoRestante   = novoTotalPago + descontoRestante;
 
       // 4. Determinar novo status da parcela após estorno
       const hoje = new Date();
@@ -279,15 +431,15 @@ export class PaymentsService {
       const vencido = vencimento < hoje;
 
       let novoStatus: string;
-      if (novoTotalPago <= 0) {
+      if (efetivoRestante >= Number(installmentAmount)) {
+        novoStatus = 'pago';
+      } else if (novoTotalPago <= 0 && descontoRestante <= 0) {
         novoStatus = vencido ? 'atrasado' : 'pendente';
       } else {
-        // ainda há pagamento parcial
         novoStatus = vencido ? 'atrasado' : 'parcialmente_pago';
       }
 
-      const installmentAmount = new Decimal(installment.installmentAmount.toString());
-      const novoSaldo = installmentAmount.minus(novoTotalPago).clampedTo(0, Infinity);
+      const novoSaldo = installmentAmount.minus(efetivoRestante).clampedTo(0, Infinity);
 
       await tx.installment.update({
         where: { id: installment.id },

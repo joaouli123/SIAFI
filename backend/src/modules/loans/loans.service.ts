@@ -13,6 +13,7 @@ import { PortalService } from '../client-portal/portal.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { addMonthsSafe, calcularDataVencimento } from '../../common/utils/date.utils';
 import { CreateLoanDto } from './dto/create-loan.dto';
+import { UpdateLoanDto } from './dto/update-loan.dto';
 import { LoanFilterDto } from './dto/loan-filter.dto';
 import type { RequestUser } from '../auth/guards/supabase-auth.guard';
 
@@ -90,10 +91,35 @@ export class LoansService {
         },
         renegociacoes: { orderBy: { createdAt: 'desc' } },
         notifications: { orderBy: { createdAt: 'desc' }, take: 50 },
+        avalistas: {
+          orderBy: { id: 'asc' },
+          include: { cliente: { select: { id: true, nome: true, cpf: true } } },
+        },
+        comissaoPagamentos: { orderBy: { dataPagamento: 'desc' } },
       },
     });
 
     if (!loan) throw new NotFoundException(`Empréstimo ${id} não encontrado`);
+
+    // Resumo da comissão do consultor (realizada via capital-primeiro × paga)
+    const pct = Number(loan.comissaoPercentual ?? 0);
+    const realizada = loan.installments.reduce(
+      (s, i) => s + (Math.max(0, Number(i.totalPago) - Number(i.principalPayback)) * pct) / 100,
+      0,
+    );
+    const paga = loan.comissaoPagamentos.reduce((s, c) => s + Number(c.valor), 0);
+    const prevista = Number(loan.targetProfit) * (pct / 100);
+    const saldo = realizada - paga;
+    const r2 = (v: number) => parseFloat(v.toFixed(2));
+    (loan as Record<string, unknown>).comissaoResumo = {
+      percentual: pct,
+      prevista: r2(prevista),
+      realizada: r2(realizada),
+      paga: r2(paga),
+      saldo: r2(saldo),
+      status: pct <= 0 ? 'sem_comissao' : paga <= 0 ? 'nao_paga' : saldo <= 0.005 ? 'paga' : 'parcial',
+    };
+
     return role === 'caixa'
       ? this.sanitizeForCaixa(loan as Record<string, unknown>)
       : loan;
@@ -104,7 +130,7 @@ export class LoansService {
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
-    const [totalAtivos, totalQuitados, carteiraResult, recebidoMesResult] = await Promise.all([
+    const [totalAtivos, totalQuitados, carteiraResult, recebidoMesResult, descontoMesResult] = await Promise.all([
       this.prisma.loan.count({ where: { status: 'ativo' } }),
       this.prisma.loan.count({ where: { status: 'quitado' } }),
       this.prisma.installment.aggregate({
@@ -118,6 +144,10 @@ export class LoansService {
         },
         _sum: { valorPago: true },
       }),
+      this.prisma.payment.aggregate({
+        where: { dataPagamento: { gte: startOfMonth, lte: endOfMonth } },
+        _sum: { desconto: true },
+      }),
     ]);
 
     return {
@@ -128,6 +158,9 @@ export class LoansService {
       ).toFixed(2),
       valorRecebidoMes: new Decimal(
         (recebidoMesResult._sum?.valorPago ?? '0').toString(),
+      ).toFixed(2),
+      descontosMes: new Decimal(
+        (descontoMesResult._sum?.desconto ?? '0').toString(),
       ).toFixed(2),
     };
   }
@@ -158,6 +191,23 @@ export class LoansService {
     const ajusteInstallment = total.minus(baseInstallment.times(n));
     const ajustePrincipal   = principal.minus(basePrincipal.times(n));
 
+    // ── Datas de vencimento ───────────────────────────────────────────────────
+    // Se dataPrimeiroVencimento for informada, a parcela 1 vence nessa data e as
+    // seguintes a cada mês. Caso contrário, mantém o padrão (dataInicio + N meses).
+    // Parse como data LOCAL (ano, mês, dia) — evita o recuo de 1 dia que
+    // new Date('YYYY-MM-DD') causa (meia-noite UTC) e mantém a convenção do
+    // calcularDataVencimento, que também constrói datas locais.
+    const primeiroVenc = dto.dataPrimeiroVencimento
+      ? (() => {
+          const [y, m, d] = dto.dataPrimeiroVencimento!.split('-').map(Number);
+          return new Date(y, m - 1, d);
+        })()
+      : null;
+    const vencDaParcela = (i: number): Date =>
+      primeiroVenc
+        ? addMonthsSafe(primeiroVenc, i)
+        : calcularDataVencimento(new Date(dto.dataInicio), i + 1, dto.diaVencimento);
+
     // ── Geração das parcelas ────────────────────────────────────────────────
     const installments = Array.from({ length: n }, (_, i) => {
       const isUltima     = i === n - 1;
@@ -172,7 +222,7 @@ export class LoansService {
         installmentAmount: amt,
         principalPayback:  principalPay.toDecimalPlaces(2).toNumber(),
         netGain:           gain.toDecimalPlaces(2).toNumber(),
-        dataVencimento:    calcularDataVencimento(new Date(dto.dataInicio), i + 1, dto.diaVencimento),
+        dataVencimento:    vencDaParcela(i),
         status:            'pendente' as const,
         totalPago:         0,
         saldoDevedor:      amt,
@@ -198,10 +248,33 @@ export class LoansService {
           diaVencimento:           dto.diaVencimento ?? null,
           multaPercentual:         dto.multaPercentual ?? null,
           moraDiariaPercentual:    dto.moraDiariaPercentual ?? null,
+          comissaoPercentual:      dto.comissaoPercentual ?? null,
+          descontoQuitacaoPercentual: dto.descontoQuitacaoPercentual ?? null,
           diasAntecedenciaCobranca: dto.diasAntecedenciaCobranca ?? 10,
           cobrarWhatsapp:          dto.cobrarWhatsapp ?? true,
           cobrarEmail:             dto.cobrarEmail ?? true,
           cobrarPortal:            dto.cobrarPortal ?? true,
+          referencia1Nome:         dto.referencia1Nome ?? null,
+          referencia1Telefone:     dto.referencia1Telefone ?? null,
+          referencia1Vinculo:      dto.referencia1Vinculo ?? null,
+          referencia2Nome:         dto.referencia2Nome ?? null,
+          referencia2Telefone:     dto.referencia2Telefone ?? null,
+          referencia2Vinculo:      dto.referencia2Vinculo ?? null,
+          avalistas: dto.avalistas?.length
+            ? {
+                create: dto.avalistas
+                  .filter((a) => a.clienteId !== dto.clientId) // cliente não pode ser avalista de si mesmo
+                  .map((a) => ({
+                  clienteId:  a.clienteId ?? null,
+                  nome:       a.nome,
+                  cpf:        a.cpf ?? null,
+                  telefone:   a.telefone ?? null,
+                  email:      a.email ?? null,
+                  endereco:   a.endereco ?? null,
+                  parentesco: a.parentesco ?? null,
+                })),
+              }
+            : undefined,
         },
       });
 
@@ -234,6 +307,280 @@ export class LoansService {
     });
 
     return this.findById(created.id);
+  }
+
+  // ─── Edição de contrato ───────────────────────────────────────────────────────
+  // Campos financeiros disparam regeneração das parcelas pendentes/atrasadas.
+  // Parcelas pagas, parcialmente pagas ou canceladas são SEMPRE preservadas.
+  async update(id: number, dto: UpdateLoanDto, ctx: RequestContext = {}): Promise<unknown> {
+    const loan = await this.prisma.loan.findUnique({
+      where: { id },
+      include: { installments: { orderBy: { numero: 'asc' } } },
+    });
+    if (!loan) throw new NotFoundException(`Empréstimo ${id} não encontrado`);
+    if (loan.status === 'cancelado') {
+      throw new ConflictException('Empréstimo cancelado não pode ser editado');
+    }
+
+    const newPrincipal  = dto.principalAmount != null ? new Decimal(dto.principalAmount) : new Decimal(loan.principalAmount.toString());
+    const newProfit     = dto.targetProfit   != null ? new Decimal(dto.targetProfit)    : new Decimal(loan.targetProfit.toString());
+    const newN          = dto.numeroParcelas ?? loan.numeroParcelas;
+    const newDataInicio = dto.dataInicio ? new Date(dto.dataInicio) : loan.dataInicio;
+    const newDiaVenc    = dto.diaVencimento !== undefined ? dto.diaVencimento : loan.diaVencimento;
+    // Data do 1º vencimento (parse local, como no create); quando informada, redefine
+    // o cronograma das parcelas pendentes (1ª pendente nessa data, demais mensais).
+    const primeiroVenc = dto.dataPrimeiroVencimento
+      ? (() => { const [y, m, d] = dto.dataPrimeiroVencimento!.split('-').map(Number); return new Date(y, m - 1, d); })()
+      : null;
+
+    if (newPrincipal.lte(0)) throw new BadRequestException('principalAmount deve ser positivo.');
+    if (newProfit.lt(0))     throw new BadRequestException('targetProfit não pode ser negativo.');
+
+    const newTotal = newPrincipal.plus(newProfit);
+
+    const cronogramaMudou =
+      (dto.principalAmount != null && !newPrincipal.equals(loan.principalAmount.toString())) ||
+      (dto.targetProfit   != null && !newProfit.equals(loan.targetProfit.toString())) ||
+      (dto.numeroParcelas != null && newN !== loan.numeroParcelas) ||
+      (dto.dataInicio     != null && newDataInicio.getTime() !== loan.dataInicio.getTime()) ||
+      (dto.diaVencimento  !== undefined && newDiaVenc !== loan.diaVencimento) ||
+      (primeiroVenc != null);
+
+    // Parcelas preservadas (histórico) vs. regeneráveis (sem pagamento)
+    const travadas = loan.installments.filter(
+      (i) => i.status === 'pago' || i.status === 'parcialmente_pago' || i.status === 'cancelado' || Number(i.totalPago) > 0,
+    );
+    const regeneraveis = loan.installments.filter(
+      (i) => (i.status === 'pendente' || i.status === 'atrasado') && Number(i.totalPago) === 0,
+    );
+
+    let novasParcelas: Array<Record<string, unknown>> = [];
+    if (cronogramaMudou) {
+      const lockedCount  = travadas.length;
+      const maxTravada   = travadas.length ? Math.max(...travadas.map((t) => t.numero)) : 0;
+      const regenCount   = newN - lockedCount;
+
+      if (newN < maxTravada) {
+        throw new BadRequestException(`numeroParcelas (${newN}) é menor que a posição de uma parcela já paga (#${maxTravada}).`);
+      }
+      if (regenCount < 0) {
+        throw new BadRequestException(`numeroParcelas (${newN}) é menor que as ${lockedCount} parcelas já pagas/canceladas.`);
+      }
+
+      const somaInstLocked  = travadas.reduce((acc, i) => acc.plus(i.installmentAmount.toString()), new Decimal(0));
+      const somaPrincLocked = travadas.reduce((acc, i) => acc.plus(i.principalPayback.toString()), new Decimal(0));
+      const remainingTotal  = newTotal.minus(somaInstLocked);
+      const remainingPrinc  = newPrincipal.minus(somaPrincLocked);
+
+      if (regenCount === 0) {
+        if (remainingTotal.greaterThan(0)) {
+          throw new BadRequestException('Não há parcelas pendentes para acomodar o saldo restante. Aumente o número de parcelas.');
+        }
+      } else {
+        if (remainingTotal.lt(0) || remainingPrinc.lt(0)) {
+          throw new BadRequestException('Os novos valores são menores que o total já comprometido em parcelas pagas deste contrato.');
+        }
+
+        // Slots livres = números em [1..newN] não usados por parcelas preservadas
+        const usados = new Set(travadas.map((t) => t.numero));
+        const slots: number[] = [];
+        for (let num = 1; num <= newN; num++) if (!usados.has(num)) slots.push(num);
+
+        const baseInst    = remainingTotal.dividedBy(regenCount).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+        const basePrinc   = remainingPrinc.dividedBy(regenCount).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+        const ajusteInst  = remainingTotal.minus(baseInst.times(regenCount));
+        const ajustePrinc = remainingPrinc.minus(basePrinc.times(regenCount));
+
+        novasParcelas = slots.map((numero, k) => {
+          const isUltima     = k === slots.length - 1;
+          const installAmt   = isUltima ? baseInst.plus(ajusteInst)   : baseInst;
+          const principalPay = isUltima ? basePrinc.plus(ajustePrinc) : basePrinc;
+          const gain         = installAmt.minus(principalPay);
+          const amt          = installAmt.toDecimalPlaces(2).toNumber();
+          return {
+            loanId:            id,
+            numero,
+            installmentAmount: amt,
+            principalPayback:  principalPay.toDecimalPlaces(2).toNumber(),
+            netGain:           gain.toDecimalPlaces(2).toNumber(),
+            dataVencimento:    primeiroVenc ? addMonthsSafe(primeiroVenc, k) : calcularDataVencimento(newDataInicio, numero, newDiaVenc),
+            status:            'pendente' as const,
+            totalPago:         0,
+            saldoDevedor:      amt,
+            valorMulta:        0,
+            valorMora:         0,
+          };
+        });
+      }
+    }
+
+    const snapshotAntes = {
+      principalAmount: loan.principalAmount.toString(),
+      targetProfit:    loan.targetProfit.toString(),
+      totalReceivable: loan.totalReceivable.toString(),
+      numeroParcelas:  loan.numeroParcelas,
+      dataInicio:      loan.dataInicio.toISOString(),
+      status:          loan.status,
+    };
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.loan.update({
+        where: { id },
+        data: {
+          principalAmount:      newPrincipal.toDecimalPlaces(2).toNumber(),
+          targetProfit:         newProfit.toDecimalPlaces(2).toNumber(),
+          totalReceivable:      newTotal.toDecimalPlaces(2).toNumber(),
+          numeroParcelas:       newN,
+          dataInicio:           newDataInicio,
+          diaVencimento:        newDiaVenc ?? null,
+          metodoPagamento:      dto.metodoPagamento ?? loan.metodoPagamento,
+          observacoes:          dto.observacoes !== undefined ? dto.observacoes : loan.observacoes,
+          multaPercentual:      dto.multaPercentual !== undefined ? dto.multaPercentual : loan.multaPercentual,
+          moraDiariaPercentual: dto.moraDiariaPercentual !== undefined ? dto.moraDiariaPercentual : loan.moraDiariaPercentual,
+          comissaoPercentual:   dto.comissaoPercentual !== undefined ? dto.comissaoPercentual : loan.comissaoPercentual,
+          descontoQuitacaoPercentual: dto.descontoQuitacaoPercentual !== undefined ? dto.descontoQuitacaoPercentual : loan.descontoQuitacaoPercentual,
+          diasAntecedenciaCobranca: dto.diasAntecedenciaCobranca ?? loan.diasAntecedenciaCobranca,
+          cobrarWhatsapp:       dto.cobrarWhatsapp ?? loan.cobrarWhatsapp,
+          cobrarEmail:          dto.cobrarEmail ?? loan.cobrarEmail,
+          cobrarPortal:         dto.cobrarPortal ?? loan.cobrarPortal,
+          referencia1Nome:      dto.referencia1Nome     !== undefined ? dto.referencia1Nome     : loan.referencia1Nome,
+          referencia1Telefone:  dto.referencia1Telefone !== undefined ? dto.referencia1Telefone : loan.referencia1Telefone,
+          referencia1Vinculo:   dto.referencia1Vinculo  !== undefined ? dto.referencia1Vinculo  : loan.referencia1Vinculo,
+          referencia2Nome:      dto.referencia2Nome     !== undefined ? dto.referencia2Nome     : loan.referencia2Nome,
+          referencia2Telefone:  dto.referencia2Telefone !== undefined ? dto.referencia2Telefone : loan.referencia2Telefone,
+          referencia2Vinculo:   dto.referencia2Vinculo  !== undefined ? dto.referencia2Vinculo  : loan.referencia2Vinculo,
+        },
+      });
+
+      if (cronogramaMudou) {
+        await tx.installment.deleteMany({
+          where: { loanId: id, id: { in: regeneraveis.map((r) => r.id) } },
+        });
+        if (novasParcelas.length) {
+          await tx.installment.createMany({ data: novasParcelas as Prisma.InstallmentCreateManyInput[] });
+        }
+      }
+
+      if (dto.avalistas !== undefined) {
+        await tx.avalista.deleteMany({ where: { loanId: id } });
+        if (dto.avalistas.length) {
+          await tx.avalista.createMany({
+            data: dto.avalistas
+              .filter((a) => a.clienteId !== loan.clientId) // cliente não pode ser avalista de si mesmo
+              .map((a) => ({
+              loanId:     id,
+              clienteId:  a.clienteId ?? null,
+              nome:       a.nome,
+              cpf:        a.cpf ?? null,
+              telefone:   a.telefone ?? null,
+              email:      a.email ?? null,
+              endereco:   a.endereco ?? null,
+              parentesco: a.parentesco ?? null,
+            })),
+          });
+        }
+      }
+
+      await this.writeAuditLog(tx, {
+        ...ctx,
+        acao:       'LOAN_UPDATED',
+        entidade:   'Loan',
+        entidadeId: id,
+        dadosAntes:  snapshotAntes,
+        dadosDepois: {
+          principalAmount:      newPrincipal.toString(),
+          targetProfit:         newProfit.toString(),
+          totalReceivable:      newTotal.toString(),
+          numeroParcelas:       newN,
+          cronogramaRegenerado: cronogramaMudou,
+          parcelasPreservadas:  travadas.length,
+          parcelasRegeneradas:  novasParcelas.length,
+        },
+      });
+    });
+
+    return this.findById(id);
+  }
+
+  // ─── Comissão do consultor: pagamento e estorno ──────────────────────────────
+
+  async registrarComissao(
+    loanId: number,
+    dto: { valor: number; dataPagamento: string; observacao?: string },
+    ctx: RequestContext = {},
+  ): Promise<unknown> {
+    const loan = await this.prisma.loan.findUnique({
+      where: { id: loanId },
+      include: { client: { select: { nome: true } } },
+    });
+    if (!loan) throw new NotFoundException(`Empréstimo ${loanId} não encontrado`);
+
+    const valor = new Decimal(dto.valor);
+    if (valor.lte(0)) throw new BadRequestException('Valor da comissão deve ser positivo.');
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.comissaoPagamento.create({
+        data: {
+          loanId,
+          consultorId:   loan.consultorId ?? null,
+          valor:         valor.toDecimalPlaces(2).toNumber(),
+          dataPagamento: new Date(dto.dataPagamento),
+          observacao:    dto.observacao ?? null,
+          registradoPor: ctx.userId ?? null,
+        },
+      });
+      await tx.transaction.create({
+        data: {
+          tipo:      'saida',
+          valor:     valor.toDecimalPlaces(2).toNumber(),
+          descricao: `Comissão consultor — Contrato #${loanId} · ${loan.client.nome}${dto.observacao ? ` — ${dto.observacao}` : ''}`,
+          categoria: 'Comissão Consultor',
+          data:      new Date(dto.dataPagamento),
+          userId:    ctx.userId ?? null,
+        },
+      });
+      await this.writeAuditLog(tx, {
+        ...ctx,
+        acao:        'COMISSAO_PAGA',
+        entidade:    'Loan',
+        entidadeId:  loanId,
+        dadosAntes:  null,
+        dadosDepois: { valor: valor.toString(), consultorId: loan.consultorId, dataPagamento: dto.dataPagamento },
+      });
+    });
+
+    return this.findById(loanId);
+  }
+
+  async estornarComissao(loanId: number, pagamentoId: number, ctx: RequestContext = {}): Promise<unknown> {
+    const pag = await this.prisma.comissaoPagamento.findUnique({ where: { id: pagamentoId } });
+    if (!pag || pag.loanId !== loanId) {
+      throw new NotFoundException('Pagamento de comissão não encontrado para este contrato.');
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.comissaoPagamento.delete({ where: { id: pagamentoId } });
+      await tx.transaction.create({
+        data: {
+          tipo:      'entrada',
+          valor:     pag.valor,
+          descricao: `Estorno comissão consultor — Contrato #${loanId}`,
+          categoria: 'Estorno',
+          data:      new Date(),
+          userId:    ctx.userId ?? null,
+        },
+      });
+      await this.writeAuditLog(tx, {
+        ...ctx,
+        acao:        'COMISSAO_ESTORNADA',
+        entidade:    'Loan',
+        entidadeId:  loanId,
+        dadosAntes:  { pagamentoId, valor: pag.valor.toString() },
+        dadosDepois: { estornado: true },
+      });
+    });
+
+    return this.findById(loanId);
   }
 
   async cancel(id: number, ctx: RequestContext = {}): Promise<unknown> {
@@ -464,7 +811,7 @@ export class LoansService {
   // from loans and installments returned to users with role 'caixa'.
   private sanitizeForCaixa(loan: Record<string, unknown>): Record<string, unknown> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { targetProfit, principalAmount, ...loanRest } = loan as Record<string, unknown>;
+    const { targetProfit, principalAmount, comissaoResumo, comissaoPagamentos, comissaoPercentual, ...loanRest } = loan as Record<string, unknown>;
     if (Array.isArray(loanRest['installments'])) {
       loanRest['installments'] = (loanRest['installments'] as Record<string, unknown>[]).map(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

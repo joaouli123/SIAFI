@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -23,6 +24,8 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { LoansService } from './loans.service';
 import { CreateLoanDto } from './dto/create-loan.dto';
+import { UpdateLoanDto } from './dto/update-loan.dto';
+import { RegistrarComissaoDto } from './dto/registrar-comissao.dto';
 import { LoanFilterDto } from './dto/loan-filter.dto';
 import type { RequestUser } from '../auth/guards/supabase-auth.guard';
 
@@ -80,6 +83,21 @@ export class LoansController {
     });
   }
 
+  @Patch(':id')
+  @Roles('admin', 'financeiro')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateLoanDto,
+    @CurrentUser() user: AuthUser,
+    @Req() req: Request,
+  ) {
+    return this.loansService.update(id, dto, {
+      userId:    user?.id,
+      ip:        req.ip,
+      userAgent: req.headers['user-agent'],
+    });
+  }
+
   @Patch(':id/liberar-capital')
   @Roles('admin', 'financeiro', 'caixa')
   liberarCapital(
@@ -92,6 +110,32 @@ export class LoansController {
       userId:    user?.id,
       ip:        req.ip,
       userAgent: req.headers['user-agent'],
+    });
+  }
+
+  @Post(':id/comissao')
+  @Roles('admin', 'financeiro')
+  registrarComissao(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: RegistrarComissaoDto,
+    @CurrentUser() user: AuthUser,
+    @Req() req: Request,
+  ) {
+    return this.loansService.registrarComissao(id, dto, {
+      userId: user?.id, ip: req.ip, userAgent: req.headers['user-agent'],
+    });
+  }
+
+  @Delete(':id/comissao/:pagamentoId')
+  @Roles('admin', 'financeiro')
+  estornarComissao(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('pagamentoId', ParseIntPipe) pagamentoId: number,
+    @CurrentUser() user: AuthUser,
+    @Req() req: Request,
+  ) {
+    return this.loansService.estornarComissao(id, pagamentoId, {
+      userId: user?.id, ip: req.ip, userAgent: req.headers['user-agent'],
     });
   }
 

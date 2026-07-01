@@ -299,10 +299,11 @@ export class ConsultorService {
           id: true,
           principalAmount: true,
           totalReceivable: true,
+          comissaoPercentual: true,
           status: true,
           dataInicio: true,
           installments: {
-            select: { status: true, installmentAmount: true, totalPago: true },
+            select: { status: true, installmentAmount: true, totalPago: true, principalPayback: true },
           },
         },
       }),
@@ -331,11 +332,19 @@ export class ConsultorService {
     let totalAReceber = 0;
     let totalRecebido = 0;
     let totalEmAtraso = 0;
+    let comissaoPrevista = 0;  // % × lucro total dos contratos da carteira
+    let comissaoRealizada = 0; // % × lucro já recebido (capital primeiro)
 
     for (const loan of loans) {
       totalInvestido += Number(loan.principalAmount);
+      const pct = Number(loan.comissaoPercentual ?? 0);
+      const lucroContrato = Number(loan.totalReceivable) - Number(loan.principalAmount);
+      comissaoPrevista += (lucroContrato * pct) / 100;
       for (const inst of loan.installments) {
         const saldo = Number(inst.installmentAmount) - Number(inst.totalPago);
+        // Lucro realizado da parcela (capital primeiro): totalPago além do principal
+        const lucroRealizado = Math.max(0, Number(inst.totalPago) - Number(inst.principalPayback));
+        comissaoRealizada += (lucroRealizado * pct) / 100;
         if (inst.status === 'pendente' || inst.status === 'parcialmente_pago') {
           totalAReceber += saldo;
         } else if (inst.status === 'atrasado') {
@@ -372,6 +381,8 @@ export class ConsultorService {
         totalAReceber,
         totalRecebido,
         totalEmAtraso,
+        comissaoPrevista: parseFloat(comissaoPrevista.toFixed(2)),
+        comissaoRealizada: parseFloat(comissaoRealizada.toFixed(2)),
         inadimplentes: loans.filter(l => l.status === 'inadimplente').length,
       },
       faturamentoMensal: meses,

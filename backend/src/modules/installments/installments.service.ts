@@ -1,9 +1,67 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
+import { InstallmentFilterDto } from './dto/installment-filter.dto';
 
 @Injectable()
 export class InstallmentsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // Listagem geral de parcelas com filtros e paginação (tela /parcelas → "Todas").
+  async findAll(
+    filters: InstallmentFilterDto,
+    consultorId?: number,
+  ): Promise<PaginatedResponse<unknown>> {
+    const { status, clientId, loanId, search, startDate, endDate, aberto, page, limit } = filters;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.InstallmentWhereInput = {};
+    if (status) where.status = status as Prisma.InstallmentWhereInput['status'];
+    else if (aberto === 'true') where.status = { notIn: ['pago', 'cancelado'] };
+    if (loanId) where.loanId = loanId;
+
+    if (startDate || endDate) {
+      where.dataVencimento = {};
+      // Início do dia / fim do dia em horário local (datas são construídas como locais)
+      if (startDate) (where.dataVencimento as Prisma.DateTimeFilter).gte = new Date(`${startDate}T00:00:00`);
+      if (endDate) (where.dataVencimento as Prisma.DateTimeFilter).lte = new Date(`${endDate}T23:59:59.999`);
+    }
+
+    const loanWhere: Prisma.LoanWhereInput = {};
+    if (clientId) loanWhere.clientId = clientId;
+    if (consultorId) loanWhere.consultorId = consultorId;
+    if (search) {
+      loanWhere.client = {
+        OR: [
+          { nome: { contains: search, mode: 'insensitive' } },
+          { cpf: { contains: search } },
+        ],
+      };
+    }
+    if (Object.keys(loanWhere).length) where.loan = loanWhere;
+
+    const [data, total] = await Promise.all([
+      this.prisma.installment.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: [{ dataVencimento: 'asc' }, { numero: 'asc' }],
+        include: {
+          loan: {
+            select: {
+              id: true,
+              status: true,
+              client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true } },
+            },
+          },
+        },
+      }),
+      this.prisma.installment.count({ where }),
+    ]);
+
+    return paginate(data, total, page, limit);
+  }
 
   async findByLoan(loanId: number): Promise<unknown[]> {
     return this.prisma.installment.findMany({
@@ -54,7 +112,7 @@ export class InstallmentsService {
       include: {
         loan: {
           include: {
-            client: { select: { id: true, nome: true, whatsapp: true } },
+            client: { select: { id: true, nome: true, cpf: true, whatsapp: true } },
           },
         },
       },
@@ -82,68 +140,101 @@ export class InstallmentsService {
       include: {
         loan: {
           include: {
-            client: { select: { id: true, nome: true, nomeSocial: true, whatsapp: true } },
+            client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true } },
           },
         },
       },
     });
   }
 
-  // Calcula e persiste valorMulta/valorMora em todas as parcelas em atraso.
-  // Executado diariamente pelo cron. Multa: aplicada uma vez ao atrasar.
-  // Mora: recalculada a cada execução (proporcional aos dias de atraso).
-  async markOverdue(): Promise<{ count: number }> {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  // ─── Encargos: fórmula ÚNICA do sistema ───────────────────────────────────────
+  // Multa: aplicada uma única vez sobre o valor da parcela (multaPercentual %).
+  // Mora:  diária sobre o saldo devedor (moraDiariaPercentual % ao dia × dias).
+  // Fallback por contrato → settings 'financeiro.multa_atraso_percentual' /
+  // 'financeiro.mora_dia_percentual'. Idempotente: o mesmo cálculo é usado no
+  // cron (atualizarEncargos), no markOverdue e no getEncargos.
 
-    const atrasadas = await this.prisma.installment.findMany({
+  private async getTaxasDefault(): Promise<{ multaDefault: number; moraDiaDefault: number }> {
+    const [multaS, moraS] = await Promise.all([
+      this.prisma.siteSetting.findUnique({ where: { chave: 'financeiro.multa_atraso_percentual' } }),
+      this.prisma.siteSetting.findUnique({ where: { chave: 'financeiro.mora_dia_percentual' } }),
+    ]);
+    return {
+      multaDefault: multaS?.valor ? parseFloat(multaS.valor) : 2.0,
+      moraDiaDefault: moraS?.valor ? parseFloat(moraS.valor) : 0.0333,
+    };
+  }
+
+  private calcEncargos(
+    inst: {
+      installmentAmount: unknown;
+      totalPago: unknown;
+      dataVencimento: Date;
+      loan: { multaPercentual: unknown; moraDiariaPercentual: unknown };
+    },
+    multaDefault: number,
+    moraDiaDefault: number,
+    hoje: Date,
+  ): { saldo: number; valorMulta: number; valorMora: number; totalDevido: number; diasAtraso: number } {
+    const venc = new Date(inst.dataVencimento);
+    venc.setHours(0, 0, 0, 0);
+
+    const saldo = Math.max(0, Number(inst.installmentAmount) - Number(inst.totalPago));
+    const diasAtraso =
+      saldo > 0
+        ? Math.max(0, Math.floor((hoje.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24)))
+        : 0;
+
+    const multaPerc = inst.loan.multaPercentual != null ? Number(inst.loan.multaPercentual) : multaDefault;
+    const moraDiaPerc = inst.loan.moraDiariaPercentual != null ? Number(inst.loan.moraDiariaPercentual) : moraDiaDefault;
+
+    const valorMulta = diasAtraso >= 1 ? parseFloat(((Number(inst.installmentAmount) * multaPerc) / 100).toFixed(2)) : 0;
+    const valorMora = diasAtraso >= 1 ? parseFloat((saldo * (moraDiaPerc / 100) * diasAtraso).toFixed(2)) : 0;
+    const totalDevido = parseFloat((saldo + valorMulta + valorMora).toFixed(2));
+
+    return { saldo, valorMulta, valorMora, totalDevido, diasAtraso };
+  }
+
+  // Marca parcelas vencidas como 'atrasado' e recalcula encargos (idempotente).
+  async markOverdue(): Promise<{ count: number }> {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
+
+    const vencidas = await this.prisma.installment.findMany({
       where: {
-        status: { in: ['pendente', 'atrasado'] },
-        dataVencimento: { lt: today },
+        status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] },
+        dataVencimento: { lt: hoje },
       },
       select: {
         id: true,
         status: true,
         installmentAmount: true,
         totalPago: true,
-        valorMulta: true,
         dataVencimento: true,
-        loan: { select: { taxaMulta: true, taxaMora: true } },
+        loan: { select: { multaPercentual: true, moraDiariaPercentual: true } },
       },
     });
 
-    for (const inst of atrasadas) {
-      const venc = new Date(inst.dataVencimento);
-      venc.setHours(0, 0, 0, 0);
-      const diasAtraso = Math.floor(
-        (today.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24),
-      );
-
-      const saldo = Math.max(0, Number(inst.installmentAmount) - Number(inst.totalPago));
-      const taxaMulta = Number(inst.loan.taxaMulta) / 100;
-      const taxaMora = Number(inst.loan.taxaMora) / 100;
-
-      // Multa: one-time ao entrar em atraso (mantém valor se já foi calculada)
-      const valorMulta =
-        inst.status === 'pendente'
-          ? parseFloat((saldo * taxaMulta).toFixed(2))
-          : Number(inst.valorMulta);
-
-      // Mora: cresce diariamente (% ao mês proporcional aos dias)
-      const valorMora = parseFloat(
-        ((saldo * taxaMora * diasAtraso) / 30).toFixed(2),
-      );
-
+    for (const inst of vencidas) {
+      const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
       await this.prisma.installment.update({
         where: { id: inst.id },
-        data: { status: 'atrasado', valorMulta, valorMora },
+        data: {
+          status: inst.status === 'pendente' ? 'atrasado' : inst.status,
+          multaAplicada: enc.valorMulta,
+          moraAcumulada: enc.valorMora,
+          valorMulta: enc.valorMulta,
+          valorMora: enc.valorMora,
+          valorComEncargos: enc.totalDevido,
+        },
       });
     }
 
-    return { count: atrasadas.length };
+    return { count: vencidas.length };
   }
 
-  // Retorna encargos recalculados em tempo real para exibição ao operador.
+  // Retorna encargos recalculados em tempo real para exibição/baixa ao operador.
   async getEncargos(id: number): Promise<{
     valor: number;
     totalPago: number;
@@ -157,11 +248,8 @@ export class InstallmentsService {
       select: {
         installmentAmount: true,
         totalPago: true,
-        valorMulta: true,
-        valorMora: true,
         dataVencimento: true,
-        status: true,
-        loan: { select: { taxaMulta: true, taxaMora: true } },
+        loan: { select: { multaPercentual: true, moraDiariaPercentual: true } },
       },
     });
 
@@ -169,29 +257,16 @@ export class InstallmentsService {
 
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
-    const venc = new Date(inst.dataVencimento);
-    venc.setHours(0, 0, 0, 0);
-
-    const diasAtraso = inst.status === 'atrasado'
-      ? Math.max(0, Math.floor((hoje.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24)))
-      : 0;
-
-    const saldo = Math.max(0, Number(inst.installmentAmount) - Number(inst.totalPago));
-    const taxaMora = Number(inst.loan.taxaMora) / 100;
-
-    // Usa multa já armazenada; recalcula mora em tempo real
-    const valorMulta = Number(inst.valorMulta);
-    const valorMora = diasAtraso > 0
-      ? parseFloat(((saldo * taxaMora * diasAtraso) / 30).toFixed(2))
-      : 0;
+    const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
+    const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
 
     return {
       valor: Number(inst.installmentAmount),
       totalPago: Number(inst.totalPago),
-      valorMulta,
-      valorMora,
-      totalDevido: Number(inst.installmentAmount) + valorMulta + valorMora,
-      diasAtraso,
+      valorMulta: enc.valorMulta,
+      valorMora: enc.valorMora,
+      totalDevido: enc.totalDevido,
+      diasAtraso: enc.diasAtraso,
     };
   }
 }

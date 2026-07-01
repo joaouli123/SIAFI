@@ -25,6 +25,10 @@ const schema = z.object({
   valorPago:     z.coerce.number().min(0.01, 'Valor deve ser maior que zero'),
   dataPagamento: z.string().min(1, 'Data obrigatória'),
   metodoPagamento: z.string().min(1, 'Método obrigatório'),
+  contaDestino: z.string().optional(),
+  desconto: z.coerce.number().min(0).optional(),
+  descontoTipo: z.enum(['saldo', 'encargos']).optional(),
+  descontoMotivo: z.string().optional(),
   observacao: z.string().optional(),
 })
 type FormData = z.infer<typeof schema>
@@ -374,7 +378,7 @@ export default function NovoPagamentoPage() {
                               </span>
                             )}
                           </p>
-                          <p className="text-xs text-muted-foreground">Venc. {formatDate(i.dataVencimento)}</p>
+                          <p className={cn('text-xs font-medium', diff > 0 ? 'text-destructive' : diff === 0 ? 'text-amber-600' : 'text-muted-foreground')}>Venc. {formatDate(i.dataVencimento)}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <span className={cn('text-sm font-bold', diff > 0 ? 'text-destructive' : '')}>
@@ -473,6 +477,34 @@ export default function NovoPagamentoPage() {
                     ))}
                   </Select>
                 </div>
+                <div className="space-y-1.5">
+                  <Label>Conta / Detalhes</Label>
+                  <Input {...form.register('contaDestino')} placeholder="ex: Itaú PJ, dinheiro em caixa" />
+                  <p className="text-[10px] text-muted-foreground">Conta/banco que recebeu o valor</p>
+                </div>
+
+                {/* Desconto (opcional) */}
+                <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 rounded-lg border border-dashed border-amber-300 dark:border-amber-900 p-3 bg-amber-50/40 dark:bg-amber-950/10">
+                  <div className="space-y-1.5">
+                    <Label>Desconto (R$)</Label>
+                    <Input type="number" step="0.01" min="0" {...form.register('desconto')} placeholder="0,00" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Tipo do desconto</Label>
+                    <Select {...form.register('descontoTipo')}>
+                      <option value="saldo">Sobre o saldo (abate a parcela)</option>
+                      <option value="encargos">Sobre encargos (multa/mora)</option>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Motivo do desconto</Label>
+                    <Input {...form.register('descontoMotivo')} placeholder="ex: negociação à vista" />
+                  </div>
+                  <p className="md:col-span-3 text-[10px] text-muted-foreground">
+                    Desconto sobre saldo permite quitar a parcela recebendo menos (reduz lucro e comissão). Sobre encargos apenas perdoa multa/mora.
+                  </p>
+                </div>
+
                 <div className="md:col-span-2 space-y-1.5">
                   <Label>Observação</Label>
                   <Textarea

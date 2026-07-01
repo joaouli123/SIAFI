@@ -302,7 +302,7 @@ export class PdfService {
 
     const clausulas = [
       `1. O DEVEDOR se compromete a pagar as parcelas nas datas de vencimento indicadas.`,
-      `2. O atraso sujeita o DEVEDOR a multa de ${Number(loan.taxaMulta).toFixed(1)}% sobre o saldo devedor, acrescido de mora de ${Number(loan.taxaMora).toFixed(1)}% ao mês, proporcional aos dias de atraso.`,
+      `2. O atraso sujeita o DEVEDOR a multa de ${Number(loan.multaPercentual ?? 2).toFixed(2)}% sobre o valor da parcela, acrescida de mora de ${Number(loan.moraDiariaPercentual ?? 0.0333).toFixed(4)}% ao dia sobre o saldo devedor, proporcional aos dias de atraso.`,
       `3. O CREDOR poderá exigir antecipação do vencimento das demais parcelas em caso de inadimplência superior a 30 dias.`,
       `4. Este contrato é celebrado em conformidade com o Código Civil Brasileiro e demais legislações aplicáveis.`,
       `5. As partes elegem o foro da comarca do CREDOR para dirimir quaisquer controvérsias.`,
@@ -467,6 +467,9 @@ export class PdfService {
           <div class="campo-valor">${fmtDate(payment.dataPagamento)}</div></div>
         <div class="campo"><div class="campo-label">Método</div>
           <div class="campo-valor">${metodoLabel[payment.metodoPagamento] ?? payment.metodoPagamento}</div></div>
+        ${Number(payment.desconto) > 0 ? `
+        <div class="campo"><div class="campo-label">Desconto concedido (${payment.descontoTipo === 'encargos' ? 'encargos' : 'saldo'})</div>
+          <div class="campo-valor">${fmt(Number(payment.desconto))}</div></div>` : ''}
         <div class="campo"><div class="campo-label">Autenticidade</div>
           <div class="campo-valor" style="font-family:monospace;font-size:9pt">${hashCurto}...</div></div>
       </div>
@@ -900,8 +903,8 @@ export class PdfService {
     this._field(doc, 'Valor da Parcela', fmt(Number(valorParcela)));
     this._field(doc, 'Total a Pagar', fmt(totalPagar));
     if (loan.taxaJuros != null) this._field(doc, 'Taxa de Juros', `${Number(loan.taxaJuros).toFixed(2)}% a.m.`);
-    this._field(doc, 'Multa por Atraso', `${Number(loan.taxaMulta).toFixed(1)}%`);
-    this._field(doc, 'Mora Mensal', `${Number(loan.taxaMora).toFixed(1)}% ao mês`);
+    this._field(doc, 'Multa por Atraso', `${Number(loan.multaPercentual ?? 2).toFixed(2)}% sobre a parcela`);
+    this._field(doc, 'Mora Diária', `${Number(loan.moraDiariaPercentual ?? 0.0333).toFixed(4)}% ao dia`);
     if (loan.metodoPagamento) this._field(doc, 'Método de Pagamento', loan.metodoPagamento);
     if (loan.observacoes) this._field(doc, 'Observações', loan.observacoes);
 
@@ -943,7 +946,7 @@ export class PdfService {
     doc.fontSize(9).fillColor('#374151').font('Helvetica');
     const clausulas = [
       `1. O DEVEDOR se compromete a pagar as parcelas nas datas de vencimento indicadas.`,
-      `2. O atraso sujeita o DEVEDOR a multa de ${Number(loan.taxaMulta).toFixed(1)}% sobre o saldo devedor, acrescido de mora de ${Number(loan.taxaMora).toFixed(1)}% ao mês.`,
+      `2. O atraso sujeita o DEVEDOR a multa de ${Number(loan.multaPercentual ?? 2).toFixed(2)}% sobre o valor da parcela, acrescida de mora de ${Number(loan.moraDiariaPercentual ?? 0.0333).toFixed(4)}% ao dia sobre o saldo devedor.`,
       `3. O CREDOR poderá exigir antecipação do vencimento em caso de inadimplência superior a 30 dias.`,
       `4. Este contrato é celebrado em conformidade com o Código Civil Brasileiro.`,
       `5. As partes elegem o foro da comarca do CREDOR para dirimir quaisquer controvérsias.`,

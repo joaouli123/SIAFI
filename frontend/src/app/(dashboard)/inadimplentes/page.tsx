@@ -82,8 +82,8 @@ export default function InadimplentesPage() {
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Atraso</th>
                       <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
                       <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
                     </tr>
@@ -91,14 +91,45 @@ export default function InadimplentesPage() {
                   <tbody>
                     {loans.map((loan: Loan) => {
                       const saldo = calcSaldoDevedor(loan.installments ?? [])
+                      // Atraso: parcela em aberto vencida mais antiga
+                      const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
+                      const vencidas = (loan.installments ?? []).filter((i) => {
+                        if (i.status === 'pago' || i.status === 'cancelado') return false
+                        if (Number(i.valor) - Number(i.totalPago) <= 0) return false
+                        const v = new Date(i.dataVencimento); v.setHours(0, 0, 0, 0)
+                        return v < hoje
+                      })
+                      const maisAntiga = vencidas.length
+                        ? vencidas.reduce((a, b) => (new Date(a.dataVencimento) < new Date(b.dataVencimento) ? a : b))
+                        : null
+                      const dias = maisAntiga
+                        ? Math.floor((hoje.getTime() - new Date(maisAntiga.dataVencimento).setHours(0, 0, 0, 0)) / 86400000)
+                        : 0
                       return (
                         <tr key={loan.id} className="border-b border-border hover:bg-muted/20">
                           <td className="px-4 py-3">
-                            <Link href={`/clientes/${loan.client?.id}`} className="font-medium hover:underline">{loan.client?.nome}</Link>
+                            <Link href={`/clientes/${loan.client?.id}`} className="hover:underline block">
+                              {loan.client?.cpf && (
+                                <span className="block text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
+                              )}
+                              <span className="font-medium">{loan.client?.nome}</span>
+                            </Link>
                             <p className="text-xs text-muted-foreground">Emp. #{loan.id}</p>
                           </td>
-                          <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{loan.client?.cpf ? formatCPF(loan.client.cpf) : '—'}</td>
                           <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
+                          <td className="px-4 py-3">
+                            {maisAntiga ? (
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-destructive">{formatDate(maisAntiga.dataVencimento)}</span>
+                                <Badge variant="destructive" className="text-[10px]">{dias}d</Badge>
+                                {vencidas.length > 1 && (
+                                  <span className="text-[10px] text-muted-foreground">+{vencidas.length - 1}</span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-muted-foreground text-xs">—</span>
+                            )}
+                          </td>
                           <td className="px-4 py-3 text-right font-bold text-destructive">{formatCurrency(saldo)}</td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex justify-end gap-1">

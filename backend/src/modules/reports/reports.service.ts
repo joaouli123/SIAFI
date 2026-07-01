@@ -119,10 +119,10 @@ export class ReportsService {
   }
 
   async getFaturamentoMensal(mes: string): Promise<unknown> {
-    const inicio = new Date(mes + '-01T00:00:00.000Z');
-    const fim    = new Date(
-      new Date(inicio.getFullYear(), inicio.getMonth() + 1, 0, 23, 59, 59, 999).toISOString(),
-    );
+    // Intervalo do mês em UTC puro (evita recuo de fuso ao misturar UTC/local)
+    const [ano, mesNum] = mes.split('-').map(Number);
+    const inicio = new Date(Date.UTC(ano, mesNum - 1, 1, 0, 0, 0, 0));
+    const fim    = new Date(Date.UTC(ano, mesNum, 0, 23, 59, 59, 999));
 
     const parcelasPagas = await this.prisma.installment.findMany({
       where: {
@@ -136,9 +136,10 @@ export class ReportsService {
         netGain:           true,
         loan: {
           select: {
-            id:             true,
-            principalAmount: true,
-            targetProfit:   true,
+            id:                 true,
+            principalAmount:    true,
+            targetProfit:       true,
+            comissaoPercentual: true,
             consultor: { select: { id: true, nome: true } },
           },
         },
@@ -154,16 +155,26 @@ export class ReportsService {
     const totalRecebido      = parcelasPagas.reduce(
       (acc, p) => acc.plus(p.installmentAmount.toString()), new Decimal(0),
     );
+    // Comissão = lucro da parcela paga × % do contrato (parcela paga → lucro realizado integral)
+    const comissaoConsultores = parcelasPagas.reduce(
+      (acc, p) => acc.plus(
+        new Decimal(p.netGain.toString()).times(Number(p.loan.comissaoPercentual ?? 0)).dividedBy(100),
+      ),
+      new Decimal(0),
+    );
+    const lucroLiquidoEmpresa = faturamentoBruto.minus(comissaoConsultores);
 
     // Breakdown por consultor
     const porConsultor = this.agruparPorConsultor(parcelasPagas);
 
     return {
       mes,
-      totalRecebido:      totalRecebido.toFixed(2),
-      faturamentoBruto:   faturamentoBruto.toFixed(2),
-      recuperacaoCapital: recuperacaoCapital.toFixed(2),
-      quantidadeParcelas: parcelasPagas.length,
+      totalRecebido:        totalRecebido.toFixed(2),
+      faturamentoBruto:     faturamentoBruto.toFixed(2),
+      recuperacaoCapital:   recuperacaoCapital.toFixed(2),
+      comissaoConsultores:  comissaoConsultores.toFixed(2),
+      lucroLiquidoEmpresa:  lucroLiquidoEmpresa.toFixed(2),
+      quantidadeParcelas:   parcelasPagas.length,
       porConsultor,
     };
   }
@@ -173,7 +184,7 @@ export class ReportsService {
       installmentAmount: { toString(): string };
       principalPayback:  { toString(): string };
       netGain:           { toString(): string };
-      loan: { consultor: { id: number; nome: string } | null };
+      loan: { comissaoPercentual?: { toString(): string } | null; consultor: { id: number; nome: string } | null };
     }>,
   ) {
     const mapa = new Map<number | null, {
@@ -181,6 +192,7 @@ export class ReportsService {
       totalRecebido:      Decimal
       faturamentoBruto:   Decimal
       recuperacaoCapital: Decimal
+      comissao:           Decimal
       quantidadeParcelas: number
     }>();
 
@@ -193,11 +205,15 @@ export class ReportsService {
         totalRecebido:      new Decimal(0),
         faturamentoBruto:   new Decimal(0),
         recuperacaoCapital: new Decimal(0),
+        comissao:           new Decimal(0),
         quantidadeParcelas: 0,
       };
+      const lucro = new Decimal(p.netGain.toString());
+      const pct   = Number(p.loan.comissaoPercentual ?? 0);
       entrada.totalRecebido      = entrada.totalRecebido.plus(p.installmentAmount.toString());
-      entrada.faturamentoBruto   = entrada.faturamentoBruto.plus(p.netGain.toString());
+      entrada.faturamentoBruto   = entrada.faturamentoBruto.plus(lucro);
       entrada.recuperacaoCapital = entrada.recuperacaoCapital.plus(p.principalPayback.toString());
+      entrada.comissao           = entrada.comissao.plus(lucro.times(pct).dividedBy(100));
       entrada.quantidadeParcelas += 1;
       mapa.set(key, entrada);
     }
@@ -208,6 +224,8 @@ export class ReportsService {
       totalRecebido:      c.totalRecebido.toFixed(2),
       faturamentoBruto:   c.faturamentoBruto.toFixed(2),
       recuperacaoCapital: c.recuperacaoCapital.toFixed(2),
+      comissao:           c.comissao.toFixed(2),
+      lucroLiquido:       c.faturamentoBruto.minus(c.comissao).toFixed(2),
       quantidadeParcelas: c.quantidadeParcelas,
     }));
   }

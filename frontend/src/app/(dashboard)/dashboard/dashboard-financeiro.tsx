@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Users, TrendingUp, AlertTriangle, CheckCircle, RefreshCw, ChevronRight,
-  Banknote, Clock, AlertCircle, BarChart2,
+  Banknote, Clock, AlertCircle, BarChart2, Wallet, DollarSign, Plus, UserPlus,
+  Percent, PieChart as PieIcon, TicketPercent,
 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Legend,
+  ResponsiveContainer, Legend, PieChart, Pie, Cell,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -24,7 +25,7 @@ import { useRealtimeDashboard } from '@/hooks/useRealtimeDashboard'
 import { useAuth } from '@/contexts/auth.context'
 
 interface ClientStats   { total: number; ativos: number; inativos: number; quitados: number; atrasados: number }
-interface LoanStats     { totalAtivos: number; totalQuitados: number; valorEmCarteira: number; valorRecebidoMes: number }
+interface LoanStats     { totalAtivos: number; totalQuitados: number; valorEmCarteira: number; valorRecebidoMes: number; descontosMes?: number }
 interface CarteiraStats { faturamentoAReceber: number; principalARecuperar: number }
 interface EvolucaoMes   {
   mes: string; label: string
@@ -33,7 +34,7 @@ interface EvolucaoMes   {
 }
 
 interface OverdueInstallment {
-  id: number; numero: number; dataVencimento: string; valor: number; totalPago: number
+  id: number; numero: number; dataVencimento: string; installmentAmount: number; totalPago: number
   loan: { id: number; client: { id: number; nome: string } }
 }
 
@@ -105,6 +106,36 @@ function StatCard({ title, value, icon: Icon, color, isLoading, href, subItems }
   return href ? <Link href={href}>{content}</Link> : content
 }
 
+function Donut({ data }: { data: { name: string; value: number; cor: string }[] }) {
+  const total = data.reduce((s, d) => s + d.value, 0)
+  return (
+    <div className="flex flex-col sm:flex-row items-center gap-4">
+      <ResponsiveContainer width={170} height={170}>
+        <PieChart>
+          <Pie data={data} dataKey="value" nameKey="name" innerRadius={52} outerRadius={78} paddingAngle={2} strokeWidth={0}>
+            {data.map((d, i) => <Cell key={i} fill={d.cor} />)}
+          </Pie>
+          <Tooltip formatter={(v: any) => formatCurrency(Number(v ?? 0))} contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid hsl(214.3 31.8% 91.4%)' }} />
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="flex-1 space-y-1.5 w-full">
+        {data.map(d => (
+          <div key={d.name} className="flex items-center justify-between text-sm">
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <span className="size-2.5 rounded-full shrink-0" style={{ background: d.cor }} />{d.name}
+            </span>
+            <span className="font-medium">{formatCurrency(d.value)}</span>
+          </div>
+        ))}
+        <div className="flex items-center justify-between text-sm border-t pt-1.5 mt-1.5">
+          <span className="text-muted-foreground">Total</span>
+          <span className="font-bold">{formatCurrency(total)}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function DashboardFinanceiro() {
   const { connected } = useRealtimeDashboard()
   const { user } = useAuth()
@@ -169,13 +200,55 @@ export default function DashboardFinanceiro() {
 
   const lastUpdated = results.map(r => r.dataUpdatedAt).filter(Boolean).reduce((m, t) => Math.max(m, t), 0)
 
+  // ── Resumo financeiro ──────────────────────────────────────────────────────
+  const lucroMes = evolucaoQuery.data?.length
+    ? Number(evolucaoQuery.data[evolucaoQuery.data.length - 1].faturamentoBruto)
+    : 0
+  const overdueSaldo = (overdueQ.data ?? []).reduce(
+    (s, i) => s + Math.max(0, Number(i.installmentAmount) - Number(i.totalPago)), 0,
+  )
+  const aReceber = Number((carteiraQ.data as CarteiraStats & { aReceber?: number })?.aReceber ?? 0)
+  const taxaInad = aReceber > 0 ? (overdueSaldo / aReceber) * 100 : 0
+
+  // ── Aging da inadimplência (rosca) ─────────────────────────────────────────
+  const agingDef = [
+    { faixa: '1-30 dias', max: 30, cor: '#f59e0b' },
+    { faixa: '31-60 dias', max: 60, cor: '#f97316' },
+    { faixa: '61-90 dias', max: 90, cor: '#ef4444' },
+    { faixa: '90+ dias', max: Infinity, cor: '#b91c1c' },
+  ]
+  const hojeMs = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime() })()
+  const agingData = (() => {
+    const acc = agingDef.map(a => ({ name: a.faixa, value: 0, cor: a.cor }))
+    for (const i of overdueQ.data ?? []) {
+      const saldo = Math.max(0, Number(i.installmentAmount) - Number(i.totalPago))
+      if (saldo <= 0) continue
+      const venc = new Date(i.dataVencimento); venc.setHours(0, 0, 0, 0)
+      const dias = Math.floor((hojeMs - venc.getTime()) / 86400000)
+      let idx = agingDef.findIndex(a => dias <= a.max)
+      if (idx === -1) idx = agingDef.length - 1
+      acc[idx].value += saldo
+    }
+    return acc.filter(a => a.value > 0)
+  })()
+
+  // ── Composição da carteira (capital × lucro a receber) ─────────────────────
+  const cart = carteiraQ.data as (CarteiraStats & { principalARecuperar?: number; faturamentoAReceber?: number }) | undefined
+  const composicaoData = cart ? [
+    { name: 'Capital a recuperar', value: Number(cart.principalARecuperar ?? 0), cor: '#2563eb' },
+    { name: 'Lucro a receber', value: Number(cart.faturamentoAReceber ?? 0), cor: '#ea580c' },
+  ].filter(d => d.value > 0) : []
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Header — saudação + atalhos rápidos */}
+      <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <div className="flex items-center gap-2.5">
-            <h2 className="text-2xl font-bold tracking-tight">Visão Geral</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {new Date().getHours() < 12 ? 'Bom dia' : new Date().getHours() < 18 ? 'Boa tarde' : 'Boa noite'},
+              {' '}{(user?.nome ?? '').split(' ')[0] || 'time'} 👋
+            </h2>
             <span title={connected ? 'Realtime conectado' : 'Conectando...'} className="relative flex size-2 shrink-0">
               {connected && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />}
               <span className={cn('relative inline-flex rounded-full size-2', connected ? 'bg-green-500' : 'bg-slate-300')} />
@@ -183,16 +256,40 @@ export default function DashboardFinanceiro() {
           </div>
           <p className="text-muted-foreground text-sm mt-1">
             {user?.role === 'admin' ? 'Painel administrativo' : 'Painel financeiro'} · atualizado em tempo real
+            {lastUpdated > 0 && <span className="hidden sm:inline"> · {formatDate(new Date(lastUpdated))}</span>}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          {lastUpdated > 0 && <p className="text-xs text-muted-foreground hidden sm:block">Atualizado em {formatDate(new Date(lastUpdated))}</p>}
-          <Button variant="outline" size="sm" onClick={refetchAll} disabled={isAnyLoading} className="gap-2">
-            <RefreshCw className={cn('size-3.5', isAnyLoading && 'animate-spin')} />
-            Atualizar
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link href="/emprestimos/novo"><Button size="sm" className="gap-1.5"><Plus className="size-4" />Novo empréstimo</Button></Link>
+          <Link href="/pagamentos/novo"><Button size="sm" variant="outline" className="gap-1.5"><DollarSign className="size-4" />Pagamento</Button></Link>
+          <Link href="/clientes/novo"><Button size="sm" variant="outline" className="gap-1.5"><UserPlus className="size-4" />Cliente</Button></Link>
+          <Button variant="ghost" size="icon" onClick={refetchAll} disabled={isAnyLoading} title="Atualizar" className="size-9">
+            <RefreshCw className={cn('size-4', isAnyLoading && 'animate-spin')} />
           </Button>
         </div>
       </div>
+
+      {/* Faixa de resumo financeiro */}
+      <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
+        <div className="grid grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-border/70">
+          {[
+            { icon: Wallet,        label: 'Valor em carteira',     value: formatCurrency(loansQ.data?.valorEmCarteira ?? 0), color: 'text-blue-700 dark:text-blue-400',   iconBg: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400',     loading: loansQ.isLoading,    hint: 'Saldo a receber em aberto' },
+            { icon: DollarSign,    label: 'Recebido no mês',       value: formatCurrency(loansQ.data?.valorRecebidoMes ?? 0), color: 'text-green-700 dark:text-green-400', iconBg: 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400', loading: loansQ.isLoading,    hint: 'Entradas de parcelas' },
+            { icon: TrendingUp,    label: 'Lucro do mês',          value: formatCurrency(lucroMes),                          color: 'text-orange-600 dark:text-orange-400', iconBg: 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400', loading: evolucaoQuery.isLoading, hint: 'Faturamento realizado' },
+            { icon: Percent,       label: 'Inadimplência',          value: `${taxaInad.toFixed(1)}%`,                          color: taxaInad >= 15 ? 'text-red-700 dark:text-red-400' : taxaInad >= 5 ? 'text-amber-600 dark:text-amber-400' : 'text-green-700 dark:text-green-400', iconBg: 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400', loading: overdueQ.isLoading || carteiraQ.isLoading, hint: 'Saldo atrasado ÷ a receber' },
+            { icon: TicketPercent, label: 'Descontos no mês',      value: formatCurrency(loansQ.data?.descontosMes ?? 0),     color: 'text-amber-600 dark:text-amber-400', iconBg: 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400', loading: loansQ.isLoading, hint: 'Concedidos nas baixas' },
+          ].map((t) => (
+            <div key={t.label} className="flex items-center gap-3 p-4">
+              <div className={cn('rounded-lg p-2.5 shrink-0', t.iconBg)}><t.icon className="size-5" /></div>
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground truncate">{t.label}</p>
+                {t.loading ? <Skeleton className="h-6 w-24 mt-1" /> : <p className={cn('text-lg font-bold leading-tight', t.color)}>{t.value}</p>}
+                <p className="text-[11px] text-muted-foreground truncate">{t.hint}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -205,6 +302,42 @@ export default function DashboardFinanceiro() {
         />
         <StatCard title="Clientes Atrasados"  value={clientsQ.data?.atrasados ?? overdueClients.length} icon={AlertTriangle} color="red"    isLoading={clientsQ.isLoading}  href="/inadimplentes" />
         <StatCard title="Clientes Quitados"   value={clientsQ.data?.quitados ?? '—'}     icon={CheckCircle}   color="purple" isLoading={clientsQ.isLoading} />
+      </div>
+
+      {/* Gráficos: composição da carteira + inadimplência por faixa */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2"><PieIcon className="size-4 text-primary" />Composição da carteira</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {carteiraQ.isLoading ? (
+              <Skeleton className="h-44 w-full" />
+            ) : composicaoData.length ? (
+              <Donut data={composicaoData} />
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-10">Sem carteira ativa.</p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2"><AlertTriangle className="size-4 text-red-500" />Inadimplência por faixa</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {overdueQ.isLoading ? (
+              <Skeleton className="h-44 w-full" />
+            ) : agingData.length ? (
+              <Donut data={agingData} />
+            ) : (
+              <div className="text-center py-10">
+                <CheckCircle className="size-8 mx-auto text-green-500 mb-2" />
+                <p className="text-sm text-green-600 font-medium">Sem parcelas em atraso!</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Fila de intenções aguardando análise */}
