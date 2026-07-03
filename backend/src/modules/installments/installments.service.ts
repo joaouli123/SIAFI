@@ -55,6 +55,8 @@ export class InstallmentsService {
             select: {
               id: true,
               status: true,
+              multaPercentual: true,
+              moraDiariaPercentual: true,
               client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, observacoes: true } },
             },
           },
@@ -63,7 +65,21 @@ export class InstallmentsService {
       this.prisma.installment.count({ where }),
     ]);
 
-    return paginate(data, total, page, limit);
+    const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const mappedData = data.map((inst: any) => {
+      const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
+      return {
+        ...inst,
+        moraAcumulada: String(enc.valorMora),
+        multaAplicada: String(enc.valorMulta),
+        valorComEncargos: String(enc.totalDevido),
+      };
+    });
+
+    return paginate(mappedData, total, page, limit);
   }
 
   async findByLoan(loanId: number): Promise<unknown[]> {
@@ -109,7 +125,7 @@ export class InstallmentsService {
       where['loan'] = { consultorId };
     }
 
-    return this.prisma.installment.findMany({
+    const data = await this.prisma.installment.findMany({
       where,
       orderBy: { dataVencimento: 'asc' },
       include: {
@@ -119,6 +135,20 @@ export class InstallmentsService {
           },
         },
       },
+    });
+
+    const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    return data.map((inst: any) => {
+      const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
+      return {
+        ...inst,
+        moraAcumulada: String(enc.valorMora),
+        multaAplicada: String(enc.valorMulta),
+        valorComEncargos: String(enc.totalDevido),
+      };
     });
   }
 
@@ -137,7 +167,7 @@ export class InstallmentsService {
       where['loan'] = { consultorId };
     }
 
-    return this.prisma.installment.findMany({
+    const data = await this.prisma.installment.findMany({
       where,
       orderBy: [{ status: 'asc' }, { dataVencimento: 'asc' }],
       include: {
@@ -147,6 +177,20 @@ export class InstallmentsService {
           },
         },
       },
+    });
+
+    const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
+    const hojeDate = new Date();
+    hojeDate.setHours(0, 0, 0, 0);
+
+    return data.map((inst: any) => {
+      const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hojeDate);
+      return {
+        ...inst,
+        moraAcumulada: String(enc.valorMora),
+        multaAplicada: String(enc.valorMulta),
+        valorComEncargos: String(enc.totalDevido),
+      };
     });
   }
 

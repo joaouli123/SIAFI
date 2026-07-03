@@ -129,6 +129,7 @@ export default function InadimplentesPage() {
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">Atraso</th>
                       <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
+                      <th className="text-center px-4 py-3 font-medium text-muted-foreground">Obs</th>
                       <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
                     </tr>
                   </thead>
@@ -157,18 +158,12 @@ export default function InadimplentesPage() {
                                 <Link href={`/clientes/${loan.client?.id}`} className="hover:underline font-medium">
                                   {loan.client?.nome}
                                 </Link>
-                                {loan.client?.observacoes && (
-                                  <HoverObsPopover obs={loan.client.observacoes} title="Observações do Cliente" />
-                                )}
                               </div>
                               {loan.client?.cpf && (
                                 <span className="text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
                               )}
                               <div className="flex items-center gap-1.5 mt-0.5">
                                 <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">Emp. #{loan.id}</span>
-                                {loan.observacoes && (
-                                  <HoverObsPopover obs={loan.observacoes} title="Observações do Empréstimo" />
-                                )}
                               </div>
                             </div>
                           </td>
@@ -187,6 +182,13 @@ export default function InadimplentesPage() {
                             )}
                           </td>
                           <td className="px-4 py-3 text-right font-bold text-destructive">{formatCurrency(saldo)}</td>
+                          <td className="px-4 py-3 text-center">
+                            {(loan.client?.observacoes || loan.observacoes) ? (
+                              <HoverObsPopover obs={`${loan.client?.observacoes || ''}\n${loan.observacoes || ''}`.trim()} title="Observações" />
+                            ) : (
+                              <span className="text-muted-foreground text-xs">—</span>
+                            )}
+                          </td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex justify-end gap-1">
                               <Link href={`/emprestimos/${loan.id}`}>

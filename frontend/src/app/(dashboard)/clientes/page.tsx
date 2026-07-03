@@ -202,11 +202,12 @@ export default function ClientesPage() {
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Nome</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Cadastro</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Portal</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground">Status</th>
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground">Obs</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
                   </tr>
                 </thead>
@@ -216,7 +217,6 @@ export default function ClientesPage() {
                       <td className="px-4 py-3 font-medium">
                         <div className="flex items-center gap-1.5">
                           <span>{c.nome}</span>
-                          {c.observacoes && <HoverObsPopover obs={c.observacoes} />}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
@@ -232,8 +232,8 @@ export default function ClientesPage() {
                           <span className="text-sm">{c.consultor.nome}</span>
                         ) : canManage ? (
                           <button
-                            onClick={() => { setVincularClient(c); setSelectedConsultorId('') }}
-                            className="text-xs text-primary hover:underline flex items-center gap-1"
+                              onClick={() => { setVincularClient(c); setSelectedConsultorId('') }}
+                              className="text-xs text-primary hover:underline flex items-center gap-1"
                           >
                             <UserCheck className="size-3" />Vincular
                           </button>
@@ -253,6 +253,13 @@ export default function ClientesPage() {
                         <Badge variant={c.active ? 'success' : 'outline'}>
                           {c.active ? 'Ativo' : 'Inativo'}
                         </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {c.observacoes ? (
+                          <HoverObsPopover obs={c.observacoes} />
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1">
