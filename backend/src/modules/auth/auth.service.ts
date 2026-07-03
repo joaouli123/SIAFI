@@ -49,6 +49,7 @@ export class AuthService {
     res: Response,
   ): Promise<{
     accessToken: string;
+    refreshToken?: string;
     user: { id: number; nome: string; role: string };
     needsMfa?: boolean;
     setupMfaRequired?: boolean;
@@ -114,7 +115,7 @@ export class AuthService {
     // 7. Gravar refresh token em httpOnly cookie
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
@@ -127,10 +128,13 @@ export class AuthService {
     ) ?? false;
 
     // Roles que exigem MFA imediato (sem prazo de graça)
-    const mfaImediato = ['admin', 'financeiro', 'consultor'].includes(dbUser.role);
+    // DISABLE_MFA=true suspende a exigência de MFA neste ambiente (ex: banco de
+    // testes) sem afetar produção, onde essa env var não é definida.
+    const mfaDesativado = process.env.DISABLE_MFA === 'true';
+    const mfaImediato = !mfaDesativado && ['admin', 'financeiro', 'consultor'].includes(dbUser.role);
 
     // MFA configurado mas ainda em aal1 → precisa do challenge
-    const needsMfa = fatoresVerificados && aal !== 'aal2';
+    const needsMfa = !mfaDesativado && fatoresVerificados && aal !== 'aal2';
 
     // Role exige MFA mas usuário ainda não configurou
     const setupMfaRequired = mfaImediato && !fatoresVerificados;
@@ -140,6 +144,7 @@ export class AuthService {
 
     return {
       accessToken: access_token,
+      refreshToken: refresh_token,
       user: { id: dbUser.id, nome: dbUser.nome, role: dbUser.role },
       ...(needsMfa ? { needsMfa: true } : {}),
       ...(setupMfaRequired ? { setupMfaRequired: true } : {}),
@@ -323,7 +328,7 @@ export class AuthService {
 
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
@@ -338,11 +343,12 @@ export class AuthService {
     const fatoresVerificados = data.session.user?.factors?.some(
       (f: { status: string }) => f.status === 'verified',
     ) ?? false;
-    const needsMfa = fatoresVerificados && aal !== 'aal2';
+    const needsMfa = process.env.DISABLE_MFA !== 'true' && fatoresVerificados && aal !== 'aal2';
     const mfaStatus = await this.verificarPrazoMfa(client.id, 'cliente', 'client');
 
     return {
       accessToken: access_token,
+      refreshToken: refresh_token,
       user: { id: client.id, nome: client.nome, role: 'cliente' },
       ...(needsMfa ? { needsMfa: true } : {}),
       ...(mfaStatus ? { mfaStatus } : {}),
@@ -367,15 +373,66 @@ export class AuthService {
 
   // ─── Refresh ──────────────────────────────────────────────────────────────
 
-  async refresh(refreshToken: string): Promise<{ accessToken: string }> {
+  async refresh(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
     const { data, error } = await this.supabase.admin.auth.refreshSession({
       refresh_token: refreshToken,
     });
     if (error || !data.session) {
       throw new UnauthorizedException('Refresh token inválido ou expirado');
     }
-    return { accessToken: data.session.access_token };
+    return {
+      accessToken: data.session.access_token,
+      refreshToken: data.session.refresh_token,
+    };
   }
+
+  // ─── MFA Challenge + Verify (server-side proxy) ───────────────────────────
+
+  async mfaVerify(
+    userAccessToken: string,
+    factorId: string,
+    code: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const SUPABASE_URL = process.env.SUPABASE_URL!;
+    // The apikey header accepts either anon key or service role key
+    const API_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+    // Step 1: create challenge (requires user's aal1 token as Authorization)
+    const challengeRes = await fetch(`${SUPABASE_URL}/auth/v1/factors/${factorId}/challenge`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        apikey: API_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!challengeRes.ok) {
+      const err = await challengeRes.json().catch(() => ({}));
+      throw new UnauthorizedException(err.error_description ?? 'Falha ao criar desafio MFA');
+    }
+    const { id: challengeId } = await challengeRes.json();
+
+    // Step 2: verify code — returns a new aal2 session
+    const verifyRes = await fetch(`${SUPABASE_URL}/auth/v1/factors/${factorId}/verify`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        apikey: API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ challenge_id: challengeId, code }),
+    });
+    if (!verifyRes.ok) {
+      const err = await verifyRes.json().catch(() => ({}));
+      throw new UnauthorizedException(err.error_description ?? err.message ?? 'Código MFA inválido');
+    }
+    const session = await verifyRes.json();
+    return {
+      accessToken: session.access_token,
+      refreshToken: session.refresh_token,
+    };
+  }
+
 
   // ─── Logout ───────────────────────────────────────────────────────────────
 

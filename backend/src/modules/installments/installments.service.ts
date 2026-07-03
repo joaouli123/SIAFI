@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { InstallmentFilterDto } from './dto/installment-filter.dto';
+import { UpdateInstallmentDto } from './dto/update-installment.dto';
 
 @Injectable()
 export class InstallmentsService {
@@ -13,13 +14,15 @@ export class InstallmentsService {
     filters: InstallmentFilterDto,
     consultorId?: number,
   ): Promise<PaginatedResponse<unknown>> {
-    const { status, clientId, loanId, search, startDate, endDate, aberto, page, limit } = filters;
+    const { status, clientId, loanId, search, startDate, endDate, aberto, comObservacao, page, limit } = filters;
     const skip = (page - 1) * limit;
 
     const where: Prisma.InstallmentWhereInput = {};
     if (status) where.status = status as Prisma.InstallmentWhereInput['status'];
     else if (aberto === 'true') where.status = { notIn: ['pago', 'cancelado'] };
     if (loanId) where.loanId = loanId;
+    if (comObservacao === 'true') where.observacao = { not: null, notIn: [''] };
+    else if (comObservacao === 'false') where.OR = [{ observacao: null }, { observacao: '' }];
 
     if (startDate || endDate) {
       where.dataVencimento = {};
@@ -52,7 +55,7 @@ export class InstallmentsService {
             select: {
               id: true,
               status: true,
-              client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true } },
+              client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, observacoes: true } },
             },
           },
         },
@@ -98,7 +101,7 @@ export class InstallmentsService {
     today.setHours(0, 0, 0, 0);
 
     const where: Record<string, unknown> = {
-      status: { in: ['pendente', 'atrasado'] },
+      status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] },
       dataVencimento: { lt: today },
     };
 
@@ -112,7 +115,7 @@ export class InstallmentsService {
       include: {
         loan: {
           include: {
-            client: { select: { id: true, nome: true, cpf: true, whatsapp: true } },
+            client: { select: { id: true, nome: true, cpf: true, whatsapp: true, observacoes: true } },
           },
         },
       },
@@ -268,5 +271,19 @@ export class InstallmentsService {
       totalDevido: enc.totalDevido,
       diasAtraso: enc.diasAtraso,
     };
+  }
+
+  async update(id: number, dto: UpdateInstallmentDto): Promise<unknown> {
+    const installment = await this.prisma.installment.findUnique({ where: { id } });
+    if (!installment) {
+      throw new NotFoundException(`Parcela com id ${id} não encontrada`);
+    }
+
+    return this.prisma.installment.update({
+      where: { id },
+      data: {
+        observacao: dto.observacao !== undefined ? dto.observacao : installment.observacao,
+      },
+    });
   }
 }

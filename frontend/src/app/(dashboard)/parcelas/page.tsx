@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import Link from 'next/link'
-import { AlertCircle, RefreshCw, Calendar, CalendarClock, CalendarRange, CheckCircle2, ListFilter, Search } from 'lucide-react'
+import { AlertCircle, RefreshCw, Calendar, CalendarClock, CalendarRange, CheckCircle2, ListFilter, Search, MessageSquare, Pencil } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -11,6 +11,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { cn, formatCurrency, formatDateLocal, formatCPF, toNumber, STATUS_INSTALLMENT } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
@@ -25,6 +29,7 @@ interface Installment {
   saldoDevedor: string
   moraAcumulada: string
   multaAplicada: string
+  observacao?: string | null
   loan: { id: number; client: { id: number; nome: string; cpf?: string | null } }
 }
 
@@ -42,6 +47,19 @@ export default function ParcelasPage() {
   const { user } = useAuth()
   const [tab, setTab] = useState<TabKey>('hoje')
   const showSplit = user?.role !== 'caixa'
+  const qc = useQueryClient()
+
+  const [obsModal, setObsModal] = useState<{ id: number; obs: string } | null>(null)
+  
+  const obsMut = useMutation({
+    mutationFn: (data: { id: number; observacao: string }) => api.patch(`/installments/${data.id}`, { observacao: data.observacao }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['installments'] })
+      setObsModal(null)
+      toast.success('Observação salva com sucesso')
+    },
+    onError: () => toast.error('Erro ao salvar observação')
+  })
 
   // Filtros da aba "Todas"
   const [fStatus, setFStatus] = useState('')
@@ -96,18 +114,32 @@ export default function ParcelasPage() {
   const isLoading  = tab === 'hoje' ? loadingHoje : tab === 'atrasado' ? loadingOverdue : loadingPaged
   const meta       = isPaged ? pagedResp?.meta : undefined
 
+  const hojeD = useMemo(() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d }, [])
+
   const diasAtraso = (dataVencimento: string) => {
-    const now  = new Date(); now.setHours(0, 0, 0, 0)
     const venc = new Date(dataVencimento); venc.setHours(0, 0, 0, 0)
-    return Math.max(0, Math.floor((now.getTime() - venc.getTime()) / 86400000))
+    return Math.max(0, Math.floor((hojeD.getTime() - venc.getTime()) / 86400000))
   }
 
   const saldoDe = (i: Installment) =>
     i.status === 'cancelado' ? 0 : Math.max(0, toNumber(i.installmentAmount) - toNumber(i.totalPago))
 
-  const totalValor    = activeData?.reduce((s, i) => s + toNumber(i.installmentAmount), 0) ?? 0
+  const totalValor = activeData?.reduce((s, i) => {
+    const venc = new Date(i.dataVencimento); venc.setHours(0, 0, 0, 0)
+    const isOverdue = i.status === 'atrasado' || (saldoDe(i) > 0 && venc < hojeD)
+    const encargos = toNumber(i.moraAcumulada) + toNumber(i.multaAplicada)
+    return s + toNumber(i.installmentAmount) + (isOverdue ? encargos : 0)
+  }, 0) ?? 0
+
   const totalPago     = activeData?.reduce((s, i) => s + toNumber(i.totalPago), 0) ?? 0
-  const totalSaldo    = activeData?.reduce((s, i) => s + saldoDe(i), 0) ?? 0
+
+  const totalSaldo = activeData?.reduce((s, i) => {
+    const venc = new Date(i.dataVencimento); venc.setHours(0, 0, 0, 0)
+    const isOverdue = i.status === 'atrasado' || (saldoDe(i) > 0 && venc < hojeD)
+    const encargos = toNumber(i.moraAcumulada) + toNumber(i.multaAplicada)
+    return s + saldoDe(i) + (isOverdue ? encargos : 0)
+  }, 0) ?? 0
+
   const totalEncargos = activeData?.reduce((s, i) => s + toNumber(i.moraAcumulada) + toNumber(i.multaAplicada), 0) ?? 0
 
   const subtitle: Record<TabKey, string> = {
@@ -240,24 +272,28 @@ export default function ParcelasPage() {
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo</th>
                     {tab === 'atrasado' && (
                       <>
-                        <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Encargos</th>
                         <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Atraso</th>
                       </>
                     )}
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Observação</th>
                     {isPaged && <th className="text-center px-4 py-3 font-medium text-muted-foreground">Status</th>}
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ação</th>
                   </tr>
                 </thead>
                 <tbody>
                   {activeData.map(inst => {
-                    const saldo = saldoDe(inst)
+                    const originalSaldo = saldoDe(inst)
                     const dias  = tab === 'atrasado' ? diasAtraso(inst.dataVencimento) : 0
                     const encargos = toNumber(inst.moraAcumulada) + toNumber(inst.multaAplicada)
                     const ist = STATUS_INSTALLMENT[inst.status] ?? { label: inst.status, variant: 'outline' as const }
-                    const hojeD = new Date(); hojeD.setHours(0, 0, 0, 0)
                     const vencD = new Date(inst.dataVencimento); vencD.setHours(0, 0, 0, 0)
-                    const vencida   = saldo > 0 && vencD < hojeD
-                    const venceHoje = saldo > 0 && vencD.getTime() === hojeD.getTime()
+                    const vencida   = originalSaldo > 0 && vencD < hojeD
+                    const venceHoje = originalSaldo > 0 && vencD.getTime() === hojeD.getTime()
+                    
+                    const isOverdue = inst.status === 'atrasado' || vencida
+                    const displayValor = isOverdue ? toNumber(inst.installmentAmount) + encargos : toNumber(inst.installmentAmount)
+                    const displaySaldo = isOverdue ? originalSaldo + encargos : originalSaldo
+
                     return (
                       <tr key={inst.id} className="border-b border-border hover:bg-muted/20 transition-colors">
                         <td className="px-4 py-3">
@@ -276,21 +312,36 @@ export default function ParcelasPage() {
                             {formatDateLocal(inst.dataVencimento)}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right font-medium">{formatCurrency(inst.installmentAmount)}</td>
+                        <td className="px-4 py-3 text-right font-medium">
+                          <div>{formatCurrency(displayValor)}</div>
+                          {isOverdue && encargos > 0 && (
+                            <div className="text-[10px] text-muted-foreground">Original: {formatCurrency(toNumber(inst.installmentAmount))}</div>
+                          )}
+                        </td>
                         {showSplit && (
                           <td className="px-4 py-3 text-right text-green-600 hidden lg:table-cell">{formatCurrency(inst.totalPago)}</td>
                         )}
-                        <td className={cn('px-4 py-3 text-right font-bold', saldo > 0 ? 'text-destructive' : 'text-green-600')}>
-                          {saldo > 0 ? formatCurrency(saldo) : '—'}
+                        <td className={cn('px-4 py-3 text-right font-bold', displaySaldo > 0 ? 'text-destructive' : 'text-green-600')}>
+                          <div>{displaySaldo > 0 ? formatCurrency(displaySaldo) : '—'}</div>
+                          {isOverdue && encargos > 0 && originalSaldo > 0 && (
+                            <div className="text-[10px] text-muted-foreground font-normal">Original: {formatCurrency(originalSaldo)}</div>
+                          )}
                         </td>
                         {tab === 'atrasado' && (
                           <>
-                            <td className="px-4 py-3 text-right text-orange-600 hidden md:table-cell">
-                              {encargos > 0 ? formatCurrency(encargos) : <span className="text-muted-foreground">—</span>}
-                            </td>
                             <td className="px-4 py-3 text-center hidden md:table-cell"><Badge variant="destructive">{dias}d</Badge></td>
                           </>
                         )}
+                        <td className="px-4 py-3 hidden xl:table-cell">
+                          <div className="flex items-center justify-center gap-1">
+                            <span className="truncate max-w-[120px] text-xs text-muted-foreground" title={inst.observacao || ''}>
+                              {inst.observacao || <span className="italic opacity-50">vazio</span>}
+                            </span>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 shrink-0" onClick={() => setObsModal({ id: inst.id, obs: inst.observacao || '' })}>
+                              <Pencil className="size-3" />
+                            </Button>
+                          </div>
+                        </td>
                         {isPaged && <td className="px-4 py-3 text-center"><Badge variant={ist.variant}>{ist.label}</Badge></td>}
                         <td className="px-4 py-3 text-right">
                           {inst.status !== 'pago' && inst.status !== 'cancelado' ? (
@@ -316,13 +367,9 @@ export default function ParcelasPage() {
                     )}
                     <td className="px-4 py-2.5 text-right text-xs text-destructive">{formatCurrency(totalSaldo)}</td>
                     {tab === 'atrasado' && (
-                      <>
-                        <td className="px-4 py-2.5 text-right text-xs text-orange-600 hidden md:table-cell">
-                          {totalEncargos > 0 ? formatCurrency(totalEncargos) : '—'}
-                        </td>
-                        <td />
-                      </>
+                      <td className="hidden md:table-cell" />
                     )}
+                    <td className="hidden xl:table-cell" />
                     {isPaged && <td />}
                     <td />
                   </tr>
@@ -342,6 +389,27 @@ export default function ParcelasPage() {
           </div>
         </div>
       )}
+
+      {/* Modal Observação */}
+      <Dialog open={!!obsModal} onOpenChange={o => { if (!o) setObsModal(null) }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader><DialogTitle>Observação da Parcela</DialogTitle></DialogHeader>
+          <div className="py-4">
+            <Textarea
+              placeholder="Digite a observação..."
+              rows={4}
+              value={obsModal?.obs || ''}
+              onChange={(e) => setObsModal(prev => prev ? { ...prev, obs: e.target.value } : null)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setObsModal(null)}>Cancelar</Button>
+            <Button onClick={() => obsModal && obsMut.mutate({ id: obsModal.id, observacao: obsModal.obs })} disabled={obsMut.isPending}>
+              {obsMut.isPending ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

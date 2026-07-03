@@ -45,21 +45,6 @@ const schema = z.object({
   cobrarWhatsapp: z.boolean().optional(),
   cobrarEmail: z.boolean().optional(),
   cobrarPortal: z.boolean().optional(),
-  // Avalistas (podem referenciar um cliente existente)
-  avalistas: z.array(z.object({
-    clienteId: z.coerce.number().optional(),
-    nome: z.string().optional(),
-    cpf: z.string().optional(),
-    telefone: z.string().optional(),
-    parentesco: z.string().optional(),
-  })).optional(),
-  // Referências de contato
-  referencia1Nome: z.string().optional(),
-  referencia1Telefone: z.string().optional(),
-  referencia1Vinculo: z.string().optional(),
-  referencia2Nome: z.string().optional(),
-  referencia2Telefone: z.string().optional(),
-  referencia2Vinculo: z.string().optional(),
 })
 type FormData = z.infer<typeof schema>
 
@@ -86,14 +71,7 @@ export default function NovoEmprestimoPage() {
       diasAntecedenciaCobranca: 10,
       cobrarWhatsapp: true,
       cobrarEmail: true,
-      cobrarPortal: true,
-      avalistas: [],
     },
-  })
-
-  const { fields: avalistaFields, append: addAvalista, remove: removeAvalista } = useFieldArray({
-    control,
-    name: 'avalistas',
   })
 
   // Cálculo bidirecional: Capital + Lucro ÷ Parcelas ⇄ Valor da Parcela.
@@ -169,12 +147,6 @@ export default function NovoEmprestimoPage() {
       const payload = {
         ...rest,
         dataPrimeiroVencimento: data.dataPrimeiroVencimento || undefined,
-        avalistas: (data.avalistas ?? [])
-          .filter((a) => a.nome && a.nome.trim())
-          .map((a) => ({
-            ...a,
-            clienteId: a.clienteId && a.clienteId > 0 ? a.clienteId : undefined,
-          })),
       }
       return api.post('/loans', payload)
     },
@@ -331,108 +303,6 @@ export default function NovoEmprestimoPage() {
               <Label>Desconto p/ quitação total do contrato (% do lucro a vencer)</Label>
               <Input type="number" step="0.01" min={0} max={100} {...register('descontoQuitacaoPercentual')} placeholder="ex: 10 — opcional" className="md:w-1/2" />
               <p className="text-xs text-muted-foreground">Aplicado quando o cliente quita o contrato inteiro de uma vez (abate parte do lucro a vencer).</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2 flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base flex items-center gap-2"><Users className="size-4" />Avalistas</CardTitle>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="gap-1"
-              onClick={() => addAvalista({ clienteId: undefined, nome: '', cpf: '', telefone: '', parentesco: '' })}
-            >
-              <Plus className="size-4" />Adicionar
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {avalistaFields.length === 0 && (
-              <p className="text-sm text-muted-foreground">Nenhum avalista. Opcional — pode adicionar um cliente já cadastrado ou uma pessoa avulsa.</p>
-            )}
-            {avalistaFields.map((field, i) => {
-              return (
-                <div key={field.id} className="rounded-lg border p-3 space-y-3 relative">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-muted-foreground">Avalista {i + 1}</span>
-                    <Button type="button" variant="ghost" size="sm" className="text-destructive h-7 px-2" onClick={() => removeAvalista(i)}>
-                      <Trash2 className="size-4" />
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="md:col-span-2 space-y-1.5">
-                      <Label>Cliente existente (opcional)</Label>
-                      <ClienteCombobox
-                        clientes={clients ?? []}
-                        value={watch(`avalistas.${i}.clienteId`)}
-                        excludeId={watch('clientId') || undefined}
-                        avulsoLabel="— Pessoa avulsa (preencher manualmente) —"
-                        placeholder="Buscar cliente por nome ou CPF..."
-                        onSelect={(c) => {
-                          setValue(`avalistas.${i}.clienteId`, c?.id ?? undefined)
-                          if (c) {
-                            setValue(`avalistas.${i}.nome`, c.nome)
-                            setValue(`avalistas.${i}.cpf`, c.cpf ?? '')
-                          }
-                        }}
-                      />
-                      <p className="text-xs text-muted-foreground">Busque um cliente (nome/CPF) ou deixe vazio e preencha manualmente. O próprio cliente do contrato não aparece.</p>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Nome *</Label>
-                      <Input {...register(`avalistas.${i}.nome`)} placeholder="Nome completo" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>CPF</Label>
-                      <Input {...register(`avalistas.${i}.cpf`)} placeholder="000.000.000-00" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Telefone</Label>
-                      <Input {...register(`avalistas.${i}.telefone`)} placeholder="(00) 00000-0000" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Vínculo / Parentesco</Label>
-                      <Input {...register(`avalistas.${i}.parentesco`)} placeholder="ex: irmão, sócio" />
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader><CardTitle className="text-base">Referências de Contato</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-1.5">
-                <Label>Referência 1 — Nome</Label>
-                <Input {...register('referencia1Nome')} placeholder="Nome" />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Telefone</Label>
-                <Input {...register('referencia1Telefone')} placeholder="(00) 00000-0000" />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Vínculo</Label>
-                <Input {...register('referencia1Vinculo')} placeholder="ex: vizinho" />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-1.5">
-                <Label>Referência 2 — Nome</Label>
-                <Input {...register('referencia2Nome')} placeholder="Nome" />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Telefone</Label>
-                <Input {...register('referencia2Telefone')} placeholder="(00) 00000-0000" />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Vínculo</Label>
-                <Input {...register('referencia2Vinculo')} placeholder="ex: colega" />
-              </div>
             </div>
           </CardContent>
         </Card>

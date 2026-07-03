@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
-import { Plus, Search, RefreshCw, Eye, Pencil, Trash2, Users, UserCheck, X } from 'lucide-react'
+import { Plus, Search, RefreshCw, Eye, Pencil, Trash2, Users, UserCheck, X, StickyNote } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { formatCPF, formatPhone, formatDate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
@@ -34,6 +35,7 @@ interface Client {
   portalAtivo: boolean
   supabaseId: string | null
   consultor?: { id: number; nome: string } | null
+  observacoes?: string | null
 }
 
 interface ClientsResponse {
@@ -41,6 +43,26 @@ interface ClientsResponse {
   total: number
   page: number
   lastPage: number
+}
+
+function HoverObsPopover({ obs }: { obs: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        className="text-amber-500 hover:text-amber-600 cursor-pointer p-0.5"
+        aria-label="Ver observação"
+      >
+        <StickyNote className="size-3.5" />
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-80">
+        <p className="font-semibold mb-1 text-xs text-foreground uppercase tracking-wider">Observações do Cliente</p>
+        <p className="text-xs text-muted-foreground whitespace-pre-wrap">{obs}</p>
+      </PopoverContent>
+    </Popover>
+  )
 }
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -191,7 +213,12 @@ export default function ClientesPage() {
                 <tbody>
                   {data.data.map((c) => (
                     <tr key={c.id} className="border-b border-border hover:bg-muted/20 transition-colors">
-                      <td className="px-4 py-3 font-medium">{c.nome}</td>
+                      <td className="px-4 py-3 font-medium">
+                        <div className="flex items-center gap-1.5">
+                          <span>{c.nome}</span>
+                          {c.observacoes && <HoverObsPopover obs={c.observacoes} />}
+                        </div>
+                      </td>
                       <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
                         {c.cpf
                           ? formatCPF(c.cpf)

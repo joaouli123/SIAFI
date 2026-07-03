@@ -2,28 +2,72 @@
 
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { AlertCircle, FileDown, RefreshCw } from 'lucide-react'
+import { AlertCircle, FileDown, RefreshCw, StickyNote } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { useState } from 'react'
 import { formatCurrency, formatDate, formatCPF, formatPhone } from '@/lib/utils'
 import api from '@/lib/api'
 
 interface Loan {
   id: number; valor: number; numeroParcelas: number; dataInicio: string; status: string
-  client: { id: number; nome: string; cpf: string; whatsapp: string }
-  installments: Array<{ id: number; valor: number; totalPago: number; dataVencimento: string; status: string }>
+  observacoes?: string | null
+  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null }
+  installments: Array<{ id: number; installmentAmount: number; totalPago: number; dataVencimento: string; status: string }>
+}
+
+function HoverObsPopover({ obs, title = 'Observações' }: { obs: string; title?: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        className="text-amber-500 hover:text-amber-600 cursor-pointer p-0.5"
+        aria-label="Ver observação"
+      >
+        <StickyNote className="size-3.5" />
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-80">
+        <p className="font-semibold mb-1 text-xs text-foreground uppercase tracking-wider">{title}</p>
+        <p className="text-xs text-muted-foreground whitespace-pre-wrap">{obs}</p>
+      </PopoverContent>
+    </Popover>
+  )
 }
 
 export default function InadimplentesPage() {
-  const { data: loans, isLoading, isError, refetch } = useQuery({
-    queryKey: ['loans', { status: 'inadimplente' }],
-    queryFn: () => api.get<any>('/loans', { params: { status: 'inadimplente', limit: 200 } }).then((r) => r.data.data ?? r.data),
+  const { data: installmentsData, isLoading, isError, refetch } = useQuery({
+    queryKey: ['installments', 'overdue'],
+    queryFn: () => api.get<any>('/installments/overdue').then((r) => r.data),
   })
 
+  const loansMap = new Map<number, Loan>()
+  if (installmentsData && Array.isArray(installmentsData)) {
+    for (const inst of installmentsData) {
+      if (!inst.loan) continue; // safe check
+      if (!loansMap.has(inst.loanId)) {
+        loansMap.set(inst.loanId, {
+          id: inst.loan.id,
+          valor: inst.loan.principalAmount,
+          numeroParcelas: inst.loan.numeroParcelas,
+          dataInicio: inst.loan.dataInicio,
+          status: inst.loan.status,
+          observacoes: inst.loan.observacoes,
+          client: inst.loan.client || { id: 0, nome: 'Cliente Desconhecido', cpf: '', whatsapp: '' },
+          installments: []
+        })
+      }
+      loansMap.get(inst.loanId)!.installments.push(inst)
+    }
+  }
+  const loans = Array.from(loansMap.values())
+
   const calcSaldoDevedor = (installments: Loan['installments']) =>
-    installments.reduce((s, i) => s + (Number(i.valor) - Number(i.totalPago)), 0)
+    installments.reduce((s, i) => s + (Number(i.installmentAmount) - Number(i.totalPago)), 0)
 
   return (
     <div className="space-y-6">
@@ -95,7 +139,7 @@ export default function InadimplentesPage() {
                       const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
                       const vencidas = (loan.installments ?? []).filter((i) => {
                         if (i.status === 'pago' || i.status === 'cancelado') return false
-                        if (Number(i.valor) - Number(i.totalPago) <= 0) return false
+                        if (Number(i.installmentAmount) - Number(i.totalPago) <= 0) return false
                         const v = new Date(i.dataVencimento); v.setHours(0, 0, 0, 0)
                         return v < hoje
                       })
@@ -108,13 +152,25 @@ export default function InadimplentesPage() {
                       return (
                         <tr key={loan.id} className="border-b border-border hover:bg-muted/20">
                           <td className="px-4 py-3">
-                            <Link href={`/clientes/${loan.client?.id}`} className="hover:underline block">
+                            <div className="flex flex-col">
+                              <div className="flex items-center gap-1.5">
+                                <Link href={`/clientes/${loan.client?.id}`} className="hover:underline font-medium">
+                                  {loan.client?.nome}
+                                </Link>
+                                {loan.client?.observacoes && (
+                                  <HoverObsPopover obs={loan.client.observacoes} title="Observações do Cliente" />
+                                )}
+                              </div>
                               {loan.client?.cpf && (
-                                <span className="block text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
+                                <span className="text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
                               )}
-                              <span className="font-medium">{loan.client?.nome}</span>
-                            </Link>
-                            <p className="text-xs text-muted-foreground">Emp. #{loan.id}</p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">Emp. #{loan.id}</span>
+                                {loan.observacoes && (
+                                  <HoverObsPopover obs={loan.observacoes} title="Observações do Empréstimo" />
+                                )}
+                              </div>
+                            </div>
                           </td>
                           <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
                           <td className="px-4 py-3">

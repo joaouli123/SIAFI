@@ -77,6 +77,7 @@ export class ClientsService {
         loans: { orderBy: { createdAt: 'asc' } },
         consultor: { select: { id: true, nome: true } },
         scoreRisco: { select: { scoreGeral: true, classificacao: true, calculadoEm: true } },
+        meusAvalistas: true,
       },
     });
     if (!client) {
@@ -133,7 +134,27 @@ export class ClientsService {
       observacoes: dto.observacoes ?? null,
       notificacoesEmail: dto.notificacoesEmail ?? true,
       ...(effectiveConsultorId ? { consultor: { connect: { id: effectiveConsultorId } } } : {}),
+      referencia1Nome: dto.referencia1Nome ?? null,
+      referencia1Telefone: dto.referencia1Telefone ?? null,
+      referencia1Vinculo: dto.referencia1Vinculo ?? null,
+      referencia2Nome: dto.referencia2Nome ?? null,
+      referencia2Telefone: dto.referencia2Telefone ?? null,
+      referencia2Vinculo: dto.referencia2Vinculo ?? null,
     };
+
+    if (dto.avalistas && dto.avalistas.length > 0) {
+      data.meusAvalistas = {
+        create: dto.avalistas.map(a => ({
+          nome: a.nome,
+          cpf: a.cpf ?? null,
+          telefone: a.telefone ?? null,
+          email: a.email ?? null,
+          endereco: a.endereco ?? null,
+          parentesco: a.parentesco ?? null,
+          clienteVinculadoId: a.clienteId ?? null,
+        }))
+      };
+    }
 
     const client = await this.prisma.client.create({ data });
 
@@ -170,6 +191,27 @@ export class ClientsService {
     if (dto.cep !== undefined) data.cep = dto.cep;
     if (dto.observacoes !== undefined) data.observacoes = dto.observacoes;
     if (dto.notificacoesEmail !== undefined) data.notificacoesEmail = dto.notificacoesEmail;
+    if (dto.referencia1Nome !== undefined) data.referencia1Nome = dto.referencia1Nome;
+    if (dto.referencia1Telefone !== undefined) data.referencia1Telefone = dto.referencia1Telefone;
+    if (dto.referencia1Vinculo !== undefined) data.referencia1Vinculo = dto.referencia1Vinculo;
+    if (dto.referencia2Nome !== undefined) data.referencia2Nome = dto.referencia2Nome;
+    if (dto.referencia2Telefone !== undefined) data.referencia2Telefone = dto.referencia2Telefone;
+    if (dto.referencia2Vinculo !== undefined) data.referencia2Vinculo = dto.referencia2Vinculo;
+
+    if (dto.avalistas !== undefined) {
+      data.meusAvalistas = {
+        deleteMany: {},
+        create: dto.avalistas.map(a => ({
+          nome: a.nome,
+          cpf: a.cpf ?? null,
+          telefone: a.telefone ?? null,
+          email: a.email ?? null,
+          endereco: a.endereco ?? null,
+          parentesco: a.parentesco ?? null,
+          clienteVinculadoId: a.clienteId ?? null,
+        }))
+      };
+    }
 
     // Campos administrativos — apenas admin/financeiro (consultorId presente = consultor bloqueado)
     if (!consultorId) {

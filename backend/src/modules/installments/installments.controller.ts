@@ -3,6 +3,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
+  Body,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { InstallmentsService } from './installments.service';
 import { InstallmentFilterDto } from './dto/installment-filter.dto';
+import { UpdateInstallmentDto } from './dto/update-installment.dto';
 
 interface AuthUser {
   id: number;
@@ -57,5 +60,11 @@ export class InstallmentsController {
   @Roles('admin', 'financeiro', 'caixa')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.installmentsService.findById(id);
+  }
+
+  @Patch(':id')
+  @Roles('admin', 'financeiro', 'caixa', 'consultor')
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateInstallmentDto) {
+    return this.installmentsService.update(id, dto);
   }
 }

@@ -50,11 +50,11 @@ export async function mfaEnroll(): Promise<EnrollResult> {
 }
 
 export async function mfaListFactors(): Promise<MfaFactor[]> {
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/factors`, {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
     headers: headers(),
   })
   const data = await expectOk(res)
-  return data ?? []
+  return data?.factors ?? []
 }
 
 export async function mfaChallengeAndVerify(

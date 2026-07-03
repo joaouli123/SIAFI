@@ -16,7 +16,7 @@ const UM_DIA_S   = 1 * 24 * 3600;   //  86 400 s — notificações concluídas 
 @Module({
   imports: [
     BullModule.forRoot({
-      connection: redisConnection,
+      connection: redisConnection as any,
     }),
     BullModule.registerQueue(
       {

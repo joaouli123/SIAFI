@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Pencil, Phone, Mail, MapPin, FileText, FileDown, CreditCard, FolderOpen, ExternalLink, UserCheck, X, Plus } from 'lucide-react'
+import { ArrowLeft, Pencil, Phone, Mail, MapPin, FileText, FileDown, CreditCard, FolderOpen, ExternalLink, UserCheck, X, Plus, Users } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { formatCPF, formatPhone, formatDate, formatCEP, formatCurrency, STATUS_LOAN } from '@/lib/utils'
+import { Textarea } from '@/components/ui/textarea'
 import { useAuth } from '@/contexts/auth.context'
 import { toast } from 'sonner'
 import api from '@/lib/api'
@@ -30,6 +31,9 @@ interface Client {
   fotoPath?: string; rgPath?: string; comprovantePath?: string
   consultor?: { id: number; nome: string } | null
   loans: Array<{ id: number; principalAmount: string; totalReceivable: string; numeroParcelas: number; status: string; dataInicio: string }>
+  meusAvalistas?: Array<{ id: number; nome: string; cpf: string; telefone: string; parentesco: string }>
+  referencia1Nome?: string; referencia1Telefone?: string; referencia1Vinculo?: string
+  referencia2Nome?: string; referencia2Telefone?: string; referencia2Vinculo?: string
 }
 
 interface DocumentUrls {
@@ -59,6 +63,26 @@ export default function ClienteDetalhePage() {
   const { data: client, isLoading, isError } = useQuery({
     queryKey: ['clients', id],
     queryFn: () => api.get<Client>(`/clients/${id}`).then((r) => r.data),
+  })
+
+  const [isEditingObs, setIsEditingObs] = useState(false)
+  const [obsText, setObsText] = useState('')
+
+  // Sync obsText when client loads
+  useEffect(() => {
+    if (client) {
+      setObsText(client.observacoes || '')
+    }
+  }, [client])
+
+  const obsMut = useMutation({
+    mutationFn: (observacoes: string) => api.patch(`/clients/${id}`, { observacoes }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['clients', id] })
+      setIsEditingObs(false)
+      toast.success('Observações atualizadas com sucesso')
+    },
+    onError: () => toast.error('Erro ao salvar observações'),
   })
 
   const { data: consultores } = useQuery<Consultor[]>({
@@ -179,6 +203,48 @@ export default function ClienteDetalhePage() {
           </Card>
         )}
 
+        {client.meusAvalistas && client.meusAvalistas.length > 0 && (
+          <Card className="md:col-span-2">
+            <CardHeader><CardTitle className="text-base flex items-center gap-2"><Users className="size-4" />Avalistas</CardTitle></CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {client.meusAvalistas.map((av, idx) => (
+                  <div key={av.id || idx} className="rounded-lg border p-3 text-sm space-y-1.5 bg-muted/20">
+                    <p className="font-semibold text-primary">Avalista #{idx + 1}: {av.nome}</p>
+                    {av.cpf && <p><span className="text-muted-foreground">CPF:</span> {formatCPF(av.cpf)}</p>}
+                    {av.telefone && <p><span className="text-muted-foreground">Telefone:</span> {formatPhone(av.telefone)}</p>}
+                    {av.parentesco && <p><span className="text-muted-foreground">Parentesco/Vínculo:</span> {av.parentesco}</p>}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {(client.referencia1Nome || client.referencia2Nome) && (
+          <Card className="md:col-span-2">
+            <CardHeader><CardTitle className="text-base flex items-center gap-2"><Phone className="size-4" />Referências de Contato</CardTitle></CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {client.referencia1Nome && (
+                  <div className="rounded-lg border p-3 text-sm space-y-1.5 bg-muted/20">
+                    <p className="font-semibold text-primary">Referência 1: {client.referencia1Nome}</p>
+                    {client.referencia1Telefone && <p><span className="text-muted-foreground">Telefone:</span> {formatPhone(client.referencia1Telefone)}</p>}
+                    {client.referencia1Vinculo && <p><span className="text-muted-foreground">Vínculo:</span> {client.referencia1Vinculo}</p>}
+                  </div>
+                )}
+                {client.referencia2Nome && (
+                  <div className="rounded-lg border p-3 text-sm space-y-1.5 bg-muted/20">
+                    <p className="font-semibold text-primary">Referência 2: {client.referencia2Nome}</p>
+                    {client.referencia2Telefone && <p><span className="text-muted-foreground">Telefone:</span> {formatPhone(client.referencia2Telefone)}</p>}
+                    {client.referencia2Vinculo && <p><span className="text-muted-foreground">Vínculo:</span> {client.referencia2Vinculo}</p>}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {hasDocuments && (
           <Card className="md:col-span-2">
             <CardHeader><CardTitle className="text-base flex items-center gap-2"><FolderOpen className="size-4" />Documentos</CardTitle></CardHeader>
@@ -230,12 +296,42 @@ export default function ClienteDetalhePage() {
           </Card>
         )}
 
-        {client.observacoes && (
-          <Card className="md:col-span-2">
-            <CardHeader><CardTitle className="text-base">Observações</CardTitle></CardHeader>
-            <CardContent><p className="text-sm text-muted-foreground whitespace-pre-wrap">{client.observacoes}</p></CardContent>
-          </Card>
-        )}
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base">Observações</CardTitle>
+              {canManage && !isEditingObs && (
+                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5" onClick={() => setIsEditingObs(true)}>
+                  <Pencil className="size-3" /> Editar
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            {isEditingObs ? (
+              <div className="space-y-3">
+                <Textarea 
+                  value={obsText} 
+                  onChange={(e) => setObsText(e.target.value)} 
+                  rows={5} 
+                  placeholder="Digite as observações sobre o cliente..."
+                />
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => { setIsEditingObs(false); setObsText(client.observacoes || '') }}>
+                    Cancelar
+                  </Button>
+                  <Button size="sm" onClick={() => obsMut.mutate(obsText)} disabled={obsMut.isPending}>
+                    {obsMut.isPending ? 'Salvando...' : 'Salvar'}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {client.observacoes || <span className="italic opacity-50">Nenhuma observação registrada.</span>}
+              </p>
+            )}
+          </CardContent>
+        </Card>
 
         <PortalCard
           clientId={client.id}

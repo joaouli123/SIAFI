@@ -15,7 +15,6 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaymentMethod } from '@prisma/client';
-import { AvalistaDto } from './avalista.dto';
 
 // Edição de contrato. Campos financeiros (principalAmount, targetProfit,
 // numeroParcelas, dataInicio, diaVencimento) disparam regeneração das parcelas
@@ -92,24 +91,4 @@ export class UpdateLoanDto {
   @IsOptional() @IsBoolean() cobrarEmail?: boolean;
   @IsOptional() @IsBoolean() cobrarPortal?: boolean;
 
-  // Substitui integralmente a lista de avalistas quando enviado
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => AvalistaDto)
-  avalistas?: AvalistaDto[];
-
-  @IsOptional() @IsString() @MaxLength(150)
-  referencia1Nome?: string;
-  @IsOptional() @IsString() @MaxLength(30)
-  referencia1Telefone?: string;
-  @IsOptional() @IsString() @MaxLength(50)
-  referencia1Vinculo?: string;
-
-  @IsOptional() @IsString() @MaxLength(150)
-  referencia2Nome?: string;
-  @IsOptional() @IsString() @MaxLength(30)
-  referencia2Telefone?: string;
-  @IsOptional() @IsString() @MaxLength(50)
-  referencia2Vinculo?: string;
 }

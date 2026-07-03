@@ -19,6 +19,7 @@ import { AuthService } from './auth.service';
 import { MfaService } from './mfa.service';
 import { UsersService } from '../users/users.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { MeGuard } from './guards/me.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { LoginDto } from './dto/login.dto';
 import { ValidateGoogleDto } from './dto/validate-google.dto';
@@ -71,9 +72,9 @@ export class AuthController {
    */
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Req() req: Request) {
+  async refresh(@Req() req: Request, @Body() body: { refreshToken?: string }) {
     const cookies = req.cookies as Record<string, string>;
-    const refreshToken = cookies['refresh_token'];
+    const refreshToken = body?.refreshToken || cookies['refresh_token'];
     if (!refreshToken) throw new UnauthorizedException('Refresh token ausente');
     return this.authService.refresh(refreshToken);
   }
@@ -90,7 +91,12 @@ export class AuthController {
     @CurrentUser() user: CurrentUserPayload,
   ) {
     await this.authService.logout(user.supabaseId);
-    res.clearCookie('refresh_token', { httpOnly: true, sameSite: 'lax', path: '/', secure: process.env.NODE_ENV === 'production' });
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+    });
     return { message: 'Sessão encerrada com sucesso' };
   }
 
@@ -98,12 +104,17 @@ export class AuthController {
    * GET /api/auth/me
    * Retorna dados do usuário autenticado.
    */
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(MeGuard)
   @Get('me')
   async me(@CurrentUser() user: CurrentUserPayload) {
     const full = await this.usersService.findById(user.id);
     if (!full) throw new NotFoundException('Usuário não encontrado');
-    return { id: full.id, username: full.username, nome: full.nome, role: full.role };
+    const aal = (user as any).aal ?? 'aal1';
+    const mfaRoles = ['admin', 'financeiro', 'consultor'];
+    // needsMfa = role requires MFA but session is still aal1
+    // DISABLE_MFA=true suspende a exigência neste ambiente (ver auth.service.ts)
+    const needsMfa = process.env.DISABLE_MFA !== 'true' && mfaRoles.includes(full.role) && aal !== 'aal2';
+    return { id: full.id, username: full.username, nome: full.nome, role: full.role, aal, needsMfa };
   }
 
   // ─── MFA ─────────────────────────────────────────────────────────────────
@@ -112,11 +123,31 @@ export class AuthController {
    * GET /api/auth/mfa/factors
    * Lista os fatores MFA do usuário autenticado.
    */
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(MeGuard)
   @Get('mfa/factors')
   async mfaFactors(@CurrentUser() user: CurrentUserPayload) {
     return this.mfaService.listFactors(user.supabaseId);
   }
+
+  /**
+   * POST /api/auth/mfa/verify
+   * Proxies Supabase MFA challenge + verify server-side.
+   * Uses MeGuard so aal1 tokens are accepted.
+   * Returns aal2 accessToken + refreshToken on success.
+   */
+  @UseGuards(MeGuard)
+  @Post('mfa/verify')
+  @HttpCode(HttpStatus.OK)
+  async mfaVerify(
+    @Req() req: Request & { user: any },
+    @Body() body: { factorId: string; code: string },
+  ) {
+    const authHeader = (req as any).headers?.authorization as string | undefined;
+    const userToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    if (!userToken) throw new UnauthorizedException('Token não fornecido');
+    return this.authService.mfaVerify(userToken, body.factorId, body.code);
+  }
+
 
   /**
    * DELETE /api/auth/mfa/factors/:factorId

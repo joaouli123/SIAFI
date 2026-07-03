@@ -10,8 +10,11 @@ import {
   Length,
   Matches,
   MaxLength,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
+import { AvalistaDto } from './avalista.dto';
 
 function stripNonDigits(value: unknown): unknown {
   if (typeof value === 'string') return value.replace(/\D/g, '');
@@ -89,4 +92,34 @@ export class CreateClientDto {
   @IsPositive()
   @Transform(({ value }) => (value !== undefined ? Number(value) : undefined))
   consultorId?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AvalistaDto)
+  avalistas?: AvalistaDto[];
+
+  @IsOptional() @IsString() @MaxLength(150)
+  referencia1Nome?: string;
+  @IsOptional() @IsString() @MaxLength(30)
+  referencia1Telefone?: string;
+  @IsOptional() @IsString() @MaxLength(50)
+  referencia1Vinculo?: string;
+
+  @IsOptional() @IsString() @MaxLength(150)
+  referencia2Nome?: string;
+  @IsOptional() @IsString() @MaxLength(30)
+  referencia2Telefone?: string;
+  @IsOptional() @IsString() @MaxLength(50)
+  referencia2Vinculo?: string;
 }

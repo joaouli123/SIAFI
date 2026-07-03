@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, ShieldCheck } from 'lucide-react'
+import api, { tokenStore } from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
-import { mfaChallengeAndVerify, mfaListFactors, type MfaFactor } from '@/lib/supabase/mfa'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,42 +14,92 @@ export default function MfaChallengePage() {
   const { completeMfa } = useAuth()
   const router = useRouter()
   const [code, setCode] = useState('')
-  const [factor, setFactor] = useState<MfaFactor | null>(null)
+  const [factorId, setFactorId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    mfaListFactors()
-      .then((factors) => {
-        const verified = factors.find((f) => f.status === 'verified' && f.factor_type === 'totp')
+    const tryLoad = async () => {
+      // Wait up to 5s for the token to be available from auth context init
+      let tries = 0
+      while (!tokenStore.get() && tries < 50) {
+        await new Promise(r => setTimeout(r, 100))
+        tries++
+      }
+
+      if (!tokenStore.get()) {
+        // No token even after waiting — check if we have a refresh token
+        const localRefreshToken = typeof window !== 'undefined' ? localStorage.getItem('siafi_refresh_token') : null
+        if (!localRefreshToken) {
+          setError('Sessão expirada. Faça login novamente.')
+          setLoading(false)
+          setTimeout(() => router.replace('/login'), 2000)
+          return
+        }
+        // Try to refresh manually
+        try {
+          const { data } = await api.post<{ accessToken: string; refreshToken?: string }>('/auth/refresh', {
+            refreshToken: localRefreshToken
+          })
+          tokenStore.set(data.accessToken)
+          if (data.refreshToken && typeof window !== 'undefined') {
+            localStorage.setItem('siafi_refresh_token', data.refreshToken)
+          }
+        } catch {
+          setError('Sessão expirada. Faça login novamente.')
+          setLoading(false)
+          setTimeout(() => router.replace('/login'), 2000)
+          return
+        }
+      }
+
+      // Now fetch MFA factors via backend (uses admin key — works with aal1)
+      try {
+        const { data } = await api.get<{ factors: Array<{ id: string; status: string; factor_type: string }> }>('/auth/mfa/factors')
+        const verified = data.factors?.find(f => f.status === 'verified' && f.factor_type === 'totp')
         if (!verified) {
-          // No verified factor — send to setup
           router.replace('/mfa-setup')
           return
         }
-        setFactor(verified)
+        setFactorId(verified.id)
         setLoading(false)
         setTimeout(() => inputRef.current?.focus(), 50)
-      })
-      .catch(() => {
+      } catch (err: any) {
+        console.error('[mfa-challenge] Failed to load factors:', err)
         setError('Erro ao carregar autenticação. Faça login novamente.')
         setLoading(false)
-      })
+        setTimeout(() => router.replace('/login'), 2500)
+      }
+    }
+
+    tryLoad()
   }, [router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!factor || code.length !== 6) return
+    if (!factorId || code.length !== 6) return
     setError(null)
     setSubmitting(true)
+
     try {
-      const { access_token } = await mfaChallengeAndVerify(factor.id, code)
-      await completeMfa(access_token)
-      router.replace('/dashboard')
+      // Use backend endpoint that proxies the Supabase challenge/verify
+      const { data } = await api.post<{ accessToken: string; refreshToken: string }>('/auth/mfa/verify', {
+        factorId,
+        code,
+      })
+
+      // Save the new aal2 refresh token
+      if (typeof window !== 'undefined' && data.refreshToken) {
+        localStorage.setItem('siafi_refresh_token', data.refreshToken)
+      }
+
+      await completeMfa(data.accessToken)
+      window.location.replace('/dashboard')
     } catch (err: any) {
-      setError(err?.message ?? 'Código inválido. Tente novamente.')
+      const msg = err?.response?.data?.message ?? err?.message ?? 'Código inválido. Tente novamente.'
+      setError(msg)
       setCode('')
       setTimeout(() => inputRef.current?.focus(), 50)
     } finally {
@@ -59,7 +109,7 @@ export default function MfaChallengePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-[200px]">
         <Loader2 className="size-6 animate-spin text-blue-600" />
       </div>
     )
@@ -112,11 +162,11 @@ export default function MfaChallengePage() {
             {submitting && <Loader2 className="size-4 animate-spin mr-2" />}
             {submitting ? 'Verificando...' : 'Verificar'}
           </Button>
-
-          <p className="text-center text-xs text-muted-foreground">
-            Abra o Google Authenticator ou outro app TOTP para ver o código.
-          </p>
         </form>
+
+        <p className="text-center text-xs text-muted-foreground mt-4">
+          Abra o Google Authenticator ou outro app TOTP para ver o código.
+        </p>
       </CardContent>
     </Card>
   )

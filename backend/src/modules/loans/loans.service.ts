@@ -91,10 +91,6 @@ export class LoansService {
         },
         renegociacoes: { orderBy: { createdAt: 'desc' } },
         notifications: { orderBy: { createdAt: 'desc' }, take: 50 },
-        avalistas: {
-          orderBy: { id: 'asc' },
-          include: { cliente: { select: { id: true, nome: true, cpf: true } } },
-        },
         comissaoPagamentos: { orderBy: { dataPagamento: 'desc' } },
       },
     });
@@ -254,27 +250,6 @@ export class LoansService {
           cobrarWhatsapp:          dto.cobrarWhatsapp ?? true,
           cobrarEmail:             dto.cobrarEmail ?? true,
           cobrarPortal:            dto.cobrarPortal ?? true,
-          referencia1Nome:         dto.referencia1Nome ?? null,
-          referencia1Telefone:     dto.referencia1Telefone ?? null,
-          referencia1Vinculo:      dto.referencia1Vinculo ?? null,
-          referencia2Nome:         dto.referencia2Nome ?? null,
-          referencia2Telefone:     dto.referencia2Telefone ?? null,
-          referencia2Vinculo:      dto.referencia2Vinculo ?? null,
-          avalistas: dto.avalistas?.length
-            ? {
-                create: dto.avalistas
-                  .filter((a) => a.clienteId !== dto.clientId) // cliente não pode ser avalista de si mesmo
-                  .map((a) => ({
-                  clienteId:  a.clienteId ?? null,
-                  nome:       a.nome,
-                  cpf:        a.cpf ?? null,
-                  telefone:   a.telefone ?? null,
-                  email:      a.email ?? null,
-                  endereco:   a.endereco ?? null,
-                  parentesco: a.parentesco ?? null,
-                })),
-              }
-            : undefined,
         },
       });
 
@@ -443,12 +418,6 @@ export class LoansService {
           cobrarWhatsapp:       dto.cobrarWhatsapp ?? loan.cobrarWhatsapp,
           cobrarEmail:          dto.cobrarEmail ?? loan.cobrarEmail,
           cobrarPortal:         dto.cobrarPortal ?? loan.cobrarPortal,
-          referencia1Nome:      dto.referencia1Nome     !== undefined ? dto.referencia1Nome     : loan.referencia1Nome,
-          referencia1Telefone:  dto.referencia1Telefone !== undefined ? dto.referencia1Telefone : loan.referencia1Telefone,
-          referencia1Vinculo:   dto.referencia1Vinculo  !== undefined ? dto.referencia1Vinculo  : loan.referencia1Vinculo,
-          referencia2Nome:      dto.referencia2Nome     !== undefined ? dto.referencia2Nome     : loan.referencia2Nome,
-          referencia2Telefone:  dto.referencia2Telefone !== undefined ? dto.referencia2Telefone : loan.referencia2Telefone,
-          referencia2Vinculo:   dto.referencia2Vinculo  !== undefined ? dto.referencia2Vinculo  : loan.referencia2Vinculo,
         },
       });
 
@@ -458,26 +427,6 @@ export class LoansService {
         });
         if (novasParcelas.length) {
           await tx.installment.createMany({ data: novasParcelas as Prisma.InstallmentCreateManyInput[] });
-        }
-      }
-
-      if (dto.avalistas !== undefined) {
-        await tx.avalista.deleteMany({ where: { loanId: id } });
-        if (dto.avalistas.length) {
-          await tx.avalista.createMany({
-            data: dto.avalistas
-              .filter((a) => a.clienteId !== loan.clientId) // cliente não pode ser avalista de si mesmo
-              .map((a) => ({
-              loanId:     id,
-              clienteId:  a.clienteId ?? null,
-              nome:       a.nome,
-              cpf:        a.cpf ?? null,
-              telefone:   a.telefone ?? null,
-              email:      a.email ?? null,
-              endereco:   a.endereco ?? null,
-              parentesco: a.parentesco ?? null,
-            })),
-          });
         }
       }
 

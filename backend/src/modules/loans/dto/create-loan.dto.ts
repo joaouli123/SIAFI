@@ -9,13 +9,9 @@ import {
   IsPositive,
   IsString,
   Max,
-  MaxLength,
   Min,
-  ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { PaymentMethod } from '@prisma/client';
-import { AvalistaDto } from './avalista.dto';
 
 export class CreateLoanDto {
   @IsInt()
@@ -107,25 +103,4 @@ export class CreateLoanDto {
   @IsBoolean()
   cobrarPortal?: boolean;
 
-  // ── Avalistas (por contrato; podem referenciar um cliente existente) ─────
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => AvalistaDto)
-  avalistas?: AvalistaDto[];
-
-  // ── Referências de contato (por contrato) ────────────────────────────────
-  @IsOptional() @IsString() @MaxLength(150)
-  referencia1Nome?: string;
-  @IsOptional() @IsString() @MaxLength(30)
-  referencia1Telefone?: string;
-  @IsOptional() @IsString() @MaxLength(50)
-  referencia1Vinculo?: string;
-
-  @IsOptional() @IsString() @MaxLength(150)
-  referencia2Nome?: string;
-  @IsOptional() @IsString() @MaxLength(30)
-  referencia2Telefone?: string;
-  @IsOptional() @IsString() @MaxLength(50)
-  referencia2Vinculo?: string;
 }

@@ -11,6 +11,11 @@ function isPublicPath(pathname: string) {
 }
 
 function hasActiveSession(request: NextRequest): boolean {
+  // Marker cookie set by the frontend itself (lib/api.ts tokenStore) whenever an
+  // access token is held in memory. Works even when backend and frontend are on
+  // different origins (e.g. Railway), unlike the cookies below which the backend
+  // sets on its own domain and the frontend origin never receives.
+  if (request.cookies.has('siafi_session')) return true
   // NestJS username/password session (httpOnly cookie set by backend after login)
   if (request.cookies.has('refresh_token')) return true
   // Supabase session — Google OAuth (cookie set by /auth/callback route handler)

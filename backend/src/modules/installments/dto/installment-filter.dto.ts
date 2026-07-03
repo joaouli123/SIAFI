@@ -38,6 +38,10 @@ export class InstallmentFilterDto {
   aberto?: string;
 
   @IsOptional()
+  @IsString()
+  comObservacao?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)

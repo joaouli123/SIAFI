@@ -2,10 +2,23 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
 let _accessToken: string | null = null
 
+// Non-httpOnly marker cookie on the FRONTEND's own origin, read by proxy.ts (edge
+// middleware) to gate routes. The real refresh_token cookie is set by the backend,
+// which may live on a different origin (e.g. Railway's separate *.up.railway.app
+// subdomains) and never reaches the frontend — so the middleware can't rely on it.
+function setSessionCookie() {
+  if (typeof document === 'undefined') return
+  document.cookie = 'siafi_session=1; path=/; max-age=2592000; samesite=lax'
+}
+function clearSessionCookie() {
+  if (typeof document === 'undefined') return
+  document.cookie = 'siafi_session=; path=/; max-age=0; samesite=lax'
+}
+
 export const tokenStore = {
   get: () => _accessToken,
-  set: (t: string) => { _accessToken = t },
-  clear: () => { _accessToken = null },
+  set: (t: string) => { _accessToken = t; setSessionCookie() },
+  clear: () => { _accessToken = null; clearSessionCookie() },
   onAuthLost: null as (() => void) | null,
 }
 
@@ -54,6 +67,12 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
+    const errorMsg = (error.response?.data as any)?.message;
+    const isMfaError = errorMsg?.includes('MFA') || errorMsg?.includes('TOTP');
+    if (isMfaError) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status !== 401 || originalRequest._retry) {
       return Promise.reject(error)
     }
@@ -77,9 +96,15 @@ api.interceptors.response.use(
     _isRefreshing = true
 
     try {
-      // Primary: NestJS refresh via httpOnly cookie (username/password users)
-      const { data } = await api.post<{ accessToken: string }>('/auth/refresh')
+      // Primary: NestJS refresh via httpOnly cookie with fallback in body
+      const localRefreshToken = typeof window !== 'undefined' ? localStorage.getItem('siafi_refresh_token') : null;
+      const { data } = await api.post<{ accessToken: string; refreshToken: string }>('/auth/refresh', {
+        refreshToken: localRefreshToken,
+      });
       tokenStore.set(data.accessToken)
+      if (typeof window !== 'undefined' && data.refreshToken) {
+        localStorage.setItem('siafi_refresh_token', data.refreshToken);
+      }
       processQueue(null, data.accessToken)
       originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
       return api(originalRequest)

@@ -31,8 +31,8 @@ export function useAuth() {
   return ctx
 }
 
-async function fetchMe(): Promise<AuthUser> {
-  const { data } = await api.get<AuthUser>('/auth/me')
+async function fetchMe(): Promise<AuthUser & { needsMfa?: boolean }> {
+  const { data } = await api.get<AuthUser & { needsMfa?: boolean }>('/auth/me')
   return data
 }
 
@@ -77,14 +77,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 1. Try existing in-memory token
       try {
         const me = await fetchMe()
+        if (me.needsMfa) {
+          // Token is valid (aal1) but MFA not yet completed.
+          // Do NOT set user — keep isAuthenticated=false so dashboard redirects.
+          // The page itself (/mfa-challenge) will handle rendering.
+          if (!cancelled) {
+            if (typeof window !== 'undefined') {
+              const path = window.location.pathname
+              if (!path.includes('/mfa-challenge') && !path.includes('/mfa-setup')) {
+                window.location.replace('/mfa-challenge')
+              }
+            }
+          }
+          return
+        }
         if (!cancelled) { setUser(me); return }
       } catch {}
 
-      // 2. Try NestJS refresh via httpOnly cookie
+      // 2. Try NestJS refresh via httpOnly cookie with fallback in body
       try {
-        const { data } = await api.post<{ accessToken: string }>('/auth/refresh')
+        const localRefreshToken = typeof window !== 'undefined' ? localStorage.getItem('siafi_refresh_token') : null
+        const { data } = await api.post<{ accessToken: string; refreshToken?: string }>('/auth/refresh', {
+          refreshToken: localRefreshToken
+        })
         tokenStore.set(data.accessToken)
+        if (typeof window !== 'undefined' && data.refreshToken) {
+          localStorage.setItem('siafi_refresh_token', data.refreshToken)
+        }
         const me = await fetchMe()
+        if (me.needsMfa) {
+          if (!cancelled && typeof window !== 'undefined') {
+            const path = window.location.pathname
+            if (!path.includes('/mfa-challenge') && !path.includes('/mfa-setup')) {
+              window.location.replace('/mfa-challenge')
+            }
+          }
+          return
+        }
         if (!cancelled) { setUser(me); return }
       } catch {}
 
@@ -102,6 +131,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (appRole !== 'cliente') {
             tokenStore.set(session.access_token)
             const me = await fetchMe()
+            if (me.needsMfa) {
+              if (!cancelled && typeof window !== 'undefined') {
+                const path = window.location.pathname
+                if (!path.includes('/mfa-challenge') && !path.includes('/mfa-setup')) {
+                  window.location.replace('/mfa-challenge')
+                }
+              }
+              return
+            }
             if (!cancelled) setUser(me)
           }
         }
@@ -116,19 +154,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function login(credentials: { identificador: string; password: string }) {
     const { data } = await api.post<{
       accessToken: string
+      refreshToken: string
       user: AuthUser
       needsMfa?: boolean
       setupMfaRequired?: boolean
     }>('/auth/login', credentials)
 
     tokenStore.set(data.accessToken)
+    if (typeof window !== 'undefined' && data.refreshToken) {
+      localStorage.setItem('siafi_refresh_token', data.refreshToken)
+    }
 
     if (data.needsMfa) {
       return { needsMfa: true }
     }
 
     if (data.setupMfaRequired) {
-      setUser(data.user)
       return { setupMfaRequired: true }
     }
 
@@ -157,6 +198,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut()
     } catch {}
     tokenStore.clear()
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('siafi_refresh_token')
+    }
     setUser(null)
   }
 
