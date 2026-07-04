@@ -1,12 +1,12 @@
 'use client'
 
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Calculator, ChevronDown, ChevronRight, Plus, Trash2, Users, AlertTriangle, Percent } from 'lucide-react'
+import { ArrowLeft, Save, Calculator, ChevronDown, ChevronRight, AlertTriangle, Percent } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
-import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency, METODO_PAGAMENTO } from '@/lib/utils'
 import api from '@/lib/api'
@@ -44,19 +43,6 @@ const schema = z.object({
   cobrarWhatsapp: z.boolean().optional(),
   cobrarEmail: z.boolean().optional(),
   cobrarPortal: z.boolean().optional(),
-  avalistas: z.array(z.object({
-    clienteId: z.coerce.number().optional(),
-    nome: z.string().optional(),
-    cpf: z.string().optional(),
-    telefone: z.string().optional(),
-    parentesco: z.string().optional(),
-  })).optional(),
-  referencia1Nome: z.string().optional(),
-  referencia1Telefone: z.string().optional(),
-  referencia1Vinculo: z.string().optional(),
-  referencia2Nome: z.string().optional(),
-  referencia2Telefone: z.string().optional(),
-  referencia2Vinculo: z.string().optional(),
 })
 type FormData = z.infer<typeof schema>
 
@@ -71,17 +57,9 @@ export default function EditarEmprestimoPage() {
     queryFn: () => api.get<any>(`/loans/${id}`).then((r) => r.data),
   })
 
-  const { data: clients } = useQuery({
-    queryKey: ['clients-list'],
-    queryFn: () => api.get<any>('/clients', { params: { limit: 500, status: 'active' } }).then((r) => r.data.data ?? r.data),
-  })
-
-  const { register, handleSubmit, watch, setValue, getValues, control, reset, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, watch, setValue, getValues, reset, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
-    defaultValues: { avalistas: [] },
   })
-
-  const { fields: avalistaFields, append: addAvalista, remove: removeAvalista } = useFieldArray({ control, name: 'avalistas' })
 
   useEffect(() => {
     if (!loan) return
@@ -108,19 +86,6 @@ export default function EditarEmprestimoPage() {
       cobrarWhatsapp: loan.cobrarWhatsapp ?? true,
       cobrarEmail: loan.cobrarEmail ?? true,
       cobrarPortal: loan.cobrarPortal ?? true,
-      avalistas: (loan.avalistas ?? []).map((a: any) => ({
-        clienteId: a.clienteId ?? undefined,
-        nome: a.nome ?? '',
-        cpf: a.cpf ?? '',
-        telefone: a.telefone ?? '',
-        parentesco: a.parentesco ?? '',
-      })),
-      referencia1Nome: loan.referencia1Nome ?? '',
-      referencia1Telefone: loan.referencia1Telefone ?? '',
-      referencia1Vinculo: loan.referencia1Vinculo ?? '',
-      referencia2Nome: loan.referencia2Nome ?? '',
-      referencia2Telefone: loan.referencia2Telefone ?? '',
-      referencia2Vinculo: loan.referencia2Vinculo ?? '',
     })
   }, [loan, reset])
 
@@ -179,9 +144,6 @@ export default function EditarEmprestimoPage() {
       const payload = {
         ...rest,
         dataPrimeiroVencimento: data.dataPrimeiroVencimento || undefined, // só envia se preenchida
-        avalistas: (data.avalistas ?? [])
-          .filter((a) => a.nome && a.nome.trim())
-          .map((a) => ({ ...a, clienteId: a.clienteId && a.clienteId > 0 ? a.clienteId : undefined })),
       }
       return api.patch(`/loans/${id}`, payload)
     },
@@ -321,64 +283,6 @@ export default function EditarEmprestimoPage() {
             <div className="md:col-span-2 space-y-1.5 border-t pt-3">
               <Label>Desconto p/ quitação total do contrato (% do lucro a vencer)</Label>
               <Input type="number" step="0.01" min={0} max={100} {...register('descontoQuitacaoPercentual')} placeholder="ex: 10 — opcional" className="md:w-1/2" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2 flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base flex items-center gap-2"><Users className="size-4" />Avalistas</CardTitle>
-            <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => addAvalista({ clienteId: undefined, nome: '', cpf: '', telefone: '', parentesco: '' })}>
-              <Plus className="size-4" />Adicionar
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {avalistaFields.length === 0 && <p className="text-sm text-muted-foreground">Nenhum avalista.</p>}
-            {avalistaFields.map((field, i) => {
-              return (
-                <div key={field.id} className="rounded-lg border p-3 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-muted-foreground">Avalista {i + 1}</span>
-                    <Button type="button" variant="ghost" size="sm" className="text-destructive h-7 px-2" onClick={() => removeAvalista(i)}><Trash2 className="size-4" /></Button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="md:col-span-2 space-y-1.5">
-                      <Label>Cliente existente (opcional)</Label>
-                      <ClienteCombobox
-                        clientes={clients ?? []}
-                        value={watch(`avalistas.${i}.clienteId`)}
-                        excludeId={loan?.client?.id}
-                        avulsoLabel="— Pessoa avulsa (preencher manualmente) —"
-                        placeholder="Buscar cliente por nome ou CPF..."
-                        onSelect={(c) => {
-                          setValue(`avalistas.${i}.clienteId`, c?.id ?? undefined)
-                          if (c) { setValue(`avalistas.${i}.nome`, c.nome); setValue(`avalistas.${i}.cpf`, c.cpf ?? '') }
-                        }}
-                      />
-                    </div>
-                    <div className="space-y-1.5"><Label>Nome *</Label><Input {...register(`avalistas.${i}.nome`)} /></div>
-                    <div className="space-y-1.5"><Label>CPF</Label><Input {...register(`avalistas.${i}.cpf`)} /></div>
-                    <div className="space-y-1.5"><Label>Telefone</Label><Input {...register(`avalistas.${i}.telefone`)} /></div>
-                    <div className="space-y-1.5"><Label>Vínculo / Parentesco</Label><Input {...register(`avalistas.${i}.parentesco`)} /></div>
-                  </div>
-                </div>
-              )
-            })}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader><CardTitle className="text-base">Referências de Contato</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-1.5"><Label>Referência 1 — Nome</Label><Input {...register('referencia1Nome')} /></div>
-              <div className="space-y-1.5"><Label>Telefone</Label><Input {...register('referencia1Telefone')} /></div>
-              <div className="space-y-1.5"><Label>Vínculo</Label><Input {...register('referencia1Vinculo')} /></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-1.5"><Label>Referência 2 — Nome</Label><Input {...register('referencia2Nome')} /></div>
-              <div className="space-y-1.5"><Label>Telefone</Label><Input {...register('referencia2Telefone')} /></div>
-              <div className="space-y-1.5"><Label>Vínculo</Label><Input {...register('referencia2Vinculo')} /></div>
             </div>
           </CardContent>
         </Card>

@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useState } from 'react'
-import { ArrowLeft, XCircle, RefreshCcw, QrCode, DollarSign, FileDown, TrendingUp, Mail, Pencil, Users, Phone, Percent, Plus, Undo2, CheckCircle } from 'lucide-react'
+import { ArrowLeft, XCircle, RefreshCcw, QrCode, DollarSign, FileDown, TrendingUp, Mail, Pencil, Percent, Plus, Undo2, CheckCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -24,11 +24,6 @@ interface Installment {
   cobrancaWhatsappOk: boolean; cobrancaEmailOk: boolean; cobrancaPortalOk: boolean
   multaAplicada: number; valorComEncargos?: number | null
 }
-interface Avalista {
-  id: number; nome: string; cpf?: string | null; telefone?: string | null
-  parentesco?: string | null; clienteId?: number | null
-  cliente?: { id: number; nome: string; cpf?: string | null } | null
-}
 interface ComissaoPagamento {
   id: number; valor: number; dataPagamento: string; observacao?: string | null
 }
@@ -45,9 +40,6 @@ interface Loan {
   descontoQuitacaoPercentual?: number | null
   comissaoResumo?: ComissaoResumo
   comissaoPagamentos?: ComissaoPagamento[]
-  referencia1Nome?: string | null; referencia1Telefone?: string | null; referencia1Vinculo?: string | null
-  referencia2Nome?: string | null; referencia2Telefone?: string | null; referencia2Vinculo?: string | null
-  avalistas?: Avalista[]
   client: { id: number; nome: string; cpf: string }
   installments: Installment[]
   consultor?: { id: number; nome: string } | null
@@ -302,61 +294,6 @@ export default function EmprestimoDetalhePage() {
           )}
         </CardContent>
       </Card>
-
-      {((loan.avalistas && loan.avalistas.length > 0) || loan.referencia1Nome || loan.referencia2Nome) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {loan.avalistas && loan.avalistas.length > 0 && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center gap-2"><Users className="size-4" />Avalistas</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                {loan.avalistas.map((a) => (
-                  <div key={a.id} className="rounded-lg border p-3">
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium">
-                        {a.cliente ? (
-                          <Link href={`/clientes/${a.cliente.id}`} className="hover:underline text-primary">{a.nome}</Link>
-                        ) : a.nome}
-                      </p>
-                      {a.cliente && <Badge variant="outline" className="text-[10px]">cliente</Badge>}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-0.5">
-                      {a.cpf && <span>CPF: {a.cpf}</span>}
-                      {a.telefone && <span>Tel: {a.telefone}</span>}
-                      {a.parentesco && <span>Vínculo: {a.parentesco}</span>}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
-          {(loan.referencia1Nome || loan.referencia2Nome) && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center gap-2"><Phone className="size-4" />Referências</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                {[1, 2].map((n) => {
-                  const nome = (loan as any)[`referencia${n}Nome`]
-                  const tel = (loan as any)[`referencia${n}Telefone`]
-                  const vinc = (loan as any)[`referencia${n}Vinculo`]
-                  if (!nome) return null
-                  return (
-                    <div key={n} className="rounded-lg border p-3">
-                      <p className="font-medium">{nome}</p>
-                      <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-0.5">
-                        {tel && <span>Tel: {tel}</span>}
-                        {vinc && <span>Vínculo: {vinc}</span>}
-                      </div>
-                    </div>
-                  )
-                })}
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
 
       {canSeeSplit && (
         <Card className="border-indigo-200 bg-indigo-50/50 dark:bg-indigo-950/20 dark:border-indigo-900">
