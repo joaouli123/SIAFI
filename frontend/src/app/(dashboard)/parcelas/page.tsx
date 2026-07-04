@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import Link from 'next/link'
-import { AlertCircle, RefreshCw, Calendar, CalendarClock, CalendarRange, CheckCircle2, ListFilter, Search, MessageSquare, Pencil } from 'lucide-react'
+import { AlertCircle, RefreshCw, Calendar, CalendarClock, CalendarRange, CheckCircle2, ListFilter, Search, Pencil } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -66,6 +66,7 @@ export default function ParcelasPage() {
   const [fSearch, setFSearch] = useState('')
   const [fStart, setFStart] = useState('')
   const [fEnd, setFEnd] = useState('')
+  const [fObs, setFObs] = useState('')
   const [fPage, setFPage] = useState(1)
   // Mês selecionado na aba "Este mês"
   const [mesSel, setMesSel] = useState(() => new Date().toISOString().slice(0, 7))
@@ -89,9 +90,10 @@ export default function ParcelasPage() {
     // todas
     return {
       status: fStatus || undefined, search: fSearch || undefined,
-      startDate: fStart || undefined, endDate: fEnd || undefined, page: fPage, limit: 50,
+      startDate: fStart || undefined, endDate: fEnd || undefined,
+      comObservacao: fObs || undefined, page: fPage, limit: 50,
     }
-  }, [tab, fPage, mesSel, fStatus, fSearch, fStart, fEnd, hojeIso])
+  }, [tab, fPage, mesSel, fStatus, fSearch, fStart, fEnd, fObs, hojeIso])
 
   const { data: hoje, isLoading: loadingHoje, refetch: refetchHoje } = useQuery<Installment[]>({
     queryKey: ['installments', 'hoje'],
@@ -221,6 +223,11 @@ export default function ParcelasPage() {
               <option value="pago">Pago</option>
               <option value="atrasado">Atrasado</option>
               <option value="cancelado">Cancelado</option>
+            </Select>
+            <Select className="w-auto" value={fObs} onChange={(e) => { setFObs(e.target.value); setFPage(1) }}>
+              <option value="">Com/sem observação</option>
+              <option value="true">Com observação</option>
+              <option value="false">Sem observação</option>
             </Select>
           </div>
           <div className="flex flex-wrap items-end gap-3">
