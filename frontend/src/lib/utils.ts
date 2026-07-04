@@ -39,8 +39,12 @@ export function formatDateTime(date: string | Date): string {
 }
 
 export function formatDateLocal(date: string | Date): string {
+  if (!date) return ""
   const d = typeof date === "string" ? new Date(date) : date
-  return format(toZonedTime(d, TIMEZONE), "dd/MM/yyyy", { locale: ptBR })
+  const day = String(d.getUTCDate()).padStart(2, '0')
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0')
+  const year = d.getUTCFullYear()
+  return `${day}/${month}/${year}`
 }
 
 export function formatDateTimeLocal(date: string | Date): string {

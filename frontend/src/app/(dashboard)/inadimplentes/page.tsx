@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { useState } from 'react'
-import { formatCurrency, formatDate, formatCPF, formatPhone } from '@/lib/utils'
+import { formatCurrency, formatDate, formatDateLocal, formatCPF, formatPhone } from '@/lib/utils'
 import api from '@/lib/api'
 
 interface Loan {
@@ -122,57 +122,56 @@ export default function InadimplentesPage() {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/30">
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Atraso</th>
-                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
-                      <th className="text-center px-4 py-3 font-medium text-muted-foreground">Obs</th>
-                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loans.map((loan: Loan) => {
-                      const saldo = calcSaldoDevedor(loan.installments ?? [])
-                      // Atraso: parcela em aberto vencida mais antiga
-                      const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
-                      const vencidas = (loan.installments ?? []).filter((i) => {
-                        if (i.status === 'pago' || i.status === 'cancelado') return false
-                        if (Number(i.installmentAmount) - Number(i.totalPago) <= 0) return false
-                        const v = new Date(i.dataVencimento); v.setHours(0, 0, 0, 0)
-                        return v < hoje
-                      })
-                      const maisAntiga = vencidas.length
-                        ? vencidas.reduce((a, b) => (new Date(a.dataVencimento) < new Date(b.dataVencimento) ? a : b))
-                        : null
-                      const dias = maisAntiga
-                        ? Math.floor((hoje.getTime() - new Date(maisAntiga.dataVencimento).setHours(0, 0, 0, 0)) / 86400000)
-                        : 0
-                      return (
-                        <tr key={loan.id} className="border-b border-border hover:bg-muted/20">
-                          <td className="px-4 py-3">
-                            <div className="flex flex-col">
-                              <div className="flex items-center gap-1.5">
-                                <Link href={`/clientes/${loan.client?.id}`} className="hover:underline font-medium">
-                                  {loan.client?.nome}
-                                </Link>
-                              </div>
-                              {loan.client?.cpf && (
-                                <span className="text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
-                              )}
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">Emp. #{loan.id}</span>
-                              </div>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/30 text-left">
+                    <th className="px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">Atraso</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground">Obs</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loans.map((loan: Loan) => {
+                    const saldo = calcSaldoDevedor(loan.installments ?? [])
+                    const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
+                    const vencidas = (loan.installments ?? []).filter((i) => {
+                      if (i.status === 'pago' || i.status === 'cancelado') return false
+                      if (Number(i.installmentAmount) - Number(i.totalPago) <= 0) return false
+                      const v = new Date(i.dataVencimento); v.setHours(0, 0, 0, 0)
+                      return v < hoje
+                    })
+                    const maisAntiga = vencidas.length
+                      ? vencidas.reduce((a, b) => (new Date(a.dataVencimento) < new Date(b.dataVencimento) ? a : b))
+                      : null
+                    const dias = maisAntiga
+                      ? Math.floor((hoje.getTime() - new Date(maisAntiga.dataVencimento).setHours(0, 0, 0, 0)) / 86400000)
+                      : 0
+                    return (
+                      <tr key={loan.id} className="border-b border-border hover:bg-muted/20">
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-1.5">
+                              <Link href={`/clientes/${loan.client?.id}`} className="hover:underline font-medium">
+                                {loan.client?.nome}
+                              </Link>
                             </div>
-                          </td>
-                          <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
-                          <td className="px-4 py-3">
-                            {maisAntiga ? (
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium text-destructive">{formatDate(maisAntiga.dataVencimento)}</span>
-                                <Badge variant="destructive" className="text-[10px]">{dias}d</Badge>
+                            {loan.client?.cpf && (
+                              <span className="text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
+                            )}
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">Emp. #{loan.id}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
+                        <td className="px-4 py-3">
+                          {maisAntiga ? (
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-destructive">{formatDateLocal(maisAntiga.dataVencimento)}</span>
+                              <Badge variant="destructive" className="text-[10px]">{dias}d</Badge>
                                 {vencidas.length > 1 && (
                                   <span className="text-[10px] text-muted-foreground">+{vencidas.length - 1}</span>
                                 )}
