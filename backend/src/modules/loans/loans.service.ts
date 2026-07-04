@@ -10,6 +10,7 @@ import Decimal from 'decimal.js';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { PortalService } from '../client-portal/portal.service';
+import { InstallmentsService } from '../installments/installments.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { addMonthsSafe, calcularDataVencimento } from '../../common/utils/date.utils';
 import { CreateLoanDto } from './dto/create-loan.dto';
@@ -33,6 +34,7 @@ export class LoansService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly portalService: PortalService,
+    private readonly installmentsService: InstallmentsService,
   ) {}
 
   // ─── Queries ────────────────────────────────────────────────────────────────
@@ -96,6 +98,12 @@ export class LoansService {
     });
 
     if (!loan) throw new NotFoundException(`Empréstimo ${id} não encontrado`);
+
+    (loan as Record<string, unknown>).installments = await this.installmentsService.recalcularEncargosLista(
+      loan.installments,
+      loan.multaPercentual,
+      loan.moraDiariaPercentual,
+    );
 
     // Resumo da comissão do consultor (realizada via capital-primeiro × paga)
     const pct = Number(loan.comissaoPercentual ?? 0);

@@ -242,6 +242,31 @@ export class InstallmentsService {
     return { saldo, valorMulta, valorMora, totalDevido, diasAtraso };
   }
 
+  // Recalcula mora/multa em tempo real para parcelas de UM MESMO contrato — usado pelo
+  // detalhe do empréstimo (LoansService.findById), que não passa por findAll/findOverdue.
+  async recalcularEncargosLista<
+    T extends { installmentAmount: unknown; totalPago: unknown; dataVencimento: Date },
+  >(
+    installments: T[],
+    multaPercentual: unknown,
+    moraDiariaPercentual: unknown,
+  ): Promise<(T & { moraAcumulada: string; multaAplicada: string; valorComEncargos: string })[]> {
+    const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const loanCtx = { multaPercentual, moraDiariaPercentual };
+
+    return installments.map((inst) => {
+      const enc = this.calcEncargos({ ...inst, loan: loanCtx }, multaDefault, moraDiaDefault, hoje);
+      return {
+        ...inst,
+        moraAcumulada: String(enc.valorMora),
+        multaAplicada: String(enc.valorMulta),
+        valorComEncargos: String(enc.totalDevido),
+      };
+    });
+  }
+
   // Marca parcelas vencidas como 'atrasado' e recalcula encargos (idempotente).
   async markOverdue(): Promise<{ count: number }> {
     const hoje = new Date();
