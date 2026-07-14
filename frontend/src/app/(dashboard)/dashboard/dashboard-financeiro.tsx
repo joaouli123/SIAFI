@@ -81,7 +81,7 @@ interface StatCardProps {
 function StatCard({ title, value, icon: Icon, color, isLoading, href, subItems }: StatCardProps) {
   const c = colorMap[color]
   const content = (
-    <Card className={cn('border-0 shadow-sm', c.bg, href && 'cursor-pointer')}>
+    <Card className={cn('border border-border/40 shadow-sm card-hover', c.bg, href && 'cursor-pointer')}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         <div className={cn('rounded-lg p-2', c.icon)}><Icon className="size-4" /></div>
@@ -270,8 +270,8 @@ export default function DashboardFinanceiro() {
       </div>
 
       {/* Faixa de resumo financeiro */}
-      <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
-        <div className="grid grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-border/70">
+      <Card className="overflow-hidden border border-border/50 shadow-md bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-950 dark:to-blue-950/10 rounded-xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-border/70">
           {[
             { icon: Wallet,        label: 'Valor em carteira',     value: formatCurrency(loansQ.data?.valorEmCarteira ?? 0), color: 'text-blue-700 dark:text-blue-400',   iconBg: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400',     loading: loansQ.isLoading,    hint: 'Saldo a receber em aberto' },
             { icon: DollarSign,    label: 'Recebido no mês',       value: formatCurrency(loansQ.data?.valorRecebidoMes ?? 0), color: 'text-green-700 dark:text-green-400', iconBg: 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400', loading: loansQ.isLoading,    hint: 'Entradas de parcelas' },
@@ -306,9 +306,9 @@ export default function DashboardFinanceiro() {
 
       {/* Gráficos: composição da carteira + inadimplência por faixa */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
+        <Card className="border border-border/40 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2"><PieIcon className="size-4 text-primary" />Composição da carteira</CardTitle>
+            <CardTitle className="text-base flex items-center gap-2 tracking-tight"><PieIcon className="size-4 text-primary" />Composição da carteira</CardTitle>
           </CardHeader>
           <CardContent>
             {carteiraQ.isLoading ? (
@@ -321,9 +321,9 @@ export default function DashboardFinanceiro() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border border-border/40 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2"><AlertTriangle className="size-4 text-red-500" />Inadimplência por faixa</CardTitle>
+            <CardTitle className="text-base flex items-center gap-2 tracking-tight"><AlertTriangle className="size-4 text-red-500" />Inadimplência por faixa</CardTitle>
           </CardHeader>
           <CardContent>
             {overdueQ.isLoading ? (
@@ -447,9 +447,9 @@ export default function DashboardFinanceiro() {
 
       {/* Clientes Atrasados + Quitados */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
+        <Card className="border border-border/40 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="text-base flex items-center gap-2 tracking-tight">
               <AlertTriangle className="size-4 text-red-500" />
               Clientes Atrasados
             </CardTitle>
@@ -484,9 +484,9 @@ export default function DashboardFinanceiro() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border border-border/40 shadow-sm">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="text-base flex items-center gap-2 tracking-tight">
               <CheckCircle className="size-4 text-green-500" />
               Clientes Quitados
             </CardTitle>
@@ -514,9 +514,9 @@ export default function DashboardFinanceiro() {
       </div>
 
       {/* Evolução mensal */}
-      <Card>
+      <Card className="border border-border/40 shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="text-base flex items-center gap-2 tracking-tight">
             <BarChart2 className="size-4 text-primary" />
             Evolução dos últimos 6 meses
           </CardTitle>

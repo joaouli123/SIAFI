@@ -156,7 +156,22 @@ export class ClientsService {
       };
     }
 
-    const client = await this.prisma.client.create({ data });
+    let client: Client;
+    try {
+      client = await this.prisma.client.create({ data });
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' && err !== null &&
+        (err as any).code === 'P2002'
+      ) {
+        const fields = (err as any).meta?.target as string[] | undefined;
+        if (fields?.includes('cpf') || fields?.some((f: string) => f.includes('cpf'))) {
+          throw new BadRequestException('CPF/CNPJ já cadastrado. Verifique se o cliente já existe no sistema.');
+        }
+        throw new BadRequestException('Dados duplicados: verifique as informações e tente novamente.');
+      }
+      throw err;
+    }
 
     if (files && Object.values(files).some((f) => f?.length)) {
       const paths = await this.uploadFiles(client.id, files);

@@ -176,6 +176,10 @@ export default function NovoClientePage() {
     },
   })
 
+  const erroMsg = mutation.isError
+    ? ((mutation.error as any)?.response?.data?.message ?? 'Erro ao cadastrar cliente. Verifique os dados e tente novamente.')
+    : null
+
   function onSubmit(data: FormData) {
     mutation.mutate(data)
   }
@@ -193,9 +197,9 @@ export default function NovoClientePage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {mutation.isError && (
+        {erroMsg && (
           <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            Erro ao cadastrar cliente. Verifique os dados e tente novamente.
+            {erroMsg}
           </div>
         )}
 

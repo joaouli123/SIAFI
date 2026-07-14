@@ -591,6 +591,7 @@ model Payment {
   id              Int           @id @default(autoincrement())
   installmentId   Int           @map("installment_id")
   valorPago       Decimal       @map("valor_pago") @db.Decimal(15, 2)
+  valorDevido     Decimal?      @map("valor_devido") @db.Decimal(15, 2) // total devido (principal + encargos) no momento da baixa
   dataPagamento   DateTime      @map("data_pagamento")
   metodoPagamento PaymentMethod @default(dinheiro) @map("metodo_pagamento")
   observacao      String?       @db.Text

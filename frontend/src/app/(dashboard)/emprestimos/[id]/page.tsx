@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useState } from 'react'
-import { ArrowLeft, XCircle, RefreshCcw, QrCode, DollarSign, FileDown, TrendingUp, Mail, Pencil, Percent, Plus, Undo2, CheckCircle } from 'lucide-react'
+import { ArrowLeft, XCircle, RefreshCcw, QrCode, DollarSign, FileDown, TrendingUp, Mail, Pencil, Percent, Plus, Undo2, CheckCircle, History, ChevronDown, ChevronRight, Tag } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -16,6 +16,12 @@ import { formatCurrency, formatDate, STATUS_LOAN, STATUS_INSTALLMENT, METODO_PAG
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 
+interface Payment {
+  id: number; valorPago: number; valorDevido?: number | null
+  dataPagamento: string; metodoPagamento: string
+  desconto: number; descontoTipo?: string | null; descontoMotivo?: string | null
+  estornado: boolean; contaDestino?: string | null; observacao?: string | null
+}
 interface Installment {
   id: number; numero: number; installmentAmount: number; dataVencimento: string
   status: string; totalPago: number; principalPayback: number; netGain: number
@@ -23,6 +29,7 @@ interface Installment {
   cobrancaEnviadaEm?: string | null
   cobrancaWhatsappOk: boolean; cobrancaEmailOk: boolean; cobrancaPortalOk: boolean
   multaAplicada: number; valorComEncargos?: number | null
+  payments?: Payment[]
 }
 interface ComissaoPagamento {
   id: number; valor: number; dataPagamento: string; observacao?: string | null
@@ -58,6 +65,12 @@ export default function EmprestimoDetalhePage() {
   const [descTipo, setDescTipo] = useState<'saldo' | 'encargos'>('saldo')
   const [descMotivo, setDescMotivo] = useState('')
   const [activeTab, setActiveTab] = useState<'parcelas' | 'cobrancas'>('parcelas')
+  const [expandedPayments, setExpandedPayments] = useState<Set<number>>(new Set())
+  const togglePayments = (id: number) => setExpandedPayments(prev => {
+    const next = new Set(prev)
+    next.has(id) ? next.delete(id) : next.add(id)
+    return next
+  })
   const [showComForm, setShowComForm] = useState(false)
   const [comValor, setComValor] = useState('')
   const [comData, setComData] = useState(new Date().toISOString().split('T')[0])
@@ -567,6 +580,7 @@ export default function EmprestimoDetalhePage() {
                 const vencD = new Date(inst.dataVencimento); vencD.setHours(0, 0, 0, 0)
                 const vencida = emAberto && vencD < hojeD
                 const venceHoje = emAberto && vencD.getTime() === hojeD.getTime()
+                const temHistorico = inst.payments && inst.payments.filter(p => !p.estornado).length > 0
                 return (
                   <tr key={inst.id} className={`border-b border-border hover:bg-muted/20 ${isParcial ? 'bg-amber-50/50 dark:bg-amber-950/10' : ''}`}>
                     <td className="px-4 py-2 text-muted-foreground">{inst.numero}</td>
@@ -598,6 +612,18 @@ export default function EmprestimoDetalhePage() {
                     <td className="px-4 py-2 text-center"><Badge variant={ist.variant}>{ist.label}</Badge></td>
                     <td className="px-4 py-2 text-right">
                       <div className="flex justify-end gap-1">
+                        {/* Botão histórico de pagamentos */}
+                        {temHistorico && (
+                          <Button
+                            size="sm" variant="ghost"
+                            className="h-7 gap-1 text-xs text-muted-foreground hover:text-blue-600"
+                            onClick={() => togglePayments(inst.id)}
+                            title="Ver histórico de baixas"
+                          >
+                            <History className="size-3" />
+                            {expandedPayments.has(inst.id) ? <ChevronDown className="size-3" /> : <ChevronRight className="size-3" />}
+                          </Button>
+                        )}
                         {canPay && (
                           <>
                             <Button size="sm" variant="outline" className="h-7 gap-1 text-xs"
@@ -613,6 +639,88 @@ export default function EmprestimoDetalhePage() {
                             )}
                           </>
                         )}
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+              {/* Sub-linhas: histórico de pagamentos por parcela */}
+              {loan.installments.map((inst) => {
+                if (!expandedPayments.has(inst.id)) return null
+                const pagamentos = inst.payments?.filter(p => !p.estornado) ?? []
+                if (pagamentos.length === 0) return null
+                const colSpan = 7 + (canSeeSplit ? 2 : 0)
+                return (
+                  <tr key={`hist-${inst.id}`} className="bg-blue-50/60 dark:bg-blue-950/20 border-b border-border">
+                    <td colSpan={colSpan} className="px-4 py-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <History className="size-3.5 text-blue-600" />
+                        <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
+                          Histórico de baixas — Parcela #{inst.numero}
+                        </span>
+                      </div>
+                      <div className="overflow-x-auto rounded border border-blue-200 dark:border-blue-900">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="bg-blue-100/60 dark:bg-blue-900/30 border-b border-blue-200 dark:border-blue-900">
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground">Data</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-muted-foreground">Valor Devido c/ Juros</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-muted-foreground">Valor Pago</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-orange-600">Desconto Dado</th>
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden md:table-cell">Método</th>
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden lg:table-cell">Motivo desconto</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {pagamentos.map((p) => {
+                              const temDesconto = Number(p.desconto) > 0
+                              const valorDevido = p.valorDevido != null ? Number(p.valorDevido) : Number(inst.installmentAmount)
+                              return (
+                                <tr key={p.id} className="border-b border-blue-100 dark:border-blue-900/50 last:border-0 hover:bg-blue-50 dark:hover:bg-blue-950/30">
+                                  <td className="px-3 py-2 text-muted-foreground">{formatDate(p.dataPagamento)}</td>
+                                  <td className="px-3 py-2 text-right font-medium">
+                                    {formatCurrency(valorDevido)}
+                                  </td>
+                                  <td className="px-3 py-2 text-right text-green-700 dark:text-green-400 font-semibold">
+                                    {formatCurrency(Number(p.valorPago))}
+                                  </td>
+                                  <td className="px-3 py-2 text-right">
+                                    {temDesconto ? (
+                                      <span className="inline-flex items-center gap-1 text-orange-600 font-semibold">
+                                        <Tag className="size-3" />
+                                        {formatCurrency(Number(p.desconto))}
+                                      </span>
+                                    ) : (
+                                      <span className="text-muted-foreground">—</span>
+                                    )}
+                                  </td>
+                                  <td className="px-3 py-2 text-muted-foreground hidden md:table-cell capitalize">
+                                    {METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}
+                                  </td>
+                                  <td className="px-3 py-2 text-muted-foreground hidden lg:table-cell">
+                                    {p.descontoMotivo || (temDesconto ? (p.descontoTipo === 'encargos' ? 'Desconto em encargos' : 'Desconto no saldo') : '—')}
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                          {pagamentos.length > 1 && (
+                            <tfoot>
+                              <tr className="bg-blue-100/60 dark:bg-blue-900/30 font-medium">
+                                <td className="px-3 py-1.5 text-xs text-muted-foreground">{pagamentos.length} baixa(s)</td>
+                                <td className="px-3 py-1.5 text-right text-xs">—</td>
+                                <td className="px-3 py-1.5 text-right text-xs text-green-700">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.valorPago), 0))}
+                                </td>
+                                <td className="px-3 py-1.5 text-right text-xs text-orange-600">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.desconto), 0))}
+                                </td>
+                                <td className="hidden md:table-cell" />
+                                <td className="hidden lg:table-cell" />
+                              </tr>
+                            </tfoot>
+                          )}
+                        </table>
                       </div>
                     </td>
                   </tr>

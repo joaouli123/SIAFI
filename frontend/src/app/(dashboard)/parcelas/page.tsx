@@ -67,6 +67,7 @@ export default function ParcelasPage() {
   const [fStart, setFStart] = useState('')
   const [fEnd, setFEnd] = useState('')
   const [fObs, setFObs] = useState('')
+  const [fLoanId, setFLoanId] = useState('')
   const [fPage, setFPage] = useState(1)
   // Mês selecionado na aba "Este mês"
   const [mesSel, setMesSel] = useState(() => new Date().toISOString().slice(0, 7))
@@ -91,9 +92,9 @@ export default function ParcelasPage() {
     return {
       status: fStatus || undefined, search: fSearch || undefined,
       startDate: fStart || undefined, endDate: fEnd || undefined,
-      comObservacao: fObs || undefined, page: fPage, limit: 50,
+      comObservacao: fObs || undefined, loanId: fLoanId ? Number(fLoanId) : undefined, page: fPage, limit: 50,
     }
-  }, [tab, fPage, mesSel, fStatus, fSearch, fStart, fEnd, fObs, hojeIso])
+  }, [tab, fPage, mesSel, fStatus, fSearch, fStart, fEnd, fObs, fLoanId, hojeIso])
 
   const { data: hoje, isLoading: loadingHoje, refetch: refetchHoje } = useQuery<Installment[]>({
     queryKey: ['installments', 'hoje'],
@@ -216,6 +217,9 @@ export default function ParcelasPage() {
               <Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" />
               <Input className="pl-9" placeholder="Buscar por cliente ou CPF..." value={fSearch} onChange={(e) => { setFSearch(e.target.value); setFPage(1) }} />
             </div>
+            <div className="w-32">
+              <Input type="number" placeholder="Nº Empréstimo" value={fLoanId} onChange={(e) => { setFLoanId(e.target.value); setFPage(1) }} />
+            </div>
             <Select className="w-auto" value={fStatus} onChange={(e) => { setFStatus(e.target.value); setFPage(1) }}>
               <option value="">Todos os status</option>
               <option value="pendente">Pendente</option>
@@ -272,7 +276,7 @@ export default function ParcelasPage() {
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Parcela</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Vencimento</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Pago</th>}
@@ -312,7 +316,7 @@ export default function ParcelasPage() {
                           </Link>
                         </td>
                         <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
-                          <Link href={`/emprestimos/${inst.loan.id}`} className="hover:underline">P{inst.numero}</Link>
+                          <Link href={`/emprestimos/${inst.loan.id}`} className="hover:underline">Empréstimo #{inst.loan.id} (P{inst.numero})</Link>
                         </td>
                         <td className="px-4 py-3">
                           <span className={cn('font-medium', vencida ? 'text-destructive' : venceHoje ? 'text-amber-600' : 'text-muted-foreground')}>

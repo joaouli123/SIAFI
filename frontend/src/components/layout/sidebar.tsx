@@ -245,13 +245,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-30 flex w-[260px] flex-col transition-transform duration-300 lg:static lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-30 flex w-[260px] flex-col transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         style={{ backgroundColor: '#0f172a' }}
       >
         <div
-          className="flex h-16 items-center justify-between px-4 border-b border-white/10"
+          className="flex h-14 items-center justify-between px-4 border-b border-white/10"
           style={{ backgroundColor: corPrimaria }}
         >
           <div className="flex items-center min-w-0">
@@ -288,10 +288,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     href={item.href}
                     onClick={onClose}
                     className={cn(
-                      'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
+                      'flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-200',
                       active
-                        ? 'text-white'
-                        : 'text-slate-400 hover:bg-white/8 hover:text-slate-200'
+                        ? 'text-white shadow-lg shadow-black/20'
+                        : 'text-slate-400 hover:bg-white/[0.06] hover:text-slate-200'
                     )}
                     style={active ? { backgroundColor: corPrimaria } : undefined}
                   >

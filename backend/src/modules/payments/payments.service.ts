@@ -100,6 +100,7 @@ export class PaymentsService {
         data: {
           installmentId:   dto.installmentId,
           valorPago:       valorPago.toDecimalPlaces(2).toNumber(),
+          valorDevido:     installmentAmount.plus(moraAcumulada).plus(new Decimal(installment.multaAplicada.toString())).toDecimalPlaces(2).toNumber(),
           dataPagamento:   new Date(dto.dataPagamento),
           metodoPagamento: (dto.metodoPagamento ?? 'dinheiro') as PaymentMethod,
           observacao:      dto.observacao ?? null,

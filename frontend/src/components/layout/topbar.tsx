@@ -55,7 +55,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
   const pageTitle = getPageTitle(pathname)
 
   return (
-    <header className="h-16 flex items-center justify-between px-4 border-b border-border bg-background flex-shrink-0">
+    <header className="h-14 flex items-center justify-between px-4 sm:px-6 border-b border-border/60 bg-background/80 backdrop-blur-xl flex-shrink-0 sticky top-0 z-10">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuToggle}
@@ -64,7 +64,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
         >
           <Menu className="size-5" />
         </button>
-        <h1 className="text-lg font-semibold text-foreground">{pageTitle}</h1>
+        <h1 className="text-sm font-semibold text-foreground tracking-tight">{pageTitle}</h1>
       </div>
 
       <div className="relative">
