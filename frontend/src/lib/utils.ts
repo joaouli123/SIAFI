@@ -4,10 +4,36 @@ import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { toZonedTime } from "date-fns-tz"
 
-const TIMEZONE = "America/Cuiaba"
+const TIMEZONE = "America/Sao_Paulo" // Brasília (UTC-3)
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+// Data de "hoje" no fuso de Brasília, em YYYY-MM-DD (para <input type="date">).
+// Usa Intl para NÃO depender do fuso da máquina/navegador — evita o bug de mostrar
+// o dia seguinte quando new Date().toISOString() converte para UTC.
+export function hojeISODate(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TIMEZONE }).format(new Date())
+}
+
+// Mês atual no fuso de Brasília (YYYY-MM), para <input type="month">.
+export function mesAtualISO(): string {
+  return hojeISODate().slice(0, 7)
+}
+
+// Primeiro dia do mês atual no fuso de Brasília (YYYY-MM-01).
+export function primeiroDiaMesISO(): string {
+  return `${hojeISODate().slice(0, 8)}01`
+}
+
+// Converte uma data (string/Date) para YYYY-MM-DD no fuso de Brasília — para
+// pré-preencher <input type="date"> a partir de um valor existente sem recuo de fuso.
+export function toDateInputValue(date: string | Date | null | undefined): string {
+  if (!date) return ""
+  const d = typeof date === "string" ? new Date(date) : date
+  if (isNaN(d.getTime())) return ""
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TIMEZONE }).format(d)
 }
 
 export function toNumber(val: unknown): number {
@@ -28,6 +54,12 @@ export function formatPercent(val: unknown, decimals = 2): string {
 }
 
 export function formatDate(date: string | Date): string {
+  if (!date) return ''
+  const d = typeof date === 'string' ? date : date.toISOString()
+  if (d.includes('T00:00:00.000Z') || (typeof date === 'string' && !date.includes('T'))) {
+    const [y, m, day] = d.split('T')[0].split('-')
+    if (y && m && day) return `${day}/${m}/${y}`
+  }
   return new Intl.DateTimeFormat("pt-BR").format(new Date(date))
 }
 

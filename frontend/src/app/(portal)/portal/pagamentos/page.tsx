@@ -5,6 +5,7 @@ import { CheckCircle2, Printer, Receipt } from 'lucide-react'
 import { portalClient } from '@/lib/portal/portal-client'
 import { MoneyDisplay } from '@/components/portal/money-display'
 import { SkeletonListItem } from '@/components/portal/skeleton-card'
+import { mesAtualISO } from '@/lib/utils'
 
 interface Pagamento {
   id: number
@@ -56,7 +57,7 @@ export default function PagamentosPage() {
   const grupos = data ? groupByMonth(data) : []
 
   /* Resumo do mês atual */
-  const mesAtual = new Date().toISOString().slice(0, 7)
+  const mesAtual = mesAtualISO()
   const pagamentosMesAtual = data?.filter(p => p.dataPagamento.startsWith(mesAtual)) ?? []
   const totalMes = pagamentosMesAtual.reduce((s, p) => s + p.valor, 0)
 

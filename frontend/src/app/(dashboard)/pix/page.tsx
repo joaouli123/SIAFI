@@ -193,7 +193,7 @@ export default function PixPage() {
   const temQrAtivo = !!latestActive
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
           <QrCode className="size-6" />Cobranças PIX / Boleto

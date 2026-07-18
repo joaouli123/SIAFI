@@ -119,7 +119,7 @@ export default function SobrePage() {
   const isAdmin = user?.role === 'admin'
 
   return (
-    <div className="mx-auto max-w-4xl space-y-14 px-4 py-8">
+    <div className="mx-auto w-full space-y-14 px-4 py-8">
 
       {/* Hero */}
       <section className="flex flex-col items-center text-center">

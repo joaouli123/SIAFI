@@ -191,10 +191,10 @@ export default function EditarClientePage() {
     },
   })
 
-  if (isLoading) return <div className="space-y-4 max-w-4xl"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
+  if (isLoading) return <div className="space-y-4 w-full"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href={`/clientes/${id}`}><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
         <div><h1 className="text-2xl font-bold tracking-tight">Editar Cliente</h1><p className="text-muted-foreground text-sm">{client?.nome}</p></div>

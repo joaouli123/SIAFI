@@ -9,6 +9,7 @@ import { ClientPortalController } from './client-portal.controller';
 import { ClientPortalService } from './client-portal.service';
 import { PortalController } from './portal.controller';
 import { PortalService } from './portal.service';
+import { SupportController } from './support.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { PortalService } from './portal.service';
     CobrancaModule,
     BullModule.registerQueue({ name: QUEUE_FINANCE_NOTIFICATIONS }),
   ],
-  controllers: [ClientPortalController, PortalController],
+  controllers: [ClientPortalController, PortalController, SupportController],
   providers: [ClientPortalService, PortalService],
   exports: [PortalService],
 })

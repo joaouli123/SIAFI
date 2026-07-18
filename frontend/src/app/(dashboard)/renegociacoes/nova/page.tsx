@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDate, hojeISODate } from '@/lib/utils'
 import * as React from 'react'
 import api from '@/lib/api'
 
@@ -44,7 +44,7 @@ export default function NovaRenegociacaoPage() {
     defaultValues: {
       taxaJuros: 5,
       numeroParcelas: 12,
-      dataInicio: new Date().toISOString().split('T')[0],
+      dataInicio: hojeISODate(),
       loanId: preLoanId ? Number(preLoanId) : 0,
     },
   })
@@ -66,7 +66,7 @@ export default function NovaRenegociacaoPage() {
 
   const { data: installmentsData } = useQuery({
     queryKey: ['installments', 'loan', loanId],
-    queryFn: () => api.get<any>('/installments', { params: { loanId: Number(loanId), limit: 300 } }).then(r => r.data.data ?? r.data),
+    queryFn: () => api.get<any>('/installments', { params: { loanId: Number(loanId), limit: 200 } }).then(r => r.data.data ?? r.data),
     enabled: !!loanId && Number(loanId) > 0,
   })
 
@@ -87,7 +87,7 @@ export default function NovaRenegociacaoPage() {
   const simulationTerms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 18, 24]
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/renegociacoes"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
         <div>

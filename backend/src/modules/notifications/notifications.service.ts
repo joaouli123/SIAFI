@@ -42,6 +42,11 @@ export interface NotificationList {
     limit: number;
     lastPage: number;
   };
+  // Campos flat espelhados de `meta` — a tela /notificacoes lê data.total/data.lastPage.
+  total: number;
+  page: number;
+  limit: number;
+  lastPage: number;
 }
 
 @Injectable()
@@ -192,9 +197,14 @@ export class NotificationsService {
       this.prisma.notification.count({ where }),
     ]);
 
+    const lastPage = Math.ceil(total / limit) || 1;
     return {
       data,
-      meta: { total, page, limit, lastPage: Math.ceil(total / limit) },
+      meta: { total, page, limit, lastPage },
+      total,
+      page,
+      limit,
+      lastPage,
     };
   }
 }

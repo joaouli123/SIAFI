@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Textarea } from '@/components/ui/textarea'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { cn, formatCurrency, formatDateLocal, formatCPF, toNumber, STATUS_INSTALLMENT } from '@/lib/utils'
+import { cn, formatCurrency, formatDateLocal, formatCPF, toNumber, STATUS_INSTALLMENT, hojeISODate, mesAtualISO } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 
@@ -30,7 +30,7 @@ interface Installment {
   moraAcumulada: string
   multaAplicada: string
   observacao?: string | null
-  loan: { id: number; client: { id: number; nome: string; cpf?: string | null } }
+  loan: { id: number; client: { id: number; nome: string; cpf?: string | null }; consultor?: { id: number; nome: string } | null }
 }
 
 type TabKey = 'hoje' | 'prox7' | 'prox30' | 'mes' | 'atrasado' | 'todas'
@@ -68,11 +68,13 @@ export default function ParcelasPage() {
   const [fEnd, setFEnd] = useState('')
   const [fObs, setFObs] = useState('')
   const [fLoanId, setFLoanId] = useState('')
+  const [fConsultor, setFConsultor] = useState('')
   const [fPage, setFPage] = useState(1)
+  const showConsultorFilter = user?.role === 'admin' || user?.role === 'financeiro'
   // Mês selecionado na aba "Este mês"
-  const [mesSel, setMesSel] = useState(() => new Date().toISOString().slice(0, 7))
+  const [mesSel, setMesSel] = useState(() => mesAtualISO())
 
-  const hojeIso = useMemo(() => isoLocal(new Date()), [])
+  const hojeIso = useMemo(() => hojeISODate(), [])
 
   function changeTab(key: TabKey) { setTab(key); setFPage(1) }
 
@@ -92,9 +94,10 @@ export default function ParcelasPage() {
     return {
       status: fStatus || undefined, search: fSearch || undefined,
       startDate: fStart || undefined, endDate: fEnd || undefined,
-      comObservacao: fObs || undefined, loanId: fLoanId ? Number(fLoanId) : undefined, page: fPage, limit: 50,
+      comObservacao: fObs || undefined, loanId: fLoanId ? Number(fLoanId) : undefined,
+      consultorId: fConsultor ? Number(fConsultor) : undefined, page: fPage, limit: 50,
     }
-  }, [tab, fPage, mesSel, fStatus, fSearch, fStart, fEnd, fObs, fLoanId, hojeIso])
+  }, [tab, fPage, mesSel, fStatus, fSearch, fStart, fEnd, fObs, fLoanId, fConsultor, hojeIso])
 
   const { data: hoje, isLoading: loadingHoje, refetch: refetchHoje } = useQuery<Installment[]>({
     queryKey: ['installments', 'hoje'],
@@ -111,6 +114,13 @@ export default function ParcelasPage() {
     queryFn: () => api.get<PaginatedInstallments>('/installments', { params: pagedParams }).then(r => r.data),
     enabled: isPaged,
     placeholderData: keepPreviousData,
+  })
+
+  // Consultores para o filtro da aba "Todas" (admin/financeiro)
+  const { data: consultores } = useQuery<{ id: number; nome: string }[]>({
+    queryKey: ['clients-consultores'],
+    queryFn: () => api.get<{ id: number; nome: string }[]>('/clients/consultores').then(r => r.data),
+    enabled: showConsultorFilter,
   })
 
   const activeData = tab === 'hoje' ? hoje : tab === 'atrasado' ? overdue : pagedResp?.data
@@ -211,43 +221,52 @@ export default function ParcelasPage() {
 
       {/* Filtros da aba Todas */}
       {tab === 'todas' && (
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" />
-              <Input className="pl-9" placeholder="Buscar por cliente ou CPF..." value={fSearch} onChange={(e) => { setFSearch(e.target.value); setFPage(1) }} />
-            </div>
-            <div className="w-32">
-              <Input type="number" placeholder="Nº Empréstimo" value={fLoanId} onChange={(e) => { setFLoanId(e.target.value); setFPage(1) }} />
-            </div>
-            <Select className="w-auto" value={fStatus} onChange={(e) => { setFStatus(e.target.value); setFPage(1) }}>
-              <option value="">Todos os status</option>
+        <div className="bg-card border border-border/40 rounded-xl p-3 shadow-sm flex flex-col sm:flex-row gap-3 items-center">
+          <div className="relative flex-1 w-full min-w-[200px]">
+            <Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" />
+            <Input className="pl-9 h-9" placeholder="Buscar por cliente ou CPF..." value={fSearch} onChange={(e) => { setFSearch(e.target.value); setFPage(1) }} />
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <Input type="number" placeholder="Nº Empréstimo" className="w-32 h-9" value={fLoanId} onChange={(e) => { setFLoanId(e.target.value); setFPage(1) }} />
+            
+            <Select className="w-auto min-w-[140px] h-9" value={fStatus} onChange={(e) => { setFStatus(e.target.value); setFPage(1) }}>
+              <option value="">Status: Todos</option>
               <option value="pendente">Pendente</option>
               <option value="parcialmente_pago">Parcialmente pago</option>
               <option value="pago">Pago</option>
               <option value="atrasado">Atrasado</option>
               <option value="cancelado">Cancelado</option>
             </Select>
-            <Select className="w-auto" value={fObs} onChange={(e) => { setFObs(e.target.value); setFPage(1) }}>
-              <option value="">Com/sem observação</option>
+            
+            {showConsultorFilter && (
+              <Select className="w-auto min-w-[150px] h-9" value={fConsultor} onChange={(e) => { setFConsultor(e.target.value); setFPage(1) }}>
+                <option value="">Consultor: Todos</option>
+                {consultores?.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
+              </Select>
+            )}
+
+            <Select className="w-auto min-w-[160px] h-9 hidden md:block" value={fObs} onChange={(e) => { setFObs(e.target.value); setFPage(1) }}>
+              <option value="">Todas observações</option>
               <option value="true">Com observação</option>
               <option value="false">Sem observação</option>
             </Select>
-          </div>
-          <div className="flex flex-wrap items-end gap-3">
-            <div className="space-y-1">
-              <Label className="text-xs text-muted-foreground">Venc. de</Label>
-              <Input type="date" value={fStart} onChange={(e) => { setFStart(e.target.value); setFPage(1) }} className="w-40" />
+
+            <div className="flex items-center gap-1.5 bg-background rounded-lg border px-2 h-9">
+              <span className="text-xs text-muted-foreground whitespace-nowrap">Venc:</span>
+              <Input type="date" value={fStart} onChange={(e) => { setFStart(e.target.value); setFPage(1) }} className="w-[125px] h-7 border-0 p-1 bg-transparent text-sm shadow-none focus-visible:ring-0" />
+              <span className="text-muted-foreground text-xs">até</span>
+              <Input type="date" value={fEnd} onChange={(e) => { setFEnd(e.target.value); setFPage(1) }} className="w-[125px] h-7 border-0 p-1 bg-transparent text-sm shadow-none focus-visible:ring-0" />
             </div>
-            <div className="space-y-1">
-              <Label className="text-xs text-muted-foreground">até</Label>
-              <Input type="date" value={fEnd} onChange={(e) => { setFEnd(e.target.value); setFPage(1) }} className="w-40" />
-            </div>
+            
             {(fStart || fEnd) && (
-              <Button variant="ghost" size="sm" onClick={() => { setFStart(''); setFEnd(''); setFPage(1) }} className="text-muted-foreground">Limpar período</Button>
+              <Button variant="ghost" size="icon" onClick={() => { setFStart(''); setFEnd(''); setFPage(1) }} className="size-8 text-muted-foreground hover:text-destructive" title="Limpar datas">
+                <RefreshCw className="size-4" />
+              </Button>
             )}
           </div>
         </div>
+
       )}
 
       {isLoading ? (
@@ -276,6 +295,7 @@ export default function ParcelasPage() {
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Vencimento</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
@@ -283,6 +303,7 @@ export default function ParcelasPage() {
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo</th>
                     {tab === 'atrasado' && (
                       <>
+                        <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Juros</th>
                         <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Atraso</th>
                       </>
                     )}
@@ -315,6 +336,15 @@ export default function ParcelasPage() {
                             <span className="font-medium">{inst.loan.client.nome}</span>
                           </Link>
                         </td>
+                        <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
+                          {inst.loan.consultor?.nome ? (
+                            <span className="text-xs truncate max-w-[100px] block" title={inst.loan.consultor.nome}>
+                              {inst.loan.consultor.nome}
+                            </span>
+                          ) : (
+                            <span className="text-xs italic opacity-50">—</span>
+                          )}
+                        </td>
                         <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
                           <Link href={`/emprestimos/${inst.loan.id}`} className="hover:underline">Empréstimo #{inst.loan.id} (P{inst.numero})</Link>
                         </td>
@@ -340,6 +370,9 @@ export default function ParcelasPage() {
                         </td>
                         {tab === 'atrasado' && (
                           <>
+                            <td className="px-4 py-3 text-right text-orange-600 hidden md:table-cell">
+                              {encargos > 0 ? formatCurrency(encargos) : <span className="text-muted-foreground">—</span>}
+                            </td>
                             <td className="px-4 py-3 text-center hidden md:table-cell"><Badge variant="destructive">{dias}d</Badge></td>
                           </>
                         )}
@@ -354,7 +387,7 @@ export default function ParcelasPage() {
                           </div>
                         </td>
                         {isPaged && <td className="px-4 py-3 text-center"><Badge variant={ist.variant}>{ist.label}</Badge></td>}
-                        <td className="px-4 py-3 text-right">
+                        <td className="px-4 py-3 text-right whitespace-nowrap">
                           {inst.status !== 'pago' && inst.status !== 'cancelado' ? (
                             <Link href={`/pagamentos/novo?parcelaId=${inst.id}`}>
                               <Button size="sm" variant="outline" className="h-7 text-xs">Pagar</Button>
@@ -378,7 +411,12 @@ export default function ParcelasPage() {
                     )}
                     <td className="px-4 py-2.5 text-right text-xs text-destructive">{formatCurrency(totalSaldo)}</td>
                     {tab === 'atrasado' && (
-                      <td className="hidden md:table-cell" />
+                      <>
+                        <td className="px-4 py-2.5 text-right text-xs text-orange-600 hidden md:table-cell">
+                          {totalEncargos > 0 ? formatCurrency(totalEncargos) : '—'}
+                        </td>
+                        <td className="hidden md:table-cell" />
+                      </>
                     )}
                     <td className="hidden xl:table-cell" />
                     {isPaged && <td />}

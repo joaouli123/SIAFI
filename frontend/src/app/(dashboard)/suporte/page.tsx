@@ -18,7 +18,7 @@ interface Ticket {
 export default function SuportePage() {
   const { data: tickets, isLoading, isError, refetch } = useQuery({
     queryKey: ['support-tickets'],
-    queryFn: () => api.get<Ticket[]>('/portal/tickets').then((r) => r.data).catch(() => [] as Ticket[]),
+    queryFn: () => api.get<Ticket[]>('/support/tickets').then((r) => r.data).catch(() => [] as Ticket[]),
   })
 
   return (

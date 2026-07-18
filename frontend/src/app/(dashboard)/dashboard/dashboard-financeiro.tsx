@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { formatDate, formatCurrency, formatDateTime } from '@/lib/utils'
+import { formatDate, formatCurrency, formatDateTime, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -64,11 +64,11 @@ function slaInfo(prazoExpiracaoEm: string | null) {
 }
 
 const colorMap = {
-  blue:   { bg: 'bg-blue-50 dark:bg-blue-950/30 hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-colors', icon: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400', value: 'text-blue-700 dark:text-blue-400' },
-  green:  { bg: 'bg-green-50 dark:bg-green-950/30 hover:bg-green-100 dark:hover:bg-green-950/50 transition-colors', icon: 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400', value: 'text-green-700 dark:text-green-400' },
-  purple: { bg: 'bg-purple-50 dark:bg-purple-950/30', icon: 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400', value: 'text-purple-700 dark:text-purple-400' },
-  red:    { bg: 'bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors', icon: 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400', value: 'text-red-700 dark:text-red-400' },
-  amber:  { bg: 'bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100 dark:hover:bg-amber-950/50 transition-colors', icon: 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400', value: 'text-amber-700 dark:text-amber-400' },
+  blue:   { bg: 'bg-card text-card-foreground', icon: 'bg-blue-500/10 text-blue-600 dark:text-blue-400', value: 'text-foreground' },
+  green:  { bg: 'bg-card text-card-foreground', icon: 'bg-green-500/10 text-green-600 dark:text-green-400', value: 'text-foreground' },
+  purple: { bg: 'bg-card text-card-foreground', icon: 'bg-purple-500/10 text-purple-600 dark:text-purple-400', value: 'text-foreground' },
+  red:    { bg: 'bg-card text-card-foreground', icon: 'bg-red-500/10 text-red-600 dark:text-red-400', value: 'text-foreground' },
+  amber:  { bg: 'bg-card text-card-foreground', icon: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', value: 'text-foreground' },
 }
 
 type Color = keyof typeof colorMap
@@ -81,26 +81,28 @@ interface StatCardProps {
 function StatCard({ title, value, icon: Icon, color, isLoading, href, subItems }: StatCardProps) {
   const c = colorMap[color]
   const content = (
-    <Card className={cn('border border-border/40 shadow-sm card-hover', c.bg, href && 'cursor-pointer')}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        <div className={cn('rounded-lg p-2', c.icon)}><Icon className="size-4" /></div>
-      </CardHeader>
-      <CardContent className="flex items-end justify-between">
-        <div className="flex-1">
-          {isLoading ? <Skeleton className="h-8 w-28 mb-1" /> : <p className={cn('text-2xl font-bold', c.value)}>{value}</p>}
-          {subItems && !isLoading && (
-            <div className="mt-1.5 space-y-0.5">
-              {subItems.map((s) => (
-                <p key={s.label} className={cn('text-xs', s.color ?? 'text-muted-foreground')}>
-                  {s.label}: <span className="font-medium">{s.value}</span>
-                </p>
-              ))}
+    <Card className={cn('h-full flex flex-col border border-border/60 shadow-sm card-hover transition-all p-5', c.bg, href && 'cursor-pointer hover:border-border')}>
+      <div className="flex items-start justify-between">
+        <p className="text-sm font-medium text-muted-foreground">{title}</p>
+        {href && <ChevronRight className="size-4 text-muted-foreground/50 shrink-0" />}
+      </div>
+      
+      <div className="mt-3 flex items-center gap-3">
+        <div className={cn('rounded-full p-2 shrink-0', c.icon)}><Icon className="size-5" /></div>
+        {isLoading ? <Skeleton className="h-8 w-24" /> : <p className={cn('text-3xl font-bold tracking-tight', c.value)}>{value}</p>}
+      </div>
+      
+      {subItems && !isLoading && (
+        <div className="mt-auto pt-4 flex flex-col gap-1.5">
+          <div className="h-px w-full bg-border/40 mb-1" />
+          {subItems.map((s) => (
+            <div key={s.label} className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">{s.label}:</span>
+              <span className={cn('font-medium', s.color ?? 'text-foreground')}>{s.value}</span>
             </div>
-          )}
+          ))}
         </div>
-        {href && <ChevronRight className="size-4 text-muted-foreground self-start mt-1" />}
-      </CardContent>
+      )}
     </Card>
   )
   return href ? <Link href={href}>{content}</Link> : content
@@ -143,7 +145,7 @@ export default function DashboardFinanceiro() {
 
   const [liberarModal, setLiberarModal] = useState<PendenteLiberacao | null>(null)
   const [metodoLiberacao, setMetodoLiberacao] = useState('dinheiro')
-  const [dataLiberacao, setDataLiberacao] = useState(new Date().toISOString().split('T')[0])
+  const [dataLiberacao, setDataLiberacao] = useState(hojeISODate())
   const [obsLiberacao, setObsLiberacao] = useState('')
 
   const pendentesQuery = useQuery({
@@ -242,54 +244,54 @@ export default function DashboardFinanceiro() {
   return (
     <div className="space-y-6">
       {/* Header — saudação + atalhos rápidos */}
-      <div className="flex items-start justify-between flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/40">
         <div>
           <div className="flex items-center gap-2.5">
-            <h2 className="text-2xl font-bold tracking-tight">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
               {new Date().getHours() < 12 ? 'Bom dia' : new Date().getHours() < 18 ? 'Boa tarde' : 'Boa noite'},
               {' '}{(user?.nome ?? '').split(' ')[0] || 'time'} 👋
             </h2>
-            <span title={connected ? 'Realtime conectado' : 'Conectando...'} className="relative flex size-2 shrink-0">
+            <span title={connected ? 'Realtime conectado' : 'Conectando...'} className="relative flex size-2.5 shrink-0 ml-1">
               {connected && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />}
-              <span className={cn('relative inline-flex rounded-full size-2', connected ? 'bg-green-500' : 'bg-slate-300')} />
+              <span className={cn('relative inline-flex rounded-full size-2.5', connected ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]')} />
             </span>
           </div>
-          <p className="text-muted-foreground text-sm mt-1">
-            {user?.role === 'admin' ? 'Painel administrativo' : 'Painel financeiro'} · atualizado em tempo real
+          <p className="text-muted-foreground text-sm mt-1 flex items-center gap-1.5">
+            <span>{user?.role === 'admin' ? 'Painel administrativo' : 'Painel financeiro'}</span>
+            <span>·</span>
+            <span>atualizado em tempo real</span>
             {lastUpdated > 0 && <span className="hidden sm:inline"> · {formatDate(new Date(lastUpdated))}</span>}
           </p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Link href="/emprestimos/novo"><Button size="sm" className="gap-1.5"><Plus className="size-4" />Novo empréstimo</Button></Link>
-          <Link href="/pagamentos/novo"><Button size="sm" variant="outline" className="gap-1.5"><DollarSign className="size-4" />Pagamento</Button></Link>
-          <Link href="/clientes/novo"><Button size="sm" variant="outline" className="gap-1.5"><UserPlus className="size-4" />Cliente</Button></Link>
-          <Button variant="ghost" size="icon" onClick={refetchAll} disabled={isAnyLoading} title="Atualizar" className="size-9">
-            <RefreshCw className={cn('size-4', isAnyLoading && 'animate-spin')} />
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          <Link href="/emprestimos/novo"><Button size="sm" className="gap-2 shadow-sm bg-primary/90 hover:bg-primary"><Plus className="size-4" />Novo empréstimo</Button></Link>
+          <Link href="/pagamentos/novo"><Button size="sm" variant="outline" className="gap-2 shadow-sm border-border/60 hover:bg-muted/50"><DollarSign className="size-4 text-green-600 dark:text-green-500" />Pagamento</Button></Link>
+          <Link href="/clientes/novo"><Button size="sm" variant="outline" className="gap-2 shadow-sm border-border/60 hover:bg-muted/50"><UserPlus className="size-4 text-blue-600 dark:text-blue-500" />Cliente</Button></Link>
+          <Button variant="ghost" size="icon" onClick={refetchAll} disabled={isAnyLoading} title="Atualizar" className="size-8 ml-1 hover:bg-muted/50">
+            <RefreshCw className={cn('size-4 text-muted-foreground', isAnyLoading && 'animate-spin')} />
           </Button>
         </div>
       </div>
 
       {/* Faixa de resumo financeiro */}
-      <Card className="overflow-hidden border border-border/50 shadow-md bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-950 dark:to-blue-950/10 rounded-xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-border/70">
-          {[
-            { icon: Wallet,        label: 'Valor em carteira',     value: formatCurrency(loansQ.data?.valorEmCarteira ?? 0), color: 'text-blue-700 dark:text-blue-400',   iconBg: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400',     loading: loansQ.isLoading,    hint: 'Saldo a receber em aberto' },
-            { icon: DollarSign,    label: 'Recebido no mês',       value: formatCurrency(loansQ.data?.valorRecebidoMes ?? 0), color: 'text-green-700 dark:text-green-400', iconBg: 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400', loading: loansQ.isLoading,    hint: 'Entradas de parcelas' },
-            { icon: TrendingUp,    label: 'Lucro do mês',          value: formatCurrency(lucroMes),                          color: 'text-orange-600 dark:text-orange-400', iconBg: 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400', loading: evolucaoQuery.isLoading, hint: 'Faturamento realizado' },
-            { icon: Percent,       label: 'Inadimplência',          value: `${taxaInad.toFixed(1)}%`,                          color: taxaInad >= 15 ? 'text-red-700 dark:text-red-400' : taxaInad >= 5 ? 'text-amber-600 dark:text-amber-400' : 'text-green-700 dark:text-green-400', iconBg: 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400', loading: overdueQ.isLoading || carteiraQ.isLoading, hint: 'Saldo atrasado ÷ a receber' },
-            { icon: TicketPercent, label: 'Descontos no mês',      value: formatCurrency(loansQ.data?.descontosMes ?? 0),     color: 'text-amber-600 dark:text-amber-400', iconBg: 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400', loading: loansQ.isLoading, hint: 'Concedidos nas baixas' },
-          ].map((t) => (
-            <div key={t.label} className="flex items-center gap-3 p-4">
-              <div className={cn('rounded-lg p-2.5 shrink-0', t.iconBg)}><t.icon className="size-5" /></div>
-              <div className="min-w-0">
-                <p className="text-xs text-muted-foreground truncate">{t.label}</p>
-                {t.loading ? <Skeleton className="h-6 w-24 mt-1" /> : <p className={cn('text-lg font-bold leading-tight', t.color)}>{t.value}</p>}
-                <p className="text-[11px] text-muted-foreground truncate">{t.hint}</p>
-              </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {[
+          { icon: Wallet,        label: 'Valor em carteira',     value: formatCurrency(loansQ.data?.valorEmCarteira ?? 0), color: 'text-blue-700 dark:text-blue-400',   iconBg: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400',     loading: loansQ.isLoading,    hint: 'Saldo a receber em aberto' },
+          { icon: DollarSign,    label: 'Recebido no mês',       value: formatCurrency(loansQ.data?.valorRecebidoMes ?? 0), color: 'text-green-700 dark:text-green-400', iconBg: 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400', loading: loansQ.isLoading,    hint: 'Entradas de parcelas' },
+          { icon: TrendingUp,    label: 'Lucro do mês',          value: formatCurrency(lucroMes),                          color: 'text-orange-600 dark:text-orange-400', iconBg: 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400', loading: evolucaoQuery.isLoading, hint: 'Faturamento realizado' },
+          { icon: Percent,       label: 'Inadimplência',          value: `${taxaInad.toFixed(1)}%`,                          color: taxaInad >= 15 ? 'text-red-700 dark:text-red-400' : taxaInad >= 5 ? 'text-amber-600 dark:text-amber-400' : 'text-green-700 dark:text-green-400', iconBg: 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400', loading: overdueQ.isLoading || carteiraQ.isLoading, hint: 'Saldo atrasado ÷ a receber' },
+          { icon: TicketPercent, label: 'Descontos no mês',      value: formatCurrency(loansQ.data?.descontosMes ?? 0),     color: 'text-amber-600 dark:text-amber-400', iconBg: 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400', loading: loansQ.isLoading, hint: 'Concedidos nas baixas' },
+        ].map((t) => (
+          <Card key={t.label} className="border border-border/60 shadow-sm flex items-center gap-3 p-4 h-full bg-card hover:border-border transition-all">
+            <div className={cn('rounded-full p-2.5 shrink-0', t.iconBg)}><t.icon className="size-5" /></div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs text-muted-foreground truncate">{t.label}</p>
+              {t.loading ? <Skeleton className="h-6 w-24 mt-1" /> : <p className={cn('text-lg font-bold leading-tight mt-0.5', t.color)}>{t.value}</p>}
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5">{t.hint}</p>
             </div>
-          ))}
-        </div>
-      </Card>
+          </Card>
+        ))}
+      </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -434,7 +436,7 @@ export default function DashboardFinanceiro() {
                         {loan.aceiteClienteEm && <span className="ml-2">· Aceito em {formatDateTime(loan.aceiteClienteEm)}</span>}
                       </p>
                     </div>
-                    <Button size="sm" className="ml-4 shrink-0" onClick={() => { setLiberarModal(loan); setMetodoLiberacao('dinheiro'); setDataLiberacao(new Date().toISOString().split('T')[0]); setObsLiberacao('') }}>
+                    <Button size="sm" className="ml-4 shrink-0" onClick={() => { setLiberarModal(loan); setMetodoLiberacao('dinheiro'); setDataLiberacao(hojeISODate()); setObsLiberacao('') }}>
                       Confirmar →
                     </Button>
                   </div>

@@ -95,11 +95,11 @@ export default function NovoReparcelamentoPage() {
   })()
 
   if (loansLoading) {
-    return <div className="space-y-4 max-w-2xl"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
+    return <div className="space-y-4 w-full"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/reparcelamentos">
           <Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button>

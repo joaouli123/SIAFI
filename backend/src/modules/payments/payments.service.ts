@@ -4,6 +4,7 @@ import { createHash } from 'crypto';
 import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ScoreRiscoService } from '../score-risco/score-risco.service';
+import { InstallmentsService } from '../installments/installments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 
 Decimal.set({ precision: 20, rounding: Decimal.ROUND_HALF_UP });
@@ -13,9 +14,16 @@ export class PaymentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly scoreRisco: ScoreRiscoService,
+    private readonly installments: InstallmentsService,
   ) {}
 
   async create(dto: CreatePaymentDto, userId?: number): Promise<unknown> {
+    // Encargos (multa/mora) em TEMPO REAL para esta parcela. O teto do pagamento é
+    // validado contra a mora ATUAL — não contra installment.moraAcumulada, que fica
+    // defasado quando o cron de encargos ainda não rodou ou a parcela tinha saldo 0
+    // (o que fazia baixas de parcelas atrasadas serem rejeitadas indevidamente).
+    const encAtual = await this.installments.getEncargos(dto.installmentId);
+
     const payment = await this.prisma.$transaction(async (tx) => {
       // 1. Buscar parcela com loan e client
       const installment = await tx.installment.findUnique({
@@ -40,6 +48,8 @@ export class PaymentsService {
       const valorPago         = new Decimal(dto.valorPago.toString());
       const installmentAmount = new Decimal(installment.installmentAmount.toString());
       const moraAcumulada     = new Decimal(installment.moraAcumulada.toString());
+      const moraAtual         = new Decimal(encAtual.valorMora.toString());
+      const multaAtual        = new Decimal(encAtual.valorMulta.toString());
       const totalPagoAnt      = new Decimal(installment.totalPago.toString());
       const novoTotalPago     = totalPagoAnt.plus(valorPago);
 
@@ -63,9 +73,10 @@ export class PaymentsService {
       });
       const totalDescontoSaldo = new Decimal(descAnt._sum.desconto?.toString() ?? '0').plus(descontoSaldo);
 
-      // Quitação considera o recebido + desconto sobre saldo
+      // Quitação considera o recebido + desconto sobre saldo. O teto é o valor da
+      // parcela + a mora ATUAL (tempo real), coerente com o total exibido ao operador.
       const efetivo      = novoTotalPago.plus(totalDescontoSaldo);
-      const limiteMaximo = installmentAmount.plus(moraAcumulada);
+      const limiteMaximo = installmentAmount.plus(moraAtual);
       if (efetivo.greaterThan(limiteMaximo.plus(0.001))) {
         throw new BadRequestException(
           `Valor pago + desconto (${efetivo.toFixed(2)}) excede o devido com mora (${limiteMaximo.toFixed(2)}).`,
@@ -100,7 +111,7 @@ export class PaymentsService {
         data: {
           installmentId:   dto.installmentId,
           valorPago:       valorPago.toDecimalPlaces(2).toNumber(),
-          valorDevido:     installmentAmount.plus(moraAcumulada).plus(new Decimal(installment.multaAplicada.toString())).toDecimalPlaces(2).toNumber(),
+          valorDevido:     installmentAmount.plus(moraAtual).plus(multaAtual).toDecimalPlaces(2).toNumber(),
           dataPagamento:   new Date(dto.dataPagamento),
           metodoPagamento: (dto.metodoPagamento ?? 'dinheiro') as PaymentMethod,
           observacao:      dto.observacao ?? null,
@@ -261,58 +272,83 @@ export class PaymentsService {
     };
   }
 
-  async findAll(search?: string, role?: string): Promise<unknown[]> {
-    const payments = await this.prisma.payment.findMany({
-      where: search
-        ? {
-            installment: {
+  async findAll(filter: import('./dto/payment-filter.dto').PaymentFilterDto, role?: string): Promise<unknown> {
+    const { search, startDate, endDate, consultorId, page = 1, limit = 20 } = filter;
+
+    const where: Prisma.PaymentWhereInput = {};
+
+    if (search || consultorId) {
+      where.installment = {
+        loan: {
+          ...(search ? { client: { nome: { contains: search, mode: 'insensitive' } } } : {}),
+          ...(consultorId ? { consultorId } : {}),
+        },
+      };
+    }
+
+    if (startDate || endDate) {
+      where.dataPagamento = {};
+      if (startDate) {
+        where.dataPagamento.gte = new Date(`${startDate}T00:00:00.000Z`);
+      }
+      if (endDate) {
+        where.dataPagamento.lte = new Date(`${endDate}T23:59:59.999Z`);
+      }
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [total, payments] = await Promise.all([
+      this.prisma.payment.count({ where }),
+      this.prisma.payment.findMany({
+        where,
+        include: {
+          installment: {
+            select: {
+              id: true,
+              numero: true,
+              principalPayback: true,
+              installmentAmount: true,
               loan: {
-                client: { nome: { contains: search, mode: 'insensitive' } },
+                select: {
+                  id: true,
+                  comissaoPercentual: true,
+                  consultor: { select: { id: true, nome: true } },
+                  client: { select: { nome: true } },
+                },
               },
-            },
-          }
-        : undefined,
-      include: {
-        installment: {
-          select: {
-            id: true,
-            numero: true,
-            principalPayback: true,
-            installmentAmount: true,
-            loan: {
-              select: {
-                id: true,
-                comissaoPercentual: true,
-                consultor: { select: { id: true, nome: true } },
-                client: { select: { nome: true } },
+              payments: {
+                select: { id: true, valorPago: true, createdAt: true },
+                orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
               },
-            },
-            // histórico para apurar a divisão capital/lucro de cada baixa (capital primeiro)
-            payments: {
-              select: { id: true, valorPago: true, createdAt: true },
-              orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
             },
           },
         },
-      },
-      orderBy: { dataPagamento: 'desc' },
-      take: 100,
-    });
+        orderBy: { dataPagamento: 'desc' },
+        skip,
+        take: limit,
+      }),
+    ]);
 
-    // Caixa não enxerga lucro/comissão
     const verSplit = role !== 'caixa';
 
-    return payments.map((p) => {
+    const mappedData = payments.map((p) => {
       const inst = p.installment as unknown as {
         principalPayback: unknown;
         loan: { comissaoPercentual: unknown };
         payments: Array<{ id: number; valorPago: unknown }>;
       };
       const split = verSplit ? this.splitPagamento(p.id, Number(p.valorPago), inst) : null;
-      // Remove o histórico auxiliar do payload
       const { payments: _omit, ...instRest } = inst as Record<string, unknown>;
       return { ...p, installment: instRest, split };
     });
+
+    return {
+      data: mappedData,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   // Divisão de uma baixa em capital × lucro (capital primeiro) e comissão do consultor.

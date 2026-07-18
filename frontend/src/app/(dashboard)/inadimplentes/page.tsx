@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { useState } from 'react'
-import { formatCurrency, formatDate, formatDateLocal, formatCPF, formatPhone } from '@/lib/utils'
+import { formatCurrency, formatDate, formatDateLocal, formatCPF, formatPhone, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 
 interface Loan {
@@ -83,7 +83,7 @@ export default function InadimplentesPage() {
             const res = await api.get('/export/inadimplentes/excel', { responseType: 'blob' })
             const a = document.createElement('a')
             a.href = URL.createObjectURL(new Blob([res.data as BlobPart], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }))
-            a.download = `inadimplentes-${new Date().toISOString().split('T')[0]}.xlsx`
+            a.download = `inadimplentes-${hojeISODate()}.xlsx`
             a.click()
             URL.revokeObjectURL(a.href)
           }}><FileDown className="size-3.5" />Excel</Button>

@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCurrency, METODO_PAGAMENTO } from '@/lib/utils'
+import { formatCurrency, METODO_PAGAMENTO, toDateInputValue } from '@/lib/utils'
 import api from '@/lib/api'
 import Decimal from 'decimal.js'
 
@@ -71,7 +71,7 @@ export default function EditarEmprestimoPage() {
         ? Number(((Number(loan.totalReceivable)) / loan.numeroParcelas).toFixed(2))
         : undefined,
       metodoPagamento: loan.metodoPagamento ?? 'dinheiro',
-      dataInicio: loan.dataInicio ? new Date(loan.dataInicio).toISOString().split('T')[0] : '',
+      dataInicio: toDateInputValue(loan.dataInicio),
       dataPrimeiroVencimento: '',
       observacoes: loan.observacoes ?? '',
       diaVencimento: loan.diaVencimento ?? undefined,
@@ -160,11 +160,11 @@ export default function EditarEmprestimoPage() {
   }
 
   if (isLoading || !loan) return (
-    <div className="space-y-4 max-w-3xl"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
+    <div className="space-y-4 w-full"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
   )
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href={`/emprestimos/${id}`}><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
         <div>

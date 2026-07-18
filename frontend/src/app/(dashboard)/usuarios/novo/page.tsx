@@ -105,7 +105,7 @@ export default function NovoUsuarioPage() {
   })
 
   return (
-    <div className="space-y-6 max-w-xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/usuarios">
           <Button variant="ghost" size="sm" className="gap-2">

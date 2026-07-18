@@ -124,7 +124,7 @@ export default function ConsultorClienteDetalhePage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4 max-w-2xl">
+      <div className="space-y-4 w-full">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-40 w-full" />
         <Skeleton className="h-64 w-full" />
@@ -147,7 +147,7 @@ export default function ConsultorClienteDetalhePage() {
   const totalAtrasadas = cliente.loans.reduce((acc, l) => acc + l.installments.length, 0)
 
   return (
-    <div className="space-y-5 max-w-2xl">
+    <div className="space-y-5 w-full">
       <div className="flex items-center gap-3">
         <Link href="/consultor/carteira">
           <button className="text-muted-foreground hover:text-foreground" aria-label="Voltar">

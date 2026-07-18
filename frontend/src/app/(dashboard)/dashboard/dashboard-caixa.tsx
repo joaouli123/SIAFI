@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { formatCurrency, formatDateTime, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDateTime, formatDate, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -70,7 +70,7 @@ export default function DashboardCaixa() {
 
   const [liberarModal, setLiberarModal] = useState<PendenteLiberacao | null>(null)
   const [metodoLiberacao, setMetodoLiberacao] = useState('dinheiro')
-  const [dataLiberacao, setDataLiberacao] = useState(new Date().toISOString().split('T')[0])
+  const [dataLiberacao, setDataLiberacao] = useState(hojeISODate())
   const [obsLiberacao, setObsLiberacao] = useState('')
 
   const pendentesQuery = useQuery({
@@ -111,7 +111,7 @@ export default function DashboardCaixa() {
   function abrirLiberacao(loan: PendenteLiberacao) {
     setLiberarModal(loan)
     setMetodoLiberacao('dinheiro')
-    setDataLiberacao(new Date().toISOString().split('T')[0])
+    setDataLiberacao(hojeISODate())
     setObsLiberacao('')
   }
 

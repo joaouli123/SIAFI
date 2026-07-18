@@ -89,7 +89,7 @@ export default function EmailTemplatesPage() {
   const selectedTpl = templates?.find(t => t.slug === selected)
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/configuracoes">
           <Button variant="ghost" size="sm" className="gap-2">

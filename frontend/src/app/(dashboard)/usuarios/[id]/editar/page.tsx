@@ -52,10 +52,10 @@ export default function EditarUsuarioPage() {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['users'] }); router.push('/usuarios') },
   })
 
-  if (isLoading) return <div className="space-y-4 max-w-lg"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
+  if (isLoading) return <div className="space-y-4 w-full"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
 
   return (
-    <div className="space-y-6 max-w-lg">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/usuarios"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
         <div><h1 className="text-2xl font-bold tracking-tight">Editar Usuário</h1><p className="text-muted-foreground text-sm">{user?.nome}</p></div>

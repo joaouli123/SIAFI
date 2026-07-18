@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { ClienteCombobox } from '@/components/ui/cliente-combobox'
-import { formatCurrency, METODO_PAGAMENTO } from '@/lib/utils'
+import { formatCurrency, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 import Decimal from 'decimal.js'
 
@@ -65,7 +65,7 @@ export default function NovoEmprestimoPage() {
     defaultValues: {
       metodoPagamento: 'dinheiro',
       numeroParcelas: 12,
-      dataInicio: new Date().toISOString().split('T')[0],
+      dataInicio: hojeISODate(),
       clientId: preClienteId ? Number(preClienteId) : 0,
       targetProfit: 0,
       diasAntecedenciaCobranca: 10,
@@ -157,7 +157,7 @@ export default function NovoEmprestimoPage() {
   })
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/emprestimos"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
         <div><h1 className="text-2xl font-bold tracking-tight">Novo Empréstimo</h1><p className="text-muted-foreground text-sm">Cadastrar contrato de empréstimo</p></div>

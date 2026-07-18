@@ -348,6 +348,15 @@ export class ClientPortalService {
     });
   }
 
+  // Listagem de todos os tickets para operadores (tela administrativa /suporte).
+  async listAllTickets(status?: string) {
+    return this.prisma.supportTicket.findMany({
+      where: status ? { status } : {},
+      orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
+      include: { client: { select: { id: true, nome: true } } },
+    });
+  }
+
   async getTicket(ticketId: number, clientId: number) {
     const ticket = await this.prisma.supportTicket.findFirst({
       where: { id: ticketId, clientId },

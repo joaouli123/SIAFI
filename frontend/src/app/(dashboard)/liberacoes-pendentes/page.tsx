@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { formatCurrency, formatDateTime } from '@/lib/utils'
+import { formatCurrency, formatDateTime, hojeISODate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import api from '@/lib/api'
 
@@ -48,7 +48,7 @@ export default function LiberacoesPendentesPage() {
   const [search, setSearch] = useState('')
   const [liberarModal, setLiberarModal] = useState<PendenteLiberacao | null>(null)
   const [metodo, setMetodo] = useState('dinheiro')
-  const [dataLib, setDataLib] = useState(new Date().toISOString().split('T')[0])
+  const [dataLib, setDataLib] = useState(hojeISODate())
   const [obs, setObs] = useState('')
   const [liberadoId, setLiberadoId] = useState<number | null>(null)
 
@@ -77,7 +77,7 @@ export default function LiberacoesPendentesPage() {
   function abrirModal(loan: PendenteLiberacao) {
     setLiberarModal(loan)
     setMetodo('dinheiro')
-    setDataLib(new Date().toISOString().split('T')[0])
+    setDataLib(hojeISODate())
     setObs('')
   }
 
@@ -91,7 +91,7 @@ export default function LiberacoesPendentesPage() {
   const urgentes = filtered.filter(l => horasDesdeAceite(l.aceiteClienteEm) >= 4).length
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">

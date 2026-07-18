@@ -302,22 +302,28 @@ export class ReparcelamentoService {
     const total = principal.plus(profit);
     const base  = total.dividedBy(n).toDecimalPlaces(2, Decimal.ROUND_DOWN);
     const baseP = principal.dividedBy(n).toDecimalPlaces(2, Decimal.ROUND_DOWN);
-    const baseG = profit.dividedBy(n).toDecimalPlaces(2, Decimal.ROUND_DOWN);
 
     const ajusteTotal = total.minus(base.times(n));
     const ajusteP     = principal.minus(baseP.times(n));
-    const ajusteG     = profit.minus(baseG.times(n));
 
     return Array.from({ length: n }, (_, i) => {
-      const isUlt = i === n - 1;
+      const isUlt        = i === n - 1;
+      const installAmt   = isUlt ? base.plus(ajusteTotal) : base;
+      const principalPay = isUlt ? baseP.plus(ajusteP)    : baseP;
+      // netGain derivado garante a invariante installmentAmount == principalPayback + netGain
+      const gain         = installAmt.minus(principalPay);
+      const amt          = installAmt.toDecimalPlaces(2).toNumber();
       return {
         numero:            i + 1,
-        installmentAmount: (isUlt ? base.plus(ajusteTotal) : base).toDecimalPlaces(2).toNumber(),
-        principalPayback:  (isUlt ? baseP.plus(ajusteP)   : baseP).toDecimalPlaces(2).toNumber(),
-        netGain:           (isUlt ? baseG.plus(ajusteG)   : baseG).toDecimalPlaces(2).toNumber(),
+        installmentAmount: amt,
+        principalPayback:  principalPay.toDecimalPlaces(2).toNumber(),
+        netGain:           gain.toDecimalPlaces(2).toNumber(),
         dataVencimento:    addMonthsSafe(dataInicio, i + 1),
         status:            'pendente' as const,
         totalPago:         0,
+        // Sem saldoDevedor o schema aplica o default 0 → o saldo some no detalhe do
+        // contrato, o pagamento pré-preenche 0 e o cron de encargos ignora a parcela.
+        saldoDevedor:      amt,
         valorMulta:        0,
         valorMora:         0,
       };

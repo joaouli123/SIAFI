@@ -161,8 +161,8 @@ export default function ClientesPage() {
             </div>
             <Select value={status} onChange={(e) => setStatus(e.target.value)} className="w-40">
               <option value="">Todos</option>
-              <option value="ativo">Ativos</option>
-              <option value="inativo">Inativos</option>
+              <option value="active">Ativos</option>
+              <option value="inactive">Inativos</option>
             </Select>
             <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
               <RefreshCw className="size-3.5" />Atualizar
@@ -294,7 +294,7 @@ export default function ClientesPage() {
             <div className="flex items-center justify-between px-4 py-3 border-t border-border flex-wrap gap-2">
               <p className="text-sm text-muted-foreground">
                 {data.total} cliente{data.total !== 1 ? 's' : ''}
-                {status === 'ativo' ? ' ativos' : status === 'inativo' ? ' inativos' : ''}
+                {status === 'active' ? ' ativos' : status === 'inactive' ? ' inativos' : ''}
               </p>
               {data.lastPage > 1 && (
                 <div className="flex gap-2">

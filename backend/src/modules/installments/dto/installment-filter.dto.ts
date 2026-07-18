@@ -20,6 +20,13 @@ export class InstallmentFilterDto {
   @IsPositive()
   loanId?: number;
 
+  // Filtro por consultor (admin/financeiro) — filtra parcelas pelos contratos do consultor
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  consultorId?: number;
+
   @IsOptional()
   @IsString()
   search?: string;

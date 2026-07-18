@@ -19,7 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog'
-import { formatCurrency, formatDate, METODO_PAGAMENTO } from '@/lib/utils'
+import { formatCurrency, formatDate, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 import Decimal from 'decimal.js'
@@ -155,7 +155,7 @@ export default function ReparcelamentosPage() {
       novoValorPrincipal: Number(item.loan.principalAmount),
       novoTargetProfit:   0,
       novoNumeroParcelas: item.loan.numeroParcelas,
-      novaDataInicio:     new Date().toISOString().split('T')[0],
+      novaDataInicio:     hojeISODate(),
     })
   }
 
@@ -174,7 +174,7 @@ export default function ReparcelamentosPage() {
   // ─── Render ───────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 w-full">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>

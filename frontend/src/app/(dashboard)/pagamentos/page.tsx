@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
-import { formatCurrency, formatDateLocal, toNumber, METODO_PAGAMENTO } from '@/lib/utils'
+import { formatCurrency, formatDateLocal, toNumber, METODO_PAGAMENTO, hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 
@@ -51,13 +51,14 @@ function useDebounce<T>(value: T, delay: number): T {
   return debounced
 }
 
-const today = new Date().toISOString().split('T')[0]
-const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0]
+const today = hojeISODate()
+const firstOfMonth = primeiroDiaMesISO()
 
 export default function PagamentosPage() {
   const [searchInput, setSearchInput] = useState('')
   const [startDate, setStartDate] = useState(firstOfMonth)
   const [endDate, setEndDate] = useState(today)
+  const [consultorId, setConsultorId] = useState('')
   const [page, setPage] = useState(1)
   const qc = useQueryClient()
   const { user } = useAuth()
@@ -65,16 +66,17 @@ export default function PagamentosPage() {
   const showSplit = user?.role !== 'caixa'
 
   const search = useDebounce(searchInput, 400)
-  useEffect(() => { setPage(1) }, [search, startDate, endDate])
+  useEffect(() => { setPage(1) }, [search, startDate, endDate, consultorId])
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['payments', { search, startDate, endDate, page }],
+    queryKey: ['payments', { search, startDate, endDate, consultorId, page }],
     queryFn: () =>
       api.get<PaymentsResponse>('/payments', {
         params: {
           search: search || undefined,
           startDate: startDate || undefined,
           endDate: endDate || undefined,
+          consultorId: consultorId ? Number(consultorId) : undefined,
           page,
           limit: 20,
         },
@@ -83,6 +85,12 @@ export default function PagamentosPage() {
         if (Array.isArray(r.data)) return { data: r.data, total: r.data.length, page: 1, lastPage: 1 } as PaymentsResponse
         return r.data
       }),
+  })
+
+  const { data: consultores } = useQuery<{id: number; nome: string}[]>({
+    queryKey: ['consultores'],
+    queryFn: () => api.get<{id: number; nome: string}[]>('/clients/consultores').then((r) => r.data),
+    enabled: user?.role === 'admin' || user?.role === 'financeiro',
   })
 
   const estornoMut = useMutation({
@@ -101,16 +109,19 @@ export default function PagamentosPage() {
   }
 
   const totalRecebido = data?.data.reduce((s, p) => s + toNumber(p.valorPago), 0) ?? 0
+  const totalCapital = data?.data.reduce((s, p) => s + (p.split?.capital ?? 0), 0) ?? 0
+  const totalLucro = data?.data.reduce((s, p) => s + (p.split?.lucroEmpresa ?? 0), 0) ?? 0
+  const totalDesconto = data?.data.reduce((s, p) => s + toNumber(p.desconto ?? 0), 0) ?? 0
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Pagamentos</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Recebimentos</h1>
           <p className="text-muted-foreground text-sm mt-1">Histórico de recebimentos</p>
         </div>
         <Link href="/pagamentos/novo">
-          <Button className="gap-2"><Plus className="size-4" />Registrar Pagamento</Button>
+          <Button className="gap-2"><Plus className="size-4" />Registrar Recebimento</Button>
         </Link>
       </div>
 
@@ -126,6 +137,16 @@ export default function PagamentosPage() {
                 className="pl-9"
               />
             </div>
+            {consultores && (
+              <select
+                value={consultorId}
+                onChange={(e) => setConsultorId(e.target.value)}
+                className="flex h-9 w-40 items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Consultor (Todos)</option>
+                {consultores.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
+              </select>
+            )}
             <div className="flex items-center gap-2">
               <Label className="text-xs text-muted-foreground whitespace-nowrap">De</Label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-36 text-sm" />
@@ -267,13 +288,28 @@ export default function PagamentosPage() {
 
           {data && (
             <div className="flex items-center justify-between px-4 py-3 border-t border-border flex-wrap gap-2">
-              <div className="flex items-center gap-4">
-                <p className="text-sm text-muted-foreground">
-                  {data.total} pagamento{data.total !== 1 ? 's' : ''}
+              <div className="flex items-center gap-6 flex-wrap">
+                <p className="text-sm text-muted-foreground font-medium">
+                  {data.total} recebimento{data.total !== 1 ? 's' : ''}
                 </p>
                 {totalRecebido > 0 && (
-                  <p className="text-sm font-medium text-green-600">
-                    Total: {formatCurrency(totalRecebido)}
+                  <p className="text-sm font-bold text-green-600">
+                    Valores Recebidos: {formatCurrency(totalRecebido)}
+                  </p>
+                )}
+                {totalCapital > 0 && showSplit && (
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Capital: {formatCurrency(totalCapital)}
+                  </p>
+                )}
+                {totalLucro > 0 && showSplit && (
+                  <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                    Lucro: {formatCurrency(totalLucro)}
+                  </p>
+                )}
+                {totalDesconto > 0 && (
+                  <p className="text-sm font-medium text-orange-600">
+                    Desconto: {formatCurrency(totalDesconto)}
                   </p>
                 )}
               </div>

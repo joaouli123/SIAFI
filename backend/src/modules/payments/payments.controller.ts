@@ -17,6 +17,8 @@ import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { QuitarContratoDto } from './dto/quitar-contrato.dto';
 
+import { PaymentFilterDto } from './dto/payment-filter.dto';
+
 interface AuthUser {
   id: number;
   username: string;
@@ -30,8 +32,8 @@ export class PaymentsController {
 
   @Get()
   @Roles('admin', 'financeiro', 'caixa')
-  findAll(@CurrentUser() user: AuthUser, @Query('search') search?: string) {
-    return this.paymentsService.findAll(search, user?.role);
+  findAll(@CurrentUser() user: AuthUser, @Query() filter: PaymentFilterDto) {
+    return this.paymentsService.findAll(filter, user?.role);
   }
 
   // Pagamentos registrados hoje — dashboard do caixa

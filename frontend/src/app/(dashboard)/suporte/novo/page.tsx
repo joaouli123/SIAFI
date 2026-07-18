@@ -73,7 +73,7 @@ export default function NovoSuporteInternoPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="w-full mx-auto space-y-6">
       <div className="flex items-center gap-3">
         <Link href="/ajuda">
           <Button variant="outline" size="icon"><ArrowLeft className="size-4" /></Button>

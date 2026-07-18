@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { Menu, LogOut, ChevronDown } from 'lucide-react'
+import { Menu, LogOut, ChevronDown, User, ArrowLeft } from 'lucide-react'
 import { useAuth } from '@/contexts/auth.context'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -22,7 +22,7 @@ function getPageTitle(pathname: string): string {
   for (const [path, title] of Object.entries(pageTitles)) {
     if (pathname === path || pathname.startsWith(path + '/')) return title
   }
-  return 'SIAFI'
+  return 'SIFI'
 }
 
 function getInitials(nome: string) {
@@ -64,7 +64,15 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
         >
           <Menu className="size-5" />
         </button>
-        <h1 className="text-sm font-semibold text-foreground tracking-tight">{pageTitle}</h1>
+        
+        {Object.keys(pageTitles).includes(pathname) || pathname === '/' ? (
+          <h1 className="text-sm font-semibold text-foreground tracking-tight">{pageTitle}</h1>
+        ) : (
+          <button onClick={() => router.back()} className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="size-4" />
+            Voltar
+          </button>
+        )}
       </div>
 
       <div className="relative">
@@ -72,10 +80,8 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
           onClick={() => setDropdownOpen((v) => !v)}
           className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-muted transition-colors"
         >
-          <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-xs font-semibold">
-              {user ? getInitials(user.nome) : '?'}
-            </span>
+          <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+            <User className="size-4 text-primary" strokeWidth={2.5} />
           </div>
           <div className="hidden sm:block text-left">
             <p className="text-sm font-medium leading-none">{user?.nome ?? 'Usuário'}</p>

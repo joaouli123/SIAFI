@@ -14,7 +14,7 @@ export class InstallmentsService {
     filters: InstallmentFilterDto,
     consultorId?: number,
   ): Promise<PaginatedResponse<unknown>> {
-    const { status, clientId, loanId, search, startDate, endDate, aberto, comObservacao, page, limit } = filters;
+    const { status, clientId, loanId, consultorId: filterConsultorId, search, startDate, endDate, aberto, comObservacao, page, limit } = filters;
     const skip = (page - 1) * limit;
 
     const where: Prisma.InstallmentWhereInput = {};
@@ -33,7 +33,9 @@ export class InstallmentsService {
 
     const loanWhere: Prisma.LoanWhereInput = {};
     if (clientId) loanWhere.clientId = clientId;
+    // Consultor autenticado só vê a própria carteira; admin/financeiro pode filtrar por consultor
     if (consultorId) loanWhere.consultorId = consultorId;
+    else if (filterConsultorId) loanWhere.consultorId = filterConsultorId;
     if (search) {
       loanWhere.client = {
         OR: [
@@ -58,6 +60,7 @@ export class InstallmentsService {
               multaPercentual: true,
               moraDiariaPercentual: true,
               client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, observacoes: true } },
+              consultor: { select: { id: true, nome: true } },
             },
           },
         },
@@ -100,6 +103,7 @@ export class InstallmentsService {
         loan: {
           include: {
             client: { select: { id: true, nome: true, cpf: true } },
+            consultor: { select: { id: true, nome: true } },
           },
         },
       },
@@ -132,6 +136,7 @@ export class InstallmentsService {
         loan: {
           include: {
             client: { select: { id: true, nome: true, cpf: true, whatsapp: true, observacoes: true } },
+            consultor: { select: { id: true, nome: true } },
           },
         },
       },
@@ -174,6 +179,7 @@ export class InstallmentsService {
         loan: {
           include: {
             client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true } },
+            consultor: { select: { id: true, nome: true } },
           },
         },
       },
