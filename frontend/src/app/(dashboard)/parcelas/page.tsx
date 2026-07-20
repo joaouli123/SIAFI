@@ -403,7 +403,7 @@ export default function ParcelasPage() {
                 <tfoot>
                   <tr className="bg-muted/40 border-t font-medium text-sm">
                     <td colSpan={3} className="px-4 py-2.5 text-xs text-muted-foreground">
-                      {meta ? `${meta.total} no total` : `${activeData.length} parcela${activeData.length !== 1 ? 's' : ''}`}
+                      {meta ? `${meta.total} no total${meta.lastPage > 1 ? ' · somas desta página' : ''}` : `${activeData.length} parcela${activeData.length !== 1 ? 's' : ''}`}
                     </td>
                     <td className="px-4 py-2.5 text-right text-xs">{formatCurrency(totalValor)}</td>
                     {showSplit && (

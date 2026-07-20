@@ -149,7 +149,7 @@ export class LoansService {
         _sum: { valorPago: true },
       }),
       this.prisma.payment.aggregate({
-        where: { dataPagamento: { gte: startOfMonth, lte: endOfMonth } },
+        where: { dataPagamento: { gte: startOfMonth, lte: endOfMonth }, estornado: false },
         _sum: { desconto: true },
       }),
     ]);

@@ -192,6 +192,10 @@ function LoanDetailSheet({
   const totalPago = loan?.installments.reduce((s, i) => s + toNumber(i.totalPago), 0) ?? 0
   const totalReceivable = toNumber(loan?.totalReceivable)
   const pctPago = totalReceivable > 0 ? Math.min(100, (totalPago / totalReceivable) * 100) : 0
+  // Saldo a cobrar AGORA (saldo + multa + mora das parcelas em aberto) — coerente com /parcelas e a página completa.
+  const saldoComEncargos = loan?.installments
+    .filter((i) => i.status !== 'pago' && i.status !== 'cancelado')
+    .reduce((s, i) => s + Math.max(0, toNumber(i.saldoDevedor)) + toNumber(i.moraAcumulada) + toNumber(i.multaAplicada), 0) ?? 0
   const parcelasPagas = loan?.installments.filter((i) => i.status === 'pago').length ?? 0
 
   // Flatten pixPayments de todas as parcelas
@@ -281,8 +285,8 @@ function LoanDetailSheet({
                   { label: 'Total pago', value: formatCurrency(totalPago), color: 'text-green-600 dark:text-green-500' },
                   {
                     label: 'Saldo',
-                    value: formatCurrency(Math.max(0, totalReceivable - totalPago)),
-                    color: totalReceivable - totalPago > 0 ? 'text-red-600 dark:text-red-500' : 'text-green-600 dark:text-green-500',
+                    value: formatCurrency(saldoComEncargos),
+                    color: saldoComEncargos > 0 ? 'text-red-600 dark:text-red-500' : 'text-green-600 dark:text-green-500',
                   },
                 ].map((k) => (
                   <div key={k.label} className="bg-slate-50 dark:bg-slate-900/40 rounded-xl px-3 py-3 flex flex-col justify-center border border-border/40">
@@ -451,7 +455,7 @@ function LoanDetailSheet({
                               {formatCurrency(inst.totalPago)}
                             </td>
                             <td className={`px-3 py-2 text-right ${toNumber(inst.saldoDevedor) > 0 ? 'text-red-600' : 'text-muted-foreground'}`}>
-                              {formatCurrency(inst.saldoDevedor)}
+                              {formatCurrency(toNumber(inst.saldoDevedor) + encargos)}
                             </td>
                             <td className="px-3 py-2 text-right">
                               {encargos > 0
@@ -470,7 +474,7 @@ function LoanDetailSheet({
                         <td colSpan={3} className="px-3 py-2 text-xs text-muted-foreground">Totais</td>
                         <td className="px-3 py-2 text-right text-xs text-green-600">{formatCurrency(totalPago)}</td>
                         <td className="px-3 py-2 text-right text-xs text-red-600">
-                          {formatCurrency(Math.max(0, totalReceivable - totalPago))}
+                          {formatCurrency(saldoComEncargos)}
                         </td>
                         <td className="px-3 py-2 text-right text-xs text-orange-600">
                           {formatCurrency(
