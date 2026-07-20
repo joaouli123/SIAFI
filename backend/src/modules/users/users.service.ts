@@ -45,6 +45,15 @@ export class UsersService {
     });
   }
 
+  // Usuários internos (id/nome/role) — para o chat interno iniciar conversa com qualquer operador.
+  async findInternosMinimal(): Promise<{ id: number; nome: string; role: string }[]> {
+    return this.prisma.user.findMany({
+      where: { active: true },
+      select: { id: true, nome: true, role: true },
+      orderBy: { nome: 'asc' },
+    });
+  }
+
   async create(dto: CreateUserDto): Promise<Omit<User, 'password'>> {
     const existing = await this.prisma.user.findUnique({ where: { username: dto.username } });
     if (existing) throw new ConflictException('Username já está em uso');

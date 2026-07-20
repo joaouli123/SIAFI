@@ -80,7 +80,7 @@ export class ClientsController {
     @CurrentUser() currentUser: RequestUser,
   ) {
     const consultorFilter = currentUser.role === 'consultor' ? currentUser.id : undefined;
-    return this.clientsService.findById(id, consultorFilter);
+    return this.clientsService.findById(id, consultorFilter, currentUser.role);
   }
 
   @Post()

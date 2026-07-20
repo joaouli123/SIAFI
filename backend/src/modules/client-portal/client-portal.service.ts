@@ -69,14 +69,23 @@ export class ClientPortalService {
     const contratosPendentesAceite = loans.filter(l => l.status === 'aguardando_aceite');
     const todasParcelas = loans.flatMap(l => l.installments);
 
-    const parcelasAtrasadas = todasParcelas.filter(p => p.status === 'atrasado');
+    // Parcela em aberto = não paga/cancelada, com saldo > 0 (inclui 'parcialmente_pago').
+    const inicioHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    const isAberta = (p: { status: string }) => p.status !== 'pago' && p.status !== 'cancelado';
+    const saldoDe = (p: { installmentAmount: unknown; totalPago: unknown }) =>
+      Math.max(0, Number(p.installmentAmount) - Number(p.totalPago));
+
+    const parcelasAtrasadas = todasParcelas.filter(
+      p => isAberta(p) && saldoDe(p) > 0 && p.dataVencimento < inicioHoje,
+    );
     const proxVencimento = todasParcelas
-      .filter(p => p.status === 'pendente')
+      .filter(p => isAberta(p) && saldoDe(p) > 0 && p.dataVencimento >= inicioHoje)
       .sort((a, b) => a.dataVencimento.getTime() - b.dataVencimento.getTime())[0];
 
+    // Total em aberto = soma dos SALDOS (installmentAmount - totalPago) das parcelas em aberto.
     const totalEmAberto = todasParcelas
-      .filter(p => p.status === 'pendente' || p.status === 'atrasado')
-      .reduce((sum, p) => sum + Number(p.installmentAmount), 0);
+      .filter(isAberta)
+      .reduce((sum, p) => sum + saldoDe(p), 0);
 
     // Banner mais urgente
     let alerta: { tipo: string; mensagem: string; loanId?: number } | null = null;

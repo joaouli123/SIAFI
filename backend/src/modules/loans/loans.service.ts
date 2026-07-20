@@ -138,8 +138,8 @@ export class LoansService {
       this.prisma.loan.count({ where: { status: 'ativo' } }),
       this.prisma.loan.count({ where: { status: 'quitado' } }),
       this.prisma.installment.aggregate({
-        where: { status: { in: ['pendente', 'atrasado'] } },
-        _sum: { installmentAmount: true },
+        where: { status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] } },
+        _sum: { saldoDevedor: true },
       }),
       this.prisma.payment.aggregate({
         where: {
@@ -158,7 +158,7 @@ export class LoansService {
       totalAtivos,
       totalQuitados,
       valorEmCarteira: new Decimal(
-        (carteiraResult._sum?.installmentAmount ?? '0').toString(),
+        (carteiraResult._sum?.saldoDevedor ?? '0').toString(),
       ).toFixed(2),
       valorRecebidoMes: new Decimal(
         (recebidoMesResult._sum?.valorPago ?? '0').toString(),

@@ -16,7 +16,7 @@ interface Loan {
   id: number; valor: number; numeroParcelas: number; dataInicio: string; status: string
   observacoes?: string | null
   client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null }
-  installments: Array<{ id: number; installmentAmount: number; totalPago: number; dataVencimento: string; status: string }>
+  installments: Array<{ id: number; installmentAmount: number; totalPago: number; dataVencimento: string; status: string; moraAcumulada?: number; multaAplicada?: number }>
 }
 
 function HoverObsPopover({ obs, title = 'Observações' }: { obs: string; title?: string }) {
@@ -66,8 +66,17 @@ export default function InadimplentesPage() {
   }
   const loans = Array.from(loansMap.values())
 
+  // Saldo devedor em atraso = saldo (installmentAmount - pago) + encargos (multa + mora),
+  // idêntico ao exibido em /parcelas.
   const calcSaldoDevedor = (installments: Loan['installments']) =>
-    installments.reduce((s, i) => s + (Number(i.installmentAmount) - Number(i.totalPago)), 0)
+    installments.reduce(
+      (s, i) =>
+        s +
+        Math.max(0, Number(i.installmentAmount) - Number(i.totalPago)) +
+        Number(i.moraAcumulada ?? 0) +
+        Number(i.multaAplicada ?? 0),
+      0,
+    )
 
   return (
     <div className="space-y-6">

@@ -41,7 +41,7 @@ export default function NovoSuporteInternoPage() {
 
       if (!adminId) throw new Error('Nenhum administrador disponível. Use o Comunicador Interno para enviar uma mensagem diretamente.')
 
-      const { data: conversa } = await api.post<{ id: number }>('/mensagens/conversas', { destinatarioId: adminId })
+      const { data: conversa } = await api.post<{ id: number }>('/mensagens/conversas', { targetUserId: adminId })
       const conteudo = `📋 SUPORTE — ${categoria}\n\n${mensagem.trim()}`
       await api.post(`/mensagens/conversas/${conversa.id}`, { conteudo })
     },

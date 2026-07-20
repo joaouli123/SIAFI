@@ -322,7 +322,7 @@ export class ReportGeneratorService {
     const [parcelasPagas, saidas, descontosAgg] = await Promise.all([
       this.prisma.installment.findMany({
         where: { status: 'pago', updatedAt: { gte: start, lte: end } },
-        select: { netGain: true, principalPayback: true, loan: { select: { comissaoPercentual: true } } },
+        select: { netGain: true, principalPayback: true, totalPago: true, loan: { select: { comissaoPercentual: true } } },
       }),
       this.prisma.transaction.findMany({
         where: { tipo: 'saida', data: { gte: start, lte: end } },
@@ -336,10 +336,11 @@ export class ReportGeneratorService {
 
     const lucro = parcelasPagas.reduce((s, i) => s + n(i.netGain), 0);
     const recuperacao = parcelasPagas.reduce((s, i) => s + n(i.principalPayback), 0);
-    const comissao = parcelasPagas.reduce((s, i) => s + (n(i.netGain) * n(i.loan.comissaoPercentual)) / 100, 0);
+    const comissao = parcelasPagas.reduce((s, i) => s + (Math.max(0, n(i.totalPago) - n(i.principalPayback)) * n(i.loan.comissaoPercentual)) / 100, 0);
     const descontos = n(descontosAgg._sum.desconto);
     const capitalLiberado = saidas.filter((t) => t.categoria === 'Liberação de Empréstimo').reduce((s, t) => s + n(t.valor), 0);
-    const despesas = saidas.filter((t) => t.categoria !== 'Liberação de Empréstimo' && t.categoria !== 'Estorno').reduce((s, t) => s + n(t.valor), 0);
+    // 'Comissão Consultor' já entra por competência acima (comissao); não contar de novo como despesa de caixa (dupla contagem).
+    const despesas = saidas.filter((t) => t.categoria !== 'Liberação de Empréstimo' && t.categoria !== 'Estorno' && t.categoria !== 'Comissão Consultor').reduce((s, t) => s + n(t.valor), 0);
     const lucroLiqComissao = lucro - comissao;
     const resultado = lucroLiqComissao - descontos - despesas;
 
@@ -424,22 +425,22 @@ export class ReportGeneratorService {
       this.prisma.installment.findMany({
         where: { status: 'pago', updatedAt: { gte: start, lte: end } },
         select: {
-          installmentAmount: true, netGain: true, principalPayback: true,
-          loan: { select: { comissaoPercentual: true, consultor: { select: { nome: true } } } },
+          installmentAmount: true, netGain: true, principalPayback: true, totalPago: true,
+          loan: { select: { comissaoPercentual: true, client: { select: { consultor: { select: { nome: true } } } } } },
         },
       }),
       // Comissões efetivamente pagas ao consultor no período
       this.prisma.comissaoPagamento.findMany({
         where: { dataPagamento: { gte: start, lte: end } },
-        select: { valor: true, loan: { select: { consultor: { select: { nome: true } } } } },
+        select: { valor: true, loan: { select: { client: { select: { consultor: { select: { nome: true } } } } } } },
       }),
     ]);
 
     const acc: Record<string, { recebido: number; lucro: number; comissao: number; comissaoPaga: number; capital: number; qtd: number }> = {};
     const ent = (nome: string) => (acc[nome] ??= { recebido: 0, lucro: 0, comissao: 0, comissaoPaga: 0, capital: 0, qtd: 0 });
     for (const i of parcelas) {
-      const e = ent(i.loan.consultor?.nome ?? 'Sem consultor');
-      const lucro = n(i.netGain);
+      const e = ent(i.loan.client?.consultor?.nome ?? 'Sem consultor');
+      const lucro = Math.max(0, n(i.totalPago) - n(i.principalPayback));
       e.recebido += n(i.installmentAmount);
       e.lucro += lucro;
       e.comissao += (lucro * n(i.loan.comissaoPercentual)) / 100;
@@ -447,7 +448,7 @@ export class ReportGeneratorService {
       e.qtd += 1;
     }
     for (const pg of pagamentos) {
-      ent(pg.loan.consultor?.nome ?? 'Sem consultor').comissaoPaga += n(pg.valor);
+      ent(pg.loan.client?.consultor?.nome ?? 'Sem consultor').comissaoPaga += n(pg.valor);
     }
 
     const linhas = Object.entries(acc).map(([consultor, v]) => ({

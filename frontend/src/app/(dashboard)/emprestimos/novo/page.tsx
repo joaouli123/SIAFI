@@ -36,8 +36,8 @@ const schema = z.object({
   observacoes: z.string().optional(),
   // Configurações de cobrança
   diaVencimento: z.coerce.number().min(1).max(28).optional(),
-  multaPercentual: z.coerce.number().min(0).max(100).optional(),
-  moraDiariaPercentual: z.coerce.number().min(0).max(100).optional(),
+  multaPercentual: z.coerce.number().min(0).max(9.99).optional(),
+  moraDiariaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
   comissaoValor: z.coerce.number().optional(), // UI: cálculo reverso (não enviado)
   descontoQuitacaoPercentual: z.coerce.number().min(0).max(100).optional(),

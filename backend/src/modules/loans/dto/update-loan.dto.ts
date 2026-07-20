@@ -62,11 +62,13 @@ export class UpdateLoanDto {
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 4 })
   @Min(0)
+  @Max(9.99)
   multaPercentual?: number;
 
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 6 })
   @Min(0)
+  @Max(9.99)
   moraDiariaPercentual?: number;
 
   @IsOptional()

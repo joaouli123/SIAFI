@@ -13,6 +13,7 @@ export class InstallmentsService {
   async findAll(
     filters: InstallmentFilterDto,
     consultorId?: number,
+    role?: string,
   ): Promise<PaginatedResponse<unknown>> {
     const { status, clientId, loanId, consultorId: filterConsultorId, search, startDate, endDate, aberto, comObservacao, page, limit } = filters;
     const skip = (page - 1) * limit;
@@ -76,12 +77,12 @@ export class InstallmentsService {
 
     const mappedData = data.map((inst: any) => {
       const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
-      return {
+      return this.stripSplitForCaixa({
         ...inst,
         moraAcumulada: String(enc.valorMora),
         multaAplicada: String(enc.valorMulta),
         valorComEncargos: String(enc.totalDevido),
-      };
+      }, role);
     });
 
     return paginate(mappedData, total, page, limit);
@@ -97,7 +98,7 @@ export class InstallmentsService {
     });
   }
 
-  async findById(id: number): Promise<unknown> {
+  async findById(id: number, role?: string): Promise<unknown> {
     const installment = await this.prisma.installment.findUnique({
       where: { id },
       include: {
@@ -115,10 +116,10 @@ export class InstallmentsService {
       throw new NotFoundException(`Parcela com id ${id} não encontrada`);
     }
 
-    return installment;
+    return this.stripSplitForCaixa(installment as Record<string, any>, role);
   }
 
-  async findOverdue(consultorId?: number): Promise<unknown[]> {
+  async findOverdue(consultorId?: number, role?: string): Promise<unknown[]> {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -150,17 +151,17 @@ export class InstallmentsService {
 
     return data.map((inst: any) => {
       const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
-      return {
+      return this.stripSplitForCaixa({
         ...inst,
         moraAcumulada: String(enc.valorMora),
         multaAplicada: String(enc.valorMulta),
         valorComEncargos: String(enc.totalDevido),
-      };
+      }, role);
     });
   }
 
   // Parcelas com vencimento hoje (pendente/atrasado/parcialmente_pago) — dashboard do caixa.
-  async findHoje(consultorId?: number): Promise<unknown[]> {
+  async findHoje(consultorId?: number, role?: string): Promise<unknown[]> {
     const hoje = new Date();
     const inicioDia = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 0, 0, 0);
     const fimDia    = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 23, 59, 59);
@@ -193,12 +194,12 @@ export class InstallmentsService {
 
     return data.map((inst: any) => {
       const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hojeDate);
-      return {
+      return this.stripSplitForCaixa({
         ...inst,
         moraAcumulada: String(enc.valorMora),
         multaAplicada: String(enc.valorMulta),
         valorComEncargos: String(enc.totalDevido),
-      };
+      }, role);
     });
   }
 
@@ -248,6 +249,14 @@ export class InstallmentsService {
     const totalDevido = parseFloat((saldo + valorMulta + valorMora).toFixed(2));
 
     return { saldo, valorMulta, valorMora, totalDevido, diasAtraso };
+  }
+
+  // Remove os campos de split (principalPayback/netGain) para o papel 'caixa'.
+  private stripSplitForCaixa<T extends Record<string, any>>(inst: T, role?: string): T {
+    if (role !== 'caixa') return inst;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { principalPayback, netGain, ...rest } = inst;
+    return rest as T;
   }
 
   // Recalcula mora/multa em tempo real para parcelas de UM MESMO contrato — usado pelo

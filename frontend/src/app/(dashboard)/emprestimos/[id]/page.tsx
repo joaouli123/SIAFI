@@ -179,7 +179,11 @@ export default function EmprestimoDetalhePage() {
 
   const st = STATUS_LOAN[loan.status] ?? { label: loan.status, variant: 'outline' as const }
   const totalPago = loan.installments.reduce((s, i) => s + Number(i.totalPago), 0)
-  const pendente = Number(loan.totalReceivable) - totalPago
+  // Pendente = total a cobrar AGORA (saldo + encargos) das parcelas em aberto,
+  // coerente com a coluna "Saldo" da mesma tela e com /parcelas.
+  const pendente = loan.installments
+    .filter((i) => i.status !== 'pago' && i.status !== 'cancelado')
+    .reduce((s, i) => s + Number(i.valorComEncargos ?? Math.max(0, Number(i.installmentAmount) - Number(i.totalPago))), 0)
   const margemPct = Number(loan.principalAmount) > 0
     ? ((Number(loan.targetProfit) / Number(loan.principalAmount)) * 100).toFixed(1)
     : '0.0'

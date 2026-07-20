@@ -55,12 +55,14 @@ export class ReportsService {
           select: { principalAmount: true, targetProfit: true, totalReceivable: true },
         }),
         this.prisma.installment.findMany({
-          where: { status: 'pago' },
+          // Escopo idêntico ao alvo (contratos ativos) — evita misturar realizado de
+          // contratos já quitados/cancelados no "a faturar / a recuperar" da carteira.
+          where: { status: 'pago', loan: { status: 'ativo' } },
           select: { installmentAmount: true, principalPayback: true, netGain: true },
         }),
         this.prisma.installment.findMany({
-          where: { status: { in: ['pendente', 'atrasado'] } },
-          select: { installmentAmount: true },
+          where: { status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] }, loan: { status: 'ativo' } },
+          select: { installmentAmount: true, totalPago: true },
         }),
         this.prisma.loan.count({
           where: {
@@ -97,7 +99,8 @@ export class ReportsService {
       (acc, i) => acc.plus(i.installmentAmount.toString()), new Decimal(0),
     );
     const aReceber = parcelasPendentes.reduce(
-      (acc, i) => acc.plus(i.installmentAmount.toString()), new Decimal(0),
+      (acc, i) => acc.plus(Decimal.max(0, new Decimal(i.installmentAmount.toString()).minus(i.totalPago.toString()))),
+      new Decimal(0),
     );
 
     return {
@@ -134,20 +137,26 @@ export class ReportsService {
         installmentAmount: true,
         principalPayback:  true,
         netGain:           true,
+        totalPago:         true,
         loan: {
           select: {
             id:                 true,
             principalAmount:    true,
             targetProfit:       true,
             comissaoPercentual: true,
-            consultor: { select: { id: true, nome: true } },
+            client: { select: { consultor: { select: { id: true, nome: true } } } },
           },
         },
       },
     });
 
+    // Lucro REALIZADO por parcela (capital-primeiro): totalPago − principalPayback.
+    // Reflete descontos sobre saldo (parcela quitada por menos → lucro menor).
+    const lucroRealizado = (p: { totalPago: { toString(): string }; principalPayback: { toString(): string } }) =>
+      Decimal.max(0, new Decimal(p.totalPago.toString()).minus(p.principalPayback.toString()));
+
     const faturamentoBruto   = parcelasPagas.reduce(
-      (acc, p) => acc.plus(p.netGain.toString()), new Decimal(0),
+      (acc, p) => acc.plus(lucroRealizado(p)), new Decimal(0),
     );
     const recuperacaoCapital = parcelasPagas.reduce(
       (acc, p) => acc.plus(p.principalPayback.toString()), new Decimal(0),
@@ -155,10 +164,10 @@ export class ReportsService {
     const totalRecebido      = parcelasPagas.reduce(
       (acc, p) => acc.plus(p.installmentAmount.toString()), new Decimal(0),
     );
-    // Comissão = lucro da parcela paga × % do contrato (parcela paga → lucro realizado integral)
+    // Comissão = lucro REALIZADO da parcela × % do contrato
     const comissaoConsultores = parcelasPagas.reduce(
       (acc, p) => acc.plus(
-        new Decimal(p.netGain.toString()).times(Number(p.loan.comissaoPercentual ?? 0)).dividedBy(100),
+        lucroRealizado(p).times(Number(p.loan.comissaoPercentual ?? 0)).dividedBy(100),
       ),
       new Decimal(0),
     );
@@ -184,7 +193,8 @@ export class ReportsService {
       installmentAmount: { toString(): string };
       principalPayback:  { toString(): string };
       netGain:           { toString(): string };
-      loan: { comissaoPercentual?: { toString(): string } | null; consultor: { id: number; nome: string } | null };
+      totalPago:         { toString(): string };
+      loan: { comissaoPercentual?: { toString(): string } | null; client: { consultor: { id: number; nome: string } | null } };
     }>,
   ) {
     const mapa = new Map<number | null, {
@@ -197,7 +207,7 @@ export class ReportsService {
     }>();
 
     for (const p of parcelas) {
-      const consultor = p.loan.consultor;
+      const consultor = p.loan.client?.consultor ?? null;
       const key  = consultor?.id ?? null;
       const nome = consultor?.nome ?? 'Sem consultor';
       const entrada = mapa.get(key) ?? {
@@ -208,7 +218,7 @@ export class ReportsService {
         comissao:           new Decimal(0),
         quantidadeParcelas: 0,
       };
-      const lucro = new Decimal(p.netGain.toString());
+      const lucro = Decimal.max(0, new Decimal(p.totalPago.toString()).minus(p.principalPayback.toString()));
       const pct   = Number(p.loan.comissaoPercentual ?? 0);
       entrada.totalRecebido      = entrada.totalRecebido.plus(p.installmentAmount.toString());
       entrada.faturamentoBruto   = entrada.faturamentoBruto.plus(lucro);

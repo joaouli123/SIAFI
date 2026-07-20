@@ -32,14 +32,14 @@ export class InstallmentsController {
   @Roles('admin', 'financeiro', 'caixa', 'consultor')
   findAll(@Query() filters: InstallmentFilterDto, @CurrentUser() user: AuthUser) {
     const consultorId = user?.role === 'consultor' ? user.id : undefined;
-    return this.installmentsService.findAll(filters, consultorId);
+    return this.installmentsService.findAll(filters, consultorId, user?.role);
   }
 
   @Get('overdue')
   @Roles('admin', 'financeiro', 'caixa', 'consultor')
   findOverdue(@CurrentUser() user: AuthUser) {
     const consultorId = user?.role === 'consultor' ? user.id : undefined;
-    return this.installmentsService.findOverdue(consultorId);
+    return this.installmentsService.findOverdue(consultorId, user?.role);
   }
 
   // Parcelas com vencimento hoje — dashboard do caixa e do consultor
@@ -47,7 +47,7 @@ export class InstallmentsController {
   @Roles('admin', 'financeiro', 'caixa', 'consultor')
   findHoje(@CurrentUser() user: AuthUser) {
     const consultorId = user?.role === 'consultor' ? user.id : undefined;
-    return this.installmentsService.findHoje(consultorId);
+    return this.installmentsService.findHoje(consultorId, user?.role);
   }
 
   @Get(':id/encargos')
@@ -58,8 +58,8 @@ export class InstallmentsController {
 
   @Get(':id')
   @Roles('admin', 'financeiro', 'caixa')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.installmentsService.findById(id);
+  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
+    return this.installmentsService.findById(id, user?.role);
   }
 
   @Patch(':id')

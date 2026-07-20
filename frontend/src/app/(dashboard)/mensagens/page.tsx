@@ -86,7 +86,7 @@ export default function MensagensPage() {
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['users-minimal'],
-    queryFn: () => api.get<{ id: number; nome: string; role: string }[]>('/users').then(r => r.data),
+    queryFn: () => api.get<{ id: number; nome: string; role: string }[]>('/users/internos').then(r => r.data),
     enabled: showNovaConversa,
   })
 

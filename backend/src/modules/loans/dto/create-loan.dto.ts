@@ -59,15 +59,19 @@ export class CreateLoanDto {
   diaVencimento?: number;
 
   // Multa por atraso override do empréstimo (% sobre saldo); null = fallback settings
+  // Máx. 9.99 (limite da coluna Decimal(5,4) no banco — evita overflow no save).
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 4 })
   @Min(0)
+  @Max(9.99)
   multaPercentual?: number;
 
   // Mora diária override (% ao dia); null = fallback settings
+  // Máx. 9.99 (limite da coluna Decimal(7,6) no banco).
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 6 })
   @Min(0)
+  @Max(9.99)
   moraDiariaPercentual?: number;
 
   // Comissão do consultor: % sobre o lucro (netGain) de cada parcela

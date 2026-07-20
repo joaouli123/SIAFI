@@ -72,7 +72,7 @@ export class ClientsService {
     return paginate(data as any, total, page, limit);
   }
 
-  async findById(id: number, consultorId?: number): Promise<unknown> {
+  async findById(id: number, consultorId?: number, role?: string): Promise<unknown> {
     const client = await this.prisma.client.findUnique({
       where: { id },
       include: {
@@ -87,6 +87,14 @@ export class ClientsService {
     }
     if (consultorId && client.consultorId !== consultorId) {
       throw new ForbiddenException('Cliente não pertence à sua carteira');
+    }
+    // Caixa não vê split financeiro dos contratos (lucro/capital/comissão).
+    if (role === 'caixa') {
+      (client as any).loans = ((client as any).loans ?? []).map((l: Record<string, unknown>) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { targetProfit, principalAmount, comissaoPercentual, ...rest } = l;
+        return rest;
+      });
     }
     return client;
   }

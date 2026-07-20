@@ -76,10 +76,10 @@ export class PaymentsService {
       // Quitação considera o recebido + desconto sobre saldo. O teto é o valor da
       // parcela + a mora ATUAL (tempo real), coerente com o total exibido ao operador.
       const efetivo      = novoTotalPago.plus(totalDescontoSaldo);
-      const limiteMaximo = installmentAmount.plus(moraAtual);
+      const limiteMaximo = installmentAmount.plus(moraAtual).plus(multaAtual);
       if (efetivo.greaterThan(limiteMaximo.plus(0.001))) {
         throw new BadRequestException(
-          `Valor pago + desconto (${efetivo.toFixed(2)}) excede o devido com mora (${limiteMaximo.toFixed(2)}).`,
+          `Valor pago + desconto (${efetivo.toFixed(2)}) excede o total devido com encargos (${limiteMaximo.toFixed(2)}).`,
         );
       }
 
@@ -278,12 +278,11 @@ export class PaymentsService {
     const where: Prisma.PaymentWhereInput = {};
 
     if (search || consultorId) {
-      where.installment = {
-        loan: {
-          ...(search ? { client: { nome: { contains: search, mode: 'insensitive' } } } : {}),
-          ...(consultorId ? { consultorId } : {}),
-        },
-      };
+      // Consultor = carteira do CLIENTE (client.consultorId), não o criador do contrato.
+      const clientWhere: Prisma.ClientWhereInput = {};
+      if (search) clientWhere.nome = { contains: search, mode: 'insensitive' };
+      if (consultorId) clientWhere.consultorId = consultorId;
+      where.installment = { loan: { client: clientWhere } };
     }
 
     if (startDate || endDate) {
@@ -298,8 +297,9 @@ export class PaymentsService {
 
     const skip = (page - 1) * limit;
 
-    const [total, payments] = await Promise.all([
+    const [total, totaisAgg, payments] = await Promise.all([
       this.prisma.payment.count({ where }),
+      this.prisma.payment.aggregate({ where, _sum: { valorPago: true, desconto: true } }),
       this.prisma.payment.findMany({
         where,
         include: {
@@ -313,8 +313,7 @@ export class PaymentsService {
                 select: {
                   id: true,
                   comissaoPercentual: true,
-                  consultor: { select: { id: true, nome: true } },
-                  client: { select: { nome: true } },
+                  client: { select: { nome: true, consultor: { select: { id: true, nome: true } } } },
                 },
               },
               payments: {
@@ -348,6 +347,11 @@ export class PaymentsService {
       total,
       page,
       lastPage: Math.ceil(total / limit),
+      // Totais do PERÍODO inteiro (todo o filtro), não só da página.
+      totais: {
+        recebido: Number(totaisAgg._sum.valorPago ?? 0),
+        desconto: Number(totaisAgg._sum.desconto ?? 0),
+      },
     };
   }
 

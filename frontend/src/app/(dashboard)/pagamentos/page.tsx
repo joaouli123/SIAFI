@@ -27,7 +27,7 @@ interface Payment {
   installment: {
     id: number
     numero: number
-    loan: { id: number; client: { nome: string }; consultor?: { id: number; nome: string } | null }
+    loan: { id: number; client: { nome: string; consultor?: { id: number; nome: string } | null } }
   }
   split?: {
     capital: number; lucro: number; comissao: number
@@ -40,6 +40,7 @@ interface PaymentsResponse {
   total: number
   page: number
   lastPage: number
+  totais?: { recebido: number; desconto: number }
 }
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -108,10 +109,12 @@ export default function PagamentosPage() {
     }
   }
 
-  const totalRecebido = data?.data.reduce((s, p) => s + toNumber(p.valorPago), 0) ?? 0
+  // Recebido/Desconto = período inteiro (agregado no backend, todo o filtro).
+  // Capital/Lucro (split) = apenas da página atual.
+  const totalRecebido = data?.totais?.recebido ?? 0
+  const totalDesconto = data?.totais?.desconto ?? 0
   const totalCapital = data?.data.reduce((s, p) => s + (p.split?.capital ?? 0), 0) ?? 0
   const totalLucro = data?.data.reduce((s, p) => s + (p.split?.lucroEmpresa ?? 0), 0) ?? 0
-  const totalDesconto = data?.data.reduce((s, p) => s + toNumber(p.desconto ?? 0), 0) ?? 0
 
   return (
     <div className="space-y-6 w-full">
@@ -234,7 +237,7 @@ export default function PagamentosPage() {
                         </td>
                       )}
                       {showSplit && (
-                        <td className="px-4 py-3 text-right hidden xl:table-cell text-emerald-700 dark:text-emerald-400" title={p.split ? `${p.split.comissaoPercentual}% do lucro · ${p.installment?.loan?.consultor?.nome ?? 'sem consultor'}` : ''}>
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-emerald-700 dark:text-emerald-400" title={p.split ? `${p.split.comissaoPercentual}% do lucro · ${p.installment?.loan?.client?.consultor?.nome ?? 'sem consultor'}` : ''}>
                           {p.split && p.split.comissao > 0 ? formatCurrency(p.split.comissao) : '—'}
                         </td>
                       )}
@@ -299,12 +302,12 @@ export default function PagamentosPage() {
                 )}
                 {totalCapital > 0 && showSplit && (
                   <p className="text-sm font-medium text-muted-foreground">
-                    Capital: {formatCurrency(totalCapital)}
+                    Capital (página): {formatCurrency(totalCapital)}
                   </p>
                 )}
                 {totalLucro > 0 && showSplit && (
                   <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                    Lucro: {formatCurrency(totalLucro)}
+                    Lucro (página): {formatCurrency(totalLucro)}
                   </p>
                 )}
                 {totalDesconto > 0 && (
