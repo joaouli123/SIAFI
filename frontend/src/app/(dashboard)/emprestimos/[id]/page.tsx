@@ -142,8 +142,10 @@ export default function EmprestimoDetalhePage() {
 
   function handlePay(inst: Installment) {
     setPayInstallmentId(inst.id)
-    // Pré-preenche com saldo devedor + mora acumulada (total para quitar)
-    const totalParaQuitar = Number(inst.saldoDevedor) + Number(inst.moraAcumulada)
+    // Pré-preenche com o total para quitar (saldo + encargos: multa + mora),
+    // idêntico ao exibido em /parcelas e no recibo de pagamento.
+    const totalParaQuitar =
+      Number(inst.saldoDevedor) + Number(inst.moraAcumulada) + Number(inst.multaAplicada)
     setValorPago(totalParaQuitar.toFixed(2))
     setDescPago(''); setDescMotivo(''); setDescTipo('saldo')
   }
@@ -565,7 +567,7 @@ export default function EmprestimoDetalhePage() {
                 {canSeeSplit && <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Lucro</th>}
                 <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden md:table-cell">Pago</th>
                 <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden md:table-cell">Saldo</th>
-                <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Mora</th>
+                <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Encargos</th>
                 <th className="text-center px-4 py-2 font-medium text-muted-foreground">Status</th>
                 <th className="text-right px-4 py-2 font-medium text-muted-foreground">Ação</th>
               </tr>
@@ -600,13 +602,24 @@ export default function EmprestimoDetalhePage() {
                       {Number(inst.totalPago) > 0 ? formatCurrency(Number(inst.totalPago)) : '—'}
                     </td>
                     <td className="px-4 py-2 text-right hidden md:table-cell">
-                      {Number(inst.saldoDevedor) > 0
-                        ? <span className="text-red-600 font-medium">{formatCurrency(Number(inst.saldoDevedor))}</span>
-                        : <span className="text-muted-foreground">—</span>}
+                      {Number(inst.saldoDevedor) > 0 ? (
+                        <>
+                          <span className="text-red-600 font-medium">
+                            {formatCurrency(Number(inst.valorComEncargos ?? inst.saldoDevedor))}
+                          </span>
+                          {(Number(inst.moraAcumulada) + Number(inst.multaAplicada)) > 0 && (
+                            <span className="block text-[10px] text-muted-foreground font-normal">
+                              base {formatCurrency(Number(inst.saldoDevedor))}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-2 text-right hidden lg:table-cell">
-                      {Number(inst.moraAcumulada) > 0
-                        ? <span className="text-orange-600 text-xs">{formatCurrency(Number(inst.moraAcumulada))}</span>
+                      {(Number(inst.moraAcumulada) + Number(inst.multaAplicada)) > 0
+                        ? <span className="text-orange-600 text-xs">{formatCurrency(Number(inst.moraAcumulada) + Number(inst.multaAplicada))}</span>
                         : <span className="text-muted-foreground text-xs">—</span>}
                     </td>
                     <td className="px-4 py-2 text-center"><Badge variant={ist.variant}>{ist.label}</Badge></td>
@@ -745,6 +758,9 @@ export default function EmprestimoDetalhePage() {
                 <div className="rounded bg-amber-50 dark:bg-amber-950/20 border border-amber-200 px-3 py-2 text-xs text-amber-800 dark:text-amber-300 flex gap-4">
                   <span>Pago: <strong>{formatCurrency(Number(instSelecionada.totalPago))}</strong></span>
                   <span>Saldo: <strong>{formatCurrency(Number(instSelecionada.saldoDevedor))}</strong></span>
+                  {Number(instSelecionada.multaAplicada) > 0 && (
+                    <span>Multa: <strong>{formatCurrency(Number(instSelecionada.multaAplicada))}</strong></span>
+                  )}
                   {Number(instSelecionada.moraAcumulada) > 0 && (
                     <span>Mora: <strong>{formatCurrency(Number(instSelecionada.moraAcumulada))}</strong></span>
                   )}
@@ -755,7 +771,7 @@ export default function EmprestimoDetalhePage() {
                   <Label>Valor Pago (R$)</Label>
                   <Input type="number" step="0.01" min="0.01" value={valorPago} onChange={(e) => setValorPago(e.target.value)} />
                   {instSelecionada && Number(instSelecionada.saldoDevedor) > 0 && (
-                    <p className="text-[10px] text-muted-foreground">Pré-preenchido com saldo + mora para quitação total</p>
+                    <p className="text-[10px] text-muted-foreground">Pré-preenchido com saldo + encargos (multa + mora) para quitação total</p>
                   )}
                 </div>
                 <div className="space-y-1.5">

@@ -30,7 +30,7 @@ interface Installment {
   moraAcumulada: string
   multaAplicada: string
   observacao?: string | null
-  loan: { id: number; client: { id: number; nome: string; cpf?: string | null }; consultor?: { id: number; nome: string } | null }
+  loan: { id: number; client: { id: number; nome: string; cpf?: string | null; consultor?: { id: number; nome: string } | null }; consultor?: { id: number; nome: string } | null }
 }
 
 type TabKey = 'hoje' | 'prox7' | 'prox30' | 'mes' | 'atrasado' | 'todas'
@@ -337,9 +337,9 @@ export default function ParcelasPage() {
                           </Link>
                         </td>
                         <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
-                          {inst.loan.consultor?.nome ? (
-                            <span className="text-xs truncate max-w-[100px] block" title={inst.loan.consultor.nome}>
-                              {inst.loan.consultor.nome}
+                          {inst.loan.client?.consultor?.nome ? (
+                            <span className="text-xs truncate max-w-[100px] block" title={inst.loan.client.consultor.nome}>
+                              {inst.loan.client.consultor.nome}
                             </span>
                           ) : (
                             <span className="text-xs italic opacity-50">—</span>

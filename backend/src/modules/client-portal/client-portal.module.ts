@@ -4,6 +4,7 @@ import { PrismaModule } from '../../prisma/prisma.module';
 import { SupabaseModule } from '../../supabase/supabase.module';
 import { PixModule } from '../pix/pix.module';
 import { CobrancaModule } from '../cobranca/cobranca.module';
+import { InstallmentsModule } from '../installments/installments.module';
 import { QUEUE_FINANCE_NOTIFICATIONS } from '../queue/queue.constants';
 import { ClientPortalController } from './client-portal.controller';
 import { ClientPortalService } from './client-portal.service';
@@ -17,6 +18,7 @@ import { SupportController } from './support.controller';
     SupabaseModule,
     PixModule,
     CobrancaModule,
+    InstallmentsModule,
     BullModule.registerQueue({ name: QUEUE_FINANCE_NOTIFICATIONS }),
   ],
   controllers: [ClientPortalController, PortalController, SupportController],

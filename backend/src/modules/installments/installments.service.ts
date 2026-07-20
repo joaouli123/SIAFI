@@ -33,17 +33,19 @@ export class InstallmentsService {
 
     const loanWhere: Prisma.LoanWhereInput = {};
     if (clientId) loanWhere.clientId = clientId;
-    // Consultor autenticado só vê a própria carteira; admin/financeiro pode filtrar por consultor
-    if (consultorId) loanWhere.consultorId = consultorId;
-    else if (filterConsultorId) loanWhere.consultorId = filterConsultorId;
+    // Consultor: a carteira é definida em client.consultorId (vínculo em /clientes),
+    // não no contrato. Consultor autenticado só vê a própria carteira; admin/financeiro
+    // pode filtrar por consultor. Ambos filtram pelo consultor DO CLIENTE.
+    const effectiveConsultorId = consultorId ?? filterConsultorId;
+    const clientWhere: Prisma.ClientWhereInput = {};
+    if (effectiveConsultorId) clientWhere.consultorId = effectiveConsultorId;
     if (search) {
-      loanWhere.client = {
-        OR: [
-          { nome: { contains: search, mode: 'insensitive' } },
-          { cpf: { contains: search } },
-        ],
-      };
+      clientWhere.OR = [
+        { nome: { contains: search, mode: 'insensitive' } },
+        { cpf: { contains: search } },
+      ];
     }
+    if (Object.keys(clientWhere).length) loanWhere.client = clientWhere;
     if (Object.keys(loanWhere).length) where.loan = loanWhere;
 
     const [data, total] = await Promise.all([
@@ -59,7 +61,7 @@ export class InstallmentsService {
               status: true,
               multaPercentual: true,
               moraDiariaPercentual: true,
-              client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, observacoes: true } },
+              client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, observacoes: true, consultor: { select: { id: true, nome: true } } } },
               consultor: { select: { id: true, nome: true } },
             },
           },
@@ -126,7 +128,7 @@ export class InstallmentsService {
     };
 
     if (consultorId) {
-      where['loan'] = { consultorId };
+      where['loan'] = { client: { consultorId } };
     }
 
     const data = await this.prisma.installment.findMany({
@@ -135,7 +137,7 @@ export class InstallmentsService {
       include: {
         loan: {
           include: {
-            client: { select: { id: true, nome: true, cpf: true, whatsapp: true, observacoes: true } },
+            client: { select: { id: true, nome: true, cpf: true, whatsapp: true, observacoes: true, consultor: { select: { id: true, nome: true } } } },
             consultor: { select: { id: true, nome: true } },
           },
         },
@@ -169,7 +171,7 @@ export class InstallmentsService {
     };
 
     if (consultorId) {
-      where['loan'] = { consultorId };
+      where['loan'] = { client: { consultorId } };
     }
 
     const data = await this.prisma.installment.findMany({
@@ -178,7 +180,7 @@ export class InstallmentsService {
       include: {
         loan: {
           include: {
-            client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true } },
+            client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, consultor: { select: { id: true, nome: true } } } },
             consultor: { select: { id: true, nome: true } },
           },
         },

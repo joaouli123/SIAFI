@@ -78,21 +78,28 @@ export default function ClientesPage() {
   const { user } = useAuth()
   const [searchInput, setSearchInput] = useState('')
   const [status, setStatus] = useState('')
+  const [consultorFilter, setConsultorFilter] = useState('')
   const [page, setPage] = useState(1)
   const [vincularClient, setVincularClient] = useState<Client | null>(null)
   const [selectedConsultorId, setSelectedConsultorId] = useState<string>('')
   const qc = useQueryClient()
 
   const search = useDebounce(searchInput, 400)
-  useEffect(() => { setPage(1) }, [search, status])
+  useEffect(() => { setPage(1) }, [search, status, consultorFilter])
 
   const canManage = user?.role === 'admin' || user?.role === 'financeiro'
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['clients', { search, status, page }],
+    queryKey: ['clients', { search, status, consultorFilter, page }],
     queryFn: () =>
       api.get<ClientsResponse>('/clients', {
-        params: { search: search || undefined, status: status || undefined, page, limit: 20 },
+        params: {
+          search: search || undefined,
+          status: status || undefined,
+          consultorId: consultorFilter || undefined,
+          page,
+          limit: 20,
+        },
       }).then((r) => r.data),
   })
 
@@ -164,6 +171,14 @@ export default function ClientesPage() {
               <option value="active">Ativos</option>
               <option value="inactive">Inativos</option>
             </Select>
+            {canManage && (
+              <Select value={consultorFilter} onChange={(e) => setConsultorFilter(e.target.value)} className="w-48">
+                <option value="">Consultor: Todos</option>
+                {consultores?.map((c) => (
+                  <option key={c.id} value={String(c.id)}>{c.nome}</option>
+                ))}
+              </Select>
+            )}
             <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
               <RefreshCw className="size-3.5" />Atualizar
             </Button>
@@ -183,10 +198,10 @@ export default function ClientesPage() {
             <div className="p-8 text-center">
               <Users className="size-10 mx-auto text-muted-foreground mb-3" />
               <p className="text-muted-foreground text-sm font-medium">
-                {searchInput || status ? 'Nenhum resultado para o filtro aplicado.' : 'Nenhum cliente cadastrado ainda.'}
+                {searchInput || status || consultorFilter ? 'Nenhum resultado para o filtro aplicado.' : 'Nenhum cliente cadastrado ainda.'}
               </p>
-              {(searchInput || status) ? (
-                <Button variant="outline" size="sm" className="mt-3" onClick={() => { setSearchInput(''); setStatus('') }}>
+              {(searchInput || status || consultorFilter) ? (
+                <Button variant="outline" size="sm" className="mt-3" onClick={() => { setSearchInput(''); setStatus(''); setConsultorFilter('') }}>
                   Limpar filtros
                 </Button>
               ) : canManage ? (

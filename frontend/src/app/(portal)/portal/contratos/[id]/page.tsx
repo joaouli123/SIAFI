@@ -17,6 +17,8 @@ interface Parcela {
   valor: number
   saldoDevedor?: number
   moraAcumulada?: number
+  multaAplicada?: number
+  valorComEncargos?: number
   dataVencimento: string
   status: string
   dataPagamento: string | null
@@ -286,7 +288,8 @@ export default function ContratoDetalhePage() {
         {data.parcelas.map((p, idx) => {
           const isPagaravel = (p.status === 'pendente' || p.status === 'atrasado' || p.status === 'parcialmente_pago') && !isAguardandoAceite
           const isPrevista = isAguardandoAceite || p.status === 'cancelado'
-          const totalParcela = (p.saldoDevedor ?? p.valor) + (p.moraAcumulada ?? 0)
+          const totalParcela = p.valorComEncargos
+            ?? ((p.saldoDevedor ?? p.valor) + (p.moraAcumulada ?? 0) + (p.multaAplicada ?? 0))
 
           return (
             <div
@@ -316,9 +319,9 @@ export default function ContratoDetalhePage() {
                     ? `Pago em ${fmtDate(p.dataPagamento)}`
                     : `Vence ${fmtDate(p.dataVencimento)}`}
                 </p>
-                {p.status === 'atrasado' && p.moraAcumulada && p.moraAcumulada > 0 && (
+                {p.status === 'atrasado' && ((p.moraAcumulada ?? 0) + (p.multaAplicada ?? 0)) > 0 && (
                   <p style={{ fontSize: '11px', color: 'var(--portal-red-600)', marginTop: '2px', fontFamily: 'var(--font-dm-sans, sans-serif)' }}>
-                    + {fmtCurrency(p.moraAcumulada)} em mora
+                    + {fmtCurrency((p.moraAcumulada ?? 0) + (p.multaAplicada ?? 0))} em multa/mora
                   </p>
                 )}
               </div>
@@ -326,7 +329,7 @@ export default function ContratoDetalhePage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ textAlign: 'right' }}>
                   <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--portal-gray-950)', fontFamily: 'var(--font-dm-serif, serif)' }}>
-                    {fmtCurrency(isPagaravel && (p.saldoDevedor || p.moraAcumulada) ? totalParcela : p.valor)}
+                    {fmtCurrency(isPagaravel && (p.saldoDevedor || p.moraAcumulada || p.multaAplicada) ? totalParcela : p.valor)}
                   </p>
                 </div>
                 {isPagaravel && (

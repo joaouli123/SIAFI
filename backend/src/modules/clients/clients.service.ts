@@ -30,14 +30,16 @@ export class ClientsService {
   ) {}
 
   async findAll(filters: ClientFilterDto, consultorId?: number): Promise<PaginatedResponse<Client>> {
-    const { page, limit, search, status } = filters;
+    const { page, limit, search, status, consultorId: filterConsultorId } = filters;
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};
 
-    // Consultor só vê sua própria carteira
+    // Consultor só vê sua própria carteira; admin/financeiro pode filtrar por consultor
     if (consultorId) {
       where.consultorId = consultorId;
+    } else if (filterConsultorId) {
+      where.consultorId = filterConsultorId;
     }
 
     if (status === 'active') {

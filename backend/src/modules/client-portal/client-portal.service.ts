@@ -9,6 +9,7 @@ import { createHash } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { PixService } from '../pix/pix.service';
+import { InstallmentsService } from '../installments/installments.service';
 
 @Injectable()
 export class ClientPortalService {
@@ -16,6 +17,7 @@ export class ClientPortalService {
     private readonly prisma: PrismaService,
     private readonly supabase: SupabaseService,
     private readonly pixService: PixService,
+    private readonly installmentsService: InstallmentsService,
   ) {}
 
   // clientId vem do JWT (RequestUser.id = client.id via JwtAuthGuard)
@@ -202,6 +204,14 @@ export class ClientPortalService {
     const totalPago = loan.installments.reduce((s, i) => s + Number(i.totalPago), 0);
     const totalParcelado = Number(loan.totalReceivable);
 
+    // Recalcula multa/mora em tempo real (mesma fórmula única do sistema) para o
+    // cliente ver o total real a pagar — idêntico ao gerado no PIX e nas telas admin.
+    const parcelasComEncargos = await this.installmentsService.recalcularEncargosLista(
+      loan.installments,
+      loan.multaPercentual,
+      loan.moraDiariaPercentual,
+    );
+
     return {
       id: loan.id,
       valor: Number(loan.principalAmount),
@@ -213,10 +223,14 @@ export class ClientPortalService {
       totalParcelado,
       totalPago,
       saldoRestante: totalParcelado - totalPago,
-      parcelas: loan.installments.map(i => ({
+      parcelas: parcelasComEncargos.map(i => ({
         id: i.id,
         numero: i.numero,
         valor: Number(i.installmentAmount),
+        saldoDevedor: Math.max(0, Number(i.installmentAmount) - Number(i.totalPago)),
+        moraAcumulada: Number(i.moraAcumulada),
+        multaAplicada: Number(i.multaAplicada),
+        valorComEncargos: Number(i.valorComEncargos),
         dataVencimento: i.dataVencimento,
         status: i.status,
         dataPagamento: i.payments[0]?.dataPagamento ?? null,
