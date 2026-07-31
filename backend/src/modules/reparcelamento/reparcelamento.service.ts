@@ -8,6 +8,7 @@ import { Queue } from 'bullmq';
 import { createHash } from 'crypto';
 import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { ScoreRiscoService } from '../score-risco/score-risco.service';
 import { addMonthsSafe } from '../../common/utils/date.utils';
 import { QUEUE_FINANCE_NOTIFICATIONS } from '../queue/queue.constants';
@@ -91,7 +92,7 @@ export class ReparcelamentoService {
           consultorId:          userId,
           tipo:                 dto.tipo,
           motivoCliente:        dto.motivoCliente,
-          dataPrevistaPagamento: dto.dataPrevistaPagamento ? new Date(dto.dataPrevistaPagamento) : null,
+          dataPrevistaPagamento: dto.dataPrevistaPagamento ? dataLocal(dto.dataPrevistaPagamento) : null,
           status:               'pendente',
         },
       });
@@ -124,7 +125,7 @@ export class ReparcelamentoService {
         novoValorPrincipal:     dto.novoValorPrincipal,
         novoTargetProfit:       dto.novoTargetProfit,
         novoNumeroParcelas:     dto.novoNumeroParcelas,
-        novaDataInicio:         new Date(dto.novaDataInicio),
+        novaDataInicio:         dataLocal(dto.novaDataInicio),
         multaAplicada:          dto.multaAplicada ?? null,
         moraAplicada:           dto.moraAplicada ?? null,
         observacaoFinanceiro:   dto.observacaoFinanceiro ?? null,
@@ -282,7 +283,7 @@ export class ReparcelamentoService {
   ) {
     const p = new Decimal(principal);
     const l = new Decimal(profit);
-    const parcelas = this.calcularParcelas(p, l, numeroParcelas, new Date(dataInicio));
+    const parcelas = this.calcularParcelas(p, l, numeroParcelas, dataLocal(dataInicio));
     const total    = p.plus(l);
     return {
       parcelas,

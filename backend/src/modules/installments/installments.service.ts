@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { calcularEncargos, Encargos, ParcelaEncargo } from '../../common/encargos';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { InstallmentFilterDto } from './dto/installment-filter.dto';
 import { UpdateInstallmentDto } from './dto/update-installment.dto';
@@ -8,6 +9,12 @@ import { UpdateInstallmentDto } from './dto/update-installment.dto';
 @Injectable()
 export class InstallmentsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // Baixas necessárias para fatiar a mora por período (ver common/encargos.ts).
+  private static readonly BAIXAS_ENCARGOS = {
+    select: { dataPagamento: true, valorPago: true, estornado: true },
+    orderBy: { dataPagamento: 'asc' },
+  } as const;
 
   // Listagem geral de parcelas com filtros e paginação (tela /parcelas → "Todas").
   async findAll(
@@ -56,6 +63,7 @@ export class InstallmentsService {
         take: limit,
         orderBy: [{ dataVencimento: 'asc' }, { numero: 'asc' }],
         include: {
+          payments: InstallmentsService.BAIXAS_ENCARGOS,
           loan: {
             select: {
               id: true,
@@ -136,6 +144,7 @@ export class InstallmentsService {
       where,
       orderBy: { dataVencimento: 'asc' },
       include: {
+        payments: InstallmentsService.BAIXAS_ENCARGOS,
         loan: {
           include: {
             client: { select: { id: true, nome: true, cpf: true, whatsapp: true, observacoes: true, consultor: { select: { id: true, nome: true } } } },
@@ -179,6 +188,7 @@ export class InstallmentsService {
       where,
       orderBy: [{ status: 'asc' }, { dataVencimento: 'asc' }],
       include: {
+        payments: InstallmentsService.BAIXAS_ENCARGOS,
         loan: {
           include: {
             client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, consultor: { select: { id: true, nome: true } } } },
@@ -203,9 +213,10 @@ export class InstallmentsService {
     });
   }
 
-  // ─── Encargos: fórmula ÚNICA do sistema ───────────────────────────────────────
+  // ─── Encargos: fórmula ÚNICA do sistema (common/encargos.ts) ──────────────────
   // Multa: aplicada uma única vez sobre o valor da parcela (multaPercentual %).
-  // Mora:  diária sobre o saldo devedor (moraDiariaPercentual % ao dia × dias).
+  // Mora:  diária sobre o saldo de CADA período (vencimento → baixas → hoje), para
+  //        que um pagamento parcial não apague a mora já corrida sobre o saldo maior.
   // Fallback por contrato → settings 'financeiro.multa_atraso_percentual' /
   // 'financeiro.mora_dia_percentual'. Idempotente: o mesmo cálculo é usado no
   // cron (atualizarEncargos), no markOverdue e no getEncargos.
@@ -222,33 +233,16 @@ export class InstallmentsService {
   }
 
   private calcEncargos(
-    inst: {
-      installmentAmount: unknown;
-      totalPago: unknown;
-      dataVencimento: Date;
-      loan: { multaPercentual: unknown; moraDiariaPercentual: unknown };
-    },
+    inst: ParcelaEncargo & { loan: { multaPercentual: unknown; moraDiariaPercentual: unknown } },
     multaDefault: number,
     moraDiaDefault: number,
     hoje: Date,
-  ): { saldo: number; valorMulta: number; valorMora: number; totalDevido: number; diasAtraso: number } {
-    const venc = new Date(inst.dataVencimento);
-    venc.setHours(0, 0, 0, 0);
-
-    const saldo = Math.max(0, Number(inst.installmentAmount) - Number(inst.totalPago));
-    const diasAtraso =
-      saldo > 0
-        ? Math.max(0, Math.floor((hoje.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24)))
-        : 0;
-
+  ): Encargos {
     const multaPerc = inst.loan.multaPercentual != null ? Number(inst.loan.multaPercentual) : multaDefault;
-    const moraDiaPerc = inst.loan.moraDiariaPercentual != null ? Number(inst.loan.moraDiariaPercentual) : moraDiaDefault;
+    const moraDiaPerc =
+      inst.loan.moraDiariaPercentual != null ? Number(inst.loan.moraDiariaPercentual) : moraDiaDefault;
 
-    const valorMulta = diasAtraso >= 1 ? parseFloat(((Number(inst.installmentAmount) * multaPerc) / 100).toFixed(2)) : 0;
-    const valorMora = diasAtraso >= 1 ? parseFloat((saldo * (moraDiaPerc / 100) * diasAtraso).toFixed(2)) : 0;
-    const totalDevido = parseFloat((saldo + valorMulta + valorMora).toFixed(2));
-
-    return { saldo, valorMulta, valorMora, totalDevido, diasAtraso };
+    return calcularEncargos(inst, multaPerc, moraDiaPerc, hoje);
   }
 
   // Remove os campos de split (principalPayback/netGain) para o papel 'caixa'.
@@ -261,9 +255,7 @@ export class InstallmentsService {
 
   // Recalcula mora/multa em tempo real para parcelas de UM MESMO contrato — usado pelo
   // detalhe do empréstimo (LoansService.findById), que não passa por findAll/findOverdue.
-  async recalcularEncargosLista<
-    T extends { installmentAmount: unknown; totalPago: unknown; dataVencimento: Date },
-  >(
+  async recalcularEncargosLista<T extends ParcelaEncargo>(
     installments: T[],
     multaPercentual: unknown,
     moraDiariaPercentual: unknown,
@@ -300,7 +292,9 @@ export class InstallmentsService {
         status: true,
         installmentAmount: true,
         totalPago: true,
+        saldoDevedor: true,
         dataVencimento: true,
+        payments: InstallmentsService.BAIXAS_ENCARGOS,
         loan: { select: { multaPercentual: true, moraDiariaPercentual: true } },
       },
     });
@@ -337,7 +331,9 @@ export class InstallmentsService {
       select: {
         installmentAmount: true,
         totalPago: true,
+        saldoDevedor: true,
         dataVencimento: true,
+        payments: InstallmentsService.BAIXAS_ENCARGOS,
         loan: { select: { multaPercentual: true, moraDiariaPercentual: true } },
       },
     });

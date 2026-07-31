@@ -478,7 +478,7 @@ export default function NovoPagamentoPage() {
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Conta / Detalhes</Label>
+                  <Label>Bco Recebedor</Label>
                   <Input {...form.register('contaDestino')} placeholder="ex: Itaú PJ, dinheiro em caixa" />
                   <p className="text-[10px] text-muted-foreground">Conta/banco que recebeu o valor</p>
                 </div>

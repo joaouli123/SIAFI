@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { Client, Prisma } from '@prisma/client';
 import { extname } from 'path';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -132,7 +133,7 @@ export class ClientsService {
       nome: dto.nome,
       cpf: dto.cpf ?? null,
       rg: dto.rg ?? null,
-      dataNascimento: dto.dataNascimento ? new Date(dto.dataNascimento) : null,
+      dataNascimento: dto.dataNascimento ? dataLocal(dto.dataNascimento) : null,
       email: dto.email ?? null,
       whatsapp: dto.whatsapp ?? null,
       telefone: dto.telefone ?? null,
@@ -205,7 +206,7 @@ export class ClientsService {
     if (dto.nome !== undefined) data.nome = dto.nome;
     if (dto.cpf !== undefined) data.cpf = dto.cpf;
     if (dto.rg !== undefined) data.rg = dto.rg;
-    if (dto.dataNascimento !== undefined) data.dataNascimento = new Date(dto.dataNascimento);
+    if (dto.dataNascimento !== undefined) data.dataNascimento = dataLocal(dto.dataNascimento);
     if (dto.email !== undefined) data.email = dto.email;
     if (dto.whatsapp !== undefined) data.whatsapp = dto.whatsapp;
     if (dto.telefone !== undefined) data.telefone = dto.telefone;

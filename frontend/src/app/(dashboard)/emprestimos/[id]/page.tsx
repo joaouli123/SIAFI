@@ -260,7 +260,7 @@ export default function EmprestimoDetalhePage() {
                 <div className="space-y-1.5"><Label>% Desconto (sobre lucro)</Label><Input type="number" step="0.01" min="0" max="100" value={qPct} onChange={(e) => setQPct(e.target.value)} placeholder="0" /></div>
                 <div className="space-y-1.5"><Label>Data</Label><Input type="date" value={qData} onChange={(e) => setQData(e.target.value)} /></div>
                 <div className="space-y-1.5"><Label>Método</Label><Select value={qMetodo} onChange={(e) => setQMetodo(e.target.value)}>{Object.entries(METODO_PAGAMENTO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</Select></div>
-                <div className="space-y-1.5"><Label>Conta / Detalhes</Label><Input value={qConta} onChange={(e) => setQConta(e.target.value)} placeholder="opcional" /></div>
+                <div className="space-y-1.5"><Label>Bco Recebedor</Label><Input value={qConta} onChange={(e) => setQConta(e.target.value)} placeholder="opcional" /></div>
               </div>
               <div className="flex gap-2">
                 <Button className="bg-green-600 hover:bg-green-700 gap-2" disabled={quitarMut.isPending}
@@ -685,6 +685,7 @@ export default function EmprestimoDetalhePage() {
                               <th className="text-right px-3 py-1.5 font-medium text-muted-foreground">Valor Pago</th>
                               <th className="text-right px-3 py-1.5 font-medium text-orange-600">Desconto Dado</th>
                               <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden md:table-cell">Método</th>
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden md:table-cell">Bco Recebedor</th>
                               <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden lg:table-cell">Motivo desconto</th>
                             </tr>
                           </thead>
@@ -713,6 +714,9 @@ export default function EmprestimoDetalhePage() {
                                   </td>
                                   <td className="px-3 py-2 text-muted-foreground hidden md:table-cell capitalize">
                                     {METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}
+                                  </td>
+                                  <td className="px-3 py-2 text-muted-foreground hidden md:table-cell">
+                                    {p.contaDestino || '—'}
                                   </td>
                                   <td className="px-3 py-2 text-muted-foreground hidden lg:table-cell">
                                     {p.descontoMotivo || (temDesconto ? (p.descontoTipo === 'encargos' ? 'Desconto em encargos' : 'Desconto no saldo') : '—')}
@@ -789,7 +793,7 @@ export default function EmprestimoDetalhePage() {
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Conta / Detalhes</Label>
+                  <Label>Bco Recebedor</Label>
                   <Input value={contaDestino} onChange={(e) => setContaDestino(e.target.value)} placeholder="ex: Itaú PJ, dinheiro em caixa" />
                 </div>
 

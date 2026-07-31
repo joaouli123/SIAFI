@@ -4,6 +4,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
+import { calcularEncargos } from '../../common/encargos';
 import { ScoreRiscoService } from '../score-risco/score-risco.service';
 import { SettingsService } from '../settings/settings.service';
 import { CobrancaService } from '../cobranca/cobranca.service';
@@ -377,6 +378,10 @@ export class CronService {
         saldoDevedor:  { gt: 0 },
       },
       include: {
+        payments: {
+          select: { dataPagamento: true, valorPago: true, estornado: true },
+          orderBy: { dataPagamento: 'asc' },
+        },
         loan: {
           select: { moraDiariaPercentual: true, multaPercentual: true },
         },
@@ -386,17 +391,9 @@ export class CronService {
     let multasAplicadas = 0;
     let moraAcumuladas  = 0;
 
-    // Fórmula ÚNICA do sistema (idem InstallmentsService.calcEncargos), idempotente:
-    // multa única sobre o valor da parcela + mora diária sobre o saldo × dias de atraso.
+    // Fórmula ÚNICA do sistema (common/encargos.ts), idempotente: multa única sobre o
+    // valor da parcela + mora diária sobre o saldo de cada período (venc → baixas → hoje).
     for (const inst of vencidas) {
-      const venc = new Date(inst.dataVencimento);
-      venc.setHours(0, 0, 0, 0);
-      const diasAtraso = Math.max(
-        0,
-        Math.floor((today.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24)),
-      );
-
-      const saldo    = new Decimal(inst.saldoDevedor.toString());
       const moraPerc = inst.loan.moraDiariaPercentual
         ? new Decimal(inst.loan.moraDiariaPercentual.toString())
         : moraDefault;
@@ -404,11 +401,7 @@ export class CronService {
         ? new Decimal(inst.loan.multaPercentual.toString())
         : multaDefault;
 
-      // Mora: recalculada (set) a partir dos dias de atraso — não acumulada
-      const mora  = saldo.times(moraPerc.dividedBy(100)).times(diasAtraso).toDecimalPlaces(2);
-      // Multa: uma vez sobre o valor da parcela
-      const multa = new Decimal(inst.installmentAmount.toString()).times(multaPerc.dividedBy(100)).toDecimalPlaces(2);
-      const totalDevido = saldo.plus(multa).plus(mora).toDecimalPlaces(2);
+      const enc = calcularEncargos(inst, multaPerc.toNumber(), moraPerc.toNumber(), today);
 
       const multaJaAplicada = new Decimal(inst.multaAplicada.toString()).greaterThan(0);
       if (!multaJaAplicada) multasAplicadas++;
@@ -416,11 +409,11 @@ export class CronService {
       await this.prisma.installment.update({
         where: { id: inst.id },
         data: {
-          moraAcumulada:    mora.toNumber(),
-          valorMora:        mora.toNumber(),
-          multaAplicada:    multa.toNumber(),
-          valorMulta:       multa.toNumber(),
-          valorComEncargos: totalDevido.toNumber(),
+          moraAcumulada:    enc.valorMora,
+          valorMora:        enc.valorMora,
+          multaAplicada:    enc.valorMulta,
+          valorMulta:       enc.valorMulta,
+          valorComEncargos: enc.totalDevido,
         },
       });
       moraAcumuladas++;

@@ -9,10 +9,12 @@ import { createHash } from 'crypto';
 import Decimal from 'decimal.js';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { PortalService } from '../client-portal/portal.service';
 import { InstallmentsService } from '../installments/installments.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { addMonthsSafe, calcularDataVencimento } from '../../common/utils/date.utils';
+import { baixasVivas, realizedLucro } from '../../common/commission';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { UpdateLoanDto } from './dto/update-loan.dto';
 import { LoanFilterDto } from './dto/loan-filter.dto';
@@ -105,12 +107,16 @@ export class LoansService {
       loan.moraDiariaPercentual,
     );
 
-    // Resumo da comissão do consultor (realizada via capital-primeiro × paga)
+    // Resumo da comissão do consultor (realizada × paga). Usa a regra única de rateio:
+    // parcelas novas (proporcional) reconhecem o lucro conforme o pago; as demais, capital-primeiro.
     const pct = Number(loan.comissaoPercentual ?? 0);
-    const realizada = loan.installments.reduce(
-      (s, i) => s + (Math.max(0, Number(i.totalPago) - Number(i.principalPayback)) * pct) / 100,
-      0,
-    );
+    const realizada = loan.installments.reduce((s, i) => {
+      const lucro = realizedLucro(baixasVivas(i.payments), {
+        principalPayback:  i.principalPayback,
+        installmentAmount: i.installmentAmount,
+      });
+      return s + (lucro * pct) / 100;
+    }, 0);
     const paga = loan.comissaoPagamentos.reduce((s, c) => s + Number(c.valor), 0);
     const prevista = Number(loan.targetProfit) * (pct / 100);
     const saldo = realizada - paga;
@@ -210,7 +216,7 @@ export class LoansService {
     const vencDaParcela = (i: number): Date =>
       primeiroVenc
         ? addMonthsSafe(primeiroVenc, i)
-        : calcularDataVencimento(new Date(dto.dataInicio), i + 1, dto.diaVencimento);
+        : calcularDataVencimento(dataLocal(dto.dataInicio), i + 1, dto.diaVencimento);
 
     // ── Geração das parcelas ────────────────────────────────────────────────
     const installments = Array.from({ length: n }, (_, i) => {
@@ -245,7 +251,7 @@ export class LoansService {
           totalReceivable:         total.toDecimalPlaces(2).toNumber(),
           numeroParcelas:          n,
           metodoPagamento:         dto.metodoPagamento ?? null,
-          dataInicio:              new Date(dto.dataInicio),
+          dataInicio:              dataLocal(dto.dataInicio),
           observacoes:             dto.observacoes ?? null,
           status:                  ctx.loanStatus ?? 'ativo',
           aceiteExpiraEm:          ctx.aceiteExpiraEm ?? null,
@@ -308,7 +314,7 @@ export class LoansService {
     const newPrincipal  = dto.principalAmount != null ? new Decimal(dto.principalAmount) : new Decimal(loan.principalAmount.toString());
     const newProfit     = dto.targetProfit   != null ? new Decimal(dto.targetProfit)    : new Decimal(loan.targetProfit.toString());
     const newN          = dto.numeroParcelas ?? loan.numeroParcelas;
-    const newDataInicio = dto.dataInicio ? new Date(dto.dataInicio) : loan.dataInicio;
+    const newDataInicio = dto.dataInicio ? dataLocal(dto.dataInicio) : loan.dataInicio;
     const newDiaVenc    = dto.diaVencimento !== undefined ? dto.diaVencimento : loan.diaVencimento;
     // Data do 1º vencimento (parse local, como no create); quando informada, redefine
     // o cronograma das parcelas pendentes (1ª pendente nessa data, demais mensais).
@@ -481,7 +487,7 @@ export class LoansService {
           loanId,
           consultorId:   loan.consultorId ?? null,
           valor:         valor.toDecimalPlaces(2).toNumber(),
-          dataPagamento: new Date(dto.dataPagamento),
+          dataPagamento: dataLocal(dto.dataPagamento),
           observacao:    dto.observacao ?? null,
           registradoPor: ctx.userId ?? null,
         },
@@ -492,7 +498,7 @@ export class LoansService {
           valor:     valor.toDecimalPlaces(2).toNumber(),
           descricao: `Comissão consultor — Contrato #${loanId} · ${loan.client.nome}${dto.observacao ? ` — ${dto.observacao}` : ''}`,
           categoria: 'Comissão Consultor',
-          data:      new Date(dto.dataPagamento),
+          data:      dataLocal(dto.dataPagamento),
           userId:    ctx.userId ?? null,
         },
       });
@@ -621,7 +627,7 @@ export class LoansService {
       throw new BadRequestException('Contrato não está aguardando liberação de capital.');
     }
 
-    const dataLib = dto.dataLiberacao ? new Date(dto.dataLiberacao) : new Date();
+    const dataLib = dto.dataLiberacao ? dataLocal(dto.dataLiberacao) : new Date();
 
     await this.prisma.$transaction(async (tx) => {
       // 1. Ativar o contrato

@@ -20,6 +20,7 @@ interface Payment {
   valorPago: string
   dataPagamento: string
   metodoPagamento: string
+  contaDestino?: string | null
   observacao: string | null
   desconto?: number | string | null
   descontoTipo?: string | null
@@ -40,7 +41,10 @@ interface PaymentsResponse {
   total: number
   page: number
   lastPage: number
-  totais?: { recebido: number; desconto: number }
+  totais?: {
+    recebido: number; desconto: number
+    capital?: number; lucro?: number; comissao?: number; lucroEmpresa?: number
+  }
 }
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -109,12 +113,13 @@ export default function PagamentosPage() {
     }
   }
 
-  // Recebido/Desconto = período inteiro (agregado no backend, todo o filtro).
-  // Capital/Lucro (split) = apenas da página atual.
+  // Todos os totais são do período inteiro (agregados no backend, todo o filtro),
+  // considerando apenas baixas não estornadas.
   const totalRecebido = data?.totais?.recebido ?? 0
   const totalDesconto = data?.totais?.desconto ?? 0
-  const totalCapital = data?.data.reduce((s, p) => s + (p.split?.capital ?? 0), 0) ?? 0
-  const totalLucro = data?.data.reduce((s, p) => s + (p.split?.lucroEmpresa ?? 0), 0) ?? 0
+  const totalCapital = data?.totais?.capital ?? 0
+  const totalLucro = data?.totais?.lucroEmpresa ?? 0
+  const totalComissao = data?.totais?.comissao ?? 0
 
   return (
     <div className="space-y-6 w-full">
@@ -196,6 +201,7 @@ export default function PagamentosPage() {
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcela</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
@@ -204,6 +210,7 @@ export default function PagamentosPage() {
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Comissão</th>}
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Lucro Empresa</th>}
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Método</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Bco Recebedor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Data</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ação</th>
                   </tr>
@@ -214,6 +221,9 @@ export default function PagamentosPage() {
                       <td className="px-4 py-3 font-medium">
                         {p.installment?.loan?.client?.nome ?? '—'}
                         {p.estornado && <Badge variant="outline" className="ml-2 text-xs">Estornado</Badge>}
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
+                        {p.installment?.loan?.client?.consultor?.nome ?? '—'}
                       </td>
                       <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
                         <Link href={`/emprestimos/${p.installment?.loan?.id}`} className="hover:underline">
@@ -248,6 +258,9 @@ export default function PagamentosPage() {
                       )}
                       <td className="px-4 py-3 hidden md:table-cell">
                         <Badge variant="outline">{METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}</Badge>
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground hidden xl:table-cell">
+                        {p.contaDestino?.trim() ? p.contaDestino : '—'}
                       </td>
                       <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
                         {formatDateLocal(p.dataPagamento)}
@@ -302,12 +315,17 @@ export default function PagamentosPage() {
                 )}
                 {totalCapital > 0 && showSplit && (
                   <p className="text-sm font-medium text-muted-foreground">
-                    Capital (página): {formatCurrency(totalCapital)}
+                    Capital: {formatCurrency(totalCapital)}
+                  </p>
+                )}
+                {showSplit && (
+                  <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400" title="Soma da comissão dos consultores no período filtrado">
+                    Comissão do Consultor: {formatCurrency(totalComissao)}
                   </p>
                 )}
                 {totalLucro > 0 && showSplit && (
                   <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                    Lucro (página): {formatCurrency(totalLucro)}
+                    Lucro Empresa: {formatCurrency(totalLucro)}
                   </p>
                 )}
                 {totalDesconto > 0 && (

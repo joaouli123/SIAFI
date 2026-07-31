@@ -202,8 +202,12 @@ export class ClientPortalService {
             dataVencimento: true,
             status: true,
             totalPago: true,
-            // principalPayback e netGain são campos INTERNOS — não selecionar no portal
-            payments: { select: { dataPagamento: true }, orderBy: { dataPagamento: 'desc' }, take: 1 },
+            // principalPayback e netGain são campos INTERNOS — não selecionar no portal.
+            // valorPago/estornado são necessários para fatiar a mora por período.
+            payments: {
+              select: { dataPagamento: true, valorPago: true, estornado: true },
+              orderBy: { dataPagamento: 'desc' },
+            },
           },
         },
       },
