@@ -14,7 +14,7 @@ import { PortalService } from '../client-portal/portal.service';
 import { InstallmentsService } from '../installments/installments.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { addMonthsSafe, calcularDataVencimento } from '../../common/utils/date.utils';
-import { baixasVivas, realizedLucro } from '../../common/commission';
+import { baixasVivas, realizedLucro, splitParcela } from '../../common/commission';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { UpdateLoanDto } from './dto/update-loan.dto';
 import { LoanFilterDto } from './dto/loan-filter.dto';
@@ -101,11 +101,31 @@ export class LoansService {
 
     if (!loan) throw new NotFoundException(`Empréstimo ${id} não encontrado`);
 
-    (loan as Record<string, unknown>).installments = await this.installmentsService.recalcularEncargosLista(
+    const installmentsComEncargos = await this.installmentsService.recalcularEncargosLista(
       loan.installments,
       loan.multaPercentual,
       loan.moraDiariaPercentual,
     );
+
+    // Rateio REALIZADO de cada baixa (capital × lucro × comissão). As colunas Capital/Lucro
+    // da tabela de parcelas mostram o PLANO do contrato; sem isto o operador não tem onde ver
+    // que uma baixa parcial foi de fato dividida proporcionalmente à dívida atual.
+    (loan as Record<string, unknown>).installments = installmentsComEncargos.map((inst) => {
+      const vivas = baixasVivas(inst.payments);
+      const splits = splitParcela(vivas, {
+        principalPayback:   inst.principalPayback,
+        installmentAmount:  inst.installmentAmount,
+        comissaoPercentual: loan.comissaoPercentual,
+      });
+      const porBaixa = new Map(vivas.map((b, i) => [b.id, splits[i]]));
+      return {
+        ...inst,
+        payments: (inst.payments as { id: number }[]).map((p) => ({
+          ...p,
+          split: porBaixa.get(p.id) ?? null,
+        })),
+      };
+    });
 
     // Resumo da comissão do consultor (realizada × paga). Usa a regra única de rateio:
     // parcelas novas (proporcional) reconhecem o lucro conforme o pago; as demais, capital-primeiro.
@@ -778,7 +798,16 @@ export class LoansService {
     if (Array.isArray(loanRest['installments'])) {
       loanRest['installments'] = (loanRest['installments'] as Record<string, unknown>[]).map(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ principalPayback, netGain, ...instRest }) => instRest,
+        ({ principalPayback, netGain, ...instRest }) => {
+          // O split por baixa (capital/lucro/comissão) é informação interna.
+          if (Array.isArray(instRest['payments'])) {
+            instRest['payments'] = (instRest['payments'] as Record<string, unknown>[]).map(
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              ({ split, ...payRest }) => payRest,
+            );
+          }
+          return instRest;
+        },
       );
     }
     return loanRest;

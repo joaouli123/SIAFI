@@ -21,6 +21,7 @@ interface Payment {
   dataPagamento: string; metodoPagamento: string
   desconto: number; descontoTipo?: string | null; descontoMotivo?: string | null
   estornado: boolean; contaDestino?: string | null; observacao?: string | null
+  split?: { capital: number; lucro: number; comissao: number; lucroEmpresa: number; comissaoPercentual: number } | null
 }
 interface Installment {
   id: number; numero: number; installmentAmount: number; dataVencimento: string
@@ -684,6 +685,8 @@ export default function EmprestimoDetalhePage() {
                               <th className="text-right px-3 py-1.5 font-medium text-muted-foreground">Valor Devido c/ Juros</th>
                               <th className="text-right px-3 py-1.5 font-medium text-muted-foreground">Valor Pago</th>
                               <th className="text-right px-3 py-1.5 font-medium text-orange-600">Desconto Dado</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-blue-700 dark:text-blue-400">Capital</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-emerald-700 dark:text-emerald-400">Lucro</th>
                               <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden md:table-cell">Método</th>
                               <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden md:table-cell">Bco Recebedor</th>
                               <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden lg:table-cell">Motivo desconto</th>
@@ -712,6 +715,12 @@ export default function EmprestimoDetalhePage() {
                                       <span className="text-muted-foreground">—</span>
                                     )}
                                   </td>
+                                  <td className="px-3 py-2 text-right text-blue-700 dark:text-blue-400" title="Parte desta baixa que repõe o capital emprestado">
+                                    {p.split ? formatCurrency(p.split.capital) : '—'}
+                                  </td>
+                                  <td className="px-3 py-2 text-right text-emerald-700 dark:text-emerald-400" title={p.split?.comissaoPercentual ? `Comissão do consultor: ${formatCurrency(p.split.comissao)} (${p.split.comissaoPercentual}%)` : 'Lucro realizado nesta baixa'}>
+                                    {p.split ? formatCurrency(p.split.lucro) : '—'}
+                                  </td>
                                   <td className="px-3 py-2 text-muted-foreground hidden md:table-cell capitalize">
                                     {METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}
                                   </td>
@@ -736,6 +745,13 @@ export default function EmprestimoDetalhePage() {
                                 <td className="px-3 py-1.5 text-right text-xs text-orange-600">
                                   {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.desconto), 0))}
                                 </td>
+                                <td className="px-3 py-1.5 text-right text-xs text-blue-700 dark:text-blue-400">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.split?.capital ?? 0), 0))}
+                                </td>
+                                <td className="px-3 py-1.5 text-right text-xs text-emerald-700 dark:text-emerald-400">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.split?.lucro ?? 0), 0))}
+                                </td>
+                                <td className="hidden md:table-cell" />
                                 <td className="hidden md:table-cell" />
                                 <td className="hidden lg:table-cell" />
                               </tr>
@@ -772,6 +788,12 @@ export default function EmprestimoDetalhePage() {
                   {Number(instSelecionada.moraAcumulada) > 0 && (
                     <span>Mora: <strong>{formatCurrency(Number(instSelecionada.moraAcumulada))}</strong></span>
                   )}
+                </div>
+              )}
+              {payMut.isError && (
+                <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  {(payMut.error as any)?.response?.data?.message
+                    ?? 'Erro ao registrar pagamento. Verifique os dados e tente novamente.'}
                 </div>
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

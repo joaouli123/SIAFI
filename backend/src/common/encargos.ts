@@ -105,7 +105,22 @@ export function calcularEncargos(
 
   const face = D(inst.installmentAmount);
   const saldoCalculado = face.minus(D(inst.totalPago));
-  const saldoRegistrado = inst.saldoDevedor == null ? null : D(inst.saldoDevedor);
+  const saldoGravado = inst.saldoDevedor == null ? null : D(inst.saldoDevedor);
+
+  // saldoDevedor só vale como "dívida atual com encargos" quando uma baixa o escreveu.
+  // O schema aplica @default(0), então parcela que nunca recebeu baixa chega aqui com 0 —
+  // e isso fazia a parcela inteira valer zero: sumia da carteira, o PIX saía com R$ 0,00 e
+  // qualquer baixa era recusada por "excede o total devido com encargos (0,00)".
+  const baixasCarregadas = Array.isArray(inst.payments);
+  const semBaixaViva = baixasCarregadas && !inst.payments!.some((p) => !p.estornado);
+  const naoInicializado =
+    saldoGravado != null &&
+    saldoGravado.lte(0.005) &&
+    D(inst.totalPago).lte(0.005) &&
+    face.greaterThan(0.005);
+
+  const saldoRegistrado =
+    saldoGravado == null || semBaixaViva || naoInicializado ? null : saldoGravado;
   const saldoDecimal = saldoRegistrado == null ? saldoCalculado : saldoRegistrado;
   const saldo = Math.max(0, r2(saldoDecimal));
   const diasAtraso = saldo > 0 ? diasEntre(venc, hojeZero) : 0;

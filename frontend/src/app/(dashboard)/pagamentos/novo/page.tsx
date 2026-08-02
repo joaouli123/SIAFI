@@ -452,7 +452,8 @@ export default function NovoPagamentoPage() {
           <form onSubmit={form.handleSubmit(d => mutation.mutate(d))} className="space-y-4">
             {mutation.isError && (
               <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                Erro ao registrar pagamento. Verifique os dados e tente novamente.
+                {(mutation.error as any)?.response?.data?.message
+                  ?? 'Erro ao registrar pagamento. Verifique os dados e tente novamente.'}
               </div>
             )}
 
