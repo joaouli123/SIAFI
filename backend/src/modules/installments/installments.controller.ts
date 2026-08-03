@@ -37,17 +37,22 @@ export class InstallmentsController {
 
   @Get('overdue')
   @Roles('admin', 'financeiro', 'caixa', 'consultor')
-  findOverdue(@CurrentUser() user: AuthUser) {
-    const consultorId = user?.role === 'consultor' ? user.id : undefined;
-    return this.installmentsService.findOverdue(consultorId, user?.role);
+  findOverdue(@CurrentUser() user: AuthUser, @Query('consultorId') consultorId?: string) {
+    return this.installmentsService.findOverdue(this.escopoConsultor(user, consultorId), user?.role);
   }
 
   // Parcelas com vencimento hoje — dashboard do caixa e do consultor
   @Get('hoje')
   @Roles('admin', 'financeiro', 'caixa', 'consultor')
-  findHoje(@CurrentUser() user: AuthUser) {
-    const consultorId = user?.role === 'consultor' ? user.id : undefined;
-    return this.installmentsService.findHoje(consultorId, user?.role);
+  findHoje(@CurrentUser() user: AuthUser, @Query('consultorId') consultorId?: string) {
+    return this.installmentsService.findHoje(this.escopoConsultor(user, consultorId), user?.role);
+  }
+
+  // Consultor logado enxerga só a própria carteira; o filtro da tela é para admin/financeiro.
+  private escopoConsultor(user: AuthUser, filtro?: string): number | undefined {
+    if (user?.role === 'consultor') return user.id;
+    const id = Number(filtro);
+    return Number.isFinite(id) && id > 0 ? id : undefined;
   }
 
   @Get(':id/encargos')

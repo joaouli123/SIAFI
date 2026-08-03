@@ -84,11 +84,12 @@ export default function ParcelasPage() {
   const pagedParams = useMemo(() => {
     const base = new Date(`${hojeIso}T00:00:00`)
     const addDias = (n: number) => isoLocal(new Date(base.getFullYear(), base.getMonth(), base.getDate() + n))
-    if (tab === 'prox7')  return { startDate: hojeIso, endDate: addDias(7),  aberto: 'true', page: fPage, limit: 50 }
-    if (tab === 'prox30') return { startDate: hojeIso, endDate: addDias(30), aberto: 'true', page: fPage, limit: 50 }
+    const consultorId = fConsultor ? Number(fConsultor) : undefined
+    if (tab === 'prox7')  return { startDate: hojeIso, endDate: addDias(7),  aberto: 'true', consultorId, page: fPage, limit: 50 }
+    if (tab === 'prox30') return { startDate: hojeIso, endDate: addDias(30), aberto: 'true', consultorId, page: fPage, limit: 50 }
     if (tab === 'mes') {
       const [a, m] = mesSel.split('-').map(Number)
-      return { startDate: isoLocal(new Date(a, m - 1, 1)), endDate: isoLocal(new Date(a, m, 0)), page: fPage, limit: 50 }
+      return { startDate: isoLocal(new Date(a, m - 1, 1)), endDate: isoLocal(new Date(a, m, 0)), consultorId, page: fPage, limit: 50 }
     }
     // todas
     return {
@@ -99,14 +100,16 @@ export default function ParcelasPage() {
     }
   }, [tab, fPage, mesSel, fStatus, fSearch, fStart, fEnd, fObs, fLoanId, fConsultor, hojeIso])
 
+  const consultorParam = fConsultor ? { consultorId: Number(fConsultor) } : undefined
+
   const { data: hoje, isLoading: loadingHoje, refetch: refetchHoje } = useQuery<Installment[]>({
-    queryKey: ['installments', 'hoje'],
-    queryFn: () => api.get<Installment[]>('/installments/hoje').then(r => r.data),
+    queryKey: ['installments', 'hoje', fConsultor],
+    queryFn: () => api.get<Installment[]>('/installments/hoje', { params: consultorParam }).then(r => r.data),
   })
 
   const { data: overdue, isLoading: loadingOverdue, refetch: refetchOverdue } = useQuery<Installment[]>({
-    queryKey: ['installments', 'overdue'],
-    queryFn: () => api.get<Installment[]>('/installments/overdue').then(r => r.data),
+    queryKey: ['installments', 'overdue', fConsultor],
+    queryFn: () => api.get<Installment[]>('/installments/overdue', { params: consultorParam }).then(r => r.data),
   })
 
   const { data: pagedResp, isLoading: loadingPaged, refetch: refetchPaged } = useQuery<PaginatedInstallments>({
@@ -209,6 +212,22 @@ export default function ParcelasPage() {
         })}
       </div>
 
+      {/* Filtro de consultor — vale para TODAS as abas, não só a "Todas" */}
+      {showConsultorFilter && (
+        <div className="flex items-center gap-2">
+          <Label className="text-xs text-muted-foreground whitespace-nowrap">Consultor</Label>
+          <Select className="w-auto min-w-[180px] h-9" value={fConsultor} onChange={(e) => { setFConsultor(e.target.value); setFPage(1) }}>
+            <option value="">Todos os consultores</option>
+            {consultores?.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
+          </Select>
+          {fConsultor && (
+            <Button variant="ghost" size="sm" className="h-9 text-muted-foreground" onClick={() => { setFConsultor(''); setFPage(1) }}>
+              Limpar
+            </Button>
+          )}
+        </div>
+      )}
+
       {/* Seletor de mês (aba Este mês) */}
       {tab === 'mes' && (
         <div className="flex items-end gap-2">
@@ -239,13 +258,6 @@ export default function ParcelasPage() {
               <option value="cancelado">Cancelado</option>
             </Select>
             
-            {showConsultorFilter && (
-              <Select className="w-auto min-w-[150px] h-9" value={fConsultor} onChange={(e) => { setFConsultor(e.target.value); setFPage(1) }}>
-                <option value="">Consultor: Todos</option>
-                {consultores?.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
-              </Select>
-            )}
-
             <Select className="w-auto min-w-[160px] h-9 hidden md:block" value={fObs} onChange={(e) => { setFObs(e.target.value); setFPage(1) }}>
               <option value="">Todas observações</option>
               <option value="true">Com observação</option>

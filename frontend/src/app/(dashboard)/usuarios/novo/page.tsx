@@ -41,7 +41,7 @@ const ROLES = [
     icon: Briefcase,
     description: 'Gerencia carteira de clientes, cria intenções e solicita reparcelamentos.',
     color: 'green',
-    warning: 'Após criar, vincule os clientes desta carteira ao consultor em Clientes > Editar.',
+    warning: 'Após criar, vincule os clientes a este consultor na lista de Clientes (botão "Vincular" na coluna Consultor) ou abrindo o cliente, no card Consultor.',
   },
   {
     value: 'financeiro',
