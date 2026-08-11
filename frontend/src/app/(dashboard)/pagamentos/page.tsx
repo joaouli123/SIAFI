@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
-import { formatCurrency, formatDateLocal, toNumber, METODO_PAGAMENTO, hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
+import { formatCurrency, formatDateLocal, toNumber, hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 
@@ -31,8 +31,8 @@ interface Payment {
     loan: { id: number; client: { nome: string; consultor?: { id: number; nome: string } | null } }
   }
   split?: {
-    capital: number; lucro: number; comissao: number
-    lucroEmpresa: number; comissaoPercentual: number
+    capital: number; lucro: number; comissao: number; comissaoAdministrador?: number
+    lucroEmpresa: number; comissaoPercentual: number; comissaoAdministradorPercentual?: number
   } | null
 }
 
@@ -43,7 +43,7 @@ interface PaymentsResponse {
   lastPage: number
   totais?: {
     recebido: number; desconto: number
-    capital?: number; lucro?: number; comissao?: number; lucroEmpresa?: number
+    capital?: number; lucro?: number; comissao?: number; comissaoAdministrador?: number; lucroEmpresa?: number
   }
 }
 
@@ -118,8 +118,10 @@ export default function PagamentosPage() {
   const totalRecebido = data?.totais?.recebido ?? 0
   const totalDesconto = data?.totais?.desconto ?? 0
   const totalCapital = data?.totais?.capital ?? 0
+  const totalLucroGeral = data?.totais?.lucro ?? 0
   const totalLucro = data?.totais?.lucroEmpresa ?? 0
   const totalComissao = data?.totais?.comissao ?? 0
+  const totalComissaoAdministrador = data?.totais?.comissaoAdministrador ?? 0
 
   return (
     <div className="space-y-6 w-full">
@@ -202,16 +204,16 @@ export default function PagamentosPage() {
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcela</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Desconto</th>
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Capital</th>}
-                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Comissão</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Lucro Geral</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Com. Consultor</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Com. Admin.</th>}
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Lucro Empresa</th>}
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Método</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Bco Recebedor</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Data</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell whitespace-nowrap">Data</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ação</th>
                   </tr>
                 </thead>
@@ -224,11 +226,6 @@ export default function PagamentosPage() {
                       </td>
                       <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
                         {p.installment?.loan?.client?.consultor?.nome ?? '—'}
-                      </td>
-                      <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
-                        <Link href={`/emprestimos/${p.installment?.loan?.id}`} className="hover:underline">
-                          #{p.installment?.loan?.id}
-                        </Link>
                       </td>
                       <td className="px-4 py-3 text-center text-muted-foreground hidden lg:table-cell">
                         P{p.installment?.numero}
@@ -247,22 +244,29 @@ export default function PagamentosPage() {
                         </td>
                       )}
                       {showSplit && (
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-violet-700 dark:text-violet-400" title="Valor recebido menos o capital">
+                          {p.split ? formatCurrency(toNumber(p.valorPago) - p.split.capital) : '—'}
+                        </td>
+                      )}
+                      {showSplit && (
                         <td className="px-4 py-3 text-right hidden xl:table-cell text-emerald-700 dark:text-emerald-400" title={p.split ? `${p.split.comissaoPercentual}% do lucro · ${p.installment?.loan?.client?.consultor?.nome ?? 'sem consultor'}` : ''}>
                           {p.split && p.split.comissao > 0 ? formatCurrency(p.split.comissao) : '—'}
                         </td>
                       )}
                       {showSplit && (
-                        <td className="px-4 py-3 text-right hidden xl:table-cell text-blue-700 dark:text-blue-400">
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-violet-700 dark:text-violet-400" title={p.split ? `${p.split.comissaoAdministradorPercentual ?? 0}% do Lucro Geral` : ''}>
+                          {p.split && (p.split.comissaoAdministrador ?? 0) > 0 ? formatCurrency(p.split.comissaoAdministrador ?? 0) : '—'}
+                        </td>
+                      )}
+                      {showSplit && (
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-blue-700 dark:text-blue-400" title="Lucro Geral − Comissão do Consultor − Comissão do Administrador">
                           {p.split && p.split.lucroEmpresa > 0 ? formatCurrency(p.split.lucroEmpresa) : '—'}
                         </td>
                       )}
-                      <td className="px-4 py-3 hidden md:table-cell">
-                        <Badge variant="outline">{METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}</Badge>
-                      </td>
                       <td className="px-4 py-3 text-muted-foreground hidden xl:table-cell">
                         {p.contaDestino?.trim() ? p.contaDestino : '—'}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
+                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell whitespace-nowrap">
                         {formatDateLocal(p.dataPagamento)}
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -319,12 +323,22 @@ export default function PagamentosPage() {
                   </p>
                 )}
                 {showSplit && (
-                  <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400" title="Soma da comissão dos consultores no período filtrado">
+                  <p className="text-sm font-bold text-violet-700 dark:text-violet-400" title="Soma de Valor recebido menos Capital no período filtrado">
+                    Lucro Geral: {formatCurrency(totalLucroGeral)}
+                  </p>
+                )}
+                {showSplit && (
+                  <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400" title="Soma da comissão dos consultores, calculada sobre o Lucro Geral do período filtrado">
                     Comissão do Consultor: {formatCurrency(totalComissao)}
                   </p>
                 )}
+                {showSplit && (
+                  <p className="text-sm font-bold text-violet-700 dark:text-violet-400" title="Soma da comissão dos administradores, calculada sobre o Lucro Geral do período filtrado">
+                    Comissão do Administrador: {formatCurrency(totalComissaoAdministrador)}
+                  </p>
+                )}
                 {totalLucro > 0 && showSplit && (
-                  <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <p className="text-sm font-medium text-blue-600 dark:text-blue-400" title="Lucro Geral − Comissão do Consultor − Comissão do Administrador">
                     Lucro Empresa: {formatCurrency(totalLucro)}
                   </p>
                 )}

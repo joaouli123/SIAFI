@@ -81,6 +81,12 @@ export class UpdateLoanDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @Max(100)
+  comissaoAdministradorPercentual?: number;
+
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(100)
   descontoQuitacaoPercentual?: number;
 
   @IsOptional()

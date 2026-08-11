@@ -15,7 +15,7 @@ import api from '@/lib/api'
 interface Loan {
   id: number; valor: number; numeroParcelas: number; dataInicio: string; status: string
   observacoes?: string | null
-  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null }
+  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null; quantidadeEmprestimos?: number }
   installments: Array<{ id: number; installmentAmount: number; totalPago: number; dataVencimento: string; status: string; moraAcumulada?: number; multaAplicada?: number }>
 }
 
@@ -171,7 +171,9 @@ export default function InadimplentesPage() {
                               <span className="text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
                             )}
                             <div className="flex items-center gap-1.5 mt-0.5">
-                              <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">Emp. #{loan.id}</span>
+                              <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">
+                                {loan.client?.quantidadeEmprestimos ?? 1} empréstimo{(loan.client?.quantidadeEmprestimos ?? 1) !== 1 ? 's' : ''}
+                              </span>
                             </div>
                           </div>
                         </td>

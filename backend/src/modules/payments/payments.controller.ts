@@ -46,7 +46,7 @@ export class PaymentsController {
   @Post()
   @Roles('admin', 'financeiro', 'caixa')
   create(@Body() dto: CreatePaymentDto, @CurrentUser() user: AuthUser) {
-    return this.paymentsService.create(dto, user?.id);
+    return this.paymentsService.create(dto, user?.id, user?.role);
   }
 
   @Post('quitar/:loanId')

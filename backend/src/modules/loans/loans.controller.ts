@@ -78,6 +78,7 @@ export class LoansController {
   create(@Body() dto: CreateLoanDto, @CurrentUser() user: AuthUser, @Req() req: Request) {
     return this.loansService.create(dto, {
       userId: user?.id,
+      role: user?.role,
       ip: req.ip,
       userAgent: req.headers['user-agent'],
     });
@@ -93,6 +94,7 @@ export class LoansController {
   ) {
     return this.loansService.update(id, dto, {
       userId:    user?.id,
+      role:      user?.role,
       ip:        req.ip,
       userAgent: req.headers['user-agent'],
     });

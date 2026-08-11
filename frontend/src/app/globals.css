@@ -162,6 +162,25 @@
 }
 
 /* Micro-animações globais */
+/* Mantém os cabeçalhos das tabelas visíveis durante a rolagem das telas. */
+@layer components {
+  table > thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: var(--card);
+    box-shadow: 0 1px 0 var(--border);
+  }
+
+  /* Reforça o comportamento nos navegadores que aplicam sticky por célula. */
+  table > thead > tr > th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: var(--card);
+  }
+}
+
 @layer utilities {
   .card-hover {
     transition: box-shadow 0.2s ease, transform 0.2s ease;

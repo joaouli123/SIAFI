@@ -93,7 +93,7 @@ export class ClientsService {
     if (role === 'caixa') {
       (client as any).loans = ((client as any).loans ?? []).map((l: Record<string, unknown>) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { targetProfit, principalAmount, comissaoPercentual, ...rest } = l;
+        const { targetProfit, principalAmount, comissaoPercentual, comissaoAdministradorPercentual, ...rest } = l;
         return rest;
       });
     }

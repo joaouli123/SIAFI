@@ -17,6 +17,7 @@ import { Select } from '@/components/ui/select'
 import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { formatCurrency, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
+import { useAuth } from '@/contexts/auth.context'
 import Decimal from 'decimal.js'
 
 function safeDecimal(val: unknown): Decimal {
@@ -39,6 +40,8 @@ const schema = z.object({
   multaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   moraDiariaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
+  comissaoAdministradorPercentual: z.coerce.number().min(0).max(100).optional(),
+  comissaoAdministradorValor: z.coerce.number().optional(),
   comissaoValor: z.coerce.number().optional(), // UI: cálculo reverso (não enviado)
   descontoQuitacaoPercentual: z.coerce.number().min(0).max(100).optional(),
   diasAntecedenciaCobranca: z.coerce.number().min(1).max(60).optional(),
@@ -49,6 +52,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export default function NovoEmprestimoPage() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const router = useRouter()
   const searchParams = useSearchParams()
   const qc = useQueryClient()
@@ -83,6 +88,7 @@ export default function NovoEmprestimoPage() {
     if (n.lte(0)) return
     setValue('valorParcela', p.plus(l).dividedBy(n).toDecimalPlaces(2).toNumber())
     recalcComissaoValorFromPct()
+    recalcComissaoAdministradorValorFromPct()
   }
   // Editar Valor da Parcela → recalcula Lucro Alvo = (parcela × n) − capital.
   function recalcLucroFromParcela() {
@@ -92,6 +98,7 @@ export default function NovoEmprestimoPage() {
     const lucro = vp.times(n).minus(p)
     setValue('targetProfit', (lucro.isNegative() ? new Decimal(0) : lucro).toDecimalPlaces(2).toNumber())
     recalcComissaoValorFromPct()
+    recalcComissaoAdministradorValorFromPct()
   }
 
   // Comissão: bidirecional valor ⇄ % sobre o Lucro Alvo.
@@ -106,6 +113,18 @@ export default function NovoEmprestimoPage() {
     if (l.lte(0)) return
     const pct = val.dividedBy(l).times(100)
     setValue('comissaoPercentual', Decimal.min(pct, new Decimal(100)).toDecimalPlaces(2).toNumber())
+  }
+  function recalcComissaoAdministradorValorFromPct() {
+    const l = safeDecimal(getValues('targetProfit'))
+    const pct = safeDecimal(getValues('comissaoAdministradorPercentual'))
+    setValue('comissaoAdministradorValor', l.times(pct).dividedBy(100).toDecimalPlaces(2).toNumber())
+  }
+  function recalcComissaoAdministradorPctFromValor() {
+    const l = safeDecimal(getValues('targetProfit'))
+    const val = safeDecimal(getValues('comissaoAdministradorValor'))
+    if (l.lte(0)) return
+    const pct = val.dividedBy(l).times(100)
+    setValue('comissaoAdministradorPercentual', Decimal.min(pct, new Decimal(100)).toDecimalPlaces(2).toNumber())
   }
 
   useEffect(() => { if (preClienteId) setValue('clientId', Number(preClienteId)) }, [preClienteId, setValue])
@@ -122,9 +141,11 @@ export default function NovoEmprestimoPage() {
   const parcelaLucro   = parcelas.isZero() ? new Decimal(0) : lucro.dividedBy(parcelas)
 
   const comissaoPct        = safeDecimal(watch('comissaoPercentual'))
+  const comissaoAdministradorPct = safeDecimal(watch('comissaoAdministradorPercentual'))
   const comissaoTotal      = lucro.times(comissaoPct).dividedBy(100)
+  const comissaoAdministradorTotal = lucro.times(comissaoAdministradorPct).dividedBy(100)
   const comissaoPorParcela = parcelas.isZero() ? new Decimal(0) : comissaoTotal.dividedBy(parcelas)
-  const lucroEmpresaTotal  = lucro.minus(comissaoTotal)
+  const lucroEmpresaTotal  = lucro.minus(comissaoTotal).minus(comissaoAdministradorTotal)
 
   // Guard: show '—' if simulation values are incoherent
   const simOk = total.equals(principal.plus(lucro)) && !parcela.isNaN()
@@ -143,7 +164,7 @@ export default function NovoEmprestimoPage() {
 
   const mutation = useMutation({
     mutationFn: (data: FormData) => {
-      const { valorParcela, comissaoValor, ...rest } = data // auxiliares de UI
+      const { valorParcela, comissaoValor, comissaoAdministradorValor, ...rest } = data
       const payload = {
         ...rest,
         dataPrimeiroVencimento: data.dataPrimeiroVencimento || undefined,
@@ -277,26 +298,35 @@ export default function NovoEmprestimoPage() {
           </Card>
         )}
 
-        <Card>
+        {isAdmin && <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2"><Percent className="size-4" />Comissão do Consultor</CardTitle>
-            <p className="text-xs text-muted-foreground">Parte do lucro destinada ao consultor — informe % OU valor (o outro se ajusta)</p>
+            <CardTitle className="text-base flex items-center gap-2"><Percent className="size-4" />Comissões sobre o Lucro Geral</CardTitle>
+            <p className="text-xs text-muted-foreground">Consultor e administrador recebem percentuais calculados sobre o Lucro Geral. O Lucro da Empresa é o valor restante.</p>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Comissão (% do lucro)</Label>
+              <Label>Comissão do Consultor (% do Lucro Geral)</Label>
               <Input type="number" step="0.01" min={0} max={100} {...register('comissaoPercentual', { onChange: recalcComissaoValorFromPct })} placeholder="ex: 30" />
             </div>
             <div className="space-y-1.5">
-              <Label>Comissão (R$ total)</Label>
+              <Label>Comissão do Consultor (R$ total)</Label>
               <Input type="number" step="0.01" min={0} {...register('comissaoValor', { onChange: recalcComissaoPctFromValor })} placeholder="0,00" />
             </div>
-            {comissaoPct.greaterThan(0) && lucro.greaterThan(0) && (
+            <div className="space-y-1.5">
+              <Label>Comissão do Administrador (% do Lucro Geral)</Label>
+              <Input type="number" step="0.01" min={0} max={100} {...register('comissaoAdministradorPercentual', { onChange: recalcComissaoAdministradorValorFromPct })} placeholder="ex: 70" />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Comissão do Administrador (R$ total)</Label>
+              <Input type="number" step="0.01" min={0} {...register('comissaoAdministradorValor', { onChange: recalcComissaoAdministradorPctFromValor })} placeholder="0,00" />
+            </div>
+            {(comissaoPct.greaterThan(0) || comissaoAdministradorPct.greaterThan(0)) && lucro.greaterThan(0) && (
               <div className="md:col-span-2 rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/20 dark:border-emerald-900 p-3 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                <div><p className="text-xs text-muted-foreground">% do lucro</p><p className="font-bold">{comissaoPct.toFixed(2)}%</p></div>
-                <div><p className="text-xs text-muted-foreground">Comissão total</p><p className="font-bold text-emerald-700 dark:text-emerald-400">{formatCurrency(comissaoTotal.toNumber())}</p></div>
+                <div><p className="text-xs text-muted-foreground">% do Lucro Geral</p><p className="font-bold">{comissaoPct.toFixed(2)}%</p></div>
+                <div><p className="text-xs text-muted-foreground">Comissão do consultor</p><p className="font-bold text-emerald-700 dark:text-emerald-400">{formatCurrency(comissaoTotal.toNumber())}</p></div>
                 <div><p className="text-xs text-muted-foreground">~ por parcela</p><p className="font-bold">{formatCurrency(comissaoPorParcela.toNumber())}</p></div>
-                <div><p className="text-xs text-muted-foreground">Lucro da empresa</p><p className="font-bold text-blue-700 dark:text-blue-400">{formatCurrency(lucroEmpresaTotal.toNumber())}</p></div>
+                <div><p className="text-xs text-muted-foreground">Comissão administrador</p><p className="font-bold text-violet-700 dark:text-violet-400">{formatCurrency(comissaoAdministradorTotal.toNumber())}</p></div>
+                <div><p className="text-xs text-muted-foreground">Lucro da Empresa</p><p className="font-bold text-blue-700 dark:text-blue-400">{formatCurrency(lucroEmpresaTotal.toNumber())}</p></div>
               </div>
             )}
             <div className="md:col-span-2 space-y-1.5 border-t pt-3">
@@ -305,7 +335,7 @@ export default function NovoEmprestimoPage() {
               <p className="text-xs text-muted-foreground">Aplicado quando o cliente quita o contrato inteiro de uma vez (abate parte do lucro a vencer).</p>
             </div>
           </CardContent>
-        </Card>
+        </Card>}
 
         <Card>
           <CardHeader className="pb-2 cursor-pointer" onClick={() => setShowCobrancaConfig(v => !v)}>

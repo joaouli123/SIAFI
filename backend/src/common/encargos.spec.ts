@@ -79,4 +79,28 @@ describe('calcularEncargos', () => {
     expect(enc.saldo).toBe(0);
     expect(enc.totalDevido).toBe(0);
   });
+
+  it('começa a mora do saldo restante na data da baixa parcial', () => {
+    const baixaParcial = new Date(2026, 7, 8);
+    const hoje = new Date(2026, 7, 10);
+
+    const enc = calcularEncargos(
+      {
+        installmentAmount: 600,
+        totalPago: 300,
+        // R$ 50 já estavam incorporados ao saldo no momento da baixa.
+        saldoDevedor: 350,
+        dataVencimento: new Date(2026, 5, 15),
+        payments: [{ dataPagamento: baixaParcial, valorPago: 300 }],
+      },
+      2,
+      0.0333,
+      hoje,
+    );
+
+    // Apenas dois dias de mora sobre o saldo após a baixa (350 × 0,0333% × 2).
+    expect(enc.valorMulta).toBe(0);
+    expect(enc.valorMora).toBe(0.23);
+    expect(enc.totalDevido).toBe(350.23);
+  });
 });

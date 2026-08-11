@@ -27,6 +27,7 @@ interface Installment {
   status: string
   totalPago: string
   saldoDevedor: string
+  capitalRestante?: string
   moraAcumulada: string
   multaAplicada: string
   observacao?: string | null
@@ -137,17 +138,27 @@ export default function ParcelasPage() {
     return Math.max(0, Math.floor((hojeD.getTime() - venc.getTime()) / 86400000))
   }
 
-  const saldoDe = (i: Installment) =>
-    i.status === 'cancelado' ? 0 : Math.max(0, toNumber(i.installmentAmount) - toNumber(i.totalPago))
+  const saldoDe = (i: Installment) => {
+    if (i.status === 'pago' || i.status === 'cancelado') return 0
+    const saldoRegistrado = toNumber(i.saldoDevedor)
+    return saldoRegistrado > 0.005
+      ? saldoRegistrado
+      : Math.max(0, toNumber(i.installmentAmount) - toNumber(i.totalPago))
+  }
 
   const totalValor = activeData?.reduce((s, i) => {
     const venc = new Date(i.dataVencimento); venc.setHours(0, 0, 0, 0)
     const isOverdue = i.status === 'atrasado' || (saldoDe(i) > 0 && venc < hojeD)
     const encargos = toNumber(i.moraAcumulada) + toNumber(i.multaAplicada)
-    return s + toNumber(i.installmentAmount) + (isOverdue ? encargos : 0)
+    const saldoAtual = saldoDe(i) + (isOverdue ? encargos : 0)
+    const valorAtualizado = i.status === 'cancelado'
+      ? toNumber(i.installmentAmount)
+      : Math.max(toNumber(i.installmentAmount), toNumber(i.totalPago) + saldoAtual)
+    return s + valorAtualizado
   }, 0) ?? 0
 
   const totalPago     = activeData?.reduce((s, i) => s + toNumber(i.totalPago), 0) ?? 0
+  const totalCapital  = activeData?.reduce((s, i) => s + toNumber(i.capitalRestante), 0) ?? 0
 
   const totalSaldo = activeData?.reduce((s, i) => {
     const venc = new Date(i.dataVencimento); venc.setHours(0, 0, 0, 0)
@@ -310,6 +321,7 @@ export default function ParcelasPage() {
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Vencimento</th>
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Capital</th>}
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Pago</th>}
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo</th>
@@ -321,7 +333,7 @@ export default function ParcelasPage() {
                     )}
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Observação</th>
                     {isPaged && <th className="text-center px-4 py-3 font-medium text-muted-foreground">Status</th>}
-                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ação</th>
+                    <th className="sticky right-0 z-20 min-w-[84px] bg-muted/95 text-right px-2 py-3 font-medium text-muted-foreground shadow-[-4px_0_8px_-6px_rgba(0,0,0,0.35)]">Ação</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -335,8 +347,10 @@ export default function ParcelasPage() {
                     const venceHoje = originalSaldo > 0 && vencD.getTime() === hojeD.getTime()
                     
                     const isOverdue = inst.status === 'atrasado' || vencida
-                    const displayValor = isOverdue ? toNumber(inst.installmentAmount) + encargos : toNumber(inst.installmentAmount)
                     const displaySaldo = isOverdue ? originalSaldo + encargos : originalSaldo
+                    const displayValor = inst.status === 'cancelado'
+                      ? toNumber(inst.installmentAmount)
+                      : Math.max(toNumber(inst.installmentAmount), toNumber(inst.totalPago) + displaySaldo)
 
                     return (
                       <tr key={inst.id} className="border-b border-border hover:bg-muted/20 transition-colors">
@@ -365,9 +379,14 @@ export default function ParcelasPage() {
                             {formatDateLocal(inst.dataVencimento)}
                           </span>
                         </td>
+                        {showSplit && (
+                          <td className="px-4 py-3 text-right font-medium hidden lg:table-cell" title="Capital da parcela ainda não recuperado">
+                            {toNumber(inst.capitalRestante) > 0 ? formatCurrency(inst.capitalRestante) : '—'}
+                          </td>
+                        )}
                         <td className="px-4 py-3 text-right font-medium">
                           <div>{formatCurrency(displayValor)}</div>
-                          {isOverdue && encargos > 0 && (
+                          {displayValor > toNumber(inst.installmentAmount) + 0.005 && (
                             <div className="text-[10px] text-muted-foreground">Original: {formatCurrency(toNumber(inst.installmentAmount))}</div>
                           )}
                         </td>
@@ -378,7 +397,7 @@ export default function ParcelasPage() {
                           <div>{displaySaldo > 0 ? formatCurrency(displaySaldo) : '—'}</div>
                           {isOverdue && encargos > 0 && originalSaldo > 0 && (
                             <div className="text-[10px] text-muted-foreground font-normal">Original: {formatCurrency(originalSaldo)}</div>
-                          )}
+                            )}
                         </td>
                         {tab === 'atrasado' && (
                           <>
@@ -399,7 +418,7 @@ export default function ParcelasPage() {
                           </div>
                         </td>
                         {isPaged && <td className="px-4 py-3 text-center"><Badge variant={ist.variant}>{ist.label}</Badge></td>}
-                        <td className="px-4 py-3 text-right whitespace-nowrap">
+                        <td className="sticky right-0 z-10 min-w-[84px] bg-card px-2 py-3 text-right whitespace-nowrap shadow-[-4px_0_8px_-6px_rgba(0,0,0,0.35)]">
                           {inst.status !== 'pago' && inst.status !== 'cancelado' ? (
                             <Link href={`/pagamentos/novo?parcelaId=${inst.id}`}>
                               <Button size="sm" variant="outline" className="h-7 text-xs">Pagar</Button>
@@ -414,9 +433,12 @@ export default function ParcelasPage() {
                 </tbody>
                 <tfoot>
                   <tr className="bg-muted/40 border-t font-medium text-sm">
-                    <td colSpan={3} className="px-4 py-2.5 text-xs text-muted-foreground">
+                    <td colSpan={4} className="px-4 py-2.5 text-xs text-muted-foreground">
                       {meta ? `${meta.total} no total${meta.lastPage > 1 ? ' · somas desta página' : ''}` : `${activeData.length} parcela${activeData.length !== 1 ? 's' : ''}`}
                     </td>
+                    {showSplit && (
+                      <td className="px-4 py-2.5 text-right text-xs hidden lg:table-cell">{formatCurrency(totalCapital)}</td>
+                    )}
                     <td className="px-4 py-2.5 text-right text-xs">{formatCurrency(totalValor)}</td>
                     {showSplit && (
                       <td className="px-4 py-2.5 text-right text-xs text-green-600 hidden lg:table-cell">{formatCurrency(totalPago)}</td>
@@ -432,7 +454,7 @@ export default function ParcelasPage() {
                     )}
                     <td className="hidden xl:table-cell" />
                     {isPaged && <td />}
-                    <td />
+                    <td className="sticky right-0 z-10 bg-muted/40" />
                   </tr>
                 </tfoot>
               </table>

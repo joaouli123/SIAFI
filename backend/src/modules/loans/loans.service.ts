@@ -25,6 +25,8 @@ Decimal.set({ precision: 20, rounding: Decimal.ROUND_HALF_UP });
 
 interface RequestContext {
   userId?: number;
+  role?: string;
+  consultorId?: number;
   ip?: string;
   userAgent?: string;
   loanStatus?: LoanStatus;   // padrão: 'ativo'; use 'aguardando_aceite' quando chamado via IntencaoService
@@ -116,6 +118,7 @@ export class LoansService {
         principalPayback:   inst.principalPayback,
         installmentAmount:  inst.installmentAmount,
         comissaoPercentual: loan.comissaoPercentual,
+        comissaoAdministradorPercentual: loan.comissaoAdministradorPercentual,
       });
       const porBaixa = new Map(vivas.map((b, i) => [b.id, splits[i]]));
       return {
@@ -198,9 +201,36 @@ export class LoansService {
   // ─── Commands ───────────────────────────────────────────────────────────────
 
   async create(dto: CreateLoanDto, ctx: RequestContext = {}): Promise<unknown> {
-    const client = await this.prisma.client.findUnique({ where: { id: dto.clientId } });
+    if (ctx.role && ctx.role !== 'admin' && (dto.comissaoPercentual != null || dto.comissaoAdministradorPercentual != null)) {
+      throw new BadRequestException('Somente o administrador pode definir comissoes no contrato.');
+    }
+    const client = await this.prisma.client.findUnique({
+      where: { id: dto.clientId },
+      select: {
+        id: true,
+        active: true,
+        consultorId: true,
+        consultor: { select: { id: true, comissaoPercentual: true } },
+      },
+    });
     if (!client) throw new NotFoundException(`Cliente ${dto.clientId} não encontrado`);
     if (!client.active) throw new BadRequestException('Cliente inativo não pode contrair empréstimos');
+
+    // A comissão é fotografada no contrato no momento da criação. Alterar o cadastro
+    // do consultor/administrador depois não recalcula contratos já existentes.
+    const operador = ctx.userId
+      ? await this.prisma.user.findUnique({ where: { id: ctx.userId }, select: { id: true, role: true, comissaoPercentual: true } })
+      : null;
+    const consultorId = client.consultorId ?? ctx.consultorId ?? (operador?.role === 'consultor' ? operador.id : null);
+    const consultorCadastro = client.consultor
+      ?? (ctx.consultorId
+        ? await this.prisma.user.findUnique({ where: { id: ctx.consultorId }, select: { id: true, comissaoPercentual: true } })
+        : null);
+    const comissaoConsultor = dto.comissaoPercentual
+      ?? consultorCadastro?.comissaoPercentual
+      ?? (operador?.role === 'consultor' ? operador.comissaoPercentual : null);
+    const comissaoAdministrador = dto.comissaoAdministradorPercentual
+      ?? (operador?.role === 'admin' ? operador.comissaoPercentual : null);
 
     const principal = new Decimal(dto.principalAmount);
     const profit    = new Decimal(dto.targetProfit);
@@ -209,6 +239,9 @@ export class LoansService {
 
     if (principal.lte(0)) throw new BadRequestException('principalAmount deve ser positivo.');
     if (profit.lt(0))     throw new BadRequestException('targetProfit não pode ser negativo.');
+    if (Number(comissaoConsultor ?? 0) + Number(comissaoAdministrador ?? 0) > 100) {
+      throw new BadRequestException('As comissões do consultor e do administrador não podem ultrapassar 100% do lucro.');
+    }
 
     // ── Cálculo base de cada parcela (floor para evitar exceder o total) ────
     // basePrincipal e baseInstallment usam ROUND_DOWN independentemente;
@@ -265,7 +298,7 @@ export class LoansService {
       const loan = await tx.loan.create({
         data: {
           clientId:                dto.clientId,
-          consultorId:             ctx.userId ?? null,
+          consultorId,
           principalAmount:         principal.toDecimalPlaces(2).toNumber(),
           targetProfit:            profit.toDecimalPlaces(2).toNumber(),
           totalReceivable:         total.toDecimalPlaces(2).toNumber(),
@@ -278,7 +311,8 @@ export class LoansService {
           diaVencimento:           dto.diaVencimento ?? null,
           multaPercentual:         dto.multaPercentual ?? null,
           moraDiariaPercentual:    dto.moraDiariaPercentual ?? null,
-          comissaoPercentual:      dto.comissaoPercentual ?? null,
+          comissaoPercentual:      comissaoConsultor,
+          comissaoAdministradorPercentual: comissaoAdministrador,
           descontoQuitacaoPercentual: dto.descontoQuitacaoPercentual ?? null,
           diasAntecedenciaCobranca: dto.diasAntecedenciaCobranca ?? 10,
           cobrarWhatsapp:          dto.cobrarWhatsapp ?? true,
@@ -322,6 +356,9 @@ export class LoansService {
   // Campos financeiros disparam regeneração das parcelas pendentes/atrasadas.
   // Parcelas pagas, parcialmente pagas ou canceladas são SEMPRE preservadas.
   async update(id: number, dto: UpdateLoanDto, ctx: RequestContext = {}): Promise<unknown> {
+    if (ctx.role && ctx.role !== 'admin' && (dto.comissaoPercentual != null || dto.comissaoAdministradorPercentual != null)) {
+      throw new BadRequestException('Somente o administrador pode alterar comissoes no contrato.');
+    }
     const loan = await this.prisma.loan.findUnique({
       where: { id },
       include: { installments: { orderBy: { numero: 'asc' } } },
@@ -344,6 +381,16 @@ export class LoansService {
 
     if (newPrincipal.lte(0)) throw new BadRequestException('principalAmount deve ser positivo.');
     if (newProfit.lt(0))     throw new BadRequestException('targetProfit não pode ser negativo.');
+    if (Number(dto.comissaoPercentual ?? loan.comissaoPercentual ?? 0) + Number(dto.comissaoAdministradorPercentual ?? loan.comissaoAdministradorPercentual ?? 0) > 100) {
+      throw new BadRequestException('As comissões do consultor e do administrador não podem ultrapassar 100% do lucro.');
+    }
+
+    const comissaoConsultorFinal =
+      dto.comissaoPercentual !== undefined ? dto.comissaoPercentual : loan.comissaoPercentual;
+    const comissaoAdministradorFinal =
+      dto.comissaoAdministradorPercentual !== undefined
+        ? dto.comissaoAdministradorPercentual
+        : loan.comissaoAdministradorPercentual;
 
     const newTotal = newPrincipal.plus(newProfit);
 
@@ -430,9 +477,12 @@ export class LoansService {
       numeroParcelas:  loan.numeroParcelas,
       dataInicio:      loan.dataInicio.toISOString(),
       status:          loan.status,
+      comissaoPercentual: loan.comissaoPercentual?.toString() ?? null,
+      comissaoAdministradorPercentual: loan.comissaoAdministradorPercentual?.toString() ?? null,
     };
 
     await this.prisma.$transaction(async (tx) => {
+      let baixasComissaoSincronizadas = 0;
       await tx.loan.update({
         where: { id },
         data: {
@@ -446,7 +496,8 @@ export class LoansService {
           observacoes:          dto.observacoes !== undefined ? dto.observacoes : loan.observacoes,
           multaPercentual:      dto.multaPercentual !== undefined ? dto.multaPercentual : loan.multaPercentual,
           moraDiariaPercentual: dto.moraDiariaPercentual !== undefined ? dto.moraDiariaPercentual : loan.moraDiariaPercentual,
-          comissaoPercentual:   dto.comissaoPercentual !== undefined ? dto.comissaoPercentual : loan.comissaoPercentual,
+          comissaoPercentual:   comissaoConsultorFinal,
+          comissaoAdministradorPercentual: comissaoAdministradorFinal,
           descontoQuitacaoPercentual: dto.descontoQuitacaoPercentual !== undefined ? dto.descontoQuitacaoPercentual : loan.descontoQuitacaoPercentual,
           diasAntecedenciaCobranca: dto.diasAntecedenciaCobranca ?? loan.diasAntecedenciaCobranca,
           cobrarWhatsapp:       dto.cobrarWhatsapp ?? loan.cobrarWhatsapp,
@@ -454,6 +505,21 @@ export class LoansService {
           cobrarPortal:         dto.cobrarPortal ?? loan.cobrarPortal,
         },
       });
+
+      if (dto.comissaoPercentual !== undefined || dto.comissaoAdministradorPercentual !== undefined) {
+        const comissaoBaixa: Prisma.PaymentUpdateManyMutationInput = {};
+        if (dto.comissaoPercentual !== undefined) {
+          comissaoBaixa.comissaoPercentual = comissaoConsultorFinal;
+        }
+        if (dto.comissaoAdministradorPercentual !== undefined) {
+          comissaoBaixa.comissaoAdministradorPercentual = comissaoAdministradorFinal;
+        }
+        const sincronizacao = await tx.payment.updateMany({
+          where: { estornado: false, installment: { is: { loanId: id } } },
+          data: comissaoBaixa,
+        });
+        baixasComissaoSincronizadas = sincronizacao.count;
+      }
 
       if (cronogramaMudou) {
         await tx.installment.deleteMany({
@@ -478,6 +544,9 @@ export class LoansService {
           cronogramaRegenerado: cronogramaMudou,
           parcelasPreservadas:  travadas.length,
           parcelasRegeneradas:  novasParcelas.length,
+          comissaoPercentual: comissaoConsultorFinal?.toString() ?? null,
+          comissaoAdministradorPercentual: comissaoAdministradorFinal?.toString() ?? null,
+          baixasComissaoSincronizadas,
         },
       });
     });
@@ -794,7 +863,7 @@ export class LoansService {
   // from loans and installments returned to users with role 'caixa'.
   private sanitizeForCaixa(loan: Record<string, unknown>): Record<string, unknown> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { targetProfit, principalAmount, comissaoResumo, comissaoPagamentos, comissaoPercentual, ...loanRest } = loan as Record<string, unknown>;
+    const { targetProfit, principalAmount, comissaoResumo, comissaoPagamentos, comissaoPercentual, comissaoAdministradorPercentual, ...loanRest } = loan as Record<string, unknown>;
     if (Array.isArray(loanRest['installments'])) {
       loanRest['installments'] = (loanRest['installments'] as Record<string, unknown>[]).map(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

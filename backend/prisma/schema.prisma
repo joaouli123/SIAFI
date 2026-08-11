@@ -108,6 +108,9 @@ model User {
   lockedUntil         DateTime? @map("locked_until")
   lastLoginAt         DateTime? @map("last_login_at")
   lastLoginIp         String?   @map("last_login_ip") @db.VarChar(45)
+  // Percentual padrão deste operador sobre o lucro geral de cada recebimento.
+  // Para consultores é a comissão do consultor; para administradores, a administrativa.
+  comissaoPercentual  Decimal?  @map("comissao_percentual") @db.Decimal(5, 2)
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
 
@@ -299,6 +302,7 @@ model Loan {
   // Comissão do consultor: % sobre o lucro (netGain) de cada parcela.
   // Valor total contratado = targetProfit × comissaoPercentual / 100.
   comissaoPercentual Decimal? @map("comissao_percentual") @db.Decimal(5, 2)
+  comissaoAdministradorPercentual Decimal? @map("comissao_administrador_percentual") @db.Decimal(5, 2)
 
   // Desconto na quitação total do contrato (% sobre o lucro a vencer)
   descontoQuitacaoPercentual Decimal? @map("desconto_quitacao_percentual") @db.Decimal(5, 2)
@@ -599,6 +603,9 @@ model Payment {
   desconto        Decimal       @default(0) @db.Decimal(15, 2) // desconto concedido nesta baixa
   descontoTipo    String?       @map("desconto_tipo") @db.VarChar(20) // 'saldo' | 'encargos'
   descontoMotivo  String?       @map("desconto_motivo") @db.Text
+  // Snapshot da regra usada nesta baixa; alterações futuras não reprocessam o histórico.
+  comissaoPercentual              Decimal? @map("comissao_percentual") @db.Decimal(5, 2)
+  comissaoAdministradorPercentual Decimal? @map("comissao_administrador_percentual") @db.Decimal(5, 2)
   estornado       Boolean       @default(false)
   estornadoEm     DateTime?     @map("estornado_em")
   estornadoPor    Int?          @map("estornado_por")

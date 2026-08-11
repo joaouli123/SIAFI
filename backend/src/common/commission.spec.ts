@@ -1,4 +1,4 @@
-import { splitParcela } from './commission';
+import { remainingCapital, splitParcela } from './commission';
 
 describe('splitParcela', () => {
   it('rateia capital sobre a divida atual quando o pagamento cobre o valor de face', () => {
@@ -60,5 +60,59 @@ describe('splitParcela', () => {
 
     expect(split.capital).toBe(300);
     expect(split.lucro).toBe(0);
+  });
+
+  it('calcula o capital restante depois de uma baixa parcial com encargos', () => {
+    const payments = [
+      {
+        valorPago: 500,
+        valorDevido: 864.6,
+        dataPagamento: '2026-08-03',
+      },
+    ];
+    const parcela = {
+      principalPayback: 500,
+      installmentAmount: 600,
+      comissaoPercentual: 10,
+    };
+
+    expect(splitParcela(payments, parcela)[0].capital).toBe(289.15);
+    expect(remainingCapital(payments, parcela)).toBe(210.85);
+  });
+
+  it('separa a comissao do consultor e do administrador', () => {
+    const [split] = splitParcela(
+      [{ valorPago: 600, dataPagamento: '2026-08-05' }],
+      {
+        principalPayback: 500,
+        installmentAmount: 600,
+        comissaoPercentual: 30,
+        comissaoAdministradorPercentual: 20,
+      },
+    );
+
+    expect(split.lucro).toBe(100);
+    expect(split.comissao).toBe(30);
+    expect(split.comissaoAdministrador).toBe(20);
+    expect(split.lucroEmpresa).toBe(split.lucro - split.comissao - split.comissaoAdministrador);
+    expect(split.lucroEmpresa).toBe(50);
+  });
+
+  it('fecha o lucro da empresa com os valores monetarios exibidos', () => {
+    const [split] = splitParcela(
+      [{ valorPago: 500, valorDevido: 864.6, dataPagamento: '2026-08-03' }],
+      {
+        principalPayback: 500,
+        installmentAmount: 600,
+        comissaoPercentual: 10,
+        comissaoAdministradorPercentual: 10,
+      },
+    );
+
+    expect(split.lucro).toBe(210.85);
+    expect(split.comissao).toBe(21.08);
+    expect(split.comissaoAdministrador).toBe(21.08);
+    expect(split.lucroEmpresa).toBe(168.69);
+    expect(split.lucroEmpresa).toBe(Number((split.lucro - split.comissao - split.comissaoAdministrador).toFixed(2)));
   });
 });

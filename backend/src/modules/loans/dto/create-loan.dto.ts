@@ -81,6 +81,12 @@ export class CreateLoanDto {
   @Max(100)
   comissaoPercentual?: number;
 
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(100)
+  comissaoAdministradorPercentual?: number;
+
   // Desconto na quitação total do contrato (% sobre o lucro a vencer)
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })

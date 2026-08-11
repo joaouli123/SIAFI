@@ -36,20 +36,26 @@ export interface BaixaInput {
   valorDevido?: Numerico;
   desconto?: Numerico;
   dataPagamento: Date | string;
+  /** Snapshot opcional da comissão usada nesta baixa. */
+  comissaoPercentual?: Numerico;
+  comissaoAdministradorPercentual?: Numerico;
 }
 
 export interface ParcelaParams {
   principalPayback: Numerico;
   installmentAmount: Numerico;
   comissaoPercentual?: Numerico;
+  comissaoAdministradorPercentual?: Numerico;
 }
 
 export interface Split {
   capital: number;
   lucro: number;
   comissao: number;
+  comissaoAdministrador: number;
   lucroEmpresa: number;
   comissaoPercentual: number;
+  comissaoAdministradorPercentual: number;
 }
 
 /**
@@ -76,7 +82,6 @@ export interface Split {
 export function splitParcela(payments: BaixaInput[], p: ParcelaParams): Split[] {
   const principal = D(p.principalPayback);
   const amount    = D(p.installmentAmount);
-  const pct       = D(p.comissaoPercentual);
   const proporcional = isProporcional(payments);
 
   let antes       = new Decimal(0); // Σ valorPago das baixas anteriores
@@ -108,19 +113,35 @@ export function splitParcela(payments: BaixaInput[], p: ParcelaParams): Split[] 
 
     capital = capital.clampedTo(0, Decimal.min(capitalRestante, valorPago));
     const lucro        = valorPago.minus(capital);
-    const comissao     = lucro.times(pct).dividedBy(100);
-    const lucroEmpresa = lucro.minus(comissao);
+    // Recebimentos novos carregam seu próprio snapshot. Baixas antigas continuam usando
+    // a regra do contrato, preservando compatibilidade com o histórico existente.
+    const pctBaixa      = D(b.comissaoPercentual ?? p.comissaoPercentual);
+    const pctAdminBaixa = D(b.comissaoAdministradorPercentual ?? p.comissaoAdministradorPercentual);
+    const comissao     = lucro.times(pctBaixa).dividedBy(100);
+    const comissaoAdministrador = lucro.times(pctAdminBaixa).dividedBy(100);
+    // Valores monetarios usam duas casas. Calcula o residual da empresa com
+    // esses mesmos valores para a formula fechar exatamente na tela:
+    // Lucro Geral - Comissao do Consultor - Comissao do Administrador.
+    const capitalArredondado = r2(capital);
+    const lucroArredondado = r2(lucro);
+    const comissaoArredondada = r2(comissao);
+    const comissaoAdministradorArredondada = r2(comissaoAdministrador);
+    const lucroEmpresa = D(lucroArredondado)
+      .minus(comissaoArredondada)
+      .minus(comissaoAdministradorArredondada);
 
     antes       = antes.plus(valorPago);
     descAntes   = descAntes.plus(desconto);
     capitalAcum = capitalAcum.plus(capital);
 
     return {
-      capital:            r2(capital),
-      lucro:              r2(lucro),
-      comissao:           r2(comissao),
+      capital:            capitalArredondado,
+      lucro:              lucroArredondado,
+      comissao:           comissaoArredondada,
+      comissaoAdministrador: comissaoAdministradorArredondada,
       lucroEmpresa:       r2(lucroEmpresa),
-      comissaoPercentual: r2(pct),
+      comissaoPercentual: r2(pctBaixa),
+      comissaoAdministradorPercentual: r2(pctAdminBaixa),
     };
   });
 }
@@ -136,8 +157,9 @@ export function splitBaixa(
     ? payments.findIndex((b) => b.id === alvo.id)
     : (alvo.index ?? -1);
   return splits[idx] ?? {
-    capital: 0, lucro: 0, comissao: 0, lucroEmpresa: 0,
+    capital: 0, lucro: 0, comissao: 0, comissaoAdministrador: 0, lucroEmpresa: 0,
     comissaoPercentual: r2(D(p.comissaoPercentual)),
+    comissaoAdministradorPercentual: r2(D(p.comissaoAdministradorPercentual)),
   };
 }
 
@@ -149,6 +171,13 @@ export function splitBaixa(
 export function realizedLucro(payments: BaixaInput[], p: ParcelaParams): number {
   const total = splitParcela(payments, p).reduce((s, x) => s + x.lucro, 0);
   return parseFloat(total.toFixed(2));
+}
+
+/** Capital da parcela que ainda não foi recuperado pelas baixas realizadas. */
+export function remainingCapital(payments: BaixaInput[], p: ParcelaParams): number {
+  const realizado = splitParcela(payments, p)
+    .reduce((s, x) => s.plus(x.capital), new Decimal(0));
+  return r2(Decimal.max(0, D(p.principalPayback).minus(realizado)));
 }
 
 /**
@@ -179,6 +208,8 @@ export const BAIXA_SELECT = {
   valorDevido: true,
   desconto: true,
   dataPagamento: true,
+  comissaoPercentual: true,
+  comissaoAdministradorPercentual: true,
   createdAt: true,
 } as const;
 
@@ -189,6 +220,7 @@ export interface BaixaComputada {
   capital: number;
   lucro: number;
   comissao: number;
+  comissaoAdministrador: number;
   lucroEmpresa: number;
   consultorId: number | null;
   consultorNome: string;
@@ -214,6 +246,7 @@ export async function computeBaixasPeriodo(
       loan: {
         select: {
           comissaoPercentual: true,
+          comissaoAdministradorPercentual: true,
           client: { select: { consultor: { select: { id: true, nome: true } } } },
         },
       },
@@ -232,6 +265,7 @@ export async function computeBaixasPeriodo(
       principalPayback:   inst.principalPayback,
       installmentAmount:  inst.installmentAmount,
       comissaoPercentual: inst.loan.comissaoPercentual,
+      comissaoAdministradorPercentual: inst.loan.comissaoAdministradorPercentual,
     });
     inst.payments.forEach((pay, i) => {
       const dt = new Date(pay.dataPagamento);
@@ -242,6 +276,7 @@ export async function computeBaixasPeriodo(
         capital:       s.capital,
         lucro:         s.lucro,
         comissao:      s.comissao,
+        comissaoAdministrador: s.comissaoAdministrador,
         lucroEmpresa:  s.lucroEmpresa,
         consultorId:   consultor?.id ?? null,
         consultorNome: consultor?.nome ?? 'Sem consultor',

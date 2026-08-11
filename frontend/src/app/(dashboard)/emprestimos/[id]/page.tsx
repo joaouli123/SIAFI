@@ -21,7 +21,7 @@ interface Payment {
   dataPagamento: string; metodoPagamento: string
   desconto: number; descontoTipo?: string | null; descontoMotivo?: string | null
   estornado: boolean; contaDestino?: string | null; observacao?: string | null
-  split?: { capital: number; lucro: number; comissao: number; lucroEmpresa: number; comissaoPercentual: number } | null
+  split?: { capital: number; lucro: number; comissao: number; comissaoAdministrador?: number; lucroEmpresa: number; comissaoPercentual: number; comissaoAdministradorPercentual?: number } | null
 }
 interface Installment {
   id: number; numero: number; installmentAmount: number; dataVencimento: string
@@ -45,6 +45,7 @@ interface Loan {
   numeroParcelas: number; dataInicio: string; status: string
   observacoes?: string | null; metodoPagamento?: string | null
   comissaoPercentual?: number | null
+  comissaoAdministradorPercentual?: number | null
   descontoQuitacaoPercentual?: number | null
   comissaoResumo?: ComissaoResumo
   comissaoPagamentos?: ComissaoPagamento[]
@@ -65,6 +66,8 @@ export default function EmprestimoDetalhePage() {
   const [descPago, setDescPago] = useState('')
   const [descTipo, setDescTipo] = useState<'saldo' | 'encargos'>('saldo')
   const [descMotivo, setDescMotivo] = useState('')
+  const [comissaoRecebimento, setComissaoRecebimento] = useState('')
+  const [comissaoAdminRecebimento, setComissaoAdminRecebimento] = useState('')
   const [activeTab, setActiveTab] = useState<'parcelas' | 'cobrancas'>('parcelas')
   const [expandedPayments, setExpandedPayments] = useState<Set<number>>(new Set())
   const togglePayments = (id: number) => setExpandedPayments(prev => {
@@ -101,7 +104,7 @@ export default function EmprestimoDetalhePage() {
   })
 
   const payMut = useMutation({
-    mutationFn: (data: { installmentId: number; valorPago: number; metodoPagamento: string; dataPagamento: string; contaDestino?: string; desconto?: number; descontoTipo?: string; descontoMotivo?: string }) =>
+    mutationFn: (data: { installmentId: number; valorPago: number; metodoPagamento: string; dataPagamento: string; contaDestino?: string; desconto?: number; descontoTipo?: string; descontoMotivo?: string; comissaoPercentual?: number; comissaoAdministradorPercentual?: number }) =>
       api.post('/payments', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['loans', id] })
@@ -109,6 +112,7 @@ export default function EmprestimoDetalhePage() {
       setValorPago('')
       setContaDestino('')
       setDescPago(''); setDescMotivo('')
+      setComissaoRecebimento(''); setComissaoAdminRecebimento('')
     },
   })
 
@@ -149,6 +153,8 @@ export default function EmprestimoDetalhePage() {
       Number(inst.saldoDevedor) + Number(inst.moraAcumulada) + Number(inst.multaAplicada)
     setValorPago(totalParaQuitar.toFixed(2))
     setDescPago(''); setDescMotivo(''); setDescTipo('saldo')
+    setComissaoRecebimento(loan?.comissaoPercentual != null ? String(Number(loan.comissaoPercentual)) : '')
+    setComissaoAdminRecebimento(loan?.comissaoAdministradorPercentual != null ? String(Number(loan.comissaoAdministradorPercentual)) : '')
   }
 
   function submitPay() {
@@ -163,6 +169,8 @@ export default function EmprestimoDetalhePage() {
       desconto: desc > 0 ? desc : undefined,
       descontoTipo: desc > 0 ? descTipo : undefined,
       descontoMotivo: desc > 0 ? (descMotivo.trim() || undefined) : undefined,
+      comissaoPercentual: user?.role === 'admin' && comissaoRecebimento !== '' ? Number(comissaoRecebimento) : undefined,
+      comissaoAdministradorPercentual: user?.role === 'admin' && comissaoAdminRecebimento !== '' ? Number(comissaoAdminRecebimento) : undefined,
     })
   }
 
@@ -345,7 +353,7 @@ export default function EmprestimoDetalhePage() {
                 <p className="font-medium">{loan.consultor.nome}</p>
               </div>
             )}
-            {Number(loan.comissaoPercentual ?? 0) > 0 && (
+            {(Number(loan.comissaoPercentual ?? 0) > 0 || Number(loan.comissaoAdministradorPercentual ?? 0) > 0) && (
               <>
                 <div>
                   <p className="text-muted-foreground">Comissão Consultor</p>
@@ -356,9 +364,18 @@ export default function EmprestimoDetalhePage() {
                 <div>
                   <p className="text-muted-foreground">Lucro da Empresa</p>
                   <p className="font-bold text-base text-blue-700 dark:text-blue-400">
-                    {formatCurrency(Number(loan.targetProfit) * (1 - Number(loan.comissaoPercentual) / 100))}
+                    {formatCurrency(Number(loan.targetProfit) * (1 - (Number(loan.comissaoPercentual ?? 0) + Number(loan.comissaoAdministradorPercentual ?? 0)) / 100))}
                   </p>
+                  <p className="text-xs text-muted-foreground">Lucro Geral − comissão do consultor − comissão do administrador</p>
                 </div>
+                {Number(loan.comissaoAdministradorPercentual ?? 0) > 0 && (
+                  <div>
+                    <p className="text-muted-foreground">Comissão Administrador</p>
+                    <p className="font-bold text-base text-violet-700 dark:text-violet-400">
+                      {Number(loan.comissaoAdministradorPercentual).toFixed(2)}% · {formatCurrency(Number(loan.targetProfit) * Number(loan.comissaoAdministradorPercentual) / 100)}
+                    </p>
+                  </div>
+                )}
               </>
             )}
           </CardContent>
@@ -818,6 +835,20 @@ export default function EmprestimoDetalhePage() {
                   <Label>Bco Recebedor</Label>
                   <Input value={contaDestino} onChange={(e) => setContaDestino(e.target.value)} placeholder="ex: Itaú PJ, dinheiro em caixa" />
                 </div>
+
+                {user?.role === 'admin' && (
+                  <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3 rounded-lg border border-violet-200 dark:border-violet-900 bg-violet-50/60 dark:bg-violet-950/20 p-3">
+                    <div className="space-y-1.5">
+                      <Label>Comissão do Consultor (% do Lucro Geral)</Label>
+                      <Input type="number" step="0.01" min="0" max="100" value={comissaoRecebimento} onChange={(e) => setComissaoRecebimento(e.target.value)} placeholder="Usa o padrão do contrato" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Comissão do Administrador (% do Lucro Geral)</Label>
+                      <Input type="number" step="0.01" min="0" max="100" value={comissaoAdminRecebimento} onChange={(e) => setComissaoAdminRecebimento(e.target.value)} placeholder="Usa o padrão do contrato" />
+                    </div>
+                    <p className="md:col-span-2 text-[10px] text-muted-foreground">Os percentuais ficam congelados neste recebimento e são calculados sobre o Lucro Geral (Valor − Capital).</p>
+                  </div>
+                )}
 
                 {/* Desconto (opcional) */}
                 <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-3 rounded-lg border border-dashed border-amber-300 dark:border-amber-900 p-3">

@@ -1,19 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { calcularEncargos, Encargos, ParcelaEncargo } from '../../common/encargos';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { InstallmentFilterDto } from './dto/installment-filter.dto';
 import { UpdateInstallmentDto } from './dto/update-installment.dto';
+import {
+  BAIXA_ORDER,
+  BAIXA_SELECT,
+  BaixaInput,
+  Numerico,
+  baixasVivas,
+  remainingCapital,
+} from '../../common/commission';
 
 @Injectable()
 export class InstallmentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   // Baixas necessárias para fatiar a mora por período (ver common/encargos.ts).
-  private static readonly BAIXAS_ENCARGOS = {
-    select: { dataPagamento: true, valorPago: true, estornado: true },
-    orderBy: { dataPagamento: 'asc' },
+  private static readonly BAIXAS_PARCELA = {
+    select: { ...BAIXA_SELECT, estornado: true },
+    orderBy: BAIXA_ORDER,
   } as const;
 
   // Listagem geral de parcelas com filtros e paginação (tela /parcelas → "Todas").
@@ -63,7 +72,7 @@ export class InstallmentsService {
         take: limit,
         orderBy: [{ dataVencimento: 'asc' }, { numero: 'asc' }],
         include: {
-          payments: InstallmentsService.BAIXAS_ENCARGOS,
+          payments: InstallmentsService.BAIXAS_PARCELA,
           loan: {
             select: {
               id: true,
@@ -87,6 +96,7 @@ export class InstallmentsService {
       const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
       return this.stripSplitForCaixa({
         ...inst,
+        capitalRestante: String(this.getRemainingCapital(inst)),
         moraAcumulada: String(enc.valorMora),
         multaAplicada: String(enc.valorMulta),
         valorComEncargos: String(enc.totalDevido),
@@ -124,7 +134,10 @@ export class InstallmentsService {
       throw new NotFoundException(`Parcela com id ${id} não encontrada`);
     }
 
-    return this.stripSplitForCaixa(installment as Record<string, any>, role);
+    return this.stripSplitForCaixa({
+      ...installment,
+      capitalRestante: String(this.getRemainingCapital(installment)),
+    } as Record<string, any>, role);
   }
 
   async findOverdue(consultorId?: number, role?: string): Promise<unknown[]> {
@@ -144,10 +157,24 @@ export class InstallmentsService {
       where,
       orderBy: { dataVencimento: 'asc' },
       include: {
-        payments: InstallmentsService.BAIXAS_ENCARGOS,
+        payments: InstallmentsService.BAIXAS_PARCELA,
         loan: {
           include: {
-            client: { select: { id: true, nome: true, cpf: true, whatsapp: true, observacoes: true, consultor: { select: { id: true, nome: true } } } },
+            client: {
+              select: {
+                id: true,
+                nome: true,
+                cpf: true,
+                whatsapp: true,
+                observacoes: true,
+                consultor: { select: { id: true, nome: true } },
+                _count: {
+                  select: {
+                    loans: { where: { status: { not: 'cancelado' } } },
+                  },
+                },
+              },
+            },
             consultor: { select: { id: true, nome: true } },
           },
         },
@@ -160,8 +187,19 @@ export class InstallmentsService {
 
     return data.map((inst: any) => {
       const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
+      const client = inst.loan?.client;
+      const { _count: clientCount, ...clientWithoutCount } = client ?? {};
       return this.stripSplitForCaixa({
         ...inst,
+        loan: inst.loan
+          ? {
+              ...inst.loan,
+              client: client
+                ? { ...clientWithoutCount, quantidadeEmprestimos: clientCount?.loans ?? 0 }
+                : client,
+            }
+          : inst.loan,
+        capitalRestante: String(this.getRemainingCapital(inst)),
         moraAcumulada: String(enc.valorMora),
         multaAplicada: String(enc.valorMulta),
         valorComEncargos: String(enc.totalDevido),
@@ -188,7 +226,7 @@ export class InstallmentsService {
       where,
       orderBy: [{ status: 'asc' }, { dataVencimento: 'asc' }],
       include: {
-        payments: InstallmentsService.BAIXAS_ENCARGOS,
+        payments: InstallmentsService.BAIXAS_PARCELA,
         loan: {
           include: {
             client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, consultor: { select: { id: true, nome: true } } } },
@@ -206,6 +244,7 @@ export class InstallmentsService {
       const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hojeDate);
       return this.stripSplitForCaixa({
         ...inst,
+        capitalRestante: String(this.getRemainingCapital(inst)),
         moraAcumulada: String(enc.valorMora),
         multaAplicada: String(enc.valorMulta),
         valorComEncargos: String(enc.totalDevido),
@@ -245,11 +284,24 @@ export class InstallmentsService {
     return calcularEncargos(inst, multaPerc, moraDiaPerc, hoje);
   }
 
-  // Remove os campos de split (principalPayback/netGain) para o papel 'caixa'.
+  private getRemainingCapital(inst: {
+    status?: string;
+    principalPayback: unknown;
+    installmentAmount: unknown;
+    payments?: Array<BaixaInput & { estornado?: boolean; createdAt?: Date | string }> | null;
+  }): number {
+    if (inst.status === 'cancelado') return 0;
+    return remainingCapital(baixasVivas(inst.payments), {
+      principalPayback: inst.principalPayback as Numerico,
+      installmentAmount: inst.installmentAmount as Numerico,
+    });
+  }
+
+  // Remove os campos de split (principalPayback/netGain/capitalRestante) para o papel 'caixa'.
   private stripSplitForCaixa<T extends Record<string, any>>(inst: T, role?: string): T {
     if (role !== 'caixa') return inst;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { principalPayback, netGain, ...rest } = inst;
+    const { principalPayback, netGain, capitalRestante, ...rest } = inst;
     return rest as T;
   }
 
@@ -294,7 +346,7 @@ export class InstallmentsService {
         totalPago: true,
         saldoDevedor: true,
         dataVencimento: true,
-        payments: InstallmentsService.BAIXAS_ENCARGOS,
+        payments: InstallmentsService.BAIXAS_PARCELA,
         loan: { select: { multaPercentual: true, moraDiariaPercentual: true } },
       },
     });
@@ -318,7 +370,7 @@ export class InstallmentsService {
   }
 
   // Retorna encargos recalculados em tempo real para exibição/baixa ao operador.
-  async getEncargos(id: number): Promise<{
+  async getEncargos(id: number, asOf?: Date | string): Promise<{
     valor: number;
     totalPago: number;
     valorMulta: number;
@@ -333,14 +385,16 @@ export class InstallmentsService {
         totalPago: true,
         saldoDevedor: true,
         dataVencimento: true,
-        payments: InstallmentsService.BAIXAS_ENCARGOS,
+        payments: InstallmentsService.BAIXAS_PARCELA,
         loan: { select: { multaPercentual: true, moraDiariaPercentual: true } },
       },
     });
 
     if (!inst) throw new NotFoundException(`Parcela ${id} não encontrada`);
 
-    const hoje = new Date();
+    // Na baixa, a dívida deve ser congelada na data informada pelo operador.
+    // Sem asOf, mantém o comportamento de exibição em tempo real (hoje).
+    const hoje = asOf ? dataLocal(asOf) : new Date();
     hoje.setHours(0, 0, 0, 0);
     const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
     const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);

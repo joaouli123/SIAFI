@@ -21,12 +21,22 @@ export class PaymentsService {
     private readonly installments: InstallmentsService,
   ) {}
 
-  async create(dto: CreatePaymentDto, userId?: number): Promise<unknown> {
+  async create(dto: CreatePaymentDto, userId?: number, role?: string): Promise<unknown> {
+    if (role !== 'admin' && (dto.comissaoPercentual != null || dto.comissaoAdministradorPercentual != null)) {
+      throw new BadRequestException('Somente o administrador pode ajustar comissões no recebimento.');
+    }
+
+    const operador = userId
+      ? await this.prisma.user.findUnique({ where: { id: userId }, select: { role: true, comissaoPercentual: true } })
+      : null;
     // Encargos (multa/mora) em TEMPO REAL para esta parcela. O teto do pagamento é
     // validado contra a mora ATUAL — não contra installment.moraAcumulada, que fica
     // defasado quando o cron de encargos ainda não rodou ou a parcela tinha saldo 0
     // (o que fazia baixas de parcelas atrasadas serem rejeitadas indevidamente).
-    const encAtual = await this.installments.getEncargos(dto.installmentId);
+    // O valor devido desta baixa é calculado na data do acerto informada pelo operador.
+    // Assim, uma baixa parcial em 08/08 não carrega encargos posteriores nem reinicia
+    // o saldo usando a data original da parcela.
+    const encAtual = await this.installments.getEncargos(dto.installmentId, dto.dataPagamento);
 
     const payment = await this.prisma.$transaction(async (tx) => {
       // 1. Buscar parcela com loan e client
@@ -36,6 +46,7 @@ export class PaymentsService {
           loan: {
             include: {
               client: { select: { id: true, nome: true } },
+              consultor: { select: { id: true, comissaoPercentual: true } },
             },
           },
         },
@@ -43,6 +54,18 @@ export class PaymentsService {
 
       if (!installment) {
         throw new NotFoundException(`Parcela com id ${dto.installmentId} não encontrada`);
+      }
+
+      const comissaoConsultor = dto.comissaoPercentual
+        ?? installment.loan.comissaoPercentual
+        ?? installment.loan.consultor?.comissaoPercentual
+        ?? null;
+      const comissaoAdministrador = dto.comissaoAdministradorPercentual
+        ?? installment.loan.comissaoAdministradorPercentual
+        ?? (role === 'admin' ? operador?.comissaoPercentual : null)
+        ?? null;
+      if (Number(comissaoConsultor ?? 0) + Number(comissaoAdministrador ?? 0) > 100) {
+        throw new BadRequestException('As comissões do consultor e do administrador não podem ultrapassar 100% do lucro.');
       }
 
       if (installment.status === 'pago' || installment.status === 'cancelado') {
@@ -114,6 +137,8 @@ export class PaymentsService {
           desconto:        desconto.toDecimalPlaces(2).toNumber(),
           descontoTipo:    descontoTipo,
           descontoMotivo:  dto.descontoMotivo ?? null,
+          comissaoPercentual: comissaoConsultor,
+          comissaoAdministradorPercentual: comissaoAdministrador,
         },
       });
 
@@ -184,6 +209,10 @@ export class PaymentsService {
               principalPayback: installment.principalPayback.toString(),
               netGain:          installment.netGain.toString(),
             },
+            comissoes_snapshot: {
+              comissaoPercentual: comissaoConsultor,
+              comissaoAdministradorPercentual: comissaoAdministrador,
+            },
           },
         },
       };
@@ -246,6 +275,7 @@ export class PaymentsService {
       const lucroRealizado = realizedLucro(inst.payments, {
         principalPayback:  inst.principalPayback,
         installmentAmount: inst.installmentAmount,
+        comissaoAdministradorPercentual: loan.comissaoAdministradorPercentual,
       });
       const remainingLucro = Math.max(0, Number(inst.netGain) - lucroRealizado);
       let descontoParc = parseFloat(((remainingLucro * pct) / 100).toFixed(2));
@@ -318,7 +348,7 @@ export class PaymentsService {
         select: {
           principalPayback: true,
           installmentAmount: true,
-          loan: { select: { comissaoPercentual: true } },
+          loan: { select: { comissaoPercentual: true, comissaoAdministradorPercentual: true } },
           payments: {
             where:   { estornado: false },
             select:  BAIXA_SELECT,
@@ -344,6 +374,7 @@ export class PaymentsService {
                 select: {
                   id: true,
                   comissaoPercentual: true,
+                  comissaoAdministradorPercentual: true,
                   client: { select: { nome: true, consultor: { select: { id: true, nome: true } } } },
                 },
               },
@@ -368,7 +399,7 @@ export class PaymentsService {
       const inst = p.installment as unknown as {
         principalPayback: unknown;
         installmentAmount: unknown;
-        loan: { comissaoPercentual: unknown };
+        loan: { comissaoPercentual: unknown; comissaoAdministradorPercentual: unknown };
         payments: BaixaInput[];
       };
       const split = verSplit ? this.splitPagamento(p.id, inst) : null;
@@ -376,11 +407,12 @@ export class PaymentsService {
       return { ...p, installment: instRest, split };
     });
 
-    let somaCapital = 0, somaComissao = 0, somaLucro = 0, somaLucroEmpresa = 0;
+    let somaCapital = 0, somaComissao = 0, somaComissaoAdministrador = 0, somaLucro = 0, somaLucroEmpresa = 0;
     for (const p of baixasPeriodo) {
       const s = this.splitPagamento(p.id, p.installment as never);
       somaCapital      += s.capital;
       somaComissao     += s.comissao;
+      somaComissaoAdministrador += s.comissaoAdministrador;
       somaLucro        += s.lucro;
       somaLucroEmpresa += s.lucroEmpresa;
     }
@@ -399,6 +431,7 @@ export class PaymentsService {
           capital:      r2(somaCapital),
           lucro:        r2(somaLucro),
           comissao:     r2(somaComissao),
+          comissaoAdministrador: r2(somaComissaoAdministrador),
           lucroEmpresa: r2(somaLucroEmpresa),
         }),
       },
@@ -413,7 +446,7 @@ export class PaymentsService {
     inst: {
       principalPayback: unknown;
       installmentAmount: unknown;
-      loan: { comissaoPercentual: unknown };
+      loan: { comissaoPercentual: unknown; comissaoAdministradorPercentual: unknown };
       payments: BaixaInput[];
     },
   ): Split {
@@ -423,6 +456,7 @@ export class PaymentsService {
         principalPayback:   inst.principalPayback as Numerico,
         installmentAmount:  inst.installmentAmount as Numerico,
         comissaoPercentual: inst.loan.comissaoPercentual as Numerico,
+        comissaoAdministradorPercentual: inst.loan.comissaoAdministradorPercentual as Numerico,
       },
       { id: paymentId },
     );

@@ -24,6 +24,7 @@ const schema = z.object({
               .regex(/^[a-z0-9_.]+$/, 'Use apenas letras minúsculas, números, . e _'),
   password: z.string().min(8, 'Senha deve ter ao menos 8 caracteres'),
   role:     z.enum(['admin', 'financeiro', 'consultor', 'caixa', 'cliente']),
+  comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
 })
 type FormData = z.infer<typeof schema>
 
@@ -175,6 +176,16 @@ export default function NovoUsuarioPage() {
                     <p className="text-xs text-amber-700 dark:text-amber-400">{roleInfo.warning}</p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {(selectedRole === 'consultor' || selectedRole === 'admin') && (
+              <div className="space-y-1.5 pt-2">
+                <Label>Comissão padrão (% do Lucro Geral)</Label>
+                <Input type="number" step="0.01" min="0" max="100" {...register('comissaoPercentual')} placeholder="ex: 30" />
+                <p className="text-xs text-muted-foreground">
+                  Fica gravada no cadastro e será usada como padrão nos novos contratos/recebimentos. O histórico não é alterado.
+                </p>
               </div>
             )}
           </CardContent>
