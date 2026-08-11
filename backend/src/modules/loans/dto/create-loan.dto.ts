@@ -9,13 +9,9 @@ import {
   IsPositive,
   IsString,
   Max,
-  MaxLength,
   Min,
-  ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { PaymentMethod } from '@prisma/client';
-import { AvalistaDto } from './avalista.dto';
 
 export class CreateLoanDto {
   @IsInt()
@@ -63,15 +59,19 @@ export class CreateLoanDto {
   diaVencimento?: number;
 
   // Multa por atraso override do empréstimo (% sobre saldo); null = fallback settings
+  // Máx. 9.99 (limite da coluna Decimal(5,4) no banco — evita overflow no save).
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 4 })
   @Min(0)
+  @Max(9.99)
   multaPercentual?: number;
 
   // Mora diária override (% ao dia); null = fallback settings
+  // Máx. 9.99 (limite da coluna Decimal(7,6) no banco).
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 6 })
   @Min(0)
+  @Max(9.99)
   moraDiariaPercentual?: number;
 
   // Comissão do consultor: % sobre o lucro (netGain) de cada parcela
@@ -80,6 +80,12 @@ export class CreateLoanDto {
   @Min(0)
   @Max(100)
   comissaoPercentual?: number;
+
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(100)
+  comissaoAdministradorPercentual?: number;
 
   // Desconto na quitação total do contrato (% sobre o lucro a vencer)
   @IsOptional()
@@ -107,25 +113,4 @@ export class CreateLoanDto {
   @IsBoolean()
   cobrarPortal?: boolean;
 
-  // ── Avalistas (por contrato; podem referenciar um cliente existente) ─────
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => AvalistaDto)
-  avalistas?: AvalistaDto[];
-
-  // ── Referências de contato (por contrato) ────────────────────────────────
-  @IsOptional() @IsString() @MaxLength(150)
-  referencia1Nome?: string;
-  @IsOptional() @IsString() @MaxLength(30)
-  referencia1Telefone?: string;
-  @IsOptional() @IsString() @MaxLength(50)
-  referencia1Vinculo?: string;
-
-  @IsOptional() @IsString() @MaxLength(150)
-  referencia2Nome?: string;
-  @IsOptional() @IsString() @MaxLength(30)
-  referencia2Telefone?: string;
-  @IsOptional() @IsString() @MaxLength(50)
-  referencia2Vinculo?: string;
 }

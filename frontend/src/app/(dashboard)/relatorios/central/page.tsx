@@ -15,6 +15,7 @@ import { Select } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import api from '@/lib/api'
+import { hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
 
 interface RelMeta {
   key: string; nome: string; descricao: string; grupo: string; persona: string; params: string[]
@@ -31,9 +32,8 @@ const FORMAT_META: Record<string, { label: string; icon: React.ElementType; cls:
 }
 
 export default function CentralRelatoriosPage() {
-  const hoje = new Date()
-  const [startDate, setStartDate] = useState(new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().split('T')[0])
-  const [endDate, setEndDate] = useState(hoje.toISOString().split('T')[0])
+  const [startDate, setStartDate] = useState(primeiroDiaMesISO())
+  const [endDate, setEndDate] = useState(hojeISODate())
   const [status, setStatus] = useState('')
   const [clientId, setClientId] = useState('')
   const [zipFmt, setZipFmt] = useState('xlsx')

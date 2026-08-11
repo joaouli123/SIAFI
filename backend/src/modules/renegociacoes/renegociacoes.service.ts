@@ -1,10 +1,15 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { CreateRenegociacaoDto } from './dto/create-renegociacao.dto';
+import { InstallmentsService } from '../installments/installments.service';
 
 @Injectable()
 export class RenegociacoesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly installments: InstallmentsService,
+  ) {}
 
   async findAll(): Promise<unknown[]> {
     return this.prisma.renegociacao.findMany({
@@ -26,8 +31,14 @@ export class RenegociacoesService {
         where: { id: dto.loanId },
         include: {
           installments: {
-            where: { status: { in: ['pendente', 'atrasado'] } },
+            where: { status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] } },
             orderBy: { numero: 'asc' },
+            include: {
+              payments: {
+                select: { dataPagamento: true, valorPago: true, estornado: true },
+                orderBy: { dataPagamento: 'asc' },
+              },
+            },
           },
         },
       });
@@ -38,9 +49,17 @@ export class RenegociacoesService {
       if (loan.installments.length === 0)
         throw new BadRequestException('Nenhuma parcela pendente ou atrasada para renegociar');
 
-      const saldoDevedor = loan.installments.reduce((acc, inst) => {
-        return acc + (Number(inst.installmentAmount) - Number(inst.totalPago));
-      }, 0);
+      // Base da renegociação = saldo + encargos (multa + mora) em tempo real, idêntico
+      // ao "Dívida total" mostrado no simulador ao cliente (fórmula única do sistema).
+      const comEncargos = await this.installments.recalcularEncargosLista(
+        loan.installments,
+        loan.multaPercentual,
+        loan.moraDiariaPercentual,
+      );
+      const saldoDevedor = comEncargos.reduce(
+        (acc, inst) => acc + Number(inst.valorComEncargos),
+        0,
+      );
 
       const installmentIds = loan.installments.map((i) => i.id);
       await tx.installment.updateMany({
@@ -68,12 +87,13 @@ export class RenegociacoesService {
 
       const newInstallments = Array.from({ length: n }, (_, i) => {
         const isLast = i === n - 1;
-        const dataVencimento = new Date(dto.dataInicio);
+        const dataVencimento = dataLocal(dto.dataInicio);
         dataVencimento.setMonth(dataVencimento.getMonth() + i);
         return {
           loanId:            dto.loanId,
           numero:            baseNumero + i,
           installmentAmount: valorParcela,
+          saldoDevedor:      valorParcela,
           principalPayback:  isLast
             ? Math.round((principalPaybackBase + ajustePrincipal) * 100) / 100
             : principalPaybackBase,
@@ -94,7 +114,7 @@ export class RenegociacoesService {
           valorTotal: Math.round(totalComJuros * 100) / 100,
           numeroParcelas: dto.numeroParcelas,
           taxaJuros: dto.taxaJuros,
-          dataInicio: new Date(dto.dataInicio),
+          dataInicio: dataLocal(dto.dataInicio),
           observacoes: dto.observacoes ?? null,
         },
       });

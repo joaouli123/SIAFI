@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
-import { formatCurrency, formatDateLocal, toNumber, METODO_PAGAMENTO } from '@/lib/utils'
+import { formatCurrency, formatDateLocal, toNumber, hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 
@@ -20,6 +20,7 @@ interface Payment {
   valorPago: string
   dataPagamento: string
   metodoPagamento: string
+  contaDestino?: string | null
   observacao: string | null
   desconto?: number | string | null
   descontoTipo?: string | null
@@ -27,11 +28,11 @@ interface Payment {
   installment: {
     id: number
     numero: number
-    loan: { id: number; client: { nome: string }; consultor?: { id: number; nome: string } | null }
+    loan: { id: number; client: { nome: string; consultor?: { id: number; nome: string } | null } }
   }
   split?: {
-    capital: number; lucro: number; comissao: number
-    lucroEmpresa: number; comissaoPercentual: number
+    capital: number; lucro: number; comissao: number; comissaoAdministrador?: number
+    lucroEmpresa: number; comissaoPercentual: number; comissaoAdministradorPercentual?: number
   } | null
 }
 
@@ -40,6 +41,10 @@ interface PaymentsResponse {
   total: number
   page: number
   lastPage: number
+  totais?: {
+    recebido: number; desconto: number
+    capital?: number; lucro?: number; comissao?: number; comissaoAdministrador?: number; lucroEmpresa?: number
+  }
 }
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -51,13 +56,14 @@ function useDebounce<T>(value: T, delay: number): T {
   return debounced
 }
 
-const today = new Date().toISOString().split('T')[0]
-const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0]
+const today = hojeISODate()
+const firstOfMonth = primeiroDiaMesISO()
 
 export default function PagamentosPage() {
   const [searchInput, setSearchInput] = useState('')
   const [startDate, setStartDate] = useState(firstOfMonth)
   const [endDate, setEndDate] = useState(today)
+  const [consultorId, setConsultorId] = useState('')
   const [page, setPage] = useState(1)
   const qc = useQueryClient()
   const { user } = useAuth()
@@ -65,16 +71,17 @@ export default function PagamentosPage() {
   const showSplit = user?.role !== 'caixa'
 
   const search = useDebounce(searchInput, 400)
-  useEffect(() => { setPage(1) }, [search, startDate, endDate])
+  useEffect(() => { setPage(1) }, [search, startDate, endDate, consultorId])
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['payments', { search, startDate, endDate, page }],
+    queryKey: ['payments', { search, startDate, endDate, consultorId, page }],
     queryFn: () =>
       api.get<PaymentsResponse>('/payments', {
         params: {
           search: search || undefined,
           startDate: startDate || undefined,
           endDate: endDate || undefined,
+          consultorId: consultorId ? Number(consultorId) : undefined,
           page,
           limit: 20,
         },
@@ -83,6 +90,12 @@ export default function PagamentosPage() {
         if (Array.isArray(r.data)) return { data: r.data, total: r.data.length, page: 1, lastPage: 1 } as PaymentsResponse
         return r.data
       }),
+  })
+
+  const { data: consultores } = useQuery<{id: number; nome: string}[]>({
+    queryKey: ['consultores'],
+    queryFn: () => api.get<{id: number; nome: string}[]>('/clients/consultores').then((r) => r.data),
+    enabled: user?.role === 'admin' || user?.role === 'financeiro',
   })
 
   const estornoMut = useMutation({
@@ -100,17 +113,25 @@ export default function PagamentosPage() {
     }
   }
 
-  const totalRecebido = data?.data.reduce((s, p) => s + toNumber(p.valorPago), 0) ?? 0
+  // Todos os totais são do período inteiro (agregados no backend, todo o filtro),
+  // considerando apenas baixas não estornadas.
+  const totalRecebido = data?.totais?.recebido ?? 0
+  const totalDesconto = data?.totais?.desconto ?? 0
+  const totalCapital = data?.totais?.capital ?? 0
+  const totalLucroGeral = data?.totais?.lucro ?? 0
+  const totalLucro = data?.totais?.lucroEmpresa ?? 0
+  const totalComissao = data?.totais?.comissao ?? 0
+  const totalComissaoAdministrador = data?.totais?.comissaoAdministrador ?? 0
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Pagamentos</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Recebimentos</h1>
           <p className="text-muted-foreground text-sm mt-1">Histórico de recebimentos</p>
         </div>
         <Link href="/pagamentos/novo">
-          <Button className="gap-2"><Plus className="size-4" />Registrar Pagamento</Button>
+          <Button className="gap-2"><Plus className="size-4" />Registrar Recebimento</Button>
         </Link>
       </div>
 
@@ -126,6 +147,16 @@ export default function PagamentosPage() {
                 className="pl-9"
               />
             </div>
+            {consultores && (
+              <select
+                value={consultorId}
+                onChange={(e) => setConsultorId(e.target.value)}
+                className="flex h-9 w-40 items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Consultor (Todos)</option>
+                {consultores.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
+              </select>
+            )}
             <div className="flex items-center gap-2">
               <Label className="text-xs text-muted-foreground whitespace-nowrap">De</Label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-36 text-sm" />
@@ -172,15 +203,17 @@ export default function PagamentosPage() {
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcela</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Desconto</th>
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Capital</th>}
-                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Comissão</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Lucro Geral</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Com. Consultor</th>}
+                    {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Com. Admin.</th>}
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Lucro Empresa</th>}
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Método</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Data</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Bco Recebedor</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell whitespace-nowrap">Data</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ação</th>
                   </tr>
                 </thead>
@@ -191,10 +224,8 @@ export default function PagamentosPage() {
                         {p.installment?.loan?.client?.nome ?? '—'}
                         {p.estornado && <Badge variant="outline" className="ml-2 text-xs">Estornado</Badge>}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
-                        <Link href={`/emprestimos/${p.installment?.loan?.id}`} className="hover:underline">
-                          #{p.installment?.loan?.id}
-                        </Link>
+                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
+                        {p.installment?.loan?.client?.consultor?.nome ?? '—'}
                       </td>
                       <td className="px-4 py-3 text-center text-muted-foreground hidden lg:table-cell">
                         P{p.installment?.numero}
@@ -213,19 +244,29 @@ export default function PagamentosPage() {
                         </td>
                       )}
                       {showSplit && (
-                        <td className="px-4 py-3 text-right hidden xl:table-cell text-emerald-700 dark:text-emerald-400" title={p.split ? `${p.split.comissaoPercentual}% do lucro · ${p.installment?.loan?.consultor?.nome ?? 'sem consultor'}` : ''}>
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-violet-700 dark:text-violet-400" title="Valor recebido menos o capital">
+                          {p.split ? formatCurrency(toNumber(p.valorPago) - p.split.capital) : '—'}
+                        </td>
+                      )}
+                      {showSplit && (
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-emerald-700 dark:text-emerald-400" title={p.split ? `${p.split.comissaoPercentual}% do lucro · ${p.installment?.loan?.client?.consultor?.nome ?? 'sem consultor'}` : ''}>
                           {p.split && p.split.comissao > 0 ? formatCurrency(p.split.comissao) : '—'}
                         </td>
                       )}
                       {showSplit && (
-                        <td className="px-4 py-3 text-right hidden xl:table-cell text-blue-700 dark:text-blue-400">
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-violet-700 dark:text-violet-400" title={p.split ? `${p.split.comissaoAdministradorPercentual ?? 0}% do Lucro Geral` : ''}>
+                          {p.split && (p.split.comissaoAdministrador ?? 0) > 0 ? formatCurrency(p.split.comissaoAdministrador ?? 0) : '—'}
+                        </td>
+                      )}
+                      {showSplit && (
+                        <td className="px-4 py-3 text-right hidden xl:table-cell text-blue-700 dark:text-blue-400" title="Lucro Geral − Comissão do Consultor − Comissão do Administrador">
                           {p.split && p.split.lucroEmpresa > 0 ? formatCurrency(p.split.lucroEmpresa) : '—'}
                         </td>
                       )}
-                      <td className="px-4 py-3 hidden md:table-cell">
-                        <Badge variant="outline">{METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}</Badge>
+                      <td className="px-4 py-3 text-muted-foreground hidden xl:table-cell">
+                        {p.contaDestino?.trim() ? p.contaDestino : '—'}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
+                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell whitespace-nowrap">
                         {formatDateLocal(p.dataPagamento)}
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -267,13 +308,43 @@ export default function PagamentosPage() {
 
           {data && (
             <div className="flex items-center justify-between px-4 py-3 border-t border-border flex-wrap gap-2">
-              <div className="flex items-center gap-4">
-                <p className="text-sm text-muted-foreground">
-                  {data.total} pagamento{data.total !== 1 ? 's' : ''}
+              <div className="flex items-center gap-6 flex-wrap">
+                <p className="text-sm text-muted-foreground font-medium">
+                  {data.total} recebimento{data.total !== 1 ? 's' : ''}
                 </p>
                 {totalRecebido > 0 && (
-                  <p className="text-sm font-medium text-green-600">
-                    Total: {formatCurrency(totalRecebido)}
+                  <p className="text-sm font-bold text-green-600">
+                    Valores Recebidos: {formatCurrency(totalRecebido)}
+                  </p>
+                )}
+                {totalCapital > 0 && showSplit && (
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Capital: {formatCurrency(totalCapital)}
+                  </p>
+                )}
+                {showSplit && (
+                  <p className="text-sm font-bold text-violet-700 dark:text-violet-400" title="Soma de Valor recebido menos Capital no período filtrado">
+                    Lucro Geral: {formatCurrency(totalLucroGeral)}
+                  </p>
+                )}
+                {showSplit && (
+                  <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400" title="Soma da comissão dos consultores, calculada sobre o Lucro Geral do período filtrado">
+                    Comissão do Consultor: {formatCurrency(totalComissao)}
+                  </p>
+                )}
+                {showSplit && (
+                  <p className="text-sm font-bold text-violet-700 dark:text-violet-400" title="Soma da comissão dos administradores, calculada sobre o Lucro Geral do período filtrado">
+                    Comissão do Administrador: {formatCurrency(totalComissaoAdministrador)}
+                  </p>
+                )}
+                {totalLucro > 0 && showSplit && (
+                  <p className="text-sm font-medium text-blue-600 dark:text-blue-400" title="Lucro Geral − Comissão do Consultor − Comissão do Administrador">
+                    Lucro Empresa: {formatCurrency(totalLucro)}
+                  </p>
+                )}
+                {totalDesconto > 0 && (
+                  <p className="text-sm font-medium text-orange-600">
+                    Desconto: {formatCurrency(totalDesconto)}
                   </p>
                 )}
               </div>

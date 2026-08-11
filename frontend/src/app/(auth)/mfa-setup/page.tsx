@@ -187,14 +187,20 @@ export default function MfaSetupPage() {
           {enrollment && (
             <>
               <div className="flex justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={enrollment.totp.qr_code}
-                  alt="QR Code MFA"
-                  width={200}
-                  height={200}
-                  className="rounded-lg border bg-white p-2"
-                />
+                {enrollment.totp.qr_code.startsWith('data:image') ? (
+                  <img
+                    src={enrollment.totp.qr_code}
+                    alt="QR Code MFA"
+                    width={200}
+                    height={200}
+                    className="rounded-lg border bg-white p-2"
+                  />
+                ) : (
+                  <div
+                    className="rounded-lg border bg-white p-2 flex items-center justify-center [&>svg]:size-[200px]"
+                    dangerouslySetInnerHTML={{ __html: enrollment.totp.qr_code }}
+                  />
+                )}
               </div>
 
               <div className="rounded-lg bg-slate-50 dark:bg-slate-900 border px-3 py-2 text-center">

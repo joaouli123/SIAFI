@@ -9,6 +9,7 @@ import { createHash } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { PixService } from '../pix/pix.service';
+import { InstallmentsService } from '../installments/installments.service';
 
 @Injectable()
 export class ClientPortalService {
@@ -16,6 +17,7 @@ export class ClientPortalService {
     private readonly prisma: PrismaService,
     private readonly supabase: SupabaseService,
     private readonly pixService: PixService,
+    private readonly installmentsService: InstallmentsService,
   ) {}
 
   // clientId vem do JWT (RequestUser.id = client.id via JwtAuthGuard)
@@ -67,14 +69,23 @@ export class ClientPortalService {
     const contratosPendentesAceite = loans.filter(l => l.status === 'aguardando_aceite');
     const todasParcelas = loans.flatMap(l => l.installments);
 
-    const parcelasAtrasadas = todasParcelas.filter(p => p.status === 'atrasado');
+    // Parcela em aberto = não paga/cancelada, com saldo > 0 (inclui 'parcialmente_pago').
+    const inicioHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    const isAberta = (p: { status: string }) => p.status !== 'pago' && p.status !== 'cancelado';
+    const saldoDe = (p: { installmentAmount: unknown; totalPago: unknown }) =>
+      Math.max(0, Number(p.installmentAmount) - Number(p.totalPago));
+
+    const parcelasAtrasadas = todasParcelas.filter(
+      p => isAberta(p) && saldoDe(p) > 0 && p.dataVencimento < inicioHoje,
+    );
     const proxVencimento = todasParcelas
-      .filter(p => p.status === 'pendente')
+      .filter(p => isAberta(p) && saldoDe(p) > 0 && p.dataVencimento >= inicioHoje)
       .sort((a, b) => a.dataVencimento.getTime() - b.dataVencimento.getTime())[0];
 
+    // Total em aberto = soma dos SALDOS (installmentAmount - totalPago) das parcelas em aberto.
     const totalEmAberto = todasParcelas
-      .filter(p => p.status === 'pendente' || p.status === 'atrasado')
-      .reduce((sum, p) => sum + Number(p.installmentAmount), 0);
+      .filter(isAberta)
+      .reduce((sum, p) => sum + saldoDe(p), 0);
 
     // Banner mais urgente
     let alerta: { tipo: string; mensagem: string; loanId?: number } | null = null;
@@ -191,8 +202,12 @@ export class ClientPortalService {
             dataVencimento: true,
             status: true,
             totalPago: true,
-            // principalPayback e netGain são campos INTERNOS — não selecionar no portal
-            payments: { select: { dataPagamento: true }, orderBy: { dataPagamento: 'desc' }, take: 1 },
+            // principalPayback e netGain são campos INTERNOS — não selecionar no portal.
+            // valorPago/estornado são necessários para fatiar a mora por período.
+            payments: {
+              select: { dataPagamento: true, valorPago: true, estornado: true },
+              orderBy: { dataPagamento: 'desc' },
+            },
           },
         },
       },
@@ -201,6 +216,14 @@ export class ClientPortalService {
 
     const totalPago = loan.installments.reduce((s, i) => s + Number(i.totalPago), 0);
     const totalParcelado = Number(loan.totalReceivable);
+
+    // Recalcula multa/mora em tempo real (mesma fórmula única do sistema) para o
+    // cliente ver o total real a pagar — idêntico ao gerado no PIX e nas telas admin.
+    const parcelasComEncargos = await this.installmentsService.recalcularEncargosLista(
+      loan.installments,
+      loan.multaPercentual,
+      loan.moraDiariaPercentual,
+    );
 
     return {
       id: loan.id,
@@ -213,10 +236,14 @@ export class ClientPortalService {
       totalParcelado,
       totalPago,
       saldoRestante: totalParcelado - totalPago,
-      parcelas: loan.installments.map(i => ({
+      parcelas: parcelasComEncargos.map(i => ({
         id: i.id,
         numero: i.numero,
         valor: Number(i.installmentAmount),
+        saldoDevedor: Math.max(0, Number(i.installmentAmount) - Number(i.totalPago)),
+        moraAcumulada: Number(i.moraAcumulada),
+        multaAplicada: Number(i.multaAplicada),
+        valorComEncargos: Number(i.valorComEncargos),
         dataVencimento: i.dataVencimento,
         status: i.status,
         dataPagamento: i.payments[0]?.dataPagamento ?? null,
@@ -345,6 +372,15 @@ export class ClientPortalService {
     return this.prisma.supportTicket.findMany({
       where: { clientId },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  // Listagem de todos os tickets para operadores (tela administrativa /suporte).
+  async listAllTickets(status?: string) {
+    return this.prisma.supportTicket.findMany({
+      where: status ? { status } : {},
+      orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
+      include: { client: { select: { id: true, nome: true } } },
     });
   }
 

@@ -1,4 +1,4 @@
-import { IsDateString, IsIn, IsInt, IsNumber, IsOptional, IsPositive, IsString, MaxLength, Min } from 'class-validator';
+import { IsDateString, IsIn, IsInt, IsNumber, IsOptional, IsPositive, IsString, Max, MaxLength, Min } from 'class-validator';
 
 export class CreatePaymentDto {
   @IsInt()
@@ -39,4 +39,17 @@ export class CreatePaymentDto {
   @IsOptional()
   @IsString()
   descontoMotivo?: string;
+
+  // Ajuste permitido somente ao administrador; os valores são congelados nesta baixa.
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(100)
+  comissaoPercentual?: number;
+
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(100)
+  comissaoAdministradorPercentual?: number;
 }

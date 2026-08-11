@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn, formatCurrency, formatDate, formatCPF, METODO_PAGAMENTO } from '@/lib/utils'
+import { cn, formatCurrency, formatDate, formatCPF, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 
 const schema = z.object({
@@ -36,9 +36,9 @@ type FormData = z.infer<typeof schema>
 type WizardStep = 1 | 2 | 3 | 'ok'
 
 interface ClientRow { id: number; nome: string; cpf: string; active: boolean }
-interface LoanRow   { id: number; valor: number; numeroParcelas: number; status: string }
+interface LoanRow   { id: number; totalReceivable: number; numeroParcelas: number; status: string }
 interface InstRow   {
-  id: number; numero: number; valor: number; totalPago: number
+  id: number; numero: number; installmentAmount: number; totalPago: number
   saldoDevedor?: number; dataVencimento: string; status: string
 }
 interface InstWithClient extends InstRow {
@@ -46,7 +46,7 @@ interface InstWithClient extends InstRow {
 }
 
 interface SelectedInst {
-  id: number; numero: number; valor: number; totalPago: number
+  id: number; numero: number; installmentAmount: number; totalPago: number
   saldoDevedor?: number; dataVencimento: string; clientNome: string
 }
 
@@ -70,7 +70,7 @@ export default function NovoPagamentoPage() {
   const form = useForm<FormData>({
     resolver: zodResolver(schema) as any,
     defaultValues: {
-      dataPagamento:   new Date().toISOString().split('T')[0],
+      dataPagamento:   hojeISODate(),
       metodoPagamento: 'dinheiro',
     },
   })
@@ -149,22 +149,22 @@ export default function NovoPagamentoPage() {
 
   useEffect(() => {
     if (!preInst) return
-    const saldo = Number(preInst.saldoDevedor ?? 0) || (Number(preInst.valor) - Number(preInst.totalPago))
+    const saldo = Number(preInst.saldoDevedor ?? 0) || (Number(preInst.installmentAmount) - Number(preInst.totalPago))
     const si: SelectedInst = {
-      id: preInst.id, numero: preInst.numero, valor: preInst.valor,
+      id: preInst.id, numero: preInst.numero, installmentAmount: preInst.installmentAmount,
       totalPago: preInst.totalPago, saldoDevedor: preInst.saldoDevedor,
       dataVencimento: preInst.dataVencimento, clientNome: preInst.loan.client.nome,
     }
     setInst(si)
     form.setValue('installmentId', preInst.id)
-    form.setValue('valorPago', saldo > 0 ? saldo : Number(preInst.valor))
+    form.setValue('valorPago', saldo > 0 ? saldo : Number(preInst.installmentAmount))
   }, [preInst, form])
 
   useEffect(() => {
     if (!inst || preParcelaId) return
-    const saldo = Number(inst.saldoDevedor ?? 0) || (Number(inst.valor) - Number(inst.totalPago))
+    const saldo = Number(inst.saldoDevedor ?? 0) || (Number(inst.installmentAmount) - Number(inst.totalPago))
     form.setValue('installmentId', inst.id)
-    form.setValue('valorPago', saldo > 0 ? saldo : Number(inst.valor))
+    form.setValue('valorPago', saldo > 0 ? saldo : Number(inst.installmentAmount))
   }, [inst, preParcelaId, form])
 
   // ── Mutation ───────────────────────────────────────────────────────────────
@@ -184,7 +184,7 @@ export default function NovoPagamentoPage() {
 
   function pickInst(i: InstRow) {
     setInst({
-      id: i.id, numero: i.numero, valor: i.valor, totalPago: i.totalPago,
+      id: i.id, numero: i.numero, installmentAmount: i.installmentAmount, totalPago: i.totalPago,
       saldoDevedor: i.saldoDevedor, dataVencimento: i.dataVencimento,
       clientNome: client!.nome,
     })
@@ -193,7 +193,7 @@ export default function NovoPagamentoPage() {
 
   function resetWizard() {
     setStep(1); setSearch(''); setClient(null); setLoanId(null); setInst(null)
-    form.reset({ dataPagamento: new Date().toISOString().split('T')[0], metodoPagamento: 'dinheiro' })
+    form.reset({ dataPagamento: hojeISODate(), metodoPagamento: 'dinheiro' })
   }
 
   const StepDot = ({ n, label }: { n: 1 | 2 | 3; label: string }) => {
@@ -217,7 +217,7 @@ export default function NovoPagamentoPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/pagamentos">
           <Button variant="ghost" size="sm" className="gap-2">
@@ -323,7 +323,7 @@ export default function NovoPagamentoPage() {
                       : 'bg-background hover:bg-muted',
                   )}
                 >
-                  #{l.id} · {formatCurrency(l.valor)}
+                  #{l.id} · {formatCurrency(l.totalReceivable)}
                 </button>
               ))}
             </div>
@@ -351,7 +351,7 @@ export default function NovoPagamentoPage() {
               ) : (
                 <div className="divide-y">
                   {pendingInst.map(i => {
-                    const saldo = Number(i.saldoDevedor ?? 0) || (Number(i.valor) - Number(i.totalPago))
+                    const saldo = Number(i.saldoDevedor ?? 0) || (Number(i.installmentAmount) - Number(i.totalPago))
                     const now  = new Date(); now.setHours(0, 0, 0, 0)
                     const venc = new Date(i.dataVencimento); venc.setHours(0, 0, 0, 0)
                     const diff = Math.floor((now.getTime() - venc.getTime()) / 86400000)
@@ -422,7 +422,7 @@ export default function NovoPagamentoPage() {
               {inst.clientNome} · Parcela {inst.numero}
             </p>
             <p className="text-muted-foreground mt-0.5">
-              Vencimento: {formatDate(inst.dataVencimento)} · Valor: {formatCurrency(inst.valor)} · Pago: {formatCurrency(inst.totalPago)}
+              Vencimento: {formatDate(inst.dataVencimento)} · Valor: {formatCurrency(inst.installmentAmount)} · Pago: {formatCurrency(inst.totalPago)}
             </p>
           </div>
 
@@ -452,7 +452,8 @@ export default function NovoPagamentoPage() {
           <form onSubmit={form.handleSubmit(d => mutation.mutate(d))} className="space-y-4">
             {mutation.isError && (
               <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                Erro ao registrar pagamento. Verifique os dados e tente novamente.
+                {(mutation.error as any)?.response?.data?.message
+                  ?? 'Erro ao registrar pagamento. Verifique os dados e tente novamente.'}
               </div>
             )}
 
@@ -478,7 +479,7 @@ export default function NovoPagamentoPage() {
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Conta / Detalhes</Label>
+                  <Label>Bco Recebedor</Label>
                   <Input {...form.register('contaDestino')} placeholder="ex: Itaú PJ, dinheiro em caixa" />
                   <p className="text-[10px] text-muted-foreground">Conta/banco que recebeu o valor</p>
                 </div>

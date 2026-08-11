@@ -12,7 +12,7 @@ import { Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { formatCurrency, formatDateTimeLocal } from '@/lib/utils'
+import { formatCurrency, formatDateTimeLocal, hojeISODate } from '@/lib/utils'
 import { toast } from 'sonner'
 import api from '@/lib/api'
 
@@ -34,17 +34,19 @@ export default function CaixaPage() {
 
   const { data: transactions, isLoading, refetch } = useQuery({
     queryKey: ['transactions', { tipo }],
-    queryFn: () => api.get<Transaction[]>('/transactions', { params: { tipo: tipo || undefined, limit: 50 } }).then((r) => r.data),
+    // /transactions responde paginado ({ data, meta, ... }); extrai o array (aceita array simples também)
+    queryFn: () => api.get<{ data: Transaction[] } | Transaction[]>('/transactions', { params: { tipo: tipo || undefined, limit: 50 } })
+      .then((r) => (Array.isArray(r.data) ? r.data : r.data.data)),
   })
 
-  const [form, setForm] = useState({ tipo: 'entrada', valor: '', descricao: '', categoria: '', data: new Date().toISOString().split('T')[0] })
+  const [form, setForm] = useState({ tipo: 'entrada', valor: '', descricao: '', categoria: '', data: hojeISODate() })
 
   const createMut = useMutation({
     mutationFn: () => api.post('/transactions', { ...form, valor: Number(form.valor) }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['transactions'] })
       setShowForm(false)
-      setForm({ tipo: 'entrada', valor: '', descricao: '', categoria: '', data: new Date().toISOString().split('T')[0] })
+      setForm({ tipo: 'entrada', valor: '', descricao: '', categoria: '', data: hojeISODate() })
       toast.success(`Transação registrada com sucesso`)
     },
     onError: () => toast.error('Não foi possível registrar a transação. Tente novamente.'),

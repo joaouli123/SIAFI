@@ -31,13 +31,13 @@ export function LogoEmpresa({
     )
   }
 
-  if (fallbackTexto && tema?.nomeFantasia) {
+  if (fallbackTexto) {
     return (
       <span
         className={`font-bold text-white leading-none ${className ?? ''}`}
         style={{ fontSize: Math.max(13, Math.round(altura * 0.48)) }}
       >
-        {tema.nomeFantasia}
+        {tema?.nomeFantasia || 'SIFI'}
       </span>
     )
   }

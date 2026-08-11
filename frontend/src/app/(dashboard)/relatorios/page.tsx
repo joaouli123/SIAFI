@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCurrency, formatDate, STATUS_LOAN } from '@/lib/utils'
+import { formatCurrency, formatDate, STATUS_LOAN, hojeISODate, primeiroDiaMesISO, mesAtualISO } from '@/lib/utils'
 import api from '@/lib/api'
 
 type ReportTab = 'carteira' | 'faturamento' | 'clientes' | 'movimentacao' | 'contratos'
@@ -43,11 +43,10 @@ interface FaturamentoResponse {
 
 export default function RelatoriosPage() {
   const [tab, setTab] = useState<ReportTab>('carteira')
-  const today = new Date()
-  const [startDate, setStartDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0])
-  const [endDate, setEndDate] = useState(today.toISOString().split('T')[0])
+  const [startDate, setStartDate] = useState(primeiroDiaMesISO())
+  const [endDate, setEndDate] = useState(hojeISODate())
   const [statusFilter, setStatusFilter] = useState('')
-  const [faturMes, setFaturMes] = useState(today.toISOString().slice(0, 7))
+  const [faturMes, setFaturMes] = useState(mesAtualISO())
 
   interface EvolucaoMes { mes: string; label: string; totalRecebido: number; faturamentoBruto: number; novosContratos: number }
 
@@ -140,7 +139,7 @@ export default function RelatoriosPage() {
         <div className="space-y-4">
           <div className="flex justify-end">
             <Button variant="outline" size="sm" className="gap-1.5"
-              onClick={() => exportarPdf('/export/carteira', `carteira-${new Date().toISOString().slice(0,10)}.pdf`)}>
+              onClick={() => exportarPdf('/export/carteira', `carteira-${hojeISODate()}.pdf`)}>
               <FileDown className="size-3.5" />Exportar PDF
             </Button>
           </div>

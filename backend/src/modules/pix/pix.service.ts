@@ -143,9 +143,15 @@ export class PixService {
     // externalReference rastreável e estável (sem timestamp — idempotência via X-Idempotency-Key)
     const externalReference = `SIAFI_INST_${installment.id}_LOAN_${installment.loanId}`;
 
+    // Encargos via fonte única do sistema (multa + mora) — o QR cobra o TOTAL devido,
+    // idêntico ao exibido em /parcelas, no detalhe do contrato e no reissue().
+    const enc = await this.installments.getEncargos(installment.id);
+    const valorEncargos = new Decimal(enc.valorMulta).plus(enc.valorMora).toDecimalPlaces(2);
+    const valorTotal = new Decimal(enc.totalDevido).toDecimalPlaces(2);
+
     const mpResponse = await this._callMpApi(
       tipo,
-      saldo.toNumber(),
+      valorTotal.toNumber(),
       installment,
       client,
       dto,
@@ -163,8 +169,8 @@ export class PixService {
         qrImage:        mpResponse.point_of_interaction?.transaction_data?.qr_code_base64 ?? null,
         barcodeContent: mpResponse.barcode?.content ?? null,
         boletoUrl:      mpResponse.transaction_details?.external_resource_url ?? null,
-        amount:         saldo.toDecimalPlaces(2).toNumber(),
-        valorEncargos:  null,
+        amount:         valorTotal.toNumber(),
+        valorEncargos:  valorEncargos.gt(0) ? valorEncargos.toNumber() : null,
         expiresAt,
         status:         'pendente',
       },

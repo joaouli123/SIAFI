@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionFilterDto } from './dto/transaction-filter.dto';
@@ -20,9 +21,9 @@ export class TransactionsService {
 
     if (dataInicio || dataFim) {
       const dateFilter: Record<string, Date> = {};
-      if (dataInicio) dateFilter.gte = new Date(dataInicio);
+      if (dataInicio) dateFilter.gte = dataLocal(dataInicio);
       if (dataFim) {
-        const end = new Date(dataFim);
+        const end = dataLocal(dataFim);
         end.setHours(23, 59, 59, 999);
         dateFilter.lte = end;
       }
@@ -56,7 +57,7 @@ export class TransactionsService {
         valor: dto.valor,
         descricao: dto.descricao ?? null,
         categoria: dto.categoria ?? null,
-        data: new Date(dto.data),
+        data: dataLocal(dto.data),
         userId: userId ?? null,
       },
       include: {

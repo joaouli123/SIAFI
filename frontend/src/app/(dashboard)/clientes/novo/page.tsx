@@ -1,19 +1,20 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Upload, X } from 'lucide-react'
+import { ArrowLeft, Save, Upload, X, Users, Plus, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
+import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 
@@ -52,6 +53,19 @@ const schema = z.object({
   cep: z.string().optional(),
   observacoes: z.string().optional(),
   consultorId: z.string().optional(),
+  avalistas: z.array(z.object({
+    clienteId: z.coerce.number().optional(),
+    nome: z.string().optional(),
+    cpf: z.string().optional(),
+    telefone: z.string().optional(),
+    parentesco: z.string().optional(),
+  })).optional(),
+  referencia1Nome: z.string().optional(),
+  referencia1Telefone: z.string().optional(),
+  referencia1Vinculo: z.string().optional(),
+  referencia2Nome: z.string().optional(),
+  referencia2Telefone: z.string().optional(),
+  referencia2Vinculo: z.string().optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -124,17 +138,31 @@ export default function NovoClientePage() {
     enabled: canAssignConsultor,
   })
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
+    defaultValues: { avalistas: [] }
+  })
+
+  const { fields: avalistaFields, append: addAvalista, remove: removeAvalista } = useFieldArray({
+    control,
+    name: 'avalistas',
+  })
+
+  const { data: allClients } = useQuery({
+    queryKey: ['clients-list'],
+    queryFn: () => api.get<any>('/clients', { params: { limit: 500, status: 'active' } }).then((r) => r.data.data ?? r.data),
   })
 
   const mutation = useMutation({
     mutationFn: (data: FormData) => {
       const fd = new FormData()
       Object.entries(data).forEach(([k, v]) => {
-        if (v !== undefined && v !== '') {
-          if (k === 'consultorId') fd.append(k, v)
-          else fd.append(k, String(v))
+        if (v !== undefined && v !== null && v !== '') {
+          if (k === 'avalistas' && Array.isArray(v)) {
+            fd.append(k, JSON.stringify(v))
+          } else {
+            fd.append(k, String(v))
+          }
         }
       })
       if (foto) fd.append('foto', foto)
@@ -148,12 +176,16 @@ export default function NovoClientePage() {
     },
   })
 
+  const erroMsg = mutation.isError
+    ? ((mutation.error as any)?.response?.data?.message ?? 'Erro ao cadastrar cliente. Verifique os dados e tente novamente.')
+    : null
+
   function onSubmit(data: FormData) {
     mutation.mutate(data)
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/clientes">
           <Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button>
@@ -165,9 +197,9 @@ export default function NovoClientePage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {mutation.isError && (
+        {erroMsg && (
           <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            Erro ao cadastrar cliente. Verifique os dados e tente novamente.
+            {erroMsg}
           </div>
         )}
 
@@ -286,6 +318,106 @@ export default function NovoClientePage() {
               file={comprovante}
               onChange={setComprovante}
             />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2 flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base flex items-center gap-2"><Users className="size-4" />Avalistas</CardTitle>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1"
+              onClick={() => addAvalista({ clienteId: undefined, nome: '', cpf: '', telefone: '', parentesco: '' })}
+            >
+              <Plus className="size-4" />Adicionar
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {avalistaFields.length === 0 && (
+              <p className="text-sm text-muted-foreground">Nenhum avalista. Opcional — pode adicionar um cliente já cadastrado ou uma pessoa avulsa.</p>
+            )}
+            {avalistaFields.map((field, i) => {
+              return (
+                <div key={field.id} className="rounded-lg border p-3 space-y-3 relative">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-muted-foreground">Avalista {i + 1}</span>
+                    <Button type="button" variant="ghost" size="sm" className="text-destructive h-7 px-2" onClick={() => removeAvalista(i)}>
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="md:col-span-2 space-y-1.5">
+                      <Label>Cliente existente (opcional)</Label>
+                      <ClienteCombobox
+                        clientes={allClients ?? []}
+                        value={watch(`avalistas.${i}.clienteId`)}
+                        avulsoLabel="— Pessoa avulsa (preencher manualmente) —"
+                        placeholder="Buscar cliente por nome ou CPF..."
+                        onSelect={(c) => {
+                          setValue(`avalistas.${i}.clienteId`, c?.id ?? undefined)
+                          if (c) {
+                            setValue(`avalistas.${i}.nome`, c.nome)
+                            setValue(`avalistas.${i}.cpf`, c.cpf ?? '')
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Nome *</Label>
+                      <Input {...register(`avalistas.${i}.nome`)} placeholder="Nome completo" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>CPF</Label>
+                      <Input {...register(`avalistas.${i}.cpf`)} placeholder="000.000.000-00" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Telefone</Label>
+                      <Input {...register(`avalistas.${i}.telefone`)} placeholder="(00) 00000-0000" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Vínculo / Parentesco</Label>
+                      <Input {...register(`avalistas.${i}.parentesco`)} placeholder="ex: irmão, sócio" />
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="text-base">Referências de Contato</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="space-y-1.5">
+                <Label>Referência 1 — Nome</Label>
+                <Input {...register('referencia1Nome')} placeholder="Nome" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Telefone</Label>
+                <Input {...register('referencia1Telefone')} placeholder="(00) 00000-0000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Vínculo</Label>
+                <Input {...register('referencia1Vinculo')} placeholder="ex: vizinho" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="space-y-1.5">
+                <Label>Referência 2 — Nome</Label>
+                <Input {...register('referencia2Nome')} placeholder="Nome" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Telefone</Label>
+                <Input {...register('referencia2Telefone')} placeholder="(00) 00000-0000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Vínculo</Label>
+                <Input {...register('referencia2Vinculo')} placeholder="ex: colega" />
+              </div>
+            </div>
           </CardContent>
         </Card>
 

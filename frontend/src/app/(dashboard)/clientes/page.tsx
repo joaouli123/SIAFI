@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
-import { Plus, Search, RefreshCw, Eye, Pencil, Trash2, Users, UserCheck, X } from 'lucide-react'
+import { Plus, Search, RefreshCw, Eye, Pencil, Trash2, Users, UserCheck, X, StickyNote } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { formatCPF, formatPhone, formatDate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
@@ -34,6 +35,7 @@ interface Client {
   portalAtivo: boolean
   supabaseId: string | null
   consultor?: { id: number; nome: string } | null
+  observacoes?: string | null
 }
 
 interface ClientsResponse {
@@ -41,6 +43,26 @@ interface ClientsResponse {
   total: number
   page: number
   lastPage: number
+}
+
+function HoverObsPopover({ obs }: { obs: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        className="text-amber-500 hover:text-amber-600 cursor-pointer p-0.5"
+        aria-label="Ver observação"
+      >
+        <StickyNote className="size-3.5" />
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-80">
+        <p className="font-semibold mb-1 text-xs text-foreground uppercase tracking-wider">Observações do Cliente</p>
+        <p className="text-xs text-muted-foreground whitespace-pre-wrap">{obs}</p>
+      </PopoverContent>
+    </Popover>
+  )
 }
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -56,21 +78,28 @@ export default function ClientesPage() {
   const { user } = useAuth()
   const [searchInput, setSearchInput] = useState('')
   const [status, setStatus] = useState('')
+  const [consultorFilter, setConsultorFilter] = useState('')
   const [page, setPage] = useState(1)
   const [vincularClient, setVincularClient] = useState<Client | null>(null)
   const [selectedConsultorId, setSelectedConsultorId] = useState<string>('')
   const qc = useQueryClient()
 
   const search = useDebounce(searchInput, 400)
-  useEffect(() => { setPage(1) }, [search, status])
+  useEffect(() => { setPage(1) }, [search, status, consultorFilter])
 
   const canManage = user?.role === 'admin' || user?.role === 'financeiro'
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['clients', { search, status, page }],
+    queryKey: ['clients', { search, status, consultorFilter, page }],
     queryFn: () =>
       api.get<ClientsResponse>('/clients', {
-        params: { search: search || undefined, status: status || undefined, page, limit: 20 },
+        params: {
+          search: search || undefined,
+          status: status || undefined,
+          consultorId: consultorFilter || undefined,
+          page,
+          limit: 20,
+        },
       }).then((r) => r.data),
   })
 
@@ -139,9 +168,17 @@ export default function ClientesPage() {
             </div>
             <Select value={status} onChange={(e) => setStatus(e.target.value)} className="w-40">
               <option value="">Todos</option>
-              <option value="ativo">Ativos</option>
-              <option value="inativo">Inativos</option>
+              <option value="active">Ativos</option>
+              <option value="inactive">Inativos</option>
             </Select>
+            {canManage && (
+              <Select value={consultorFilter} onChange={(e) => setConsultorFilter(e.target.value)} className="w-48">
+                <option value="">Consultor: Todos</option>
+                {consultores?.map((c) => (
+                  <option key={c.id} value={String(c.id)}>{c.nome}</option>
+                ))}
+              </Select>
+            )}
             <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
               <RefreshCw className="size-3.5" />Atualizar
             </Button>
@@ -161,10 +198,10 @@ export default function ClientesPage() {
             <div className="p-8 text-center">
               <Users className="size-10 mx-auto text-muted-foreground mb-3" />
               <p className="text-muted-foreground text-sm font-medium">
-                {searchInput || status ? 'Nenhum resultado para o filtro aplicado.' : 'Nenhum cliente cadastrado ainda.'}
+                {searchInput || status || consultorFilter ? 'Nenhum resultado para o filtro aplicado.' : 'Nenhum cliente cadastrado ainda.'}
               </p>
-              {(searchInput || status) ? (
-                <Button variant="outline" size="sm" className="mt-3" onClick={() => { setSearchInput(''); setStatus('') }}>
+              {(searchInput || status || consultorFilter) ? (
+                <Button variant="outline" size="sm" className="mt-3" onClick={() => { setSearchInput(''); setStatus(''); setConsultorFilter('') }}>
                   Limpar filtros
                 </Button>
               ) : canManage ? (
@@ -180,18 +217,23 @@ export default function ClientesPage() {
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Nome</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Cadastro</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Portal</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground">Status</th>
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground">Obs</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.data.map((c) => (
                     <tr key={c.id} className="border-b border-border hover:bg-muted/20 transition-colors">
-                      <td className="px-4 py-3 font-medium">{c.nome}</td>
+                      <td className="px-4 py-3 font-medium">
+                        <div className="flex items-center gap-1.5">
+                          <span>{c.nome}</span>
+                        </div>
+                      </td>
                       <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
                         {c.cpf
                           ? formatCPF(c.cpf)
@@ -205,8 +247,8 @@ export default function ClientesPage() {
                           <span className="text-sm">{c.consultor.nome}</span>
                         ) : canManage ? (
                           <button
-                            onClick={() => { setVincularClient(c); setSelectedConsultorId('') }}
-                            className="text-xs text-primary hover:underline flex items-center gap-1"
+                              onClick={() => { setVincularClient(c); setSelectedConsultorId('') }}
+                              className="text-xs text-primary hover:underline flex items-center gap-1"
                           >
                             <UserCheck className="size-3" />Vincular
                           </button>
@@ -226,6 +268,13 @@ export default function ClientesPage() {
                         <Badge variant={c.active ? 'success' : 'outline'}>
                           {c.active ? 'Ativo' : 'Inativo'}
                         </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {c.observacoes ? (
+                          <HoverObsPopover obs={c.observacoes} />
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1">
@@ -260,7 +309,7 @@ export default function ClientesPage() {
             <div className="flex items-center justify-between px-4 py-3 border-t border-border flex-wrap gap-2">
               <p className="text-sm text-muted-foreground">
                 {data.total} cliente{data.total !== 1 ? 's' : ''}
-                {status === 'ativo' ? ' ativos' : status === 'inativo' ? ' inativos' : ''}
+                {status === 'active' ? ' ativos' : status === 'inactive' ? ' inativos' : ''}
               </p>
               {data.lastPage > 1 && (
                 <div className="flex gap-2">

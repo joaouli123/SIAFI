@@ -30,8 +30,8 @@ const SETTING_GROUPS = [
     icon: '💰',
     description: 'Taxas aplicadas automaticamente sobre inadimplência.',
     keys: [
-      { key: 'taxa_mora_diaria',    label: 'Mora diária (%)',      placeholder: '0.033', hint: 'Juros ao dia sobre saldo em atraso. Ex: 0.033 = 1% ao mês' },
-      { key: 'taxa_multa',          label: 'Multa por atraso (%)', placeholder: '2',     hint: 'Aplicada na primeira ocorrência de atraso' },
+      { key: 'financeiro.mora_dia_percentual',     label: 'Mora diária (%)',      placeholder: '0.033', hint: 'Juros ao dia sobre saldo em atraso. Ex: 0.033 = 1% ao mês' },
+      { key: 'financeiro.multa_atraso_percentual', label: 'Multa por atraso (%)', placeholder: '2',     hint: 'Aplicada na primeira ocorrência de atraso' },
       { key: 'dias_tolerancia',     label: 'Dias de tolerância',   placeholder: '0',     hint: 'Dias após vencimento antes de aplicar encargos' },
       { key: 'taxa_juros_padrao',   label: 'Taxa de juros padrão (%)', placeholder: '5', hint: 'Taxa pré-preenchida ao criar empréstimo' },
     ],
@@ -120,7 +120,7 @@ export default function ConfiguracoesPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2"><Settings className="size-6" />Configurações</h1>

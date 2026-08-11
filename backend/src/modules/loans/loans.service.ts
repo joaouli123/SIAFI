@@ -9,9 +9,12 @@ import { createHash } from 'crypto';
 import Decimal from 'decimal.js';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { PortalService } from '../client-portal/portal.service';
+import { InstallmentsService } from '../installments/installments.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { addMonthsSafe, calcularDataVencimento } from '../../common/utils/date.utils';
+import { baixasVivas, realizedLucro, splitParcela } from '../../common/commission';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { UpdateLoanDto } from './dto/update-loan.dto';
 import { LoanFilterDto } from './dto/loan-filter.dto';
@@ -22,6 +25,8 @@ Decimal.set({ precision: 20, rounding: Decimal.ROUND_HALF_UP });
 
 interface RequestContext {
   userId?: number;
+  role?: string;
+  consultorId?: number;
   ip?: string;
   userAgent?: string;
   loanStatus?: LoanStatus;   // padrão: 'ativo'; use 'aguardando_aceite' quando chamado via IntencaoService
@@ -33,6 +38,7 @@ export class LoansService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly portalService: PortalService,
+    private readonly installmentsService: InstallmentsService,
   ) {}
 
   // ─── Queries ────────────────────────────────────────────────────────────────
@@ -91,22 +97,49 @@ export class LoansService {
         },
         renegociacoes: { orderBy: { createdAt: 'desc' } },
         notifications: { orderBy: { createdAt: 'desc' }, take: 50 },
-        avalistas: {
-          orderBy: { id: 'asc' },
-          include: { cliente: { select: { id: true, nome: true, cpf: true } } },
-        },
         comissaoPagamentos: { orderBy: { dataPagamento: 'desc' } },
       },
     });
 
     if (!loan) throw new NotFoundException(`Empréstimo ${id} não encontrado`);
 
-    // Resumo da comissão do consultor (realizada via capital-primeiro × paga)
-    const pct = Number(loan.comissaoPercentual ?? 0);
-    const realizada = loan.installments.reduce(
-      (s, i) => s + (Math.max(0, Number(i.totalPago) - Number(i.principalPayback)) * pct) / 100,
-      0,
+    const installmentsComEncargos = await this.installmentsService.recalcularEncargosLista(
+      loan.installments,
+      loan.multaPercentual,
+      loan.moraDiariaPercentual,
     );
+
+    // Rateio REALIZADO de cada baixa (capital × lucro × comissão). As colunas Capital/Lucro
+    // da tabela de parcelas mostram o PLANO do contrato; sem isto o operador não tem onde ver
+    // que uma baixa parcial foi de fato dividida proporcionalmente à dívida atual.
+    (loan as Record<string, unknown>).installments = installmentsComEncargos.map((inst) => {
+      const vivas = baixasVivas(inst.payments);
+      const splits = splitParcela(vivas, {
+        principalPayback:   inst.principalPayback,
+        installmentAmount:  inst.installmentAmount,
+        comissaoPercentual: loan.comissaoPercentual,
+        comissaoAdministradorPercentual: loan.comissaoAdministradorPercentual,
+      });
+      const porBaixa = new Map(vivas.map((b, i) => [b.id, splits[i]]));
+      return {
+        ...inst,
+        payments: (inst.payments as { id: number }[]).map((p) => ({
+          ...p,
+          split: porBaixa.get(p.id) ?? null,
+        })),
+      };
+    });
+
+    // Resumo da comissão do consultor (realizada × paga). Usa a regra única de rateio:
+    // parcelas novas (proporcional) reconhecem o lucro conforme o pago; as demais, capital-primeiro.
+    const pct = Number(loan.comissaoPercentual ?? 0);
+    const realizada = loan.installments.reduce((s, i) => {
+      const lucro = realizedLucro(baixasVivas(i.payments), {
+        principalPayback:  i.principalPayback,
+        installmentAmount: i.installmentAmount,
+      });
+      return s + (lucro * pct) / 100;
+    }, 0);
     const paga = loan.comissaoPagamentos.reduce((s, c) => s + Number(c.valor), 0);
     const prevista = Number(loan.targetProfit) * (pct / 100);
     const saldo = realizada - paga;
@@ -134,8 +167,8 @@ export class LoansService {
       this.prisma.loan.count({ where: { status: 'ativo' } }),
       this.prisma.loan.count({ where: { status: 'quitado' } }),
       this.prisma.installment.aggregate({
-        where: { status: { in: ['pendente', 'atrasado'] } },
-        _sum: { installmentAmount: true },
+        where: { status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] } },
+        _sum: { saldoDevedor: true },
       }),
       this.prisma.payment.aggregate({
         where: {
@@ -145,7 +178,7 @@ export class LoansService {
         _sum: { valorPago: true },
       }),
       this.prisma.payment.aggregate({
-        where: { dataPagamento: { gte: startOfMonth, lte: endOfMonth } },
+        where: { dataPagamento: { gte: startOfMonth, lte: endOfMonth }, estornado: false },
         _sum: { desconto: true },
       }),
     ]);
@@ -154,7 +187,7 @@ export class LoansService {
       totalAtivos,
       totalQuitados,
       valorEmCarteira: new Decimal(
-        (carteiraResult._sum?.installmentAmount ?? '0').toString(),
+        (carteiraResult._sum?.saldoDevedor ?? '0').toString(),
       ).toFixed(2),
       valorRecebidoMes: new Decimal(
         (recebidoMesResult._sum?.valorPago ?? '0').toString(),
@@ -168,9 +201,36 @@ export class LoansService {
   // ─── Commands ───────────────────────────────────────────────────────────────
 
   async create(dto: CreateLoanDto, ctx: RequestContext = {}): Promise<unknown> {
-    const client = await this.prisma.client.findUnique({ where: { id: dto.clientId } });
+    if (ctx.role && ctx.role !== 'admin' && (dto.comissaoPercentual != null || dto.comissaoAdministradorPercentual != null)) {
+      throw new BadRequestException('Somente o administrador pode definir comissoes no contrato.');
+    }
+    const client = await this.prisma.client.findUnique({
+      where: { id: dto.clientId },
+      select: {
+        id: true,
+        active: true,
+        consultorId: true,
+        consultor: { select: { id: true, comissaoPercentual: true } },
+      },
+    });
     if (!client) throw new NotFoundException(`Cliente ${dto.clientId} não encontrado`);
     if (!client.active) throw new BadRequestException('Cliente inativo não pode contrair empréstimos');
+
+    // A comissão é fotografada no contrato no momento da criação. Alterar o cadastro
+    // do consultor/administrador depois não recalcula contratos já existentes.
+    const operador = ctx.userId
+      ? await this.prisma.user.findUnique({ where: { id: ctx.userId }, select: { id: true, role: true, comissaoPercentual: true } })
+      : null;
+    const consultorId = client.consultorId ?? ctx.consultorId ?? (operador?.role === 'consultor' ? operador.id : null);
+    const consultorCadastro = client.consultor
+      ?? (ctx.consultorId
+        ? await this.prisma.user.findUnique({ where: { id: ctx.consultorId }, select: { id: true, comissaoPercentual: true } })
+        : null);
+    const comissaoConsultor = dto.comissaoPercentual
+      ?? consultorCadastro?.comissaoPercentual
+      ?? (operador?.role === 'consultor' ? operador.comissaoPercentual : null);
+    const comissaoAdministrador = dto.comissaoAdministradorPercentual
+      ?? (operador?.role === 'admin' ? operador.comissaoPercentual : null);
 
     const principal = new Decimal(dto.principalAmount);
     const profit    = new Decimal(dto.targetProfit);
@@ -179,6 +239,9 @@ export class LoansService {
 
     if (principal.lte(0)) throw new BadRequestException('principalAmount deve ser positivo.');
     if (profit.lt(0))     throw new BadRequestException('targetProfit não pode ser negativo.');
+    if (Number(comissaoConsultor ?? 0) + Number(comissaoAdministrador ?? 0) > 100) {
+      throw new BadRequestException('As comissões do consultor e do administrador não podem ultrapassar 100% do lucro.');
+    }
 
     // ── Cálculo base de cada parcela (floor para evitar exceder o total) ────
     // basePrincipal e baseInstallment usam ROUND_DOWN independentemente;
@@ -206,7 +269,7 @@ export class LoansService {
     const vencDaParcela = (i: number): Date =>
       primeiroVenc
         ? addMonthsSafe(primeiroVenc, i)
-        : calcularDataVencimento(new Date(dto.dataInicio), i + 1, dto.diaVencimento);
+        : calcularDataVencimento(dataLocal(dto.dataInicio), i + 1, dto.diaVencimento);
 
     // ── Geração das parcelas ────────────────────────────────────────────────
     const installments = Array.from({ length: n }, (_, i) => {
@@ -235,46 +298,26 @@ export class LoansService {
       const loan = await tx.loan.create({
         data: {
           clientId:                dto.clientId,
-          consultorId:             ctx.userId ?? null,
+          consultorId,
           principalAmount:         principal.toDecimalPlaces(2).toNumber(),
           targetProfit:            profit.toDecimalPlaces(2).toNumber(),
           totalReceivable:         total.toDecimalPlaces(2).toNumber(),
           numeroParcelas:          n,
           metodoPagamento:         dto.metodoPagamento ?? null,
-          dataInicio:              new Date(dto.dataInicio),
+          dataInicio:              dataLocal(dto.dataInicio),
           observacoes:             dto.observacoes ?? null,
           status:                  ctx.loanStatus ?? 'ativo',
           aceiteExpiraEm:          ctx.aceiteExpiraEm ?? null,
           diaVencimento:           dto.diaVencimento ?? null,
           multaPercentual:         dto.multaPercentual ?? null,
           moraDiariaPercentual:    dto.moraDiariaPercentual ?? null,
-          comissaoPercentual:      dto.comissaoPercentual ?? null,
+          comissaoPercentual:      comissaoConsultor,
+          comissaoAdministradorPercentual: comissaoAdministrador,
           descontoQuitacaoPercentual: dto.descontoQuitacaoPercentual ?? null,
           diasAntecedenciaCobranca: dto.diasAntecedenciaCobranca ?? 10,
           cobrarWhatsapp:          dto.cobrarWhatsapp ?? true,
           cobrarEmail:             dto.cobrarEmail ?? true,
           cobrarPortal:            dto.cobrarPortal ?? true,
-          referencia1Nome:         dto.referencia1Nome ?? null,
-          referencia1Telefone:     dto.referencia1Telefone ?? null,
-          referencia1Vinculo:      dto.referencia1Vinculo ?? null,
-          referencia2Nome:         dto.referencia2Nome ?? null,
-          referencia2Telefone:     dto.referencia2Telefone ?? null,
-          referencia2Vinculo:      dto.referencia2Vinculo ?? null,
-          avalistas: dto.avalistas?.length
-            ? {
-                create: dto.avalistas
-                  .filter((a) => a.clienteId !== dto.clientId) // cliente não pode ser avalista de si mesmo
-                  .map((a) => ({
-                  clienteId:  a.clienteId ?? null,
-                  nome:       a.nome,
-                  cpf:        a.cpf ?? null,
-                  telefone:   a.telefone ?? null,
-                  email:      a.email ?? null,
-                  endereco:   a.endereco ?? null,
-                  parentesco: a.parentesco ?? null,
-                })),
-              }
-            : undefined,
         },
       });
 
@@ -313,6 +356,9 @@ export class LoansService {
   // Campos financeiros disparam regeneração das parcelas pendentes/atrasadas.
   // Parcelas pagas, parcialmente pagas ou canceladas são SEMPRE preservadas.
   async update(id: number, dto: UpdateLoanDto, ctx: RequestContext = {}): Promise<unknown> {
+    if (ctx.role && ctx.role !== 'admin' && (dto.comissaoPercentual != null || dto.comissaoAdministradorPercentual != null)) {
+      throw new BadRequestException('Somente o administrador pode alterar comissoes no contrato.');
+    }
     const loan = await this.prisma.loan.findUnique({
       where: { id },
       include: { installments: { orderBy: { numero: 'asc' } } },
@@ -325,7 +371,7 @@ export class LoansService {
     const newPrincipal  = dto.principalAmount != null ? new Decimal(dto.principalAmount) : new Decimal(loan.principalAmount.toString());
     const newProfit     = dto.targetProfit   != null ? new Decimal(dto.targetProfit)    : new Decimal(loan.targetProfit.toString());
     const newN          = dto.numeroParcelas ?? loan.numeroParcelas;
-    const newDataInicio = dto.dataInicio ? new Date(dto.dataInicio) : loan.dataInicio;
+    const newDataInicio = dto.dataInicio ? dataLocal(dto.dataInicio) : loan.dataInicio;
     const newDiaVenc    = dto.diaVencimento !== undefined ? dto.diaVencimento : loan.diaVencimento;
     // Data do 1º vencimento (parse local, como no create); quando informada, redefine
     // o cronograma das parcelas pendentes (1ª pendente nessa data, demais mensais).
@@ -335,6 +381,16 @@ export class LoansService {
 
     if (newPrincipal.lte(0)) throw new BadRequestException('principalAmount deve ser positivo.');
     if (newProfit.lt(0))     throw new BadRequestException('targetProfit não pode ser negativo.');
+    if (Number(dto.comissaoPercentual ?? loan.comissaoPercentual ?? 0) + Number(dto.comissaoAdministradorPercentual ?? loan.comissaoAdministradorPercentual ?? 0) > 100) {
+      throw new BadRequestException('As comissões do consultor e do administrador não podem ultrapassar 100% do lucro.');
+    }
+
+    const comissaoConsultorFinal =
+      dto.comissaoPercentual !== undefined ? dto.comissaoPercentual : loan.comissaoPercentual;
+    const comissaoAdministradorFinal =
+      dto.comissaoAdministradorPercentual !== undefined
+        ? dto.comissaoAdministradorPercentual
+        : loan.comissaoAdministradorPercentual;
 
     const newTotal = newPrincipal.plus(newProfit);
 
@@ -421,9 +477,12 @@ export class LoansService {
       numeroParcelas:  loan.numeroParcelas,
       dataInicio:      loan.dataInicio.toISOString(),
       status:          loan.status,
+      comissaoPercentual: loan.comissaoPercentual?.toString() ?? null,
+      comissaoAdministradorPercentual: loan.comissaoAdministradorPercentual?.toString() ?? null,
     };
 
     await this.prisma.$transaction(async (tx) => {
+      let baixasComissaoSincronizadas = 0;
       await tx.loan.update({
         where: { id },
         data: {
@@ -437,20 +496,30 @@ export class LoansService {
           observacoes:          dto.observacoes !== undefined ? dto.observacoes : loan.observacoes,
           multaPercentual:      dto.multaPercentual !== undefined ? dto.multaPercentual : loan.multaPercentual,
           moraDiariaPercentual: dto.moraDiariaPercentual !== undefined ? dto.moraDiariaPercentual : loan.moraDiariaPercentual,
-          comissaoPercentual:   dto.comissaoPercentual !== undefined ? dto.comissaoPercentual : loan.comissaoPercentual,
+          comissaoPercentual:   comissaoConsultorFinal,
+          comissaoAdministradorPercentual: comissaoAdministradorFinal,
           descontoQuitacaoPercentual: dto.descontoQuitacaoPercentual !== undefined ? dto.descontoQuitacaoPercentual : loan.descontoQuitacaoPercentual,
           diasAntecedenciaCobranca: dto.diasAntecedenciaCobranca ?? loan.diasAntecedenciaCobranca,
           cobrarWhatsapp:       dto.cobrarWhatsapp ?? loan.cobrarWhatsapp,
           cobrarEmail:          dto.cobrarEmail ?? loan.cobrarEmail,
           cobrarPortal:         dto.cobrarPortal ?? loan.cobrarPortal,
-          referencia1Nome:      dto.referencia1Nome     !== undefined ? dto.referencia1Nome     : loan.referencia1Nome,
-          referencia1Telefone:  dto.referencia1Telefone !== undefined ? dto.referencia1Telefone : loan.referencia1Telefone,
-          referencia1Vinculo:   dto.referencia1Vinculo  !== undefined ? dto.referencia1Vinculo  : loan.referencia1Vinculo,
-          referencia2Nome:      dto.referencia2Nome     !== undefined ? dto.referencia2Nome     : loan.referencia2Nome,
-          referencia2Telefone:  dto.referencia2Telefone !== undefined ? dto.referencia2Telefone : loan.referencia2Telefone,
-          referencia2Vinculo:   dto.referencia2Vinculo  !== undefined ? dto.referencia2Vinculo  : loan.referencia2Vinculo,
         },
       });
+
+      if (dto.comissaoPercentual !== undefined || dto.comissaoAdministradorPercentual !== undefined) {
+        const comissaoBaixa: Prisma.PaymentUpdateManyMutationInput = {};
+        if (dto.comissaoPercentual !== undefined) {
+          comissaoBaixa.comissaoPercentual = comissaoConsultorFinal;
+        }
+        if (dto.comissaoAdministradorPercentual !== undefined) {
+          comissaoBaixa.comissaoAdministradorPercentual = comissaoAdministradorFinal;
+        }
+        const sincronizacao = await tx.payment.updateMany({
+          where: { estornado: false, installment: { is: { loanId: id } } },
+          data: comissaoBaixa,
+        });
+        baixasComissaoSincronizadas = sincronizacao.count;
+      }
 
       if (cronogramaMudou) {
         await tx.installment.deleteMany({
@@ -458,26 +527,6 @@ export class LoansService {
         });
         if (novasParcelas.length) {
           await tx.installment.createMany({ data: novasParcelas as Prisma.InstallmentCreateManyInput[] });
-        }
-      }
-
-      if (dto.avalistas !== undefined) {
-        await tx.avalista.deleteMany({ where: { loanId: id } });
-        if (dto.avalistas.length) {
-          await tx.avalista.createMany({
-            data: dto.avalistas
-              .filter((a) => a.clienteId !== loan.clientId) // cliente não pode ser avalista de si mesmo
-              .map((a) => ({
-              loanId:     id,
-              clienteId:  a.clienteId ?? null,
-              nome:       a.nome,
-              cpf:        a.cpf ?? null,
-              telefone:   a.telefone ?? null,
-              email:      a.email ?? null,
-              endereco:   a.endereco ?? null,
-              parentesco: a.parentesco ?? null,
-            })),
-          });
         }
       }
 
@@ -495,6 +544,9 @@ export class LoansService {
           cronogramaRegenerado: cronogramaMudou,
           parcelasPreservadas:  travadas.length,
           parcelasRegeneradas:  novasParcelas.length,
+          comissaoPercentual: comissaoConsultorFinal?.toString() ?? null,
+          comissaoAdministradorPercentual: comissaoAdministradorFinal?.toString() ?? null,
+          baixasComissaoSincronizadas,
         },
       });
     });
@@ -524,7 +576,7 @@ export class LoansService {
           loanId,
           consultorId:   loan.consultorId ?? null,
           valor:         valor.toDecimalPlaces(2).toNumber(),
-          dataPagamento: new Date(dto.dataPagamento),
+          dataPagamento: dataLocal(dto.dataPagamento),
           observacao:    dto.observacao ?? null,
           registradoPor: ctx.userId ?? null,
         },
@@ -535,7 +587,7 @@ export class LoansService {
           valor:     valor.toDecimalPlaces(2).toNumber(),
           descricao: `Comissão consultor — Contrato #${loanId} · ${loan.client.nome}${dto.observacao ? ` — ${dto.observacao}` : ''}`,
           categoria: 'Comissão Consultor',
-          data:      new Date(dto.dataPagamento),
+          data:      dataLocal(dto.dataPagamento),
           userId:    ctx.userId ?? null,
         },
       });
@@ -664,7 +716,7 @@ export class LoansService {
       throw new BadRequestException('Contrato não está aguardando liberação de capital.');
     }
 
-    const dataLib = dto.dataLiberacao ? new Date(dto.dataLiberacao) : new Date();
+    const dataLib = dto.dataLiberacao ? dataLocal(dto.dataLiberacao) : new Date();
 
     await this.prisma.$transaction(async (tx) => {
       // 1. Ativar o contrato
@@ -811,11 +863,20 @@ export class LoansService {
   // from loans and installments returned to users with role 'caixa'.
   private sanitizeForCaixa(loan: Record<string, unknown>): Record<string, unknown> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { targetProfit, principalAmount, comissaoResumo, comissaoPagamentos, comissaoPercentual, ...loanRest } = loan as Record<string, unknown>;
+    const { targetProfit, principalAmount, comissaoResumo, comissaoPagamentos, comissaoPercentual, comissaoAdministradorPercentual, ...loanRest } = loan as Record<string, unknown>;
     if (Array.isArray(loanRest['installments'])) {
       loanRest['installments'] = (loanRest['installments'] as Record<string, unknown>[]).map(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ principalPayback, netGain, ...instRest }) => instRest,
+        ({ principalPayback, netGain, ...instRest }) => {
+          // O split por baixa (capital/lucro/comissão) é informação interna.
+          if (Array.isArray(instRest['payments'])) {
+            instRest['payments'] = (instRest['payments'] as Record<string, unknown>[]).map(
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              ({ split, ...payRest }) => payRest,
+            );
+          }
+          return instRest;
+        },
       );
     }
     return loanRest;

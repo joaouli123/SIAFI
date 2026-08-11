@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useState } from 'react'
-import { ArrowLeft, XCircle, RefreshCcw, QrCode, DollarSign, FileDown, TrendingUp, Mail, Pencil, Users, Phone, Percent, Plus, Undo2, CheckCircle } from 'lucide-react'
+import { ArrowLeft, XCircle, RefreshCcw, QrCode, DollarSign, FileDown, TrendingUp, Mail, Pencil, Percent, Plus, Undo2, CheckCircle, History, ChevronDown, ChevronRight, Tag } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,10 +12,17 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { formatCurrency, formatDate, STATUS_LOAN, STATUS_INSTALLMENT, METODO_PAGAMENTO } from '@/lib/utils'
+import { formatCurrency, formatDate, formatDateLocal, STATUS_LOAN, STATUS_INSTALLMENT, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 
+interface Payment {
+  id: number; valorPago: number; valorDevido?: number | null
+  dataPagamento: string; metodoPagamento: string
+  desconto: number; descontoTipo?: string | null; descontoMotivo?: string | null
+  estornado: boolean; contaDestino?: string | null; observacao?: string | null
+  split?: { capital: number; lucro: number; comissao: number; comissaoAdministrador?: number; lucroEmpresa: number; comissaoPercentual: number; comissaoAdministradorPercentual?: number } | null
+}
 interface Installment {
   id: number; numero: number; installmentAmount: number; dataVencimento: string
   status: string; totalPago: number; principalPayback: number; netGain: number
@@ -23,11 +30,7 @@ interface Installment {
   cobrancaEnviadaEm?: string | null
   cobrancaWhatsappOk: boolean; cobrancaEmailOk: boolean; cobrancaPortalOk: boolean
   multaAplicada: number; valorComEncargos?: number | null
-}
-interface Avalista {
-  id: number; nome: string; cpf?: string | null; telefone?: string | null
-  parentesco?: string | null; clienteId?: number | null
-  cliente?: { id: number; nome: string; cpf?: string | null } | null
+  payments?: Payment[]
 }
 interface ComissaoPagamento {
   id: number; valor: number; dataPagamento: string; observacao?: string | null
@@ -42,12 +45,10 @@ interface Loan {
   numeroParcelas: number; dataInicio: string; status: string
   observacoes?: string | null; metodoPagamento?: string | null
   comissaoPercentual?: number | null
+  comissaoAdministradorPercentual?: number | null
   descontoQuitacaoPercentual?: number | null
   comissaoResumo?: ComissaoResumo
   comissaoPagamentos?: ComissaoPagamento[]
-  referencia1Nome?: string | null; referencia1Telefone?: string | null; referencia1Vinculo?: string | null
-  referencia2Nome?: string | null; referencia2Telefone?: string | null; referencia2Vinculo?: string | null
-  avalistas?: Avalista[]
   client: { id: number; nome: string; cpf: string }
   installments: Installment[]
   consultor?: { id: number; nome: string } | null
@@ -60,18 +61,26 @@ export default function EmprestimoDetalhePage() {
   const [payInstallmentId, setPayInstallmentId] = useState<number | null>(null)
   const [valorPago, setValorPago] = useState('')
   const [metodo, setMetodo] = useState('dinheiro')
-  const [dataPagamento, setDataPagamento] = useState(new Date().toISOString().split('T')[0])
+  const [dataPagamento, setDataPagamento] = useState(hojeISODate())
   const [contaDestino, setContaDestino] = useState('')
   const [descPago, setDescPago] = useState('')
   const [descTipo, setDescTipo] = useState<'saldo' | 'encargos'>('saldo')
   const [descMotivo, setDescMotivo] = useState('')
+  const [comissaoRecebimento, setComissaoRecebimento] = useState('')
+  const [comissaoAdminRecebimento, setComissaoAdminRecebimento] = useState('')
   const [activeTab, setActiveTab] = useState<'parcelas' | 'cobrancas'>('parcelas')
+  const [expandedPayments, setExpandedPayments] = useState<Set<number>>(new Set())
+  const togglePayments = (id: number) => setExpandedPayments(prev => {
+    const next = new Set(prev)
+    next.has(id) ? next.delete(id) : next.add(id)
+    return next
+  })
   const [showComForm, setShowComForm] = useState(false)
   const [comValor, setComValor] = useState('')
-  const [comData, setComData] = useState(new Date().toISOString().split('T')[0])
+  const [comData, setComData] = useState(hojeISODate())
   const [comObs, setComObs] = useState('')
   const [showQuitar, setShowQuitar] = useState(false)
-  const [qData, setQData] = useState(new Date().toISOString().split('T')[0])
+  const [qData, setQData] = useState(hojeISODate())
   const [qMetodo, setQMetodo] = useState('dinheiro')
   const [qConta, setQConta] = useState('')
   const [qPct, setQPct] = useState('')
@@ -95,7 +104,7 @@ export default function EmprestimoDetalhePage() {
   })
 
   const payMut = useMutation({
-    mutationFn: (data: { installmentId: number; valorPago: number; metodoPagamento: string; dataPagamento: string; contaDestino?: string; desconto?: number; descontoTipo?: string; descontoMotivo?: string }) =>
+    mutationFn: (data: { installmentId: number; valorPago: number; metodoPagamento: string; dataPagamento: string; contaDestino?: string; desconto?: number; descontoTipo?: string; descontoMotivo?: string; comissaoPercentual?: number; comissaoAdministradorPercentual?: number }) =>
       api.post('/payments', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['loans', id] })
@@ -103,6 +112,7 @@ export default function EmprestimoDetalhePage() {
       setValorPago('')
       setContaDestino('')
       setDescPago(''); setDescMotivo('')
+      setComissaoRecebimento(''); setComissaoAdminRecebimento('')
     },
   })
 
@@ -137,10 +147,14 @@ export default function EmprestimoDetalhePage() {
 
   function handlePay(inst: Installment) {
     setPayInstallmentId(inst.id)
-    // Pré-preenche com saldo devedor + mora acumulada (total para quitar)
-    const totalParaQuitar = Number(inst.saldoDevedor) + Number(inst.moraAcumulada)
+    // Pré-preenche com o total para quitar (saldo + encargos: multa + mora),
+    // idêntico ao exibido em /parcelas e no recibo de pagamento.
+    const totalParaQuitar =
+      Number(inst.saldoDevedor) + Number(inst.moraAcumulada) + Number(inst.multaAplicada)
     setValorPago(totalParaQuitar.toFixed(2))
     setDescPago(''); setDescMotivo(''); setDescTipo('saldo')
+    setComissaoRecebimento(loan?.comissaoPercentual != null ? String(Number(loan.comissaoPercentual)) : '')
+    setComissaoAdminRecebimento(loan?.comissaoAdministradorPercentual != null ? String(Number(loan.comissaoAdministradorPercentual)) : '')
   }
 
   function submitPay() {
@@ -155,11 +169,13 @@ export default function EmprestimoDetalhePage() {
       desconto: desc > 0 ? desc : undefined,
       descontoTipo: desc > 0 ? descTipo : undefined,
       descontoMotivo: desc > 0 ? (descMotivo.trim() || undefined) : undefined,
+      comissaoPercentual: user?.role === 'admin' && comissaoRecebimento !== '' ? Number(comissaoRecebimento) : undefined,
+      comissaoAdministradorPercentual: user?.role === 'admin' && comissaoAdminRecebimento !== '' ? Number(comissaoAdminRecebimento) : undefined,
     })
   }
 
   if (isLoading) return (
-    <div className="space-y-4 max-w-4xl">
+    <div className="space-y-4 w-full">
       <Skeleton className="h-8 w-48" /><Skeleton className="h-48 w-full" /><Skeleton className="h-64 w-full" />
     </div>
   )
@@ -172,36 +188,40 @@ export default function EmprestimoDetalhePage() {
 
   const st = STATUS_LOAN[loan.status] ?? { label: loan.status, variant: 'outline' as const }
   const totalPago = loan.installments.reduce((s, i) => s + Number(i.totalPago), 0)
-  const pendente = Number(loan.totalReceivable) - totalPago
+  // Pendente = total a cobrar AGORA (saldo + encargos) das parcelas em aberto,
+  // coerente com a coluna "Saldo" da mesma tela e com /parcelas.
+  const pendente = loan.installments
+    .filter((i) => i.status !== 'pago' && i.status !== 'cancelado')
+    .reduce((s, i) => s + Number(i.valorComEncargos ?? Math.max(0, Number(i.installmentAmount) - Number(i.totalPago))), 0)
   const margemPct = Number(loan.principalAmount) > 0
     ? ((Number(loan.targetProfit) / Number(loan.principalAmount)) * 100).toFixed(1)
     : '0.0'
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-4">
-          <Link href="/emprestimos"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
-          <div>
+    <div className="space-y-6 w-full">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold tracking-tight">Empréstimo #{loan.id}</h1>
-            <p className="text-muted-foreground text-sm">
-              <Link href={`/clientes/${loan.client?.id}`} className="hover:underline">{loan.client?.nome}</Link>
-              {' · '}Início em {formatDate(loan.dataInicio)}
-            </p>
+            <Badge variant={st.variant} className="text-sm px-2 py-0.5">{st.label}</Badge>
           </div>
+          <p className="text-muted-foreground text-sm mt-1">
+            <Link href={`/clientes/${loan.client?.id}`} className="hover:underline">{loan.client?.nome}</Link>
+            {' · '}Início em {formatDateLocal(loan.dataInicio)}
+            {loan.consultor?.nome ? <span className="text-muted-foreground/60"> · Cons: {loan.consultor.nome}</span> : ''}
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge variant={st.variant}>{st.label}</Badge>
-          <Button size="sm" variant="outline" className="gap-1" onClick={baixarContrato}>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button size="sm" variant="outline" className="gap-1 shadow-sm" onClick={baixarContrato}>
             <FileDown className="size-3.5" />PDF
           </Button>
           {loan.status !== 'cancelado' && (
             <Link href={`/emprestimos/${loan.id}/editar`}>
-              <Button size="sm" variant="outline" className="gap-1"><Pencil className="size-3.5" />Editar</Button>
+              <Button size="sm" variant="outline" className="gap-1 shadow-sm"><Pencil className="size-3.5" />Editar</Button>
             </Link>
           )}
           {loan.status === 'aguardando_aceite' && (
-            <Button size="sm" variant="outline" className="gap-1"
+            <Button size="sm" variant="outline" className="gap-1 shadow-sm"
               onClick={() => { if (confirm('Reenviar link de aceite para o cliente?')) reenviarAceiteMut.mutate() }}
               disabled={reenviarAceiteMut.isPending}>
               <Mail className="size-3.5" />{reenviarAceiteMut.isPending ? 'Enviando...' : 'Reenviar Aceite'}
@@ -210,13 +230,13 @@ export default function EmprestimoDetalhePage() {
           {(loan.status === 'ativo' || loan.status === 'inadimplente') && (
             <>
               <Link href={`/renegociacoes/nova?loanId=${loan.id}`}>
-                <Button size="sm" variant="outline" className="gap-1"><RefreshCcw className="size-3.5" />Renegociar</Button>
+                <Button size="sm" variant="outline" className="gap-1 shadow-sm"><RefreshCcw className="size-3.5" />Renegociar</Button>
               </Link>
-              <Button size="sm" variant="outline" className="gap-1 text-green-700 dark:text-green-400 border-green-300"
+              <Button size="sm" variant="outline" className="gap-1 text-green-700 dark:text-green-400 border-green-300 shadow-sm"
                 onClick={() => { setQPct(loan.descontoQuitacaoPercentual != null ? String(loan.descontoQuitacaoPercentual) : ''); setShowQuitar(v => !v) }}>
                 <CheckCircle className="size-3.5" />Quitar contrato
               </Button>
-              <Button size="sm" variant="destructive" className="gap-1"
+              <Button size="sm" variant="destructive" className="gap-1 shadow-sm"
                 onClick={() => { if (confirm('Cancelar empréstimo?')) cancelMut.mutate() }}
                 disabled={cancelMut.isPending}>
                 <XCircle className="size-3.5" />Cancelar
@@ -249,7 +269,7 @@ export default function EmprestimoDetalhePage() {
                 <div className="space-y-1.5"><Label>% Desconto (sobre lucro)</Label><Input type="number" step="0.01" min="0" max="100" value={qPct} onChange={(e) => setQPct(e.target.value)} placeholder="0" /></div>
                 <div className="space-y-1.5"><Label>Data</Label><Input type="date" value={qData} onChange={(e) => setQData(e.target.value)} /></div>
                 <div className="space-y-1.5"><Label>Método</Label><Select value={qMetodo} onChange={(e) => setQMetodo(e.target.value)}>{Object.entries(METODO_PAGAMENTO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</Select></div>
-                <div className="space-y-1.5"><Label>Conta / Detalhes</Label><Input value={qConta} onChange={(e) => setQConta(e.target.value)} placeholder="opcional" /></div>
+                <div className="space-y-1.5"><Label>Bco Recebedor</Label><Input value={qConta} onChange={(e) => setQConta(e.target.value)} placeholder="opcional" /></div>
               </div>
               <div className="flex gap-2">
                 <Button className="bg-green-600 hover:bg-green-700 gap-2" disabled={quitarMut.isPending}
@@ -303,61 +323,6 @@ export default function EmprestimoDetalhePage() {
         </CardContent>
       </Card>
 
-      {((loan.avalistas && loan.avalistas.length > 0) || loan.referencia1Nome || loan.referencia2Nome) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {loan.avalistas && loan.avalistas.length > 0 && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center gap-2"><Users className="size-4" />Avalistas</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                {loan.avalistas.map((a) => (
-                  <div key={a.id} className="rounded-lg border p-3">
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium">
-                        {a.cliente ? (
-                          <Link href={`/clientes/${a.cliente.id}`} className="hover:underline text-primary">{a.nome}</Link>
-                        ) : a.nome}
-                      </p>
-                      {a.cliente && <Badge variant="outline" className="text-[10px]">cliente</Badge>}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-0.5">
-                      {a.cpf && <span>CPF: {a.cpf}</span>}
-                      {a.telefone && <span>Tel: {a.telefone}</span>}
-                      {a.parentesco && <span>Vínculo: {a.parentesco}</span>}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
-          {(loan.referencia1Nome || loan.referencia2Nome) && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center gap-2"><Phone className="size-4" />Referências</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                {[1, 2].map((n) => {
-                  const nome = (loan as any)[`referencia${n}Nome`]
-                  const tel = (loan as any)[`referencia${n}Telefone`]
-                  const vinc = (loan as any)[`referencia${n}Vinculo`]
-                  if (!nome) return null
-                  return (
-                    <div key={n} className="rounded-lg border p-3">
-                      <p className="font-medium">{nome}</p>
-                      <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-0.5">
-                        {tel && <span>Tel: {tel}</span>}
-                        {vinc && <span>Vínculo: {vinc}</span>}
-                      </div>
-                    </div>
-                  )
-                })}
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
-
       {canSeeSplit && (
         <Card className="border-indigo-200 bg-indigo-50/50 dark:bg-indigo-950/20 dark:border-indigo-900">
           <CardHeader className="pb-2">
@@ -388,7 +353,7 @@ export default function EmprestimoDetalhePage() {
                 <p className="font-medium">{loan.consultor.nome}</p>
               </div>
             )}
-            {Number(loan.comissaoPercentual ?? 0) > 0 && (
+            {(Number(loan.comissaoPercentual ?? 0) > 0 || Number(loan.comissaoAdministradorPercentual ?? 0) > 0) && (
               <>
                 <div>
                   <p className="text-muted-foreground">Comissão Consultor</p>
@@ -399,9 +364,18 @@ export default function EmprestimoDetalhePage() {
                 <div>
                   <p className="text-muted-foreground">Lucro da Empresa</p>
                   <p className="font-bold text-base text-blue-700 dark:text-blue-400">
-                    {formatCurrency(Number(loan.targetProfit) * (1 - Number(loan.comissaoPercentual) / 100))}
+                    {formatCurrency(Number(loan.targetProfit) * (1 - (Number(loan.comissaoPercentual ?? 0) + Number(loan.comissaoAdministradorPercentual ?? 0)) / 100))}
                   </p>
+                  <p className="text-xs text-muted-foreground">Lucro Geral − comissão do consultor − comissão do administrador</p>
                 </div>
+                {Number(loan.comissaoAdministradorPercentual ?? 0) > 0 && (
+                  <div>
+                    <p className="text-muted-foreground">Comissão Administrador</p>
+                    <p className="font-bold text-base text-violet-700 dark:text-violet-400">
+                      {Number(loan.comissaoAdministradorPercentual).toFixed(2)}% · {formatCurrency(Number(loan.targetProfit) * Number(loan.comissaoAdministradorPercentual) / 100)}
+                    </p>
+                  </div>
+                )}
               </>
             )}
           </CardContent>
@@ -562,8 +536,8 @@ export default function EmprestimoDetalhePage() {
         </CardHeader>
 
         {activeTab === 'cobrancas' && (
-          <CardContent className="p-0">
-            <table className="w-full text-sm">
+          <CardContent className="p-0 overflow-x-auto">
+            <table className="w-full text-sm min-w-[700px]">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
                   <th className="text-left px-4 py-2 font-medium text-muted-foreground">#</th>
@@ -580,7 +554,7 @@ export default function EmprestimoDetalhePage() {
                 {loan.installments.map((inst) => (
                   <tr key={inst.id} className="border-b border-border hover:bg-muted/20">
                     <td className="px-4 py-2 text-muted-foreground">{inst.numero}</td>
-                    <td className="px-4 py-2">{formatDate(inst.dataVencimento)}</td>
+                    <td className="px-4 py-2">{formatDateLocal(inst.dataVencimento)}</td>
                     <td className="px-4 py-2 text-muted-foreground">
                       {inst.cobrancaEnviadaEm ? formatDate(inst.cobrancaEnviadaEm) : <span className="text-xs text-muted-foreground">—</span>}
                     </td>
@@ -604,8 +578,8 @@ export default function EmprestimoDetalhePage() {
           </CardContent>
         )}
 
-        {activeTab === 'parcelas' && <CardContent className="p-0">
-          <table className="w-full text-sm">
+        {activeTab === 'parcelas' && <CardContent className="p-0 overflow-x-auto">
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="border-b border-border bg-muted/30">
                 <th className="text-left px-4 py-2 font-medium text-muted-foreground">#</th>
@@ -615,7 +589,7 @@ export default function EmprestimoDetalhePage() {
                 {canSeeSplit && <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Lucro</th>}
                 <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden md:table-cell">Pago</th>
                 <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden md:table-cell">Saldo</th>
-                <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Mora</th>
+                <th className="text-right px-4 py-2 font-medium text-muted-foreground hidden lg:table-cell">Encargos</th>
                 <th className="text-center px-4 py-2 font-medium text-muted-foreground">Status</th>
                 <th className="text-right px-4 py-2 font-medium text-muted-foreground">Ação</th>
               </tr>
@@ -630,10 +604,11 @@ export default function EmprestimoDetalhePage() {
                 const vencD = new Date(inst.dataVencimento); vencD.setHours(0, 0, 0, 0)
                 const vencida = emAberto && vencD < hojeD
                 const venceHoje = emAberto && vencD.getTime() === hojeD.getTime()
+                const temHistorico = inst.payments && inst.payments.filter(p => !p.estornado).length > 0
                 return (
                   <tr key={inst.id} className={`border-b border-border hover:bg-muted/20 ${isParcial ? 'bg-amber-50/50 dark:bg-amber-950/10' : ''}`}>
                     <td className="px-4 py-2 text-muted-foreground">{inst.numero}</td>
-                    <td className={`px-4 py-2 font-medium ${vencida ? 'text-destructive' : venceHoje ? 'text-amber-600' : ''}`}>{formatDate(inst.dataVencimento)}</td>
+                    <td className={`px-4 py-2 font-medium ${vencida ? 'text-destructive' : venceHoje ? 'text-amber-600' : ''}`}>{formatDateLocal(inst.dataVencimento)}</td>
                     <td className="px-4 py-2 text-right font-medium">{formatCurrency(Number(inst.installmentAmount))}</td>
                     {canSeeSplit && (
                       <td className="px-4 py-2 text-right text-blue-700 dark:text-blue-400 hidden lg:table-cell">
@@ -649,18 +624,41 @@ export default function EmprestimoDetalhePage() {
                       {Number(inst.totalPago) > 0 ? formatCurrency(Number(inst.totalPago)) : '—'}
                     </td>
                     <td className="px-4 py-2 text-right hidden md:table-cell">
-                      {Number(inst.saldoDevedor) > 0
-                        ? <span className="text-red-600 font-medium">{formatCurrency(Number(inst.saldoDevedor))}</span>
-                        : <span className="text-muted-foreground">—</span>}
+                      {Number(inst.saldoDevedor) > 0 ? (
+                        <>
+                          <span className="text-red-600 font-medium">
+                            {formatCurrency(Number(inst.valorComEncargos ?? inst.saldoDevedor))}
+                          </span>
+                          {(Number(inst.moraAcumulada) + Number(inst.multaAplicada)) > 0 && (
+                            <span className="block text-[10px] text-muted-foreground font-normal">
+                              base {formatCurrency(Number(inst.saldoDevedor))}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-2 text-right hidden lg:table-cell">
-                      {Number(inst.moraAcumulada) > 0
-                        ? <span className="text-orange-600 text-xs">{formatCurrency(Number(inst.moraAcumulada))}</span>
+                      {(Number(inst.moraAcumulada) + Number(inst.multaAplicada)) > 0
+                        ? <span className="text-orange-600 text-xs">{formatCurrency(Number(inst.moraAcumulada) + Number(inst.multaAplicada))}</span>
                         : <span className="text-muted-foreground text-xs">—</span>}
                     </td>
                     <td className="px-4 py-2 text-center"><Badge variant={ist.variant}>{ist.label}</Badge></td>
                     <td className="px-4 py-2 text-right">
-                      <div className="flex justify-end gap-1">
+                      <div className="flex justify-end gap-1 whitespace-nowrap">
+                        {/* Botão histórico de pagamentos */}
+                        {temHistorico && (
+                          <Button
+                            size="sm" variant="ghost"
+                            className="h-7 gap-1 text-xs text-muted-foreground hover:text-blue-600"
+                            onClick={() => togglePayments(inst.id)}
+                            title="Ver histórico de baixas"
+                          >
+                            <History className="size-3" />
+                            {expandedPayments.has(inst.id) ? <ChevronDown className="size-3" /> : <ChevronRight className="size-3" />}
+                          </Button>
+                        )}
                         {canPay && (
                           <>
                             <Button size="sm" variant="outline" className="h-7 gap-1 text-xs"
@@ -676,6 +674,107 @@ export default function EmprestimoDetalhePage() {
                             )}
                           </>
                         )}
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+              {/* Sub-linhas: histórico de pagamentos por parcela */}
+              {loan.installments.map((inst) => {
+                if (!expandedPayments.has(inst.id)) return null
+                const pagamentos = inst.payments?.filter(p => !p.estornado) ?? []
+                if (pagamentos.length === 0) return null
+                const colSpan = 7 + (canSeeSplit ? 2 : 0)
+                return (
+                  <tr key={`hist-${inst.id}`} className="bg-blue-50/60 dark:bg-blue-950/20 border-b border-border">
+                    <td colSpan={colSpan} className="px-4 py-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <History className="size-3.5 text-blue-600" />
+                        <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
+                          Histórico de baixas — Parcela #{inst.numero}
+                        </span>
+                      </div>
+                      <div className="overflow-x-auto rounded border border-blue-200 dark:border-blue-900">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="bg-blue-100/60 dark:bg-blue-900/30 border-b border-blue-200 dark:border-blue-900">
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground">Data</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-muted-foreground">Valor Devido c/ Juros</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-muted-foreground">Valor Pago</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-orange-600">Desconto Dado</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-blue-700 dark:text-blue-400">Capital</th>
+                              <th className="text-right px-3 py-1.5 font-medium text-emerald-700 dark:text-emerald-400">Lucro</th>
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden md:table-cell">Método</th>
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden md:table-cell">Bco Recebedor</th>
+                              <th className="text-left px-3 py-1.5 font-medium text-muted-foreground hidden lg:table-cell">Motivo desconto</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {pagamentos.map((p) => {
+                              const temDesconto = Number(p.desconto) > 0
+                              const valorDevido = p.valorDevido != null ? Number(p.valorDevido) : Number(inst.installmentAmount)
+                              return (
+                                <tr key={p.id} className="border-b border-blue-100 dark:border-blue-900/50 last:border-0 hover:bg-blue-50 dark:hover:bg-blue-950/30">
+                                  <td className="px-3 py-2 text-muted-foreground">{formatDate(p.dataPagamento)}</td>
+                                  <td className="px-3 py-2 text-right font-medium">
+                                    {formatCurrency(valorDevido)}
+                                  </td>
+                                  <td className="px-3 py-2 text-right text-green-700 dark:text-green-400 font-semibold">
+                                    {formatCurrency(Number(p.valorPago))}
+                                  </td>
+                                  <td className="px-3 py-2 text-right">
+                                    {temDesconto ? (
+                                      <span className="inline-flex items-center gap-1 text-orange-600 font-semibold">
+                                        <Tag className="size-3" />
+                                        {formatCurrency(Number(p.desconto))}
+                                      </span>
+                                    ) : (
+                                      <span className="text-muted-foreground">—</span>
+                                    )}
+                                  </td>
+                                  <td className="px-3 py-2 text-right text-blue-700 dark:text-blue-400" title="Parte desta baixa que repõe o capital emprestado">
+                                    {p.split ? formatCurrency(p.split.capital) : '—'}
+                                  </td>
+                                  <td className="px-3 py-2 text-right text-emerald-700 dark:text-emerald-400" title={p.split?.comissaoPercentual ? `Comissão do consultor: ${formatCurrency(p.split.comissao)} (${p.split.comissaoPercentual}%)` : 'Lucro realizado nesta baixa'}>
+                                    {p.split ? formatCurrency(p.split.lucro) : '—'}
+                                  </td>
+                                  <td className="px-3 py-2 text-muted-foreground hidden md:table-cell capitalize">
+                                    {METODO_PAGAMENTO[p.metodoPagamento] ?? p.metodoPagamento}
+                                  </td>
+                                  <td className="px-3 py-2 text-muted-foreground hidden md:table-cell">
+                                    {p.contaDestino || '—'}
+                                  </td>
+                                  <td className="px-3 py-2 text-muted-foreground hidden lg:table-cell">
+                                    {p.descontoMotivo || (temDesconto ? (p.descontoTipo === 'encargos' ? 'Desconto em encargos' : 'Desconto no saldo') : '—')}
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                          {pagamentos.length > 1 && (
+                            <tfoot>
+                              <tr className="bg-blue-100/60 dark:bg-blue-900/30 font-medium">
+                                <td className="px-3 py-1.5 text-xs text-muted-foreground">{pagamentos.length} baixa(s)</td>
+                                <td className="px-3 py-1.5 text-right text-xs">—</td>
+                                <td className="px-3 py-1.5 text-right text-xs text-green-700">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.valorPago), 0))}
+                                </td>
+                                <td className="px-3 py-1.5 text-right text-xs text-orange-600">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.desconto), 0))}
+                                </td>
+                                <td className="px-3 py-1.5 text-right text-xs text-blue-700 dark:text-blue-400">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.split?.capital ?? 0), 0))}
+                                </td>
+                                <td className="px-3 py-1.5 text-right text-xs text-emerald-700 dark:text-emerald-400">
+                                  {formatCurrency(pagamentos.reduce((s, p) => s + Number(p.split?.lucro ?? 0), 0))}
+                                </td>
+                                <td className="hidden md:table-cell" />
+                                <td className="hidden md:table-cell" />
+                                <td className="hidden lg:table-cell" />
+                              </tr>
+                            </tfoot>
+                          )}
+                        </table>
                       </div>
                     </td>
                   </tr>
@@ -700,9 +799,18 @@ export default function EmprestimoDetalhePage() {
                 <div className="rounded bg-amber-50 dark:bg-amber-950/20 border border-amber-200 px-3 py-2 text-xs text-amber-800 dark:text-amber-300 flex gap-4">
                   <span>Pago: <strong>{formatCurrency(Number(instSelecionada.totalPago))}</strong></span>
                   <span>Saldo: <strong>{formatCurrency(Number(instSelecionada.saldoDevedor))}</strong></span>
+                  {Number(instSelecionada.multaAplicada) > 0 && (
+                    <span>Multa: <strong>{formatCurrency(Number(instSelecionada.multaAplicada))}</strong></span>
+                  )}
                   {Number(instSelecionada.moraAcumulada) > 0 && (
                     <span>Mora: <strong>{formatCurrency(Number(instSelecionada.moraAcumulada))}</strong></span>
                   )}
+                </div>
+              )}
+              {payMut.isError && (
+                <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  {(payMut.error as any)?.response?.data?.message
+                    ?? 'Erro ao registrar pagamento. Verifique os dados e tente novamente.'}
                 </div>
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -710,7 +818,7 @@ export default function EmprestimoDetalhePage() {
                   <Label>Valor Pago (R$)</Label>
                   <Input type="number" step="0.01" min="0.01" value={valorPago} onChange={(e) => setValorPago(e.target.value)} />
                   {instSelecionada && Number(instSelecionada.saldoDevedor) > 0 && (
-                    <p className="text-[10px] text-muted-foreground">Pré-preenchido com saldo + mora para quitação total</p>
+                    <p className="text-[10px] text-muted-foreground">Pré-preenchido com saldo + encargos (multa + mora) para quitação total</p>
                   )}
                 </div>
                 <div className="space-y-1.5">
@@ -724,9 +832,23 @@ export default function EmprestimoDetalhePage() {
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Conta / Detalhes</Label>
+                  <Label>Bco Recebedor</Label>
                   <Input value={contaDestino} onChange={(e) => setContaDestino(e.target.value)} placeholder="ex: Itaú PJ, dinheiro em caixa" />
                 </div>
+
+                {user?.role === 'admin' && (
+                  <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3 rounded-lg border border-violet-200 dark:border-violet-900 bg-violet-50/60 dark:bg-violet-950/20 p-3">
+                    <div className="space-y-1.5">
+                      <Label>Comissão do Consultor (% do Lucro Geral)</Label>
+                      <Input type="number" step="0.01" min="0" max="100" value={comissaoRecebimento} onChange={(e) => setComissaoRecebimento(e.target.value)} placeholder="Usa o padrão do contrato" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Comissão do Administrador (% do Lucro Geral)</Label>
+                      <Input type="number" step="0.01" min="0" max="100" value={comissaoAdminRecebimento} onChange={(e) => setComissaoAdminRecebimento(e.target.value)} placeholder="Usa o padrão do contrato" />
+                    </div>
+                    <p className="md:col-span-2 text-[10px] text-muted-foreground">Os percentuais ficam congelados neste recebimento e são calculados sobre o Lucro Geral (Valor − Capital).</p>
+                  </div>
+                )}
 
                 {/* Desconto (opcional) */}
                 <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-3 rounded-lg border border-dashed border-amber-300 dark:border-amber-900 p-3">

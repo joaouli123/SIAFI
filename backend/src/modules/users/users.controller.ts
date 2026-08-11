@@ -23,6 +23,13 @@ export class UsersController {
     return this.usersService.findByRole('admin');
   }
 
+  // Lista mínima de usuários internos (id/nome/role) — para o chat interno (todos os perfis)
+  @Get('internos')
+  @Roles('admin', 'financeiro', 'consultor', 'caixa')
+  findInternos() {
+    return this.usersService.findInternosMinimal();
+  }
+
   @Post()
   @Roles('admin')
   create(@Body() dto: CreateUserDto) {

@@ -8,6 +8,7 @@ import { Queue } from 'bullmq';
 import { createHash } from 'crypto';
 import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { ScoreRiscoService } from '../score-risco/score-risco.service';
 import { addMonthsSafe } from '../../common/utils/date.utils';
 import { QUEUE_FINANCE_NOTIFICATIONS } from '../queue/queue.constants';
@@ -91,7 +92,7 @@ export class ReparcelamentoService {
           consultorId:          userId,
           tipo:                 dto.tipo,
           motivoCliente:        dto.motivoCliente,
-          dataPrevistaPagamento: dto.dataPrevistaPagamento ? new Date(dto.dataPrevistaPagamento) : null,
+          dataPrevistaPagamento: dto.dataPrevistaPagamento ? dataLocal(dto.dataPrevistaPagamento) : null,
           status:               'pendente',
         },
       });
@@ -124,7 +125,7 @@ export class ReparcelamentoService {
         novoValorPrincipal:     dto.novoValorPrincipal,
         novoTargetProfit:       dto.novoTargetProfit,
         novoNumeroParcelas:     dto.novoNumeroParcelas,
-        novaDataInicio:         new Date(dto.novaDataInicio),
+        novaDataInicio:         dataLocal(dto.novaDataInicio),
         multaAplicada:          dto.multaAplicada ?? null,
         moraAplicada:           dto.moraAplicada ?? null,
         observacaoFinanceiro:   dto.observacaoFinanceiro ?? null,
@@ -282,7 +283,7 @@ export class ReparcelamentoService {
   ) {
     const p = new Decimal(principal);
     const l = new Decimal(profit);
-    const parcelas = this.calcularParcelas(p, l, numeroParcelas, new Date(dataInicio));
+    const parcelas = this.calcularParcelas(p, l, numeroParcelas, dataLocal(dataInicio));
     const total    = p.plus(l);
     return {
       parcelas,
@@ -302,22 +303,28 @@ export class ReparcelamentoService {
     const total = principal.plus(profit);
     const base  = total.dividedBy(n).toDecimalPlaces(2, Decimal.ROUND_DOWN);
     const baseP = principal.dividedBy(n).toDecimalPlaces(2, Decimal.ROUND_DOWN);
-    const baseG = profit.dividedBy(n).toDecimalPlaces(2, Decimal.ROUND_DOWN);
 
     const ajusteTotal = total.minus(base.times(n));
     const ajusteP     = principal.minus(baseP.times(n));
-    const ajusteG     = profit.minus(baseG.times(n));
 
     return Array.from({ length: n }, (_, i) => {
-      const isUlt = i === n - 1;
+      const isUlt        = i === n - 1;
+      const installAmt   = isUlt ? base.plus(ajusteTotal) : base;
+      const principalPay = isUlt ? baseP.plus(ajusteP)    : baseP;
+      // netGain derivado garante a invariante installmentAmount == principalPayback + netGain
+      const gain         = installAmt.minus(principalPay);
+      const amt          = installAmt.toDecimalPlaces(2).toNumber();
       return {
         numero:            i + 1,
-        installmentAmount: (isUlt ? base.plus(ajusteTotal) : base).toDecimalPlaces(2).toNumber(),
-        principalPayback:  (isUlt ? baseP.plus(ajusteP)   : baseP).toDecimalPlaces(2).toNumber(),
-        netGain:           (isUlt ? baseG.plus(ajusteG)   : baseG).toDecimalPlaces(2).toNumber(),
+        installmentAmount: amt,
+        principalPayback:  principalPay.toDecimalPlaces(2).toNumber(),
+        netGain:           gain.toDecimalPlaces(2).toNumber(),
         dataVencimento:    addMonthsSafe(dataInicio, i + 1),
         status:            'pendente' as const,
         totalPago:         0,
+        // Sem saldoDevedor o schema aplica o default 0 → o saldo some no detalhe do
+        // contrato, o pagamento pré-preenche 0 e o cron de encargos ignora a parcela.
+        saldoDevedor:      amt,
         valorMulta:        0,
         valorMora:         0,
       };

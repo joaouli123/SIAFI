@@ -11,7 +11,7 @@ import { formatDate } from '@/lib/utils'
 import api from '@/lib/api'
 
 interface User {
-  id: number; nome: string; username: string; role: string; active: boolean; createdAt: string
+  id: number; nome: string; username: string; role: string; active: boolean; createdAt: string; comissaoPercentual?: number | null
 }
 
 const ROLE_LABEL: Record<string, string> = {
@@ -66,6 +66,7 @@ export default function UsuariosPage() {
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground">Nome</th>
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Login</th>
                   <th className="text-center px-4 py-3 font-medium text-muted-foreground">Perfil</th>
+                  <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Comissão</th>
                   <th className="text-center px-4 py-3 font-medium text-muted-foreground">Status</th>
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Cadastro</th>
                   <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
@@ -78,6 +79,9 @@ export default function UsuariosPage() {
                     <td className="px-4 py-3 text-muted-foreground hidden md:table-cell font-mono text-xs">{u.username}</td>
                     <td className="px-4 py-3 text-center">
                       <Badge variant={ROLE_VARIANT[u.role] ?? 'outline'}>{ROLE_LABEL[u.role] ?? u.role}</Badge>
+                    </td>
+                    <td className="px-4 py-3 text-center hidden md:table-cell text-muted-foreground">
+                      {(u.role === 'consultor' || u.role === 'admin') && u.comissaoPercentual != null ? `${Number(u.comissaoPercentual).toFixed(2)}%` : '—'}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <Badge variant={u.active ? 'success' : 'outline'}>{u.active ? 'Ativo' : 'Inativo'}</Badge>

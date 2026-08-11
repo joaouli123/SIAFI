@@ -207,8 +207,8 @@ export class ExcelService {
       const venc = new Date(inst.dataVencimento);
       venc.setHours(0, 0, 0, 0);
       const dias = Math.floor((hoje.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24));
-      const total =
-        Number(inst.installmentAmount) + Number(inst.valorMulta) + Number(inst.valorMora);
+      const saldo = Math.max(0, Number(inst.installmentAmount) - Number(inst.totalPago));
+      const total = saldo + Number(inst.valorMulta) + Number(inst.valorMora);
 
       ws.addRow({
         cliente: inst.loan.client.nome,
@@ -219,7 +219,7 @@ export class ExcelService {
         parcela: inst.numero,
         venc: DT(inst.dataVencimento),
         dias,
-        valor: BRL(Number(inst.installmentAmount)),
+        valor: BRL(saldo),
         multa: BRL(Number(inst.valorMulta)),
         mora: BRL(Number(inst.valorMora)),
         total: BRL(total),

@@ -9,7 +9,7 @@ import {
   ArrowLeftRight, Settings, Shield, ShieldCheck, LogOut, X, ChevronRight,
   AlertCircle, RefreshCcw, QrCode, BarChart2, Bell, MessageSquare,
   UserCog, ListChecks, Briefcase, ClipboardList, TrendingUp, Phone,
-  Banknote, Search, Mail, Info, HelpCircle, Building2, FileStack,
+  Banknote, Search, Mail, Info, HelpCircle, Building2, FileStack, User,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
@@ -60,7 +60,7 @@ const navGroups: NavGroup[] = [
       { label: 'Clientes',      href: '/clientes',      icon: Users },
       { label: 'Empréstimos',   href: '/emprestimos',   icon: CreditCard },
       { label: 'Parcelas',      href: '/parcelas',      icon: Receipt },
-      { label: 'Pagamentos',    href: '/pagamentos',    icon: Wallet },
+      { label: 'Recebimentos',  href: '/pagamentos',    icon: Wallet },
       { label: 'Inadimplentes', href: '/inadimplentes', icon: AlertCircle },
     ],
   },
@@ -116,9 +116,9 @@ const navGroups: NavGroup[] = [
     title: 'Operações',
     roles: ['caixa'],
     items: [
-      { label: 'Liberar Capital',     href: '/liberacoes-pendentes', icon: Banknote },
-      { label: 'Registrar Pagamento', href: '/pagamentos/novo',      icon: Wallet },
-      { label: 'Parcelas do Dia',     href: '/parcelas',             icon: Receipt },
+      { label: 'Liberar Capital',      href: '/liberacoes-pendentes', icon: Banknote },
+      { label: 'Registrar Recebimento', href: '/pagamentos/novo',      icon: Wallet },
+      { label: 'Parcelas do Dia',      href: '/parcelas',             icon: Receipt },
     ],
   },
 
@@ -222,7 +222,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   function isActive(href: string) {
     if (href === '/dashboard') return pathname === '/dashboard'
-    return pathname.startsWith(href)
+    if (pathname === href) return true
+    if (pathname.startsWith(href + '/')) {
+      const hasMoreSpecificItem = navGroups.some(group => 
+        group.items.some(item => item.href !== href && pathname.startsWith(item.href))
+      )
+      return !hasMoreSpecificItem
+    }
+    return false
   }
 
   function getInitials(nome: string) {
@@ -245,13 +252,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-30 flex w-[260px] flex-col transition-transform duration-300 lg:static lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-30 flex w-[260px] flex-col transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         style={{ backgroundColor: '#0f172a' }}
       >
         <div
-          className="flex h-16 items-center justify-between px-4 border-b border-white/10"
+          className="flex h-14 items-center justify-between px-4 border-b border-white/10"
           style={{ backgroundColor: corPrimaria }}
         >
           <div className="flex items-center min-w-0">
@@ -288,10 +295,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     href={item.href}
                     onClick={onClose}
                     className={cn(
-                      'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
+                      'flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-200',
                       active
-                        ? 'text-white'
-                        : 'text-slate-400 hover:bg-white/8 hover:text-slate-200'
+                        ? 'text-white shadow-lg shadow-black/20'
+                        : 'text-slate-400 hover:bg-white/[0.06] hover:text-slate-200'
                     )}
                     style={active ? { backgroundColor: corPrimaria } : undefined}
                   >
@@ -311,7 +318,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </nav>
 
         <div className="border-t border-white/10 p-4">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 border"
               style={{
@@ -319,24 +326,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 borderColor: `${corPrimaria}55`,
               }}
             >
-              <span className="text-xs font-semibold" style={{ color: corPrimaria }}>
-                {user ? getInitials(user.nome) : '?'}
-              </span>
+              <User className="size-4" style={{ color: corPrimaria }} strokeWidth={2.5} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-slate-200 truncate">{user?.nome ?? 'Usuário'}</p>
               <p className="text-xs text-slate-500">{user ? (roleLabel[user.role] ?? user.role) : ''}</p>
             </div>
+            <button
+              onClick={logout}
+              className="p-2 rounded-lg text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+              title="Sair"
+            >
+              <LogOut className="size-4" />
+            </button>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={logout}
-            className="w-full justify-start text-slate-400 hover:text-white hover:bg-white/8 gap-2"
-          >
-            <LogOut className="size-4" />
-            Sair
-          </Button>
         </div>
       </aside>
     </>

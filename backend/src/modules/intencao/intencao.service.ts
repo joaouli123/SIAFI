@@ -142,7 +142,9 @@ export class IntencaoService {
         observacoes:     dto.observacoes,
       },
       {
-        userId:         intencao.consultorId ?? undefined,
+        userId:         user.id,
+        role:           user.role,
+        consultorId:    intencao.consultorId ?? undefined,
         loanStatus:     'aguardando_aceite',
         aceiteExpiraEm,
       },

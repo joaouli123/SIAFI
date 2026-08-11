@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useAuth } from '@/contexts/auth.context'
-import { cn } from '@/lib/utils'
+import { cn, hojeISODate } from '@/lib/utils'
 import { Search, ChevronRight, Lock, FileDown, Loader2 } from 'lucide-react'
 import api from '@/lib/api'
 
@@ -921,7 +921,7 @@ export default function DocumentacaoPage() {
       const res = await api.get('/export/manual-sistema', { responseType: 'blob' })
       const a = document.createElement('a')
       a.href = URL.createObjectURL(new Blob([res.data as BlobPart], { type: 'application/pdf' }))
-      a.download = `manual-siafi-${new Date().toISOString().split('T')[0]}.pdf`
+      a.download = `manual-siafi-${hojeISODate()}.pdf`
       a.click()
       URL.revokeObjectURL(a.href)
     } finally {

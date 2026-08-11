@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { Client, Prisma } from '@prisma/client';
 import { extname } from 'path';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -30,14 +31,16 @@ export class ClientsService {
   ) {}
 
   async findAll(filters: ClientFilterDto, consultorId?: number): Promise<PaginatedResponse<Client>> {
-    const { page, limit, search, status } = filters;
+    const { page, limit, search, status, consultorId: filterConsultorId } = filters;
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};
 
-    // Consultor só vê sua própria carteira
+    // Consultor só vê sua própria carteira; admin/financeiro pode filtrar por consultor
     if (consultorId) {
       where.consultorId = consultorId;
+    } else if (filterConsultorId) {
+      where.consultorId = filterConsultorId;
     }
 
     if (status === 'active') {
@@ -70,13 +73,14 @@ export class ClientsService {
     return paginate(data as any, total, page, limit);
   }
 
-  async findById(id: number, consultorId?: number): Promise<unknown> {
+  async findById(id: number, consultorId?: number, role?: string): Promise<unknown> {
     const client = await this.prisma.client.findUnique({
       where: { id },
       include: {
         loans: { orderBy: { createdAt: 'asc' } },
         consultor: { select: { id: true, nome: true } },
         scoreRisco: { select: { scoreGeral: true, classificacao: true, calculadoEm: true } },
+        meusAvalistas: true,
       },
     });
     if (!client) {
@@ -84,6 +88,14 @@ export class ClientsService {
     }
     if (consultorId && client.consultorId !== consultorId) {
       throw new ForbiddenException('Cliente não pertence à sua carteira');
+    }
+    // Caixa não vê split financeiro dos contratos (lucro/capital/comissão).
+    if (role === 'caixa') {
+      (client as any).loans = ((client as any).loans ?? []).map((l: Record<string, unknown>) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { targetProfit, principalAmount, comissaoPercentual, comissaoAdministradorPercentual, ...rest } = l;
+        return rest;
+      });
     }
     return client;
   }
@@ -121,7 +133,7 @@ export class ClientsService {
       nome: dto.nome,
       cpf: dto.cpf ?? null,
       rg: dto.rg ?? null,
-      dataNascimento: dto.dataNascimento ? new Date(dto.dataNascimento) : null,
+      dataNascimento: dto.dataNascimento ? dataLocal(dto.dataNascimento) : null,
       email: dto.email ?? null,
       whatsapp: dto.whatsapp ?? null,
       telefone: dto.telefone ?? null,
@@ -133,9 +145,44 @@ export class ClientsService {
       observacoes: dto.observacoes ?? null,
       notificacoesEmail: dto.notificacoesEmail ?? true,
       ...(effectiveConsultorId ? { consultor: { connect: { id: effectiveConsultorId } } } : {}),
+      referencia1Nome: dto.referencia1Nome ?? null,
+      referencia1Telefone: dto.referencia1Telefone ?? null,
+      referencia1Vinculo: dto.referencia1Vinculo ?? null,
+      referencia2Nome: dto.referencia2Nome ?? null,
+      referencia2Telefone: dto.referencia2Telefone ?? null,
+      referencia2Vinculo: dto.referencia2Vinculo ?? null,
     };
 
-    const client = await this.prisma.client.create({ data });
+    if (dto.avalistas && dto.avalistas.length > 0) {
+      data.meusAvalistas = {
+        create: dto.avalistas.map(a => ({
+          nome: a.nome,
+          cpf: a.cpf ?? null,
+          telefone: a.telefone ?? null,
+          email: a.email ?? null,
+          endereco: a.endereco ?? null,
+          parentesco: a.parentesco ?? null,
+          clienteVinculadoId: a.clienteId ?? null,
+        }))
+      };
+    }
+
+    let client: Client;
+    try {
+      client = await this.prisma.client.create({ data });
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' && err !== null &&
+        (err as any).code === 'P2002'
+      ) {
+        const fields = (err as any).meta?.target as string[] | undefined;
+        if (fields?.includes('cpf') || fields?.some((f: string) => f.includes('cpf'))) {
+          throw new BadRequestException('CPF/CNPJ já cadastrado. Verifique se o cliente já existe no sistema.');
+        }
+        throw new BadRequestException('Dados duplicados: verifique as informações e tente novamente.');
+      }
+      throw err;
+    }
 
     if (files && Object.values(files).some((f) => f?.length)) {
       const paths = await this.uploadFiles(client.id, files);
@@ -159,7 +206,7 @@ export class ClientsService {
     if (dto.nome !== undefined) data.nome = dto.nome;
     if (dto.cpf !== undefined) data.cpf = dto.cpf;
     if (dto.rg !== undefined) data.rg = dto.rg;
-    if (dto.dataNascimento !== undefined) data.dataNascimento = new Date(dto.dataNascimento);
+    if (dto.dataNascimento !== undefined) data.dataNascimento = dataLocal(dto.dataNascimento);
     if (dto.email !== undefined) data.email = dto.email;
     if (dto.whatsapp !== undefined) data.whatsapp = dto.whatsapp;
     if (dto.telefone !== undefined) data.telefone = dto.telefone;
@@ -170,6 +217,27 @@ export class ClientsService {
     if (dto.cep !== undefined) data.cep = dto.cep;
     if (dto.observacoes !== undefined) data.observacoes = dto.observacoes;
     if (dto.notificacoesEmail !== undefined) data.notificacoesEmail = dto.notificacoesEmail;
+    if (dto.referencia1Nome !== undefined) data.referencia1Nome = dto.referencia1Nome;
+    if (dto.referencia1Telefone !== undefined) data.referencia1Telefone = dto.referencia1Telefone;
+    if (dto.referencia1Vinculo !== undefined) data.referencia1Vinculo = dto.referencia1Vinculo;
+    if (dto.referencia2Nome !== undefined) data.referencia2Nome = dto.referencia2Nome;
+    if (dto.referencia2Telefone !== undefined) data.referencia2Telefone = dto.referencia2Telefone;
+    if (dto.referencia2Vinculo !== undefined) data.referencia2Vinculo = dto.referencia2Vinculo;
+
+    if (dto.avalistas !== undefined) {
+      data.meusAvalistas = {
+        deleteMany: {},
+        create: dto.avalistas.map(a => ({
+          nome: a.nome,
+          cpf: a.cpf ?? null,
+          telefone: a.telefone ?? null,
+          email: a.email ?? null,
+          endereco: a.endereco ?? null,
+          parentesco: a.parentesco ?? null,
+          clienteVinculadoId: a.clienteId ?? null,
+        }))
+      };
+    }
 
     // Campos administrativos — apenas admin/financeiro (consultorId presente = consultor bloqueado)
     if (!consultorId) {

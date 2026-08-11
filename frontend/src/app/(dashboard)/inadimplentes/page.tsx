@@ -2,28 +2,81 @@
 
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { AlertCircle, FileDown, RefreshCw } from 'lucide-react'
+import { AlertCircle, FileDown, RefreshCw, StickyNote } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCurrency, formatDate, formatCPF, formatPhone } from '@/lib/utils'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { useState } from 'react'
+import { formatCurrency, formatDate, formatDateLocal, formatCPF, formatPhone, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 
 interface Loan {
   id: number; valor: number; numeroParcelas: number; dataInicio: string; status: string
-  client: { id: number; nome: string; cpf: string; whatsapp: string }
-  installments: Array<{ id: number; valor: number; totalPago: number; dataVencimento: string; status: string }>
+  observacoes?: string | null
+  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null; quantidadeEmprestimos?: number }
+  installments: Array<{ id: number; installmentAmount: number; totalPago: number; dataVencimento: string; status: string; moraAcumulada?: number; multaAplicada?: number }>
+}
+
+function HoverObsPopover({ obs, title = 'Observações' }: { obs: string; title?: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        className="text-amber-500 hover:text-amber-600 cursor-pointer p-0.5"
+        aria-label="Ver observação"
+      >
+        <StickyNote className="size-3.5" />
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-80">
+        <p className="font-semibold mb-1 text-xs text-foreground uppercase tracking-wider">{title}</p>
+        <p className="text-xs text-muted-foreground whitespace-pre-wrap">{obs}</p>
+      </PopoverContent>
+    </Popover>
+  )
 }
 
 export default function InadimplentesPage() {
-  const { data: loans, isLoading, isError, refetch } = useQuery({
-    queryKey: ['loans', { status: 'inadimplente' }],
-    queryFn: () => api.get<any>('/loans', { params: { status: 'inadimplente', limit: 200 } }).then((r) => r.data.data ?? r.data),
+  const { data: installmentsData, isLoading, isError, refetch } = useQuery({
+    queryKey: ['installments', 'overdue'],
+    queryFn: () => api.get<any>('/installments/overdue').then((r) => r.data),
   })
 
+  const loansMap = new Map<number, Loan>()
+  if (installmentsData && Array.isArray(installmentsData)) {
+    for (const inst of installmentsData) {
+      if (!inst.loan) continue; // safe check
+      if (!loansMap.has(inst.loanId)) {
+        loansMap.set(inst.loanId, {
+          id: inst.loan.id,
+          valor: inst.loan.principalAmount,
+          numeroParcelas: inst.loan.numeroParcelas,
+          dataInicio: inst.loan.dataInicio,
+          status: inst.loan.status,
+          observacoes: inst.loan.observacoes,
+          client: inst.loan.client || { id: 0, nome: 'Cliente Desconhecido', cpf: '', whatsapp: '' },
+          installments: []
+        })
+      }
+      loansMap.get(inst.loanId)!.installments.push(inst)
+    }
+  }
+  const loans = Array.from(loansMap.values())
+
+  // Saldo devedor em atraso = saldo (installmentAmount - pago) + encargos (multa + mora),
+  // idêntico ao exibido em /parcelas.
   const calcSaldoDevedor = (installments: Loan['installments']) =>
-    installments.reduce((s, i) => s + (Number(i.valor) - Number(i.totalPago)), 0)
+    installments.reduce(
+      (s, i) =>
+        s +
+        Math.max(0, Number(i.installmentAmount) - Number(i.totalPago)) +
+        Number(i.moraAcumulada ?? 0) +
+        Number(i.multaAplicada ?? 0),
+      0,
+    )
 
   return (
     <div className="space-y-6">
@@ -39,7 +92,7 @@ export default function InadimplentesPage() {
             const res = await api.get('/export/inadimplentes/excel', { responseType: 'blob' })
             const a = document.createElement('a')
             a.href = URL.createObjectURL(new Blob([res.data as BlobPart], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }))
-            a.download = `inadimplentes-${new Date().toISOString().split('T')[0]}.xlsx`
+            a.download = `inadimplentes-${hojeISODate()}.xlsx`
             a.click()
             URL.revokeObjectURL(a.href)
           }}><FileDown className="size-3.5" />Excel</Button>
@@ -78,50 +131,58 @@ export default function InadimplentesPage() {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/30">
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Atraso</th>
-                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
-                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loans.map((loan: Loan) => {
-                      const saldo = calcSaldoDevedor(loan.installments ?? [])
-                      // Atraso: parcela em aberto vencida mais antiga
-                      const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
-                      const vencidas = (loan.installments ?? []).filter((i) => {
-                        if (i.status === 'pago' || i.status === 'cancelado') return false
-                        if (Number(i.valor) - Number(i.totalPago) <= 0) return false
-                        const v = new Date(i.dataVencimento); v.setHours(0, 0, 0, 0)
-                        return v < hoje
-                      })
-                      const maisAntiga = vencidas.length
-                        ? vencidas.reduce((a, b) => (new Date(a.dataVencimento) < new Date(b.dataVencimento) ? a : b))
-                        : null
-                      const dias = maisAntiga
-                        ? Math.floor((hoje.getTime() - new Date(maisAntiga.dataVencimento).setHours(0, 0, 0, 0)) / 86400000)
-                        : 0
-                      return (
-                        <tr key={loan.id} className="border-b border-border hover:bg-muted/20">
-                          <td className="px-4 py-3">
-                            <Link href={`/clientes/${loan.client?.id}`} className="hover:underline block">
-                              {loan.client?.cpf && (
-                                <span className="block text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
-                              )}
-                              <span className="font-medium">{loan.client?.nome}</span>
-                            </Link>
-                            <p className="text-xs text-muted-foreground">Emp. #{loan.id}</p>
-                          </td>
-                          <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
-                          <td className="px-4 py-3">
-                            {maisAntiga ? (
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium text-destructive">{formatDate(maisAntiga.dataVencimento)}</span>
-                                <Badge variant="destructive" className="text-[10px]">{dias}d</Badge>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/30 text-left">
+                    <th className="px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">Atraso</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground">Obs</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loans.map((loan: Loan) => {
+                    const saldo = calcSaldoDevedor(loan.installments ?? [])
+                    const hoje = new Date(); hoje.setHours(0, 0, 0, 0)
+                    const vencidas = (loan.installments ?? []).filter((i) => {
+                      if (i.status === 'pago' || i.status === 'cancelado') return false
+                      if (Number(i.installmentAmount) - Number(i.totalPago) <= 0) return false
+                      const v = new Date(i.dataVencimento); v.setHours(0, 0, 0, 0)
+                      return v < hoje
+                    })
+                    const maisAntiga = vencidas.length
+                      ? vencidas.reduce((a, b) => (new Date(a.dataVencimento) < new Date(b.dataVencimento) ? a : b))
+                      : null
+                    const dias = maisAntiga
+                      ? Math.floor((hoje.getTime() - new Date(maisAntiga.dataVencimento).setHours(0, 0, 0, 0)) / 86400000)
+                      : 0
+                    return (
+                      <tr key={loan.id} className="border-b border-border hover:bg-muted/20">
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-1.5">
+                              <Link href={`/clientes/${loan.client?.id}`} className="hover:underline font-medium">
+                                {loan.client?.nome}
+                              </Link>
+                            </div>
+                            {loan.client?.cpf && (
+                              <span className="text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
+                            )}
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">
+                                {loan.client?.quantidadeEmprestimos ?? 1} empréstimo{(loan.client?.quantidadeEmprestimos ?? 1) !== 1 ? 's' : ''}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
+                        <td className="px-4 py-3">
+                          {maisAntiga ? (
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-destructive">{formatDateLocal(maisAntiga.dataVencimento)}</span>
+                              <Badge variant="destructive" className="text-[10px]">{dias}d</Badge>
                                 {vencidas.length > 1 && (
                                   <span className="text-[10px] text-muted-foreground">+{vencidas.length - 1}</span>
                                 )}
@@ -131,6 +192,13 @@ export default function InadimplentesPage() {
                             )}
                           </td>
                           <td className="px-4 py-3 text-right font-bold text-destructive">{formatCurrency(saldo)}</td>
+                          <td className="px-4 py-3 text-center">
+                            {(loan.client?.observacoes || loan.observacoes) ? (
+                              <HoverObsPopover obs={`${loan.client?.observacoes || ''}\n${loan.observacoes || ''}`.trim()} title="Observações" />
+                            ) : (
+                              <span className="text-muted-foreground text-xs">—</span>
+                            )}
+                          </td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex justify-end gap-1">
                               <Link href={`/emprestimos/${loan.id}`}>

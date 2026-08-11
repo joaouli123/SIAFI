@@ -8,6 +8,7 @@ export interface CreateUserDto {
   username: string;
   password: string;
   role: string;
+  comissaoPercentual?: number;
 }
 
 export interface UpdateUserDto {
@@ -16,6 +17,7 @@ export interface UpdateUserDto {
   password?: string;
   role?: string;
   active?: boolean;
+  comissaoPercentual?: number | null;
 }
 
 @Injectable()
@@ -45,17 +47,28 @@ export class UsersService {
     });
   }
 
+  // Usuários internos (id/nome/role) — para o chat interno iniciar conversa com qualquer operador.
+  async findInternosMinimal(): Promise<{ id: number; nome: string; role: string }[]> {
+    return this.prisma.user.findMany({
+      where: { active: true },
+      select: { id: true, nome: true, role: true },
+      orderBy: { nome: 'asc' },
+    });
+  }
+
   async create(dto: CreateUserDto): Promise<Omit<User, 'password'>> {
     const existing = await this.prisma.user.findUnique({ where: { username: dto.username } });
     if (existing) throw new ConflictException('Username já está em uso');
 
     const hashed = await bcrypt.hash(dto.password, 12);
+    this.validateCommission(dto.comissaoPercentual, dto.role);
     const user = await this.prisma.user.create({
       data: {
         nome: dto.nome,
         username: dto.username,
         password: hashed,
         role: dto.role as any,
+        comissaoPercentual: dto.comissaoPercentual ?? null,
         active: true,
       },
     });
@@ -67,16 +80,29 @@ export class UsersService {
     const existing = await this.prisma.user.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Usuário não encontrado');
 
+    this.validateCommission(dto.comissaoPercentual, dto.role ?? existing.role);
+
     const data: any = {};
     if (dto.nome !== undefined) data.nome = dto.nome;
     if (dto.username !== undefined) data.username = dto.username;
     if (dto.role !== undefined) data.role = dto.role;
     if (dto.active !== undefined) data.active = dto.active;
+    if (dto.comissaoPercentual !== undefined) data.comissaoPercentual = dto.comissaoPercentual;
     if (dto.password) data.password = await bcrypt.hash(dto.password, 12);
 
     const user = await this.prisma.user.update({ where: { id }, data });
     const { password: _, ...safe } = user;
     return safe;
+  }
+
+  private validateCommission(value: number | null | undefined, role: string): void {
+    if (value == null) return;
+    if (!Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > 100) {
+      throw new ConflictException('A comissão deve estar entre 0% e 100%.');
+    }
+    if (role !== 'consultor' && role !== 'admin') {
+      throw new ConflictException('Comissão só pode ser configurada para consultores ou administradores.');
+    }
   }
 
   async softDelete(id: number): Promise<void> {

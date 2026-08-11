@@ -646,7 +646,7 @@ export default function AjudaPage() {
     : []
 
   return (
-    <div className="mx-auto max-w-4xl space-y-10 px-4 py-8">
+    <div className="mx-auto w-full space-y-10 px-4 py-8">
 
       {/* ── Header ── */}
       <div className="space-y-1">

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RelData } from './relatorios.types';
+import { BAIXA_ORDER, BAIXA_SELECT, computeBaixasPeriodo, realizedLucro } from '../../common/commission';
 
 export interface RelParams {
   startDate?: string;
@@ -319,11 +320,9 @@ export class ReportGeneratorService {
   private async dre(p: RelParams): Promise<RelData> {
     const { start, end, label } = this.resolvePeriodo(p);
 
-    const [parcelasPagas, saidas, descontosAgg] = await Promise.all([
-      this.prisma.installment.findMany({
-        where: { status: 'pago', updatedAt: { gte: start, lte: end } },
-        select: { netGain: true, principalPayback: true, loan: { select: { comissaoPercentual: true } } },
-      }),
+    const [baixas, saidas, descontosAgg] = await Promise.all([
+      // Lucro/capital/comissão atribuídos por data do pagamento (rateio proporcional).
+      computeBaixasPeriodo(this.prisma, start, end),
       this.prisma.transaction.findMany({
         where: { tipo: 'saida', data: { gte: start, lte: end } },
         select: { valor: true, categoria: true },
@@ -334,12 +333,13 @@ export class ReportGeneratorService {
       }),
     ]);
 
-    const lucro = parcelasPagas.reduce((s, i) => s + n(i.netGain), 0);
-    const recuperacao = parcelasPagas.reduce((s, i) => s + n(i.principalPayback), 0);
-    const comissao = parcelasPagas.reduce((s, i) => s + (n(i.netGain) * n(i.loan.comissaoPercentual)) / 100, 0);
+    const lucro = baixas.reduce((s, b) => s + b.lucro, 0);
+    const recuperacao = baixas.reduce((s, b) => s + b.capital, 0);
+    const comissao = baixas.reduce((s, b) => s + b.comissao, 0);
     const descontos = n(descontosAgg._sum.desconto);
     const capitalLiberado = saidas.filter((t) => t.categoria === 'Liberação de Empréstimo').reduce((s, t) => s + n(t.valor), 0);
-    const despesas = saidas.filter((t) => t.categoria !== 'Liberação de Empréstimo' && t.categoria !== 'Estorno').reduce((s, t) => s + n(t.valor), 0);
+    // 'Comissão Consultor' já entra por competência acima (comissao); não contar de novo como despesa de caixa (dupla contagem).
+    const despesas = saidas.filter((t) => t.categoria !== 'Liberação de Empréstimo' && t.categoria !== 'Estorno' && t.categoria !== 'Comissão Consultor').reduce((s, t) => s + n(t.valor), 0);
     const lucroLiqComissao = lucro - comissao;
     const resultado = lucroLiqComissao - descontos - despesas;
 
@@ -420,34 +420,28 @@ export class ReportGeneratorService {
 
   private async faturamentoConsultor(p: RelParams): Promise<RelData> {
     const { start, end, label } = this.resolvePeriodo(p);
-    const [parcelas, pagamentos] = await Promise.all([
-      this.prisma.installment.findMany({
-        where: { status: 'pago', updatedAt: { gte: start, lte: end } },
-        select: {
-          installmentAmount: true, netGain: true, principalPayback: true,
-          loan: { select: { comissaoPercentual: true, consultor: { select: { nome: true } } } },
-        },
-      }),
+    const [baixas, pagamentos] = await Promise.all([
+      // Recebido/lucro/comissão/capital atribuídos por data do pagamento (rateio proporcional).
+      computeBaixasPeriodo(this.prisma, start, end),
       // Comissões efetivamente pagas ao consultor no período
       this.prisma.comissaoPagamento.findMany({
         where: { dataPagamento: { gte: start, lte: end } },
-        select: { valor: true, loan: { select: { consultor: { select: { nome: true } } } } },
+        select: { valor: true, loan: { select: { client: { select: { consultor: { select: { nome: true } } } } } } },
       }),
     ]);
 
     const acc: Record<string, { recebido: number; lucro: number; comissao: number; comissaoPaga: number; capital: number; qtd: number }> = {};
     const ent = (nome: string) => (acc[nome] ??= { recebido: 0, lucro: 0, comissao: 0, comissaoPaga: 0, capital: 0, qtd: 0 });
-    for (const i of parcelas) {
-      const e = ent(i.loan.consultor?.nome ?? 'Sem consultor');
-      const lucro = n(i.netGain);
-      e.recebido += n(i.installmentAmount);
-      e.lucro += lucro;
-      e.comissao += (lucro * n(i.loan.comissaoPercentual)) / 100;
-      e.capital += n(i.principalPayback);
+    for (const b of baixas) {
+      const e = ent(b.consultorNome);
+      e.recebido += b.valorPago;
+      e.lucro += b.lucro;
+      e.comissao += b.comissao;
+      e.capital += b.capital;
       e.qtd += 1;
     }
     for (const pg of pagamentos) {
-      ent(pg.loan.consultor?.nome ?? 'Sem consultor').comissaoPaga += n(pg.valor);
+      ent(pg.loan.client?.consultor?.nome ?? 'Sem consultor').comissaoPaga += n(pg.valor);
     }
 
     const linhas = Object.entries(acc).map(([consultor, v]) => ({
@@ -564,7 +558,12 @@ export class ReportGeneratorService {
         id: true, status: true, targetProfit: true, comissaoPercentual: true,
         client: { select: { nome: true } },
         consultor: { select: { nome: true } },
-        installments: { select: { totalPago: true, principalPayback: true } },
+        installments: {
+          select: {
+            totalPago: true, principalPayback: true, installmentAmount: true,
+            payments: { where: { estornado: false }, select: BAIXA_SELECT, orderBy: BAIXA_ORDER },
+          },
+        },
         comissaoPagamentos: { select: { valor: true } },
       },
     });
@@ -572,9 +571,13 @@ export class ReportGeneratorService {
     const linhas = loans.map((l) => {
       const pct = n(l.comissaoPercentual);
       const prevista = (n(l.targetProfit) * pct) / 100;
-      const realizada = l.installments.reduce(
-        (s, i) => s + (Math.max(0, n(i.totalPago) - n(i.principalPayback)) * pct) / 100, 0,
-      );
+      const realizada = l.installments.reduce((s, i) => {
+        const lucro = realizedLucro(i.payments, {
+          principalPayback: i.principalPayback,
+          installmentAmount: i.installmentAmount,
+        });
+        return s + (lucro * pct) / 100;
+      }, 0);
       const paga = l.comissaoPagamentos.reduce((s, c) => s + n(c.valor), 0);
       const saldo = realizada - paga;
       const status = paga <= 0 ? 'A pagar' : saldo <= 0.005 ? 'Quitada' : 'Parcial';

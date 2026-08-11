@@ -1,12 +1,12 @@
 'use client'
 
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Calculator, ChevronDown, ChevronRight, Plus, Trash2, Users, AlertTriangle, Percent } from 'lucide-react'
+import { ArrowLeft, Save, Calculator, ChevronDown, ChevronRight, AlertTriangle, Percent } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -14,10 +14,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
-import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCurrency, METODO_PAGAMENTO } from '@/lib/utils'
+import { formatCurrency, METODO_PAGAMENTO, toDateInputValue } from '@/lib/utils'
 import api from '@/lib/api'
+import { useAuth } from '@/contexts/auth.context'
 import Decimal from 'decimal.js'
 
 function safeDecimal(val: unknown): Decimal {
@@ -35,32 +35,23 @@ const schema = z.object({
   dataPrimeiroVencimento: z.string().optional(),
   observacoes: z.string().optional(),
   diaVencimento: z.coerce.number().min(1).max(28).optional(),
-  multaPercentual: z.coerce.number().min(0).max(100).optional(),
-  moraDiariaPercentual: z.coerce.number().min(0).max(100).optional(),
+  multaPercentual: z.coerce.number().min(0).max(9.99).optional(),
+  moraDiariaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
+  comissaoAdministradorPercentual: z.coerce.number().min(0).max(100).optional(),
+  comissaoAdministradorValor: z.coerce.number().optional(),
   comissaoValor: z.coerce.number().optional(),
   descontoQuitacaoPercentual: z.coerce.number().min(0).max(100).optional(),
   diasAntecedenciaCobranca: z.coerce.number().min(1).max(60).optional(),
   cobrarWhatsapp: z.boolean().optional(),
   cobrarEmail: z.boolean().optional(),
   cobrarPortal: z.boolean().optional(),
-  avalistas: z.array(z.object({
-    clienteId: z.coerce.number().optional(),
-    nome: z.string().optional(),
-    cpf: z.string().optional(),
-    telefone: z.string().optional(),
-    parentesco: z.string().optional(),
-  })).optional(),
-  referencia1Nome: z.string().optional(),
-  referencia1Telefone: z.string().optional(),
-  referencia1Vinculo: z.string().optional(),
-  referencia2Nome: z.string().optional(),
-  referencia2Telefone: z.string().optional(),
-  referencia2Vinculo: z.string().optional(),
 })
 type FormData = z.infer<typeof schema>
 
 export default function EditarEmprestimoPage() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const router = useRouter()
   const { id } = useParams()
   const qc = useQueryClient()
@@ -71,17 +62,9 @@ export default function EditarEmprestimoPage() {
     queryFn: () => api.get<any>(`/loans/${id}`).then((r) => r.data),
   })
 
-  const { data: clients } = useQuery({
-    queryKey: ['clients-list'],
-    queryFn: () => api.get<any>('/clients', { params: { limit: 500, status: 'active' } }).then((r) => r.data.data ?? r.data),
-  })
-
-  const { register, handleSubmit, watch, setValue, getValues, control, reset, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, watch, setValue, getValues, reset, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
-    defaultValues: { avalistas: [] },
   })
-
-  const { fields: avalistaFields, append: addAvalista, remove: removeAvalista } = useFieldArray({ control, name: 'avalistas' })
 
   useEffect(() => {
     if (!loan) return
@@ -93,7 +76,7 @@ export default function EditarEmprestimoPage() {
         ? Number(((Number(loan.totalReceivable)) / loan.numeroParcelas).toFixed(2))
         : undefined,
       metodoPagamento: loan.metodoPagamento ?? 'dinheiro',
-      dataInicio: loan.dataInicio ? new Date(loan.dataInicio).toISOString().split('T')[0] : '',
+      dataInicio: toDateInputValue(loan.dataInicio),
       dataPrimeiroVencimento: '',
       observacoes: loan.observacoes ?? '',
       diaVencimento: loan.diaVencimento ?? undefined,
@@ -103,24 +86,15 @@ export default function EditarEmprestimoPage() {
       comissaoValor: loan.comissaoPercentual != null
         ? Number((Number(loan.targetProfit) * Number(loan.comissaoPercentual) / 100).toFixed(2))
         : undefined,
+      comissaoAdministradorPercentual: loan.comissaoAdministradorPercentual != null ? Number(loan.comissaoAdministradorPercentual) : undefined,
+      comissaoAdministradorValor: loan.comissaoAdministradorPercentual != null
+        ? Number((Number(loan.targetProfit) * Number(loan.comissaoAdministradorPercentual) / 100).toFixed(2))
+        : undefined,
       descontoQuitacaoPercentual: loan.descontoQuitacaoPercentual != null ? Number(loan.descontoQuitacaoPercentual) : undefined,
       diasAntecedenciaCobranca: loan.diasAntecedenciaCobranca ?? 10,
       cobrarWhatsapp: loan.cobrarWhatsapp ?? true,
       cobrarEmail: loan.cobrarEmail ?? true,
       cobrarPortal: loan.cobrarPortal ?? true,
-      avalistas: (loan.avalistas ?? []).map((a: any) => ({
-        clienteId: a.clienteId ?? undefined,
-        nome: a.nome ?? '',
-        cpf: a.cpf ?? '',
-        telefone: a.telefone ?? '',
-        parentesco: a.parentesco ?? '',
-      })),
-      referencia1Nome: loan.referencia1Nome ?? '',
-      referencia1Telefone: loan.referencia1Telefone ?? '',
-      referencia1Vinculo: loan.referencia1Vinculo ?? '',
-      referencia2Nome: loan.referencia2Nome ?? '',
-      referencia2Telefone: loan.referencia2Telefone ?? '',
-      referencia2Vinculo: loan.referencia2Vinculo ?? '',
     })
   }, [loan, reset])
 
@@ -134,9 +108,11 @@ export default function EditarEmprestimoPage() {
   const parcelaLucro   = parcelas.isZero() ? new Decimal(0) : lucro.dividedBy(parcelas)
 
   const comissaoPct        = safeDecimal(watch('comissaoPercentual'))
+  const comissaoAdministradorPct = safeDecimal(watch('comissaoAdministradorPercentual'))
   const comissaoTotal      = lucro.times(comissaoPct).dividedBy(100)
+  const comissaoAdministradorTotal = lucro.times(comissaoAdministradorPct).dividedBy(100)
   const comissaoPorParcela = parcelas.isZero() ? new Decimal(0) : comissaoTotal.dividedBy(parcelas)
-  const lucroEmpresaTotal  = lucro.minus(comissaoTotal)
+  const lucroEmpresaTotal  = lucro.minus(comissaoTotal).minus(comissaoAdministradorTotal)
 
   function recalcComissaoValorFromPct() {
     const l = safeDecimal(getValues('targetProfit'))
@@ -149,6 +125,17 @@ export default function EditarEmprestimoPage() {
     if (l.lte(0)) return
     setValue('comissaoPercentual', Decimal.min(val.dividedBy(l).times(100), new Decimal(100)).toDecimalPlaces(2).toNumber())
   }
+  function recalcComissaoAdministradorValorFromPct() {
+    const l = safeDecimal(getValues('targetProfit'))
+    const pct = safeDecimal(getValues('comissaoAdministradorPercentual'))
+    setValue('comissaoAdministradorValor', l.times(pct).dividedBy(100).toDecimalPlaces(2).toNumber())
+  }
+  function recalcComissaoAdministradorPctFromValor() {
+    const l = safeDecimal(getValues('targetProfit'))
+    const val = safeDecimal(getValues('comissaoAdministradorValor'))
+    if (l.lte(0)) return
+    setValue('comissaoAdministradorPercentual', Decimal.min(val.dividedBy(l).times(100), new Decimal(100)).toDecimalPlaces(2).toNumber())
+  }
 
   // Capital + Lucro ÷ Parcelas ⇄ Valor da Parcela (igual ao /novo)
   function recalcParcelaFromInputs() {
@@ -158,6 +145,7 @@ export default function EditarEmprestimoPage() {
     if (num.lte(0)) return
     setValue('valorParcela', p.plus(l).dividedBy(num).toDecimalPlaces(2).toNumber())
     recalcComissaoValorFromPct()
+    recalcComissaoAdministradorValorFromPct()
   }
   function recalcLucroFromParcela() {
     const vp = safeDecimal(getValues('valorParcela'))
@@ -166,6 +154,7 @@ export default function EditarEmprestimoPage() {
     const novoLucro = vp.times(num).minus(p)
     setValue('targetProfit', (novoLucro.isNegative() ? new Decimal(0) : novoLucro).toDecimalPlaces(2).toNumber())
     recalcComissaoValorFromPct()
+    recalcComissaoAdministradorValorFromPct()
   }
 
   // Quantas parcelas já têm pagamento (preservadas na regeneração)
@@ -175,13 +164,10 @@ export default function EditarEmprestimoPage() {
 
   const mutation = useMutation({
     mutationFn: (data: FormData) => {
-      const { comissaoValor, valorParcela, ...rest } = data // auxiliares de UI
+      const { comissaoValor, comissaoAdministradorValor, valorParcela, ...rest } = data
       const payload = {
         ...rest,
         dataPrimeiroVencimento: data.dataPrimeiroVencimento || undefined, // só envia se preenchida
-        avalistas: (data.avalistas ?? [])
-          .filter((a) => a.nome && a.nome.trim())
-          .map((a) => ({ ...a, clienteId: a.clienteId && a.clienteId > 0 ? a.clienteId : undefined })),
       }
       return api.patch(`/loans/${id}`, payload)
     },
@@ -198,11 +184,11 @@ export default function EditarEmprestimoPage() {
   }
 
   if (isLoading || !loan) return (
-    <div className="space-y-4 max-w-3xl"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
+    <div className="space-y-4 w-full"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
   )
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href={`/emprestimos/${id}`}><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
         <div>
@@ -296,26 +282,35 @@ export default function EditarEmprestimoPage() {
           </Card>
         )}
 
-        <Card>
+        {isAdmin && <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2"><Percent className="size-4" />Comissão do Consultor</CardTitle>
-            <p className="text-xs text-muted-foreground">% OU valor sobre o lucro (o outro se ajusta)</p>
+            <CardTitle className="text-base flex items-center gap-2"><Percent className="size-4" />Comissões sobre o Lucro Geral</CardTitle>
+            <p className="text-xs text-muted-foreground">Consultor e administrador recebem percentuais calculados sobre o Lucro Geral. O Lucro da Empresa é o valor restante.</p>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Comissão (% do lucro)</Label>
+              <Label>Comissão do Consultor (% do Lucro Geral)</Label>
               <Input type="number" step="0.01" min={0} max={100} {...register('comissaoPercentual', { onChange: recalcComissaoValorFromPct })} placeholder="ex: 30" />
             </div>
             <div className="space-y-1.5">
-              <Label>Comissão (R$ total)</Label>
+              <Label>Comissão do Consultor (R$ total)</Label>
               <Input type="number" step="0.01" min={0} {...register('comissaoValor', { onChange: recalcComissaoPctFromValor })} placeholder="0,00" />
             </div>
-            {comissaoPct.greaterThan(0) && lucro.greaterThan(0) && (
+            <div className="space-y-1.5">
+              <Label>Comissão do Administrador (% do Lucro Geral)</Label>
+              <Input type="number" step="0.01" min={0} max={100} {...register('comissaoAdministradorPercentual', { onChange: recalcComissaoAdministradorValorFromPct })} placeholder="ex: 70" />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Comissão do Administrador (R$ total)</Label>
+              <Input type="number" step="0.01" min={0} {...register('comissaoAdministradorValor', { onChange: recalcComissaoAdministradorPctFromValor })} placeholder="0,00" />
+            </div>
+            {(comissaoPct.greaterThan(0) || comissaoAdministradorPct.greaterThan(0)) && lucro.greaterThan(0) && (
               <div className="md:col-span-2 rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/20 dark:border-emerald-900 p-3 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                <div><p className="text-xs text-muted-foreground">% do lucro</p><p className="font-bold">{comissaoPct.toFixed(2)}%</p></div>
-                <div><p className="text-xs text-muted-foreground">Comissão total</p><p className="font-bold text-emerald-700 dark:text-emerald-400">{formatCurrency(comissaoTotal.toNumber())}</p></div>
+                <div><p className="text-xs text-muted-foreground">% do Lucro Geral</p><p className="font-bold">{comissaoPct.toFixed(2)}%</p></div>
+                <div><p className="text-xs text-muted-foreground">Comissão do consultor</p><p className="font-bold text-emerald-700 dark:text-emerald-400">{formatCurrency(comissaoTotal.toNumber())}</p></div>
                 <div><p className="text-xs text-muted-foreground">~ por parcela</p><p className="font-bold">{formatCurrency(comissaoPorParcela.toNumber())}</p></div>
-                <div><p className="text-xs text-muted-foreground">Lucro da empresa</p><p className="font-bold text-blue-700 dark:text-blue-400">{formatCurrency(lucroEmpresaTotal.toNumber())}</p></div>
+                <div><p className="text-xs text-muted-foreground">Comissão administrador</p><p className="font-bold text-violet-700 dark:text-violet-400">{formatCurrency(comissaoAdministradorTotal.toNumber())}</p></div>
+                <div><p className="text-xs text-muted-foreground">Lucro da Empresa</p><p className="font-bold text-blue-700 dark:text-blue-400">{formatCurrency(lucroEmpresaTotal.toNumber())}</p></div>
               </div>
             )}
             <div className="md:col-span-2 space-y-1.5 border-t pt-3">
@@ -323,65 +318,7 @@ export default function EditarEmprestimoPage() {
               <Input type="number" step="0.01" min={0} max={100} {...register('descontoQuitacaoPercentual')} placeholder="ex: 10 — opcional" className="md:w-1/2" />
             </div>
           </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2 flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base flex items-center gap-2"><Users className="size-4" />Avalistas</CardTitle>
-            <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => addAvalista({ clienteId: undefined, nome: '', cpf: '', telefone: '', parentesco: '' })}>
-              <Plus className="size-4" />Adicionar
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {avalistaFields.length === 0 && <p className="text-sm text-muted-foreground">Nenhum avalista.</p>}
-            {avalistaFields.map((field, i) => {
-              return (
-                <div key={field.id} className="rounded-lg border p-3 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-muted-foreground">Avalista {i + 1}</span>
-                    <Button type="button" variant="ghost" size="sm" className="text-destructive h-7 px-2" onClick={() => removeAvalista(i)}><Trash2 className="size-4" /></Button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="md:col-span-2 space-y-1.5">
-                      <Label>Cliente existente (opcional)</Label>
-                      <ClienteCombobox
-                        clientes={clients ?? []}
-                        value={watch(`avalistas.${i}.clienteId`)}
-                        excludeId={loan?.client?.id}
-                        avulsoLabel="— Pessoa avulsa (preencher manualmente) —"
-                        placeholder="Buscar cliente por nome ou CPF..."
-                        onSelect={(c) => {
-                          setValue(`avalistas.${i}.clienteId`, c?.id ?? undefined)
-                          if (c) { setValue(`avalistas.${i}.nome`, c.nome); setValue(`avalistas.${i}.cpf`, c.cpf ?? '') }
-                        }}
-                      />
-                    </div>
-                    <div className="space-y-1.5"><Label>Nome *</Label><Input {...register(`avalistas.${i}.nome`)} /></div>
-                    <div className="space-y-1.5"><Label>CPF</Label><Input {...register(`avalistas.${i}.cpf`)} /></div>
-                    <div className="space-y-1.5"><Label>Telefone</Label><Input {...register(`avalistas.${i}.telefone`)} /></div>
-                    <div className="space-y-1.5"><Label>Vínculo / Parentesco</Label><Input {...register(`avalistas.${i}.parentesco`)} /></div>
-                  </div>
-                </div>
-              )
-            })}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader><CardTitle className="text-base">Referências de Contato</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-1.5"><Label>Referência 1 — Nome</Label><Input {...register('referencia1Nome')} /></div>
-              <div className="space-y-1.5"><Label>Telefone</Label><Input {...register('referencia1Telefone')} /></div>
-              <div className="space-y-1.5"><Label>Vínculo</Label><Input {...register('referencia1Vinculo')} /></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-1.5"><Label>Referência 2 — Nome</Label><Input {...register('referencia2Nome')} /></div>
-              <div className="space-y-1.5"><Label>Telefone</Label><Input {...register('referencia2Telefone')} /></div>
-              <div className="space-y-1.5"><Label>Vínculo</Label><Input {...register('referencia2Vinculo')} /></div>
-            </div>
-          </CardContent>
-        </Card>
+        </Card>}
 
         <Card>
           <CardHeader className="pb-2 cursor-pointer" onClick={() => setShowCobrancaConfig(v => !v)}>

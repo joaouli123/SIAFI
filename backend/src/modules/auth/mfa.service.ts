@@ -7,12 +7,18 @@ import { SupabaseService } from '../../supabase/supabase.service';
 export class MfaService {
   constructor(private readonly supabase: SupabaseService) {}
 
-  async listFactors(supabaseId: string): Promise<{ factorId: string; status: string }[]> {
+  async listFactors(supabaseId: string): Promise<{ factors: Array<{ id: string; factorId: string; status: string; factor_type: string }> }> {
     const { data, error } = await this.supabase.admin.auth.admin.mfa.listFactors({
       userId: supabaseId,
     });
     if (error) throw new BadRequestException('Erro ao listar fatores MFA');
-    return (data?.factors ?? []).map((f) => ({ factorId: f.id, status: f.status }));
+    const factors = (data?.factors ?? []).map((f) => ({
+      id: f.id,
+      factorId: f.id,
+      status: f.status,
+      factor_type: f.factor_type,
+    }));
+    return { factors };
   }
 
   async deleteFactor(supabaseId: string, factorId: string): Promise<void> {
@@ -24,7 +30,9 @@ export class MfaService {
   }
 
   // admin, financeiro e consultor exigem MFA imediato (sem prazo de graça)
+  // DISABLE_MFA=true suspende a exigência neste ambiente (ver auth.service.ts)
   roleRequiresMfa(role: string): boolean {
+    if (process.env.DISABLE_MFA === 'true') return false;
     return ['admin', 'financeiro', 'consultor'].includes(role);
   }
 

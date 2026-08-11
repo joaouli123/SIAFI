@@ -16,6 +16,7 @@ yarn-error.log*
 .env.*
 !.env.example
 !.env.*.example
+.codex-deploy/
 .claude/
 
 # IDEs and OS

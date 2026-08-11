@@ -108,6 +108,9 @@ model User {
   lockedUntil         DateTime? @map("locked_until")
   lastLoginAt         DateTime? @map("last_login_at")
   lastLoginIp         String?   @map("last_login_ip") @db.VarChar(45)
+  // Percentual padrão deste operador sobre o lucro geral de cada recebimento.
+  // Para consultores é a comissão do consultor; para administradores, a administrativa.
+  comissaoPercentual  Decimal?  @map("comissao_percentual") @db.Decimal(5, 2)
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
 
@@ -175,6 +178,14 @@ model Client {
   termosVersao     String?   @map("termos_versao") @db.VarChar(20)
   politicaAceitaEm DateTime? @map("politica_aceita_em")
 
+  // Referências de contato
+  referencia1Nome     String? @map("referencia1_nome") @db.VarChar(150)
+  referencia1Telefone String? @map("referencia1_telefone") @db.VarChar(30)
+  referencia1Vinculo  String? @map("referencia1_vinculo") @db.VarChar(50)
+  referencia2Nome     String? @map("referencia2_nome") @db.VarChar(150)
+  referencia2Telefone String? @map("referencia2_telefone") @db.VarChar(30)
+  referencia2Vinculo  String? @map("referencia2_vinculo") @db.VarChar(50)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -193,7 +204,8 @@ model Client {
   scoreRisco                 ScoreRisco?
   consentimentos             ConsentimentoLGPD[]
   solicitacoesTitular        SolicitacaoTitular[]
-  avalistaEm                 Avalista[]                  @relation("AvalistaCliente")
+  avalistaEm                 Avalista[]                  @relation("AvalistaVinculado")
+  meusAvalistas              Avalista[]                  @relation("ClienteAvalistas")
 
   @@index([nome])
   @@index([riskLevel])
@@ -290,6 +302,7 @@ model Loan {
   // Comissão do consultor: % sobre o lucro (netGain) de cada parcela.
   // Valor total contratado = targetProfit × comissaoPercentual / 100.
   comissaoPercentual Decimal? @map("comissao_percentual") @db.Decimal(5, 2)
+  comissaoAdministradorPercentual Decimal? @map("comissao_administrador_percentual") @db.Decimal(5, 2)
 
   // Desconto na quitação total do contrato (% sobre o lucro a vencer)
   descontoQuitacaoPercentual Decimal? @map("desconto_quitacao_percentual") @db.Decimal(5, 2)
@@ -299,14 +312,6 @@ model Loan {
   status          LoanStatus     @default(ativo)
   metodoPagamento PaymentMethod? @map("metodo_pagamento")
   observacoes     String?        @db.Text
-
-  // Referências de contato (por contrato)
-  referencia1Nome     String? @map("referencia1_nome") @db.VarChar(150)
-  referencia1Telefone String? @map("referencia1_telefone") @db.VarChar(30)
-  referencia1Vinculo  String? @map("referencia1_vinculo") @db.VarChar(50)
-  referencia2Nome     String? @map("referencia2_nome") @db.VarChar(150)
-  referencia2Telefone String? @map("referencia2_telefone") @db.VarChar(30)
-  referencia2Vinculo  String? @map("referencia2_vinculo") @db.VarChar(50)
 
   // Rastreabilidade de reparcelamento
   origemLoanId        Int? @unique @map("origem_loan_id")
@@ -350,7 +355,6 @@ model Loan {
   consultorSolicitacoes      ConsultorSolicitacao[]
   solicitacoesReparcelamento SolicitacaoReparcelamento[]
   conversas                  Conversa[]
-  avalistas                  Avalista[]
   comissaoPagamentos         ComissaoPagamento[]
 
   @@index([clientId])
@@ -383,8 +387,8 @@ model ComissaoPagamento {
 
 model Avalista {
   id         Int      @id @default(autoincrement())
-  loanId     Int      @map("loan_id")
-  clienteId  Int?     @map("cliente_id") // avalista que também é cliente cadastrado
+  clientId   Int      @map("client_id")
+  clienteVinculadoId Int? @map("cliente_vinculado_id") // avalista que também é cliente cadastrado
   nome       String   @db.VarChar(150)
   cpf        String?  @db.VarChar(20)
   telefone   String?  @db.VarChar(30)
@@ -394,11 +398,11 @@ model Avalista {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
-  loan    Loan    @relation(fields: [loanId], references: [id], onDelete: Cascade)
-  cliente Client? @relation("AvalistaCliente", fields: [clienteId], references: [id], onDelete: SetNull)
+  client           Client  @relation("ClienteAvalistas", fields: [clientId], references: [id], onDelete: Cascade)
+  clienteVinculado Client? @relation("AvalistaVinculado", fields: [clienteVinculadoId], references: [id], onDelete: SetNull)
 
-  @@index([loanId])
-  @@index([clienteId])
+  @@index([clientId])
+  @@index([clienteVinculadoId])
   @@map("avalistas")
 }
 
@@ -571,6 +575,7 @@ model Installment {
   multaAplicada      Decimal   @default(0) @map("multa_aplicada") @db.Decimal(10, 2)
   valorComEncargos   Decimal?  @map("valor_com_encargos") @db.Decimal(15, 2)
   pixCobrancaId      Int?      @map("pix_cobranca_id")
+  observacao         String?   @db.Text
 
   loan             Loan              @relation(fields: [loanId], references: [id])
   payments         Payment[]
@@ -590,6 +595,7 @@ model Payment {
   id              Int           @id @default(autoincrement())
   installmentId   Int           @map("installment_id")
   valorPago       Decimal       @map("valor_pago") @db.Decimal(15, 2)
+  valorDevido     Decimal?      @map("valor_devido") @db.Decimal(15, 2) // total devido (principal + encargos) no momento da baixa
   dataPagamento   DateTime      @map("data_pagamento")
   metodoPagamento PaymentMethod @default(dinheiro) @map("metodo_pagamento")
   observacao      String?       @db.Text
@@ -597,6 +603,9 @@ model Payment {
   desconto        Decimal       @default(0) @db.Decimal(15, 2) // desconto concedido nesta baixa
   descontoTipo    String?       @map("desconto_tipo") @db.VarChar(20) // 'saldo' | 'encargos'
   descontoMotivo  String?       @map("desconto_motivo") @db.Text
+  // Snapshot da regra usada nesta baixa; alterações futuras não reprocessam o histórico.
+  comissaoPercentual              Decimal? @map("comissao_percentual") @db.Decimal(5, 2)
+  comissaoAdministradorPercentual Decimal? @map("comissao_administrador_percentual") @db.Decimal(5, 2)
   estornado       Boolean       @default(false)
   estornadoEm     DateTime?     @map("estornado_em")
   estornadoPor    Int?          @map("estornado_por")

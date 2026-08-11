@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
+import { computeBaixasPeriodo, BaixaComputada } from '../../common/commission';
 
 Decimal.set({ precision: 20, rounding: Decimal.ROUND_HALF_UP });
 
@@ -55,12 +56,14 @@ export class ReportsService {
           select: { principalAmount: true, targetProfit: true, totalReceivable: true },
         }),
         this.prisma.installment.findMany({
-          where: { status: 'pago' },
+          // Escopo idêntico ao alvo (contratos ativos) — evita misturar realizado de
+          // contratos já quitados/cancelados no "a faturar / a recuperar" da carteira.
+          where: { status: 'pago', loan: { status: 'ativo' } },
           select: { installmentAmount: true, principalPayback: true, netGain: true },
         }),
         this.prisma.installment.findMany({
-          where: { status: { in: ['pendente', 'atrasado'] } },
-          select: { installmentAmount: true },
+          where: { status: { in: ['pendente', 'atrasado', 'parcialmente_pago'] }, loan: { status: 'ativo' } },
+          select: { installmentAmount: true, totalPago: true },
         }),
         this.prisma.loan.count({
           where: {
@@ -97,7 +100,8 @@ export class ReportsService {
       (acc, i) => acc.plus(i.installmentAmount.toString()), new Decimal(0),
     );
     const aReceber = parcelasPendentes.reduce(
-      (acc, i) => acc.plus(i.installmentAmount.toString()), new Decimal(0),
+      (acc, i) => acc.plus(Decimal.max(0, new Decimal(i.installmentAmount.toString()).minus(i.totalPago.toString()))),
+      new Decimal(0),
     );
 
     return {
@@ -124,48 +128,18 @@ export class ReportsService {
     const inicio = new Date(Date.UTC(ano, mesNum - 1, 1, 0, 0, 0, 0));
     const fim    = new Date(Date.UTC(ano, mesNum, 0, 23, 59, 59, 999));
 
-    const parcelasPagas = await this.prisma.installment.findMany({
-      where: {
-        status: 'pago',
-        updatedAt: { gte: inicio, lte: fim },
-      },
-      select: {
-        id:                true,
-        installmentAmount: true,
-        principalPayback:  true,
-        netGain:           true,
-        loan: {
-          select: {
-            id:                 true,
-            principalAmount:    true,
-            targetProfit:       true,
-            comissaoPercentual: true,
-            consultor: { select: { id: true, nome: true } },
-          },
-        },
-      },
-    });
+    // Atribui cada valor ao MÊS em que o dinheiro entrou (por data do pagamento),
+    // com o capital rateado proporcionalmente (regra "daqui pra frente").
+    const baixas = await computeBaixasPeriodo(this.prisma, inicio, fim);
 
-    const faturamentoBruto   = parcelasPagas.reduce(
-      (acc, p) => acc.plus(p.netGain.toString()), new Decimal(0),
-    );
-    const recuperacaoCapital = parcelasPagas.reduce(
-      (acc, p) => acc.plus(p.principalPayback.toString()), new Decimal(0),
-    );
-    const totalRecebido      = parcelasPagas.reduce(
-      (acc, p) => acc.plus(p.installmentAmount.toString()), new Decimal(0),
-    );
-    // Comissão = lucro da parcela paga × % do contrato (parcela paga → lucro realizado integral)
-    const comissaoConsultores = parcelasPagas.reduce(
-      (acc, p) => acc.plus(
-        new Decimal(p.netGain.toString()).times(Number(p.loan.comissaoPercentual ?? 0)).dividedBy(100),
-      ),
-      new Decimal(0),
-    );
+    const faturamentoBruto    = baixas.reduce((s, b) => s.plus(b.lucro),     new Decimal(0));
+    const recuperacaoCapital  = baixas.reduce((s, b) => s.plus(b.capital),   new Decimal(0));
+    const totalRecebido       = baixas.reduce((s, b) => s.plus(b.valorPago), new Decimal(0));
+    const comissaoConsultores = baixas.reduce((s, b) => s.plus(b.comissao),  new Decimal(0));
     const lucroLiquidoEmpresa = faturamentoBruto.minus(comissaoConsultores);
 
     // Breakdown por consultor
-    const porConsultor = this.agruparPorConsultor(parcelasPagas);
+    const porConsultor = this.agruparPorConsultor(baixas);
 
     return {
       mes,
@@ -174,19 +148,12 @@ export class ReportsService {
       recuperacaoCapital:   recuperacaoCapital.toFixed(2),
       comissaoConsultores:  comissaoConsultores.toFixed(2),
       lucroLiquidoEmpresa:  lucroLiquidoEmpresa.toFixed(2),
-      quantidadeParcelas:   parcelasPagas.length,
+      quantidadeParcelas:   baixas.length,
       porConsultor,
     };
   }
 
-  private agruparPorConsultor(
-    parcelas: Array<{
-      installmentAmount: { toString(): string };
-      principalPayback:  { toString(): string };
-      netGain:           { toString(): string };
-      loan: { comissaoPercentual?: { toString(): string } | null; consultor: { id: number; nome: string } | null };
-    }>,
-  ) {
+  private agruparPorConsultor(baixas: BaixaComputada[]) {
     const mapa = new Map<number | null, {
       id: number | null; nome: string
       totalRecebido:      Decimal
@@ -196,10 +163,9 @@ export class ReportsService {
       quantidadeParcelas: number
     }>();
 
-    for (const p of parcelas) {
-      const consultor = p.loan.consultor;
-      const key  = consultor?.id ?? null;
-      const nome = consultor?.nome ?? 'Sem consultor';
+    for (const b of baixas) {
+      const key  = b.consultorId;
+      const nome = b.consultorNome;
       const entrada = mapa.get(key) ?? {
         id: key, nome,
         totalRecebido:      new Decimal(0),
@@ -208,12 +174,10 @@ export class ReportsService {
         comissao:           new Decimal(0),
         quantidadeParcelas: 0,
       };
-      const lucro = new Decimal(p.netGain.toString());
-      const pct   = Number(p.loan.comissaoPercentual ?? 0);
-      entrada.totalRecebido      = entrada.totalRecebido.plus(p.installmentAmount.toString());
-      entrada.faturamentoBruto   = entrada.faturamentoBruto.plus(lucro);
-      entrada.recuperacaoCapital = entrada.recuperacaoCapital.plus(p.principalPayback.toString());
-      entrada.comissao           = entrada.comissao.plus(lucro.times(pct).dividedBy(100));
+      entrada.totalRecebido      = entrada.totalRecebido.plus(b.valorPago);
+      entrada.faturamentoBruto   = entrada.faturamentoBruto.plus(b.lucro);
+      entrada.recuperacaoCapital = entrada.recuperacaoCapital.plus(b.capital);
+      entrada.comissao           = entrada.comissao.plus(b.comissao);
       entrada.quantidadeParcelas += 1;
       mapa.set(key, entrada);
     }
@@ -274,17 +238,14 @@ export class ReportsService {
       const label  = ref.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' })
         .replace('.', '').replace(/^(.)/, (c) => c.toUpperCase())
 
-      const [parcelas, novosPrestamos] = await Promise.all([
-        this.prisma.installment.findMany({
-          where: { status: 'pago', updatedAt: { gte: inicio, lte: fim } },
-          select: { installmentAmount: true, netGain: true, principalPayback: true },
-        }),
+      const [baixas, novosPrestamos] = await Promise.all([
+        computeBaixasPeriodo(this.prisma, inicio, fim),
         this.prisma.loan.count({ where: { createdAt: { gte: inicio, lte: fim } } }),
       ])
 
-      const totalRecebido    = parcelas.reduce((s, p) => s + Number(p.installmentAmount), 0)
-      const faturamentoBruto = parcelas.reduce((s, p) => s + Number(p.netGain), 0)
-      const recuperacaoCapital = parcelas.reduce((s, p) => s + Number(p.principalPayback), 0)
+      const totalRecebido      = baixas.reduce((s, b) => s + b.valorPago, 0)
+      const faturamentoBruto   = baixas.reduce((s, b) => s + b.lucro, 0)
+      const recuperacaoCapital = baixas.reduce((s, b) => s + b.capital, 0)
 
       result.push({
         mes,
@@ -292,7 +253,7 @@ export class ReportsService {
         totalRecebido:      parseFloat(totalRecebido.toFixed(2)),
         faturamentoBruto:   parseFloat(faturamentoBruto.toFixed(2)),
         recuperacaoCapital: parseFloat(recuperacaoCapital.toFixed(2)),
-        quantidadeParcelas: parcelas.length,
+        quantidadeParcelas: baixas.length,
         novosContratos:     novosPrestamos,
       })
     }

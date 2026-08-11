@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -22,6 +22,7 @@ const schema = z.object({
   password: z.string().min(8).optional().or(z.literal('')),
   role: z.enum(['admin', 'financeiro', 'consultor', 'caixa', 'cliente']),
   active: z.boolean(),
+  comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
 })
 type FormData = z.infer<typeof schema>
 
@@ -35,27 +36,29 @@ export default function EditarUsuarioPage() {
     queryFn: () => api.get<any>(`/users`).then((r) => (r.data as any[]).find((u) => u.id === Number(id))),
   })
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
   })
+  const selectedRole = useWatch({ control, name: 'role' })
 
   useEffect(() => {
-    if (user) reset({ nome: user.nome, username: user.username, role: user.role, active: user.active, password: '' })
+    if (user) reset({ nome: user.nome, username: user.username, role: user.role, active: user.active, password: '', comissaoPercentual: user.comissaoPercentual != null ? Number(user.comissaoPercentual) : undefined })
   }, [user, reset])
 
   const mutation = useMutation({
     mutationFn: (data: FormData) => {
       const payload: any = { nome: data.nome, username: data.username, role: data.role, active: data.active }
+      if (data.role === 'consultor' || data.role === 'admin') payload.comissaoPercentual = data.comissaoPercentual
       if (data.password) payload.password = data.password
       return api.patch(`/users/${id}`, payload)
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['users'] }); router.push('/usuarios') },
   })
 
-  if (isLoading) return <div className="space-y-4 max-w-lg"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
+  if (isLoading) return <div className="space-y-4 w-full"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
 
   return (
-    <div className="space-y-6 max-w-lg">
+    <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
         <Link href="/usuarios"><Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="size-4" />Voltar</Button></Link>
         <div><h1 className="text-2xl font-bold tracking-tight">Editar Usuário</h1><p className="text-muted-foreground text-sm">{user?.nome}</p></div>
@@ -93,6 +96,13 @@ export default function EditarUsuarioPage() {
                 <option value="false">Inativo</option>
               </Select>
             </div>
+            {(selectedRole === 'consultor' || selectedRole === 'admin') && (
+              <div className="space-y-1.5">
+                <Label>Comissão padrão (% do Lucro Geral)</Label>
+                <Input type="number" step="0.01" min="0" max="100" {...register('comissaoPercentual')} placeholder="ex: 30" />
+                <p className="text-xs text-muted-foreground">Usada como padrão nos novos contratos/recebimentos. Alterar este campo não recalcula o histórico.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 

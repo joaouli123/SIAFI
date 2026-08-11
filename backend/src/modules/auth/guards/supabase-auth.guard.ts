@@ -60,7 +60,10 @@ export class SupabaseAuthGuard implements CanActivate {
     }
 
     // Verificar MFA — admin, financeiro e consultor exigem aal2
-    const mfaObrigatorio = ['admin', 'financeiro', 'consultor'].includes(resolvedUser.role);
+    // DISABLE_MFA=true suspende a exigência neste ambiente (ver auth.service.ts)
+    const mfaObrigatorio =
+      process.env.DISABLE_MFA !== 'true' &&
+      ['admin', 'financeiro', 'consultor'].includes(resolvedUser.role);
     if (mfaObrigatorio && aal !== 'aal2') {
       const fatoresVerificados = supabaseUser.factors?.some(
         (f: { status: string }) => f.status === 'verified',

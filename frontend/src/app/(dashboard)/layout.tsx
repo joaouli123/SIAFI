@@ -89,8 +89,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex flex-1 flex-col min-w-0">
           <Topbar onMenuToggle={() => setSidebarOpen((v) => !v)} />
-          <main className="flex-1 overflow-y-auto p-6">
-            {children}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-background/50">
+            <div className="mx-auto w-full max-w-7xl">
+              {children}
+            </div>
           </main>
         </div>
       </div>

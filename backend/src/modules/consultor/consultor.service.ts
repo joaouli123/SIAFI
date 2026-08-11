@@ -4,6 +4,8 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { dataLocal } from '../../common/data';
+import { BAIXA_ORDER, BAIXA_SELECT, realizedLucro } from '../../common/commission';
 import type { RequestUser } from '../auth/guards/supabase-auth.guard';
 import { CreateSolicitacaoDto, ResponderSolicitacaoDto } from './dto/create-solicitacao.dto';
 import { CreateIntencaoDto, AprovarIntencaoDto } from './dto/create-intencao.dto';
@@ -212,7 +214,7 @@ export class ConsultorService {
         consultorId: currentUser.id,
         canal: dto.canal,
         resultado: dto.resultado,
-        prometeuPagarEm: dto.prometeuPagarEm ? new Date(dto.prometeuPagarEm) : null,
+        prometeuPagarEm: dto.prometeuPagarEm ? dataLocal(dto.prometeuPagarEm) : null,
         observacao: dto.observacao ?? null,
       },
     });
@@ -303,7 +305,10 @@ export class ConsultorService {
           status: true,
           dataInicio: true,
           installments: {
-            select: { status: true, installmentAmount: true, totalPago: true, principalPayback: true },
+            select: {
+              status: true, installmentAmount: true, totalPago: true, principalPayback: true,
+              payments: { where: { estornado: false }, select: BAIXA_SELECT, orderBy: BAIXA_ORDER },
+            },
           },
         },
       }),
@@ -342,8 +347,11 @@ export class ConsultorService {
       comissaoPrevista += (lucroContrato * pct) / 100;
       for (const inst of loan.installments) {
         const saldo = Number(inst.installmentAmount) - Number(inst.totalPago);
-        // Lucro realizado da parcela (capital primeiro): totalPago além do principal
-        const lucroRealizado = Math.max(0, Number(inst.totalPago) - Number(inst.principalPayback));
+        // Lucro realizado da parcela: proporcional (daqui pra frente) ou capital-primeiro (legado).
+        const lucroRealizado = realizedLucro(inst.payments, {
+          principalPayback: inst.principalPayback,
+          installmentAmount: inst.installmentAmount,
+        });
         comissaoRealizada += (lucroRealizado * pct) / 100;
         if (inst.status === 'pendente' || inst.status === 'parcialmente_pago') {
           totalAReceber += saldo;

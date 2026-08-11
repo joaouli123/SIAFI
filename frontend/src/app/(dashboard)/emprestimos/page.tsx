@@ -46,6 +46,7 @@ interface LoanRow {
   status: string
   installmentAmount?: string
   client: { id: number; nome: string; cpf: string | null }
+  consultor?: { id: number; nome: string } | null
 }
 
 interface LoansResponse { data: LoanRow[]; total: number; page: number; lastPage: number }
@@ -191,6 +192,10 @@ function LoanDetailSheet({
   const totalPago = loan?.installments.reduce((s, i) => s + toNumber(i.totalPago), 0) ?? 0
   const totalReceivable = toNumber(loan?.totalReceivable)
   const pctPago = totalReceivable > 0 ? Math.min(100, (totalPago / totalReceivable) * 100) : 0
+  // Saldo a cobrar AGORA (saldo + multa + mora das parcelas em aberto) — coerente com /parcelas e a página completa.
+  const saldoComEncargos = loan?.installments
+    .filter((i) => i.status !== 'pago' && i.status !== 'cancelado')
+    .reduce((s, i) => s + Math.max(0, toNumber(i.saldoDevedor)) + toNumber(i.moraAcumulada) + toNumber(i.multaAplicada), 0) ?? 0
   const parcelasPagas = loan?.installments.filter((i) => i.status === 'pago').length ?? 0
 
   // Flatten pixPayments de todas as parcelas
@@ -208,7 +213,7 @@ function LoanDetailSheet({
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-2xl overflow-y-auto p-0 flex flex-col"
+        className="w-full sm:!max-w-3xl lg:!max-w-4xl overflow-y-auto p-0 flex flex-col"
       >
         {isLoading || !loan ? (
           <div className="p-6 space-y-4">
@@ -219,72 +224,74 @@ function LoanDetailSheet({
         ) : (
           <>
             {/* Cabeçalho fixo */}
-            <div className="sticky top-0 z-10 bg-background border-b px-6 pt-4 pb-4">
-              <SheetHeader className="mb-3">
-                <div className="flex items-center justify-between">
+            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b px-6 pt-5 pb-5">
+              <SheetHeader className="mb-4">
+                <div className="flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row">
                   <div>
-                    <SheetTitle className="text-lg">Contrato #{loan.id}</SheetTitle>
-                    <p className="text-sm text-muted-foreground mt-0.5">
+                    <SheetTitle className="text-xl md:text-2xl font-bold">Contrato #{loan.id}</SheetTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
                       <Link
                         href={`/clientes/${loan.client.id}`}
-                        className="hover:underline"
+                        className="hover:underline text-foreground/80"
                         onClick={onClose}
                       >
                         {loan.client.nome}
                       </Link>
                       {loan.client.cpf ? ` · ${formatCPF(loan.client.cpf)}` : ''}
+                      {loan.consultor?.nome ? <span className="text-muted-foreground/60"> · Cons: {loan.consultor.nome}</span> : ''}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {st && <Badge variant={st.variant}>{st.label}</Badge>}
+                  <div className="flex items-center gap-1.5 self-end sm:self-auto">
+                    {st && <Badge variant={st.variant} className="mr-2">{st.label}</Badge>}
                     <a
                       href={`/api/export/contratos/${loan.id}/pdf`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                      className="inline-flex items-center gap-1.5 rounded-lg border bg-background px-3 py-1.5 text-sm font-medium shadow-sm hover:bg-muted transition-colors"
+                      title="Ver Contrato"
                     >
-                      <FileText className="size-3.5" />
-                      Ver Contrato
+                      <FileText className="size-4" />
+                      <span className="hidden md:inline">Ver Contrato</span>
                     </a>
                     {loan.status !== 'cancelado' && (
                       <Link href={`/emprestimos/${loan.id}/editar`} onClick={onClose}>
-                        <Button variant="ghost" size="sm" className="gap-1">
-                          <Pencil className="size-3.5" />
-                          Editar
+                        <Button variant="ghost" size="sm" className="gap-1.5 px-2" title="Editar">
+                          <Pencil className="size-4" />
+                          <span className="hidden md:inline">Editar</span>
                         </Button>
                       </Link>
                     )}
                     <Link href={`/emprestimos/${loan.id}`} onClick={onClose}>
-                      <Button variant="ghost" size="sm" className="gap-1">
-                        <ExternalLink className="size-3.5" />
-                        Página completa
+                      <Button variant="ghost" size="sm" className="gap-1.5 px-2" title="Página completa">
+                        <ExternalLink className="size-4" />
+                        <span className="hidden md:inline">Página completa</span>
                       </Button>
                     </Link>
                     <button
                       onClick={onClose}
-                      className="h-8 w-8 p-0 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                      className="ml-1 h-8 w-8 p-0 inline-flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                     >
-                      <X className="size-4" />
+                      <X className="size-4.5" />
                     </button>
                   </div>
                 </div>
               </SheetHeader>
 
               {/* Mini KPIs */}
-              <div className="grid grid-cols-4 gap-2 text-center">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                 {[
                   { label: 'Capital', value: formatCurrency(loan.principalAmount) },
                   { label: 'Total c/ juros', value: formatCurrency(loan.totalReceivable) },
-                  { label: 'Total pago', value: formatCurrency(totalPago), color: 'text-green-600' },
+                  { label: 'Total pago', value: formatCurrency(totalPago), color: 'text-green-600 dark:text-green-500' },
                   {
                     label: 'Saldo',
-                    value: formatCurrency(Math.max(0, totalReceivable - totalPago)),
-                    color: totalReceivable - totalPago > 0 ? 'text-red-600' : 'text-green-600',
+                    value: formatCurrency(saldoComEncargos),
+                    color: saldoComEncargos > 0 ? 'text-red-600 dark:text-red-500' : 'text-green-600 dark:text-green-500',
                   },
                 ].map((k) => (
-                  <div key={k.label} className="bg-muted/40 rounded-lg px-2 py-2">
-                    <p className="text-xs text-muted-foreground">{k.label}</p>
-                    <p className={`text-sm font-bold ${k.color ?? ''}`}>{k.value}</p>
+                  <div key={k.label} className="bg-slate-50 dark:bg-slate-900/40 rounded-xl px-3 py-3 flex flex-col justify-center border border-border/40">
+                    <p className="text-xs text-muted-foreground mb-1">{k.label}</p>
+                    <p className={`text-sm md:text-base font-bold ${k.color ?? 'text-foreground'}`}>{k.value}</p>
                   </div>
                 ))}
               </div>
@@ -312,9 +319,9 @@ function LoanDetailSheet({
               </TabsList>
 
               {/* ── Aba 1: Visão Geral ── */}
-              <TabsContent value="visao-geral" className="space-y-4 mt-0">
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="space-y-3">
+              <TabsContent value="visao-geral" className="space-y-6 mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm">
+                  <div className="space-y-4">
                     <div>
                       <p className="text-xs text-muted-foreground">Cliente</p>
                       <p className="font-medium">{loan.client.nome}</p>
@@ -349,7 +356,7 @@ function LoanDetailSheet({
                     </div>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div>
                       <p className="text-xs text-muted-foreground">Número de parcelas</p>
                       <p className="font-medium">{loan.numeroParcelas}x</p>
@@ -448,7 +455,7 @@ function LoanDetailSheet({
                               {formatCurrency(inst.totalPago)}
                             </td>
                             <td className={`px-3 py-2 text-right ${toNumber(inst.saldoDevedor) > 0 ? 'text-red-600' : 'text-muted-foreground'}`}>
-                              {formatCurrency(inst.saldoDevedor)}
+                              {formatCurrency(toNumber(inst.saldoDevedor) + encargos)}
                             </td>
                             <td className="px-3 py-2 text-right">
                               {encargos > 0
@@ -467,7 +474,7 @@ function LoanDetailSheet({
                         <td colSpan={3} className="px-3 py-2 text-xs text-muted-foreground">Totais</td>
                         <td className="px-3 py-2 text-right text-xs text-green-600">{formatCurrency(totalPago)}</td>
                         <td className="px-3 py-2 text-right text-xs text-red-600">
-                          {formatCurrency(Math.max(0, totalReceivable - totalPago))}
+                          {formatCurrency(saldoComEncargos)}
                         </td>
                         <td className="px-3 py-2 text-right text-xs text-orange-600">
                           {formatCurrency(
@@ -818,6 +825,7 @@ export default function EmprestimosPage() {
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">#</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Capital</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcelas</th>
@@ -847,6 +855,15 @@ export default function EmprestimosPage() {
                           </button>
                         </td>
                         <td className="px-4 py-3 font-medium">{loan.client?.nome ?? '—'}</td>
+                        <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
+                          {loan.consultor?.nome ? (
+                            <span className="text-xs truncate max-w-[100px] block" title={loan.consultor.nome}>
+                              {loan.consultor.nome}
+                            </span>
+                          ) : (
+                            <span className="text-xs italic opacity-50">—</span>
+                          )}
+                        </td>
                         <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
                           {loan.client?.cpf
                             ? formatCPF(loan.client.cpf)
