@@ -16,6 +16,10 @@ yarn-error.log*
 .env.*
 !.env.example
 !.env.*.example
+.cred
+
+# Dump de produção (dados sensíveis — nunca commitar)
+db/
 .codex-deploy/
 .claude/
 

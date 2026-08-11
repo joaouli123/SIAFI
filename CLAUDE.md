@@ -29,7 +29,7 @@ Realtime:  Supabase Realtime (postgres_changes) — chat de mensagens internas
 Filas:     BullMQ + Redis — notificações assíncronas e jobs
 Portas:    Backend :4010  Frontend :4011
 Deploy:    NSSM (Windows Service) · Nginx reverse proxy · SSL Let's Encrypt
-Supabase:  lvpseuaybpnmrneuyndi · https://lvpseuaybpnmrneuyndi.supabase.co
+Supabase:  aejlmkwqddlpxtwbtknk · https://aejlmkwqddlpxtwbtknk.supabase.co (IPv6-only; usar pooler aws-0-sa-east-1)
 ```
 
 ---
@@ -381,7 +381,7 @@ sc.exe start SIAFI-WEB
 
 ### ⚠️ Supabase RLS — Pendente de Aplicação Manual
 
-Executar no SQL Editor do Supabase (`lvpseuaybpnmrneuyndi`):
+Executar no SQL Editor do Supabase (`aejlmkwqddlpxtwbtknk`):
 
 ```sql
 ALTER TABLE loans        ENABLE ROW LEVEL SECURITY;

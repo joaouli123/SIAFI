@@ -313,7 +313,7 @@ sc.exe stop SIAFI-WEB && sc.exe start SIAFI-WEB
         content: (
           <>
             <P>
-              Projeto <code className="font-mono text-emerald-600 dark:text-emerald-400">lvpseuaybpnmrneuyndi</code> — região{' '}
+              Projeto <code className="font-mono text-emerald-600 dark:text-emerald-400">aejlmkwqddlpxtwbtknk</code> — região{' '}
               <code className="font-mono text-emerald-600 dark:text-emerald-400">sa-east-1</code> (São Paulo).
             </P>
             <Code>{`

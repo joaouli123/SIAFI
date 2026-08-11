@@ -1,7 +1,7 @@
 # SIAFI 2.0 — Database (Prisma + PostgreSQL / Supabase)
 > Última atualização: 2026-05-23
 > **Banco:** PostgreSQL via Supabase Cloud (região sa-east-1 — São Paulo)
-> **Projeto:** `lvpseuaybpnmrneuyndi` · `https://lvpseuaybpnmrneuyndi.supabase.co`
+> **Projeto:** `aejlmkwqddlpxtwbtknk` · `https://aejlmkwqddlpxtwbtknk.supabase.co`
 
 ---
 
@@ -12,7 +12,7 @@
 | ORM | Prisma 5 |
 | Schema | `siafi_v2` |
 | Pooler (API) | `aws-0-sa-east-1.pooler.supabase.com:6543` (Transaction mode) |
-| Direct (Migrations) | `db.lvpseuaybpnmrneuyndi.supabase.co:5432` |
+| Direct (Migrations) | `aws-0-sa-east-1.pooler.supabase.com:5432` (Session mode — projeto é IPv6-only, sem host direto) |
 
 ```prisma
 datasource db {
@@ -244,7 +244,7 @@ ALTER PUBLICATION supabase_realtime ADD TABLE transactions;
 ## 12. RLS Pendente — Aplicar em Produção
 
 ```sql
--- Executar no SQL Editor do Supabase (projeto lvpseuaybpnmrneuyndi)
+-- Executar no SQL Editor do Supabase (projeto aejlmkwqddlpxtwbtknk)
 ALTER TABLE loans        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE installments ENABLE ROW LEVEL SECURITY;
 

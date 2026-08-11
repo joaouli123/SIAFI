@@ -41,7 +41,7 @@ caminho ao array `candidatos` em `backend/src/modules/pdf/pdf.service.ts` ou set
 ## 3. [SECURITY] Aplicar Supabase RLS
 **Labels:** `security`, `infra`
 
-Aplicar as policies de Row Level Security no Supabase (`lvpseuaybpnmrneuyndi`), via SQL Editor,
+Aplicar as policies de Row Level Security no Supabase (`aejlmkwqddlpxtwbtknk`), via SQL Editor,
 para `loans` e `installments` (cliente só vê os próprios). SQL pronto em `CLAUDE.md`
 (§"Supabase RLS — Pendente de Aplicação Manual").
 
