@@ -45,7 +45,7 @@ export class WhatsAppWorker extends WorkerHost {
         message =
           `Olá, ${clienteNome}! 👋\n` +
           `Sua parcela de *${valor}* vence em *${dataVencimento ?? ''}*.\n` +
-          `Pague com PIX pelo portal: https://financeiro.lidera.app.br/portal`;
+          `Pague com PIX pelo portal: https://siafi.app.br/portal`;
         break;
 
       case JOB_WA_COBRANCA_ATRASO:
@@ -66,7 +66,7 @@ export class WhatsAppWorker extends WorkerHost {
           `Olá, ${clienteNome}! 👋\n` +
           `Seu acesso ao portal Lidera foi ativado.\n` +
           `🔐 Senha temporária: *${senhaTemporaria ?? ''}*\n` +
-          `🌐 https://financeiro.lidera.app.br/portal\n` +
+          `🌐 https://siafi.app.br/portal\n` +
           `⚠️ Troque sua senha no primeiro acesso.`;
         break;
 
@@ -75,7 +75,7 @@ export class WhatsAppWorker extends WorkerHost {
           `Olá, ${clienteNome}! 💰\n` +
           `Sua parcela de *${valor}* vence em *${dataVencimento ?? ''}*.\n` +
           `Acesse o portal para pagar via PIX ou baixar o boleto:\n` +
-          `🌐 https://financeiro.lidera.app.br/portal\n` +
+          `🌐 https://siafi.app.br/portal\n` +
           `Qualquer dúvida, estamos à disposição!`;
         break;
 

@@ -9,7 +9,7 @@ export interface LegalSection {
 export const SECTIONS: LegalSection[] = [
   {
     titulo: '1. Identificação',
-    conteudo: `A Lidera Tecnologia e Gestão Ltda (doravante "Lidera"), pessoa jurídica de direito privado, inscrita no CNPJ sob o nº [PREENCHER: CNPJ DA EMPRESA], com sede em [PREENCHER: ENDEREÇO COMPLETO], Cuiabá, Estado do Mato Grosso, é a responsável pela operação do SIAFI — Sistema de Agilidade Financeira, acessível em https://financeiro.lidera.app.br.`,
+    conteudo: `A Lidera Tecnologia e Gestão Ltda (doravante "Lidera"), pessoa jurídica de direito privado, inscrita no CNPJ sob o nº [PREENCHER: CNPJ DA EMPRESA], com sede em [PREENCHER: ENDEREÇO COMPLETO], Cuiabá, Estado do Mato Grosso, é a responsável pela operação do SIAFI — Sistema de Agilidade Financeira, acessível em https://siafi.app.br.`,
   },
   {
     titulo: '2. Aceite dos Termos',
@@ -96,6 +96,6 @@ O uso continuado após a vigência da nova versão implica aceite.`,
     titulo: '11. Contato',
     conteudo: `Para dúvidas sobre estes Termos:
 • Email: lideraabrange@gmail.com
-• Portal de suporte: https://financeiro.lidera.app.br/portal/suporte`,
+• Portal de suporte: https://siafi.app.br/portal/suporte`,
   },
 ]

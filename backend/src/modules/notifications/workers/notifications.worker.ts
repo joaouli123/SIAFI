@@ -30,9 +30,9 @@ import {
 } from '../../queue/queue.constants';
 import type { NotificationJobData } from '../../queue/queue.interfaces';
 
-const LOGO_URL      = 'https://financeiro.lidera.app.br/logo.png';
-const PORTAL_URL    = 'https://financeiro.lidera.app.br/portal';
-const APP_URL       = process.env.APP_URL ?? 'https://financeiro.lidera.app.br';
+const LOGO_URL      = 'https://siafi.app.br/logo.png';
+const PORTAL_URL    = 'https://siafi.app.br/portal';
+const APP_URL       = process.env.APP_URL ?? 'https://siafi.app.br';
 const TELEFONE_SUPORTE = process.env.WHATSAPP_SUPORTE ?? '(65) 99999-9999';
 
 const EMAIL_FOOTER = `

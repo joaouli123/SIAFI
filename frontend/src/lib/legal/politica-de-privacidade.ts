@@ -82,7 +82,7 @@ A Lidera não vende dados pessoais a terceiros.`,
 *A exclusão pode ser limitada quando há obrigação legal de retenção (ex: dados de contratos ativos ou no prazo legal de guarda).
 
 Como exercer seus direitos:
-• Portal: https://financeiro.lidera.app.br/portal/privacidade
+• Portal: https://siafi.app.br/portal/privacidade
 • Email: privacidade@lidera.com.br
 • Prazo de resposta: até 15 dias úteis`,
   },

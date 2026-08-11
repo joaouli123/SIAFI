@@ -51,6 +51,6 @@ Exceção: a preferência de aviso de cookies ("siafi_cookie_consent") é salva 
     titulo: 'Contato',
     conteudo: `Para dúvidas sobre cookies:
 • Email: privacidade@lidera.com.br
-• Portal: https://financeiro.lidera.app.br/portal/suporte`,
+• Portal: https://siafi.app.br/portal/suporte`,
   },
 ]

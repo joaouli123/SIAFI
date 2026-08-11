@@ -251,7 +251,7 @@ export class CobrancaService {
 
       doc.fontSize(11).fillColor(primary).font('Helvetica-Bold').text('INSTRUÇÕES').moveDown(0.3);
       doc.fontSize(9).fillColor('#374151').font('Helvetica')
-        .text('• Acesse o portal e pague via PIX: https://financeiro.lidera.app.br/portal')
+        .text('• Acesse o portal e pague via PIX: https://siafi.app.br/portal')
         .text('• Após o vencimento, multa e mora serão aplicados conforme contrato.')
         .text('• Para dúvidas, entre em contato com a Lidera.');
 
