@@ -32,7 +32,10 @@ function addDays(date: Date, days: number): Date {
 }
 
 async function seedLoanForClient(cpf: string) {
-  const client = await prisma.client.findUnique({ where: { cpf } })
+  // Aceita CPF cru ou formatado — o seed.ts grava formatado (000.000.000-00)
+  const digits = cpf.replace(/\D/g, '')
+  const formatted = `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`
+  const client = await prisma.client.findFirst({ where: { cpf: { in: [digits, formatted] } } })
   if (!client) {
     console.error(`  [erro] cliente com CPF ${cpf} não encontrado — rode prisma/seed.ts antes`)
     return
