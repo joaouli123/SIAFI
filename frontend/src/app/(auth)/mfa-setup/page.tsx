@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, ShieldCheck, Smartphone, QrCode, KeyRound, CheckCircle2 } from 'lucide-react'
 import { useAuth } from '@/contexts/auth.context'
-import { mfaChallengeAndVerify, mfaEnroll, type EnrollResult } from '@/lib/supabase/mfa'
+import { tokenStore } from '@/lib/api'
+import { mfaChallengeAndVerify, mfaEnroll, mfaListFactors, mfaUnenroll, type EnrollResult } from '@/lib/supabase/mfa'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -74,7 +75,7 @@ const STEPS = [
 ]
 
 export default function MfaSetupPage() {
-  const { completeMfa } = useAuth()
+  const { completeMfa, logout } = useAuth()
   const router = useRouter()
   const [enrollment, setEnrollment] = useState<EnrollResult | null>(null)
   const [code, setCode] = useState('')
@@ -85,17 +86,53 @@ export default function MfaSetupPage() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    mfaEnroll()
-      .then((result) => {
-        setEnrollment(result)
+    let cancelled = false
+
+    async function start() {
+      // Aguarda o init do contexto popular o token (recarga da página cai aqui
+      // sem token em memória — o enroll direto no Supabase falharia com 401).
+      let tries = 0
+      while (!tokenStore.get() && tries < 50) {
+        await new Promise((r) => setTimeout(r, 100))
+        tries++
+      }
+      if (cancelled) return
+      if (!tokenStore.get()) {
+        setError('Sessão expirada. Use o botão abaixo para voltar ao login.')
         setLoading(false)
-        setTimeout(() => inputRef.current?.focus(), 50)
-      })
-      .catch((err) => {
-        setError(err?.message ?? 'Erro ao iniciar configuração do MFA.')
-        setLoading(false)
-      })
+        return
+      }
+
+      try {
+        // Remove fatores órfãos de setups abortados — um TOTP não-verificado
+        // pendurado faz o novo enroll falhar por nome duplicado.
+        const factors = await mfaListFactors().catch(() => [])
+        for (const f of factors) {
+          if (f.status === 'unverified') await mfaUnenroll(f.id).catch(() => {})
+        }
+
+        const result = await mfaEnroll()
+        if (!cancelled) {
+          setEnrollment(result)
+          setLoading(false)
+          setTimeout(() => inputRef.current?.focus(), 50)
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          setError(err?.message ?? 'Erro ao iniciar configuração do MFA.')
+          setLoading(false)
+        }
+      }
+    }
+
+    start()
+    return () => { cancelled = true }
   }, [])
+
+  async function handleSair() {
+    await logout()
+    window.location.replace('/login')
+  }
 
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault()
@@ -179,8 +216,13 @@ export default function MfaSetupPage() {
         </CardHeader>
         <CardContent className="space-y-5">
           {error && !enrollment && (
-            <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2">
-              <p className="text-sm text-destructive">{error}</p>
+            <div className="space-y-3">
+              <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2">
+                <p className="text-sm text-destructive">{error}</p>
+              </div>
+              <Button type="button" variant="outline" className="w-full" onClick={handleSair}>
+                Sair e voltar ao login
+              </Button>
             </div>
           )}
 
@@ -254,6 +296,15 @@ export default function MfaSetupPage() {
               </form>
             </>
           )}
+
+          <button
+            type="button"
+            onClick={handleSair}
+            disabled={submitting}
+            className="w-full text-center text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
+          >
+            Cancelar e voltar ao login
+          </button>
         </CardContent>
       </Card>
     </div>

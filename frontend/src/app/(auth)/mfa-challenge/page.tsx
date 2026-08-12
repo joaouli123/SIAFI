@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function MfaChallengePage() {
-  const { completeMfa } = useAuth()
+  const { completeMfa, logout } = useAuth()
   const router = useRouter()
   const [code, setCode] = useState('')
   const [factorId, setFactorId] = useState<string | null>(null)
@@ -167,6 +167,15 @@ export default function MfaChallengePage() {
         <p className="text-center text-xs text-muted-foreground mt-4">
           Abra o Google Authenticator ou outro app TOTP para ver o código.
         </p>
+
+        <button
+          type="button"
+          onClick={async () => { await logout(); window.location.replace('/login') }}
+          disabled={submitting}
+          className="mt-3 w-full text-center text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
+        >
+          Entrar com outro usuário
+        </button>
       </CardContent>
     </Card>
   )

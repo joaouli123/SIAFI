@@ -48,7 +48,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let cancelled = false
 
-    async function init() {
+    // Redireciona sessões aal1 com MFA pendente para o challenge — exceto nas
+    // páginas de MFA e no /login (permite re-login/troca de usuário sem loop).
+    // Retorna true quando disparou navegação (full page load em andamento).
+    function redirectToMfa(): boolean {
+      if (cancelled || typeof window === 'undefined') return false
+      const path = window.location.pathname
+      if (path.includes('/mfa-challenge') || path.includes('/mfa-setup') || path.includes('/login')) {
+        return false
+      }
+      window.location.replace('/mfa-challenge')
+      return true
+    }
+
+    // Retorna true quando disparou navegação — nesse caso isLoading fica true
+    // para o layout manter o spinner e NÃO competir com redirect próprio.
+    async function init(): Promise<boolean> {
       const supabase = getSupabaseBrowserClient()
 
       // 0. Handle OAuth callback code in URL (any page, any port)
@@ -62,7 +77,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const me = await fetchMe()
             if (!cancelled) {
               setUser(me)
-              setIsLoading(false)
               window.location.replace('/dashboard')
             }
           } catch {
@@ -70,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenStore.clear()
             if (!cancelled) window.location.replace('/login?error=acesso_negado')
           }
-          return
+          return true
         }
       }
 
@@ -79,19 +93,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const me = await fetchMe()
         if (me.needsMfa) {
           // Token is valid (aal1) but MFA not yet completed.
-          // Do NOT set user — keep isAuthenticated=false so dashboard redirects.
-          // The page itself (/mfa-challenge) will handle rendering.
-          if (!cancelled) {
-            if (typeof window !== 'undefined') {
-              const path = window.location.pathname
-              if (!path.includes('/mfa-challenge') && !path.includes('/mfa-setup')) {
-                window.location.replace('/mfa-challenge')
-              }
-            }
-          }
-          return
+          // Do NOT set user — the MFA pages handle their own rendering.
+          return redirectToMfa()
         }
-        if (!cancelled) { setUser(me); return }
+        if (!cancelled) setUser(me)
+        return false
       } catch {}
 
       // 2. Try NestJS refresh via httpOnly cookie with fallback in body
@@ -106,15 +112,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         const me = await fetchMe()
         if (me.needsMfa) {
-          if (!cancelled && typeof window !== 'undefined') {
-            const path = window.location.pathname
-            if (!path.includes('/mfa-challenge') && !path.includes('/mfa-setup')) {
-              window.location.replace('/mfa-challenge')
-            }
-          }
-          return
+          return redirectToMfa()
         }
-        if (!cancelled) { setUser(me); return }
+        if (!cancelled) setUser(me)
+        return false
       } catch {}
 
       // 3. Check Supabase session (Google OAuth staff only — NEVER client sessions)
@@ -132,21 +133,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenStore.set(session.access_token)
             const me = await fetchMe()
             if (me.needsMfa) {
-              if (!cancelled && typeof window !== 'undefined') {
-                const path = window.location.pathname
-                if (!path.includes('/mfa-challenge') && !path.includes('/mfa-setup')) {
-                  window.location.replace('/mfa-challenge')
-                }
-              }
-              return
+              return redirectToMfa()
             }
             if (!cancelled) setUser(me)
           }
         }
       } catch {}
+
+      return false
     }
 
-    init().finally(() => { if (!cancelled) setIsLoading(false) })
+    init().then((navigating) => {
+      if (!cancelled && !navigating) setIsLoading(false)
+    })
 
     return () => { cancelled = true }
   }, [])
