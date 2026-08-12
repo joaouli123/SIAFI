@@ -376,7 +376,7 @@ sc.exe start SIAFI-WEB
 ### ⚠️ Configurar em Produção
 - `MP_ACCESS_TOKEN` — Mercado Pago real
 - `WHATSAPP_API_URL` + `WHATSAPP_API_KEY` + `WHATSAPP_INSTANCE` — Evolution API
-- SMTP — `MAIL_HOST`, `MAIL_PORT`, `MAIL_USER`, `MAIL_PASS`
+- ~~SMTP~~ ✅ Cloudflare Email Sending (`smtp.mx.cloudflare.net:465`, user literal `api_token`, remetente `nao-responder@siafi.app.br` — precisa ser da zona `siafi.app.br`)
 - **Supabase RLS** — aplicar policies via SQL Editor (ver abaixo)
 
 ### ⚠️ Supabase RLS — Pendente de Aplicação Manual

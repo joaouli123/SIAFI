@@ -55,7 +55,7 @@ para `loans` e `installments` (cliente só vê os próprios). SQL pronto em `CLA
 Preencher no `backend/.env` de produção (valores reais, por canal privado):
 - `MP_ACCESS_TOKEN` / `MP_WEBHOOK_SECRET` — Mercado Pago real (sair de sandbox)
 - `WHATSAPP_API_URL` / `WHATSAPP_API_KEY` / `WHATSAPP_INSTANCE` (Evolution API)
-- `MAIL_HOST` / `MAIL_PORT` / `MAIL_USER` / `MAIL_PASS` — SMTP
+- ~~`MAIL_HOST` / `MAIL_PORT` / `MAIL_USER` / `MAIL_PASS` — SMTP~~ ✅ Cloudflare Email Sending configurado (2026-08-12)
 
 **Critério de aceite:** PIX, WhatsApp e e-mails funcionando em produção.
 
