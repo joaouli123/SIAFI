@@ -465,7 +465,7 @@ export class PixService {
     const nomeParts = client.nome.trim().split(' ');
     const firstName = nomeParts[0];
     const lastName  = nomeParts.slice(1).join(' ') || firstName;
-    const email     = client.email ?? 'cliente@siafi.app.br';
+    const email     = client.email ?? 'cliente@2wm.siafi.app.br';
     const cpfDigits = client.cpf ? client.cpf.replace(/\D/g, '') : null;
 
     const payer: Record<string, unknown> = { email, first_name: firstName, last_name: lastName };

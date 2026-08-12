@@ -177,7 +177,7 @@ export class PortalService {
     // Portal já estava ativo → link para o login; cliente vai em Contratos após autenticar
     // Acabou de ser ativado → recovery link para definir senha antes de acessar o portal
     const needsPasswordSetup = !jaEraAtivo;
-    const baseUrl = process.env.APP_URL ?? 'https://siafi.app.br';
+    const baseUrl = process.env.APP_URL ?? 'https://2wm.siafi.app.br';
     let link: string;
     if (jaEraAtivo) {
       link = `${baseUrl}/portal/login`;
@@ -397,7 +397,7 @@ export class PortalService {
   }
 
   private async gerarLinkAcesso(email: string): Promise<string> {
-    const redirectTo = `${process.env.APP_URL ?? 'https://siafi.app.br'}/redefinir-senha`;
+    const redirectTo = `${process.env.APP_URL ?? 'https://2wm.siafi.app.br'}/redefinir-senha`;
     const { data, error } = await this.supabase.admin.auth.admin.generateLink({
       type: 'recovery',
       email,

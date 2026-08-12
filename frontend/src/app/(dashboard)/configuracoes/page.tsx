@@ -20,7 +20,7 @@ const SETTING_GROUPS = [
     icon: '🏢',
     keys: [
       { key: 'app_name',      label: 'Nome do Sistema',    placeholder: 'SIAFI' },
-      { key: 'app_url',       label: 'URL do Sistema',     placeholder: 'https://siafi.app.br' },
+      { key: 'app_url',       label: 'URL do Sistema',     placeholder: 'https://2wm.siafi.app.br' },
       { key: 'empresa_nome',  label: 'Nome da Empresa',    placeholder: 'Lidera' },
       { key: 'empresa_email', label: 'E-mail de Contato',  placeholder: 'contato@empresa.com' },
     ],

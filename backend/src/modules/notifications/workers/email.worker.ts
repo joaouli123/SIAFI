@@ -15,8 +15,8 @@ import {
 } from '../../queue/queue.constants';
 import type { NotificationJobData } from '../../queue/queue.interfaces';
 
-const LOGO_URL = 'https://siafi.app.br/logo.png';
-const PORTAL_URL = 'https://siafi.app.br/portal';
+const LOGO_URL = 'https://2wm.siafi.app.br/logo.png';
+const PORTAL_URL = 'https://2wm.siafi.app.br/portal';
 
 @Processor(QUEUE_FINANCE_NOTIFICATIONS, { concurrency: 3 })
 export class EmailWorker extends WorkerHost {

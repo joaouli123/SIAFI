@@ -2,13 +2,14 @@
 
 > Plataforma moderna de gestão de empréstimos e financeiro da **Lidera**.
 
-- **URL Produção:** https://siafi.app.br
-- **Portal do Cliente:** https://siafi.app.br/portal
+- **URL Produção:** https://2wm.siafi.app.br
+- **Portal do Cliente:** https://2wm.siafi.app.br/portal
 - **Repositório:** https://github.com/lideratecnologiaegestao/SIAFI
 - **Backend API (local):** http://localhost:4010/api
 - **Frontend (local):** http://localhost:4011
 
-> O domínio anterior `financeiro.lidera.app.br` foi substituído por `siafi.app.br`.
+> O sistema é servido em `2wm.siafi.app.br`; `siafi.app.br` e `www.siafi.app.br`
+> redirecionam (301) para o site institucional `lideratecnologia.com.br`.
 > Serviços auxiliares seguem o mesmo padrão: `evolution.siafi.app.br`, `files.siafi.app.br`, etc.
 > (os hosts `*.lidera.app.br` permanecem como alias no Nginx).
 
@@ -153,8 +154,8 @@ Template completo em [backend/.env.example](backend/.env.example). Arquivo real:
 ```env
 NODE_ENV=production
 PORT=4010
-APP_URL=https://siafi.app.br
-FRONTEND_URL=https://siafi.app.br,http://localhost:4011
+APP_URL=https://2wm.siafi.app.br
+FRONTEND_URL=https://2wm.siafi.app.br,http://localhost:4011
 
 # Banco (Supabase PostgreSQL)
 DATABASE_URL="postgresql://postgres.PROJECT_REF:SENHA@aws-X-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
@@ -181,7 +182,7 @@ REDIS_HOST=...  REDIS_PORT=6379  REDIS_PASSWORD=...  REDIS_TLS=true
 
 ## Nginx
 
-Config **viva** de produção: `C:\nginx\conf\sites\siafi.conf` (`server_name siafi.app.br www.siafi.app.br`).
+Config **viva** de produção: `C:\nginx\conf\sites\siafi.conf` (`server_name 2wm.siafi.app.br`; apex/www → redirect 301 institucional).
 Faz proxy: `/api/` → `127.0.0.1:4010`, demais rotas → `127.0.0.1:4011`.
 
 ```powershell

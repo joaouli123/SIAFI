@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
-const PORTAL_URL = 'https://siafi.app.br/portal';
-const LOGO_URL   = 'https://siafi.app.br/logo.png';
+const PORTAL_URL = 'https://2wm.siafi.app.br/portal';
+const LOGO_URL   = 'https://2wm.siafi.app.br/logo.png';
 
 const FOOTER = `
   <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">

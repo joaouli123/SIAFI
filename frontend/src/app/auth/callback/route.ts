@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 function getPublicOrigin(request: NextRequest): string {
   const proto = request.headers.get('x-forwarded-proto') ?? 'https'
-  const host = request.headers.get('host') ?? 'siafi.app.br'
+  const host = request.headers.get('host') ?? '2wm.siafi.app.br'
   return `${proto}://${host}`
 }
 

@@ -65,7 +65,7 @@ const ARTICLES: Article[] = [
   {
     id: 'pp-1', categoryId: 'primeiros-passos',
     question: 'Como faço para acessar o sistema pela primeira vez?',
-    answer: `Acesse o endereço do sistema no navegador: https://siafi.app.br\n\nDigite o e-mail e a senha provisória enviada pelo administrador. Na sequência, o sistema pedirá que você defina uma nova senha permanente. Após trocar a senha, você será redirecionado para o painel inicial.\n\nSe for seu primeiro acesso com o perfil administrador, financeiro ou consultor, a configuração da autenticação em dois fatores (Google Authenticator) será solicitada imediatamente.`,
+    answer: `Acesse o endereço do sistema no navegador: https://2wm.siafi.app.br\n\nDigite o e-mail e a senha provisória enviada pelo administrador. Na sequência, o sistema pedirá que você defina uma nova senha permanente. Após trocar a senha, você será redirecionado para o painel inicial.\n\nSe for seu primeiro acesso com o perfil administrador, financeiro ou consultor, a configuração da autenticação em dois fatores (Google Authenticator) será solicitada imediatamente.`,
   },
   {
     id: 'pp-2', categoryId: 'primeiros-passos',
@@ -493,7 +493,7 @@ const ARTICLES: Article[] = [
   {
     id: 'cfg-7', categoryId: 'configuracoes-sistema',
     question: 'Como configurar o Mercado Pago?',
-    answer: `Acesse Configurações → Integrações → Mercado Pago. Informe o Access Token de produção (obtido no painel do Mercado Pago). Configure também o webhook no painel do Mercado Pago apontando para: https://siafi.app.br/api/webhook/mp`,
+    answer: `Acesse Configurações → Integrações → Mercado Pago. Informe o Access Token de produção (obtido no painel do Mercado Pago). Configure também o webhook no painel do Mercado Pago apontando para: https://2wm.siafi.app.br/api/webhook/mp`,
   },
   {
     id: 'cfg-8', categoryId: 'configuracoes-sistema',

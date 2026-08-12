@@ -239,7 +239,7 @@ export default function LoginPage() {
         <div className="mt-4 pt-4 border-t text-center">
           <p className="text-xs text-muted-foreground mb-1">É cliente Lidera?</p>
           <a
-            href="https://siafi.app.br/portal/login"
+            href="/portal/login"
             className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors"
           >
             Acessar Portal do Cliente →

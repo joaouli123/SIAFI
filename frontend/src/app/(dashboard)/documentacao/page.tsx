@@ -152,7 +152,7 @@ const DOCS: DocSection[] = [
                 ['Backend', 'npm run start:dev (:4010)', 'NSSM SIAFI-API (:4010)'],
                 ['Frontend', 'npm run dev (:4011)', 'NSSM SIAFI-WEB (:4011)'],
                 ['SSL', 'Não', "Let's Encrypt via Nginx"],
-                ['URL', 'http://localhost:4011', 'https://siafi.app.br'],
+                ['URL', 'http://localhost:4011', 'https://2wm.siafi.app.br'],
                 ['Banco', 'Supabase Cloud (mesmo projeto)', 'Supabase Cloud'],
                 ['Redis', 'Upstash (mesmo)', 'Upstash'],
               ]}
@@ -753,7 +753,7 @@ return <DashboardFinanceiro />`}</Code>
             </P>
             <Code>{`
 // Configurar webhook no painel do Mercado Pago:
-// URL: https://siafi.app.br/api/webhook/mp
+// URL: https://2wm.siafi.app.br/api/webhook/mp
 // Eventos: payment.created, payment.updated
 
 // QR Code válido por 24h
@@ -884,7 +884,7 @@ npx prisma migrate dev --name YYYYMMDD_descricao_curta`}</Code>
           <P>
             Disponível em{' '}
             <code className="font-mono text-emerald-600 dark:text-emerald-400">
-              https://siafi.app.br/admin/queues
+              https://2wm.siafi.app.br/admin/queues
             </code>
             . Exibe jobs pendentes, ativos, completados e com falha das filas{' '}
             <code className="font-mono text-emerald-600 dark:text-emerald-400">notif-queue</code> e{' '}
