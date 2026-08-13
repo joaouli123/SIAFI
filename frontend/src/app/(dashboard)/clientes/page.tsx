@@ -215,8 +215,8 @@ export default function ClientesPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Nome</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Nome</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Cadastro</th>

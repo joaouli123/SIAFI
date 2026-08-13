@@ -134,8 +134,8 @@ export default function InadimplentesPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30 text-left">
-                    <th className="px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground">Atraso</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>

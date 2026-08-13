@@ -317,8 +317,8 @@ export default function ParcelasPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Vencimento</th>
