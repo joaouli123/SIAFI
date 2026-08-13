@@ -203,7 +203,7 @@ export default function AuditoriaPage() {
           ) : !data?.data.length ? (
             <div className="p-8 text-center"><Shield className="size-10 mx-auto text-muted-foreground mb-3" /><p className="text-muted-foreground text-sm">Nenhum registro encontrado.</p></div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="tabela-rolavel">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">

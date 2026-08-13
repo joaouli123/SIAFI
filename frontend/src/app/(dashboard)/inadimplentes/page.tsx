@@ -130,11 +130,12 @@ export default function InadimplentesPage() {
 
           <Card>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              <div className="tabela-rolavel">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30 text-left">
                     <th className="px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground">Atraso</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
@@ -167,15 +168,15 @@ export default function InadimplentesPage() {
                                 {loan.client?.nome}
                               </Link>
                             </div>
-                            {loan.client?.cpf && (
-                              <span className="text-xs text-muted-foreground font-mono">{formatCPF(loan.client.cpf)}</span>
-                            )}
                             <div className="flex items-center gap-1.5 mt-0.5">
                               <span className="text-[10px] bg-muted px-1 py-0.5 rounded text-muted-foreground">
                                 {loan.client?.quantidadeEmprestimos ?? 1} empréstimo{(loan.client?.quantidadeEmprestimos ?? 1) !== 1 ? 's' : ''}
                               </span>
                             </div>
                           </div>
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground font-mono text-xs hidden md:table-cell">
+                          {loan.client?.cpf ? formatCPF(loan.client.cpf) : '—'}
                         </td>
                         <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
                         <td className="px-4 py-3">

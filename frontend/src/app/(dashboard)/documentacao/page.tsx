@@ -26,7 +26,7 @@ function Code({ children }: { children: string }) {
 
 function DocTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return (
-    <div className="my-4 overflow-x-auto">
+    <div className="my-4 tabela-rolavel">
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr>

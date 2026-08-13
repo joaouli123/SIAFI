@@ -179,6 +179,27 @@
     z-index: 20;
     background-color: var(--card);
   }
+
+  /* Container padrão das tabelas roláveis.
+     WHY: `overflow-x: auto` sozinho faz o navegador computar `overflow-y: auto`
+     também, criando um scroll container que cresce junto com o conteúdo — ou
+     seja, um scrollport que nunca rola. O `position: sticky` do thead passa a
+     se ancorar nesse container em vez da tela, e o cabeçalho sai de vista com
+     o resto da tabela. Limitar a altura devolve ao thead um scrollport real. */
+  .tabela-rolavel {
+    overflow: auto;
+    /* O `max()` garante um piso: se o viewport for muito baixo (ou reportado
+       como zero, como acontece em janelas ainda não compostas), a tabela não
+       colapsa para altura nenhuma. */
+    max-height: max(24rem, calc(100dvh - 14rem));
+  }
+
+  /* Tabela aninhada (linha expandida): o cabeçalho dela não pode passar por
+     cima do cabeçalho da tabela externa, que fica fixo no topo. */
+  table table > thead,
+  table table > thead > tr > th {
+    z-index: 5;
+  }
 }
 
 @layer utilities {

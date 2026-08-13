@@ -211,7 +211,7 @@ export default function ClientesPage() {
               ) : null}
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="tabela-rolavel">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">

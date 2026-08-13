@@ -41,7 +41,7 @@ export default function SuportePage() {
               <p className="text-muted-foreground text-sm">Nenhum ticket de suporte aberto.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="tabela-rolavel">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">

@@ -424,7 +424,7 @@ function LoanDetailSheet({
 
               {/* ── Aba 2: Parcelas ── */}
               <TabsContent value="parcelas" className="mt-0">
-                <div className="overflow-x-auto rounded-lg border">
+                <div className="tabela-rolavel rounded-lg border">
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="bg-muted/40 border-b">
@@ -819,7 +819,7 @@ export default function EmprestimosPage() {
               ) : null}
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="tabela-rolavel">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">

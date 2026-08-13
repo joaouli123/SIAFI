@@ -313,11 +313,12 @@ export default function ParcelasPage() {
       ) : (
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="tabela-rolavel">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Vencimento</th>
@@ -356,11 +357,11 @@ export default function ParcelasPage() {
                       <tr key={inst.id} className="border-b border-border hover:bg-muted/20 transition-colors">
                         <td className="px-4 py-3">
                           <Link href={`/clientes/${inst.loan.client.id}`} className="hover:underline block">
-                            {inst.loan.client.cpf && (
-                              <span className="block text-xs text-muted-foreground font-mono">{formatCPF(inst.loan.client.cpf)}</span>
-                            )}
                             <span className="font-medium">{inst.loan.client.nome}</span>
                           </Link>
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground font-mono text-xs hidden md:table-cell">
+                          {inst.loan.client.cpf ? formatCPF(inst.loan.client.cpf) : '—'}
                         </td>
                         <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
                           {inst.loan.client?.consultor?.nome ? (
@@ -433,7 +434,7 @@ export default function ParcelasPage() {
                 </tbody>
                 <tfoot>
                   <tr className="bg-muted/40 border-t font-medium text-sm">
-                    <td colSpan={4} className="px-4 py-2.5 text-xs text-muted-foreground">
+                    <td colSpan={5} className="px-4 py-2.5 text-xs text-muted-foreground">
                       {meta ? `${meta.total} no total${meta.lastPage > 1 ? ' · somas desta página' : ''}` : `${activeData.length} parcela${activeData.length !== 1 ? 's' : ''}`}
                     </td>
                     {showSplit && (

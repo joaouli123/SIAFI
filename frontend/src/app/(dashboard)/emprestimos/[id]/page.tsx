@@ -452,7 +452,7 @@ export default function EmprestimoDetalhePage() {
 
               {/* Tabela: parcelas quitadas e parte do consultor */}
               {quitadas.length > 0 && (
-                <div className="overflow-x-auto rounded-lg border">
+                <div className="tabela-rolavel rounded-lg border">
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="border-b bg-muted/40">
@@ -536,7 +536,7 @@ export default function EmprestimoDetalhePage() {
         </CardHeader>
 
         {activeTab === 'cobrancas' && (
-          <CardContent className="p-0 overflow-x-auto">
+          <CardContent className="p-0 tabela-rolavel">
             <table className="w-full text-sm min-w-[700px]">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
@@ -578,7 +578,7 @@ export default function EmprestimoDetalhePage() {
           </CardContent>
         )}
 
-        {activeTab === 'parcelas' && <CardContent className="p-0 overflow-x-auto">
+        {activeTab === 'parcelas' && <CardContent className="p-0 tabela-rolavel">
           <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="border-b border-border bg-muted/30">
@@ -694,7 +694,7 @@ export default function EmprestimoDetalhePage() {
                           Histórico de baixas — Parcela #{inst.numero}
                         </span>
                       </div>
-                      <div className="overflow-x-auto rounded border border-blue-200 dark:border-blue-900">
+                      <div className="tabela-rolavel rounded border border-blue-200 dark:border-blue-900">
                         <table className="w-full text-xs">
                           <thead>
                             <tr className="bg-blue-100/60 dark:bg-blue-900/30 border-b border-blue-200 dark:border-blue-900">
