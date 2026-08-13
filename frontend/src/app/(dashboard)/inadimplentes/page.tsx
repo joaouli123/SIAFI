@@ -134,8 +134,8 @@ export default function InadimplentesPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30 text-left">
-                    <th className="px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground">Atraso</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
@@ -161,6 +161,9 @@ export default function InadimplentesPage() {
                       : 0
                     return (
                       <tr key={loan.id} className="border-b border-border hover:bg-muted/20">
+                        <td className="px-4 py-3 text-muted-foreground font-mono text-xs hidden md:table-cell">
+                          {loan.client?.cpf ? formatCPF(loan.client.cpf) : '—'}
+                        </td>
                         <td className="px-4 py-3">
                           <div className="flex flex-col">
                             <div className="flex items-center gap-1.5">
@@ -174,9 +177,6 @@ export default function InadimplentesPage() {
                               </span>
                             </div>
                           </div>
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground font-mono text-xs hidden md:table-cell">
-                          {loan.client?.cpf ? formatCPF(loan.client.cpf) : '—'}
                         </td>
                         <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
                         <td className="px-4 py-3">

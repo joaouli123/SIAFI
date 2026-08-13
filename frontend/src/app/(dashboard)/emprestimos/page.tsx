@@ -824,9 +824,9 @@ export default function EmprestimosPage() {
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">#</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Capital</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcelas</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Vl. Parcela</th>
@@ -854,6 +854,11 @@ export default function EmprestimosPage() {
                             #{loan.id}
                           </button>
                         </td>
+                        <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
+                          {loan.client?.cpf
+                            ? formatCPF(loan.client.cpf)
+                            : <Badge variant="outline" className="text-xs font-normal">Não informado</Badge>}
+                        </td>
                         <td className="px-4 py-3 font-medium">{loan.client?.nome ?? '—'}</td>
                         <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
                           {loan.consultor?.nome ? (
@@ -863,11 +868,6 @@ export default function EmprestimosPage() {
                           ) : (
                             <span className="text-xs italic opacity-50">—</span>
                           )}
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
-                          {loan.client?.cpf
-                            ? formatCPF(loan.client.cpf)
-                            : <Badge variant="outline" className="text-xs font-normal">Não informado</Badge>}
                         </td>
                         <td className="px-4 py-3 text-right font-medium">
                           {formatCurrency(loan.principalAmount)}
