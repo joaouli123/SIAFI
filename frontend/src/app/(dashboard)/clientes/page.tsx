@@ -211,12 +211,12 @@ export default function ClientesPage() {
               ) : null}
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="tabela-rolavel">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Nome</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">CPF</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Nome</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Consultor</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Cadastro</th>
@@ -229,15 +229,15 @@ export default function ClientesPage() {
                 <tbody>
                   {data.data.map((c) => (
                     <tr key={c.id} className="border-b border-border hover:bg-muted/20 transition-colors">
-                      <td className="px-4 py-3 font-medium">
-                        <div className="flex items-center gap-1.5">
-                          <span>{c.nome}</span>
-                        </div>
-                      </td>
                       <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
                         {c.cpf
                           ? formatCPF(c.cpf)
                           : <Badge variant="outline" className="text-xs font-normal">Não informado</Badge>}
+                      </td>
+                      <td className="px-4 py-3 font-medium">
+                        <div className="flex items-center gap-1.5">
+                          <span>{c.nome}</span>
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
                         {c.whatsapp ? formatPhone(c.whatsapp) : <span className="text-xs text-muted-foreground italic">Sem WhatsApp</span>}
