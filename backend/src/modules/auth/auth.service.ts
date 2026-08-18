@@ -437,9 +437,10 @@ export class AuthService {
 
   // ─── Logout ───────────────────────────────────────────────────────────────
 
-  async logout(supabaseId: string): Promise<void> {
+  /** Revoga a sessão Supabase do JWT informado (admin.signOut espera o JWT, não o user id). */
+  async logout(jwt: string): Promise<void> {
     try {
-      await this.supabase.admin.auth.admin.signOut(supabaseId, 'local');
+      await this.supabase.admin.auth.admin.signOut(jwt, 'local');
     } catch {
       // Best-effort — client removes cookie regardless
     }

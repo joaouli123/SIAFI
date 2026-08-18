@@ -74,31 +74,46 @@ export class AuthController {
    */
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Req() req: Request, @Body() body: { refreshToken?: string }) {
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: { refreshToken?: string },
+  ) {
     const cookies = req.cookies as Record<string, string>;
     const refreshToken = body?.refreshToken || cookies['refresh_token'];
     if (!refreshToken) throw new UnauthorizedException('Refresh token ausente');
-    return this.authService.refresh(refreshToken);
+    try {
+      return await this.authService.refresh(refreshToken);
+    } catch (err) {
+      // Refresh morto: limpa o cookie para o navegador não ficar preso num
+      // loop login↔dashboard com credencial que nunca mais valida.
+      this.limparCookieRefresh(res);
+      throw err;
+    }
   }
 
-  /**
-   * POST /api/auth/logout
-   * Revoga a sessão Supabase e limpa o cookie.
-   */
-  @UseGuards(JwtAuthGuard)
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
-  async logout(
-    @Res({ passthrough: true }) res: Response,
-    @CurrentUser() user: CurrentUserPayload,
-  ) {
-    await this.authService.logout(user.supabaseId);
+  private limparCookieRefresh(res: Response): void {
     res.clearCookie('refresh_token', {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       path: '/',
       secure: process.env.NODE_ENV === 'production',
     });
+  }
+
+  /**
+   * POST /api/auth/logout
+   * Revoga a sessão Supabase e limpa o cookie.
+   */
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    // Sem guard: precisa funcionar com token aal1 (MFA pendente), expirado ou
+    // ausente — senão quem está preso num estado inválido nunca consegue sair.
+    // O cookie é sempre limpo; a sessão Supabase é revogada quando o token valida.
+    const token = (req.headers.authorization ?? '').replace(/^Bearer\s+/i, '');
+    if (token) await this.authService.logout(token);
+    this.limparCookieRefresh(res);
     return { message: 'Sessão encerrada com sucesso' };
   }
 

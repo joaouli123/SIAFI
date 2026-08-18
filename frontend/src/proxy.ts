@@ -26,9 +26,11 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (isPublicPath(pathname)) {
-    if (pathname === '/login' && hasActiveSession(request)) {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
-    }
+    // Não redirecionar /login -> /dashboard por cookie. Cookies de sessão podem
+    // estar mortos (refresh_token expirado, marcador siafi_session órfão) e o
+    // dashboard devolveria para /login → loop com spinner eterno. Quem decide
+    // se há sessão válida é o AuthContext (que consulta a API); a página de
+    // login já redireciona sozinha quando isAuthenticated=true.
     return NextResponse.next()
   }
 

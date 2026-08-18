@@ -150,11 +150,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } catch {}
 
+      // Nenhuma credencial validou: limpa restos (marcador siafi_session, refresh
+      // token morto no localStorage) para não reciclar lixo em próximos loads.
+      tokenStore.clear()
+      try { localStorage.removeItem('siafi_refresh_token') } catch {}
       return false
     }
 
     init().then((navigating) => {
-      if (!cancelled && !navigating) setIsLoading(false)
+      if (cancelled || navigating) return
+      setIsLoading(false)
     })
 
     return () => { cancelled = true }

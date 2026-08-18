@@ -8,6 +8,7 @@ import { z } from 'zod'
 import Image from 'next/image'
 import { Eye, EyeOff, Loader2, CheckCircle2, AlertTriangle, XCircle, RefreshCw } from 'lucide-react'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import api, { tokenStore } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -34,6 +35,21 @@ const schema = z.object({
 })
 
 type FormData = z.infer<typeof schema>
+
+// Encerra TODA credencial local — não só a sessão Supabase. O link costuma
+// ser aberto num navegador onde a sessão anterior ainda existe (cookie
+// httpOnly do backend + refresh token no localStorage + siafi_session); se
+// sobrar qualquer uma, o /login re-autentica sozinho com o token antigo
+// (aal1) e o dashboard fica preso no "Carregando...".
+async function encerrarSessaoCompleta() {
+  try { await api.post('/auth/logout') } catch {}
+  try { await getSupabaseBrowserClient().auth.signOut({ scope: 'local' }) } catch {}
+  tokenStore.clear()
+  try {
+    localStorage.removeItem('siafi_refresh_token')
+    Object.keys(localStorage).filter(k => k.startsWith('sb-')).forEach(k => localStorage.removeItem(k))
+  } catch {}
+}
 
 // ─── Componentes auxiliares ───────────────────────────────────────────────────
 
@@ -150,7 +166,7 @@ export default function RedefinirSenhaPage() {
       setSegundosRestantes(contador)
       if (contador <= 0) {
         clearInterval(interval)
-        router.replace(destino)
+        window.location.replace(destino)
       }
     }, 1000)
     return () => clearInterval(interval)
@@ -189,7 +205,7 @@ export default function RedefinirSenhaPage() {
         if (error) throw error
       }
 
-      await supabase.auth.signOut().catch(() => {})
+      await encerrarSessaoCompleta()
       setEstado('sucesso')
     } catch (err: any) {
       setMensagemErro(err?.message ?? 'Erro ao salvar a senha. Tente novamente.')
@@ -276,7 +292,7 @@ export default function RedefinirSenhaPage() {
           <p className="text-sm text-muted-foreground">
             Redirecionando para o login em <strong>{segundosRestantes}s</strong>...
           </p>
-          <Button className="w-full" onClick={() => router.replace(destino)}>
+          <Button className="w-full" onClick={() => window.location.replace(destino)}>
             Ir para o login agora
           </Button>
         </CardContent>
