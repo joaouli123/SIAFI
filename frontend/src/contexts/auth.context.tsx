@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     function redirectToMfa(): boolean {
       if (cancelled || typeof window === 'undefined') return false
       const path = window.location.pathname
-      if (path.includes('/mfa-challenge') || path.includes('/mfa-setup') || path.includes('/login')) {
+      if (path.includes('/mfa-challenge') || path.includes('/mfa-setup') || path.includes('/login') || path.includes('/redefinir-senha')) {
         return false
       }
       window.location.replace('/mfa-challenge')
@@ -65,6 +65,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // para o layout manter o spinner e NÃO competir com redirect próprio.
     async function init(): Promise<boolean> {
       const supabase = getSupabaseBrowserClient()
+
+      // -1. Link de recuperação de senha que caiu fora de /redefinir-senha
+      // (Supabase manda para o Site URL quando o redirect_to não está na
+      // allow-list). O token vem no hash e criaria sessão silenciosamente —
+      // repassa para a tela correta com o hash intacto.
+      const hash = window.location.hash
+      if (hash.includes('type=recovery') && !window.location.pathname.startsWith('/redefinir-senha')) {
+        window.location.replace(`/redefinir-senha${hash}`)
+        return true
+      }
 
       // 0. Handle OAuth callback code in URL (any page, any port)
       const urlCode = new URLSearchParams(window.location.search).get('code')

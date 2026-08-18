@@ -35,6 +35,17 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Link de recuperação de senha que o Supabase mandou para o Site URL
+            (redirect_to fora da allow-list): o token vem no hash e viraria
+            sessão silenciosa. Roda antes de qualquer JS da app e devolve o
+            fluxo para /redefinir-senha com o hash intacto. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var h=location.hash;if(h&&h.indexOf('type=recovery')!==-1&&location.pathname.indexOf('/redefinir-senha')!==0){location.replace('/redefinir-senha'+h);}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
         <Toaster richColors position="top-right" />
