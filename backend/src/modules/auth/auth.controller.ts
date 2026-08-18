@@ -13,6 +13,7 @@ import {
   HttpStatus,
   UnauthorizedException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -115,6 +116,27 @@ export class AuthController {
     // DISABLE_MFA=true suspende a exigência neste ambiente (ver auth.service.ts)
     const needsMfa = process.env.DISABLE_MFA !== 'true' && mfaRoles.includes(full.role) && aal !== 'aal2';
     return { id: full.id, username: full.username, nome: full.nome, role: full.role, aal, needsMfa };
+  }
+
+  /**
+   * POST /api/auth/redefinir-senha
+   * Após o usuário trocar a senha no Supabase (link de recuperação), sincroniza
+   * o hash bcrypt em public.users — o login de operadores valida primeiro esse
+   * hash e só depois o Supabase; sem a sincronia a nova senha não funcionaria.
+   * MeGuard: aceita token aal1 (a sessão de recovery não passa pelo MFA).
+   */
+  @UseGuards(MeGuard)
+  @Post('redefinir-senha')
+  @HttpCode(HttpStatus.OK)
+  async redefinirSenha(
+    @CurrentUser() user: CurrentUserPayload,
+    @Body() body: { novaSenha?: string },
+  ) {
+    if (!body?.novaSenha || body.novaSenha.length < 8) {
+      throw new BadRequestException('Senha inválida');
+    }
+    await this.authService.sincronizarSenhaLocal(user.id, body.novaSenha);
+    return { message: 'Senha sincronizada' };
   }
 
   // ─── MFA ─────────────────────────────────────────────────────────────────

@@ -165,6 +165,26 @@ export default function RedefinirSenhaPage() {
       const supabase = getSupabaseBrowserClient()
       const { error } = await supabase.auth.updateUser({ password: data.novaSenha })
       if (error) throw error
+
+      // Operadores: o login valida o bcrypt em public.users antes do Supabase —
+      // sincroniza a nova senha no backend ou o link de recuperação não surte efeito.
+      if (tipoUsuario === 'staff') {
+        const { data: { session } } = await supabase.auth.getSession()
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4010/api'
+        const res = await fetch(`${apiUrl}/auth/redefinir-senha`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token ?? ''}`,
+          },
+          body: JSON.stringify({ novaSenha: data.novaSenha }),
+        })
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body?.message ?? 'Falha ao sincronizar a senha no sistema.')
+        }
+      }
+
       await supabase.auth.signOut()
       setEstado('sucesso')
     } catch (err: any) {

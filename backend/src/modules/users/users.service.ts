@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { SupabaseService } from '../../supabase/supabase.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
@@ -22,7 +23,10 @@ export interface UpdateUserDto {
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly supabase: SupabaseService,
+  ) {}
 
   async findByUsername(username: string): Promise<User | null> {
     return this.prisma.user.findUnique({ where: { username } });
@@ -89,6 +93,24 @@ export class UsersService {
     if (dto.active !== undefined) data.active = dto.active;
     if (dto.comissaoPercentual !== undefined) data.comissaoPercentual = dto.comissaoPercentual;
     if (dto.password) data.password = await bcrypt.hash(dto.password, 12);
+
+    // O login autentica no Supabase com `${username}@siafi.local`; trocar o
+    // username (ou a senha) só no Prisma deixa a conta Supabase órfã e o
+    // operador sem conseguir logar. Sincroniza antes de gravar.
+    const usernameMudou = dto.username !== undefined && dto.username !== existing.username;
+    if (existing.supabaseId && (usernameMudou || dto.password || dto.role !== undefined)) {
+      const attrs: Record<string, any> = {};
+      if (usernameMudou) {
+        attrs.email = `${dto.username}@siafi.local`;
+        attrs.email_confirm = true;
+        attrs.user_metadata = { username: dto.username, nome: dto.nome ?? existing.nome };
+      }
+      if (dto.password) attrs.password = dto.password;
+      if (dto.role !== undefined) attrs.app_metadata = { role: dto.role, prismaId: existing.id, tipo: 'operador' };
+      const { error } = await this.supabase.admin.auth.admin.updateUserById(existing.supabaseId, attrs);
+      if (error) throw new ConflictException(`Falha ao sincronizar conta de acesso: ${error.message}`);
+      if (usernameMudou) data.email = `${dto.username}@siafi.local`;
+    }
 
     const user = await this.prisma.user.update({ where: { id }, data });
     const { password: _, ...safe } = user;

@@ -507,6 +507,19 @@ export class AuthService {
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
+  /**
+   * Sincroniza a senha em public.users após troca via link de recuperação
+   * (a tela /redefinir-senha atualiza o Supabase; aqui gravamos o bcrypt local
+   * que loginComEmailOuCpf valida antes do Supabase). Zera bloqueio por falhas.
+   */
+  async sincronizarSenhaLocal(userId: number, novaSenha: string): Promise<void> {
+    const hashed = await bcrypt.hash(novaSenha, 12);
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashed, failedLoginAttempts: 0, lockedUntil: null },
+    });
+  }
+
   toSupabaseEmail(username: string): string {
     return `${username}@siafi.local`;
   }
