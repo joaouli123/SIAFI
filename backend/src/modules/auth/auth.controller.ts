@@ -136,10 +136,11 @@ export class AuthController {
 
   /**
    * POST /api/auth/redefinir-senha
-   * Após o usuário trocar a senha no Supabase (link de recuperação), sincroniza
-   * o hash bcrypt em public.users — o login de operadores valida primeiro esse
-   * hash e só depois o Supabase; sem a sincronia a nova senha não funcionaria.
-   * MeGuard: aceita token aal1 (a sessão de recovery não passa pelo MFA).
+   * Redefine a senha do operador a partir da sessão de recovery (link por e-mail).
+   * Feito server-side (chave admin): o cliente Supabase exige aal2 para trocar
+   * senha quando há MFA, e a sessão de recovery é sempre aal1. Também
+   * sincroniza o hash bcrypt em public.users, validado antes do Supabase no login.
+   * MeGuard: aceita token aal1.
    */
   @UseGuards(MeGuard)
   @Post('redefinir-senha')
@@ -147,12 +148,14 @@ export class AuthController {
   async redefinirSenha(
     @CurrentUser() user: CurrentUserPayload,
     @Body() body: { novaSenha?: string },
+    @Req() req: Request,
   ) {
     if (!body?.novaSenha || body.novaSenha.length < 8) {
       throw new BadRequestException('Senha inválida');
     }
-    await this.authService.sincronizarSenhaLocal(user.id, body.novaSenha);
-    return { message: 'Senha sincronizada' };
+    const jwt = (req.headers.authorization ?? '').replace(/^Bearer\s+/i, '') || undefined;
+    await this.authService.redefinirSenhaOperador(user.id, user.supabaseId, body.novaSenha, jwt);
+    return { message: 'Senha redefinida' };
   }
 
   // ─── MFA ─────────────────────────────────────────────────────────────────

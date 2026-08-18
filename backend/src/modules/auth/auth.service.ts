@@ -521,6 +521,23 @@ export class AuthService {
     });
   }
 
+  /**
+   * Redefine a senha de um operador a partir da sessão de recovery (aal1).
+   * A troca via cliente Supabase (`updateUser`) exige aal2 quando a conta tem
+   * MFA verificado — o link de recuperação nunca chega em aal2, então a
+   * operação é feita server-side com a chave admin e o hash local é
+   * sincronizado. Sessões antigas são derrubadas.
+   */
+  async redefinirSenhaOperador(userId: number, supabaseId: string, novaSenha: string, jwt?: string): Promise<void> {
+    if (!supabaseId) throw new UnauthorizedException('Sessão inválida');
+    const { error } = await this.supabase.admin.auth.admin.updateUserById(supabaseId, { password: novaSenha });
+    if (error) throw new InternalServerErrorException(`Falha ao atualizar a senha: ${error.message}`);
+    await this.sincronizarSenhaLocal(userId, novaSenha);
+    // Encerra todas as sessões do usuário (inclusive a de recovery) — o próximo
+    // acesso exige a nova senha e o MFA normalmente.
+    if (jwt) await this.supabase.admin.auth.admin.signOut(jwt, 'global').catch(() => {});
+  }
+
   // ─── Esqueci minha senha ─────────────────────────────────────────────────
 
   /**

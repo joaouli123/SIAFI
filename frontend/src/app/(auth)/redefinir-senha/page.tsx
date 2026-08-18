@@ -163,12 +163,12 @@ export default function RedefinirSenhaPage() {
     setMensagemErro('')
     try {
       const supabase = getSupabaseBrowserClient()
-      const { error } = await supabase.auth.updateUser({ password: data.novaSenha })
-      if (error) throw error
 
-      // Operadores: o login valida o bcrypt em public.users antes do Supabase —
-      // sincroniza a nova senha no backend ou o link de recuperação não surte efeito.
       if (tipoUsuario === 'staff') {
+        // Operadores: a troca é feita pelo backend com a chave admin. O
+        // updateUser do cliente exige sessão aal2 quando a conta tem MFA e a
+        // sessão de recovery é sempre aal1 ("AAL2 session is required..."); o
+        // backend também sincroniza o hash bcrypt validado no login.
         const { data: { session } } = await supabase.auth.getSession()
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4010/api'
         const res = await fetch(`${apiUrl}/auth/redefinir-senha`, {
@@ -181,11 +181,15 @@ export default function RedefinirSenhaPage() {
         })
         if (!res.ok) {
           const body = await res.json().catch(() => ({}))
-          throw new Error(body?.message ?? 'Falha ao sincronizar a senha no sistema.')
+          throw new Error(body?.message ?? 'Falha ao redefinir a senha. Tente novamente.')
         }
+      } else {
+        // Clientes do portal não têm MFA obrigatório: updateUser funciona em aal1.
+        const { error } = await supabase.auth.updateUser({ password: data.novaSenha })
+        if (error) throw error
       }
 
-      await supabase.auth.signOut()
+      await supabase.auth.signOut().catch(() => {})
       setEstado('sucesso')
     } catch (err: any) {
       setMensagemErro(err?.message ?? 'Erro ao salvar a senha. Tente novamente.')
