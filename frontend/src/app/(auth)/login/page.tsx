@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -167,6 +168,14 @@ export default function LoginPage() {
             {errors.password && (
               <p className="text-xs text-destructive">{errors.password.message}</p>
             )}
+            <div className="flex justify-end">
+              <Link
+                href="/esqueci-senha"
+                className="text-xs text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                Esqueci minha senha
+              </Link>
+            </div>
           </div>
 
           {serverError && (

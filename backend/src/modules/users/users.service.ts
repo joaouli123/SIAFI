@@ -9,6 +9,7 @@ export interface CreateUserDto {
   username: string;
   password: string;
   role: string;
+  email?: string | null;
   comissaoPercentual?: number;
 }
 
@@ -18,6 +19,7 @@ export interface UpdateUserDto {
   password?: string;
   role?: string;
   active?: boolean;
+  email?: string | null;
   comissaoPercentual?: number | null;
 }
 
@@ -72,6 +74,7 @@ export class UsersService {
         username: dto.username,
         password: hashed,
         role: dto.role as any,
+        email: dto.email?.trim() || null,
         comissaoPercentual: dto.comissaoPercentual ?? null,
         active: true,
       },
@@ -91,6 +94,7 @@ export class UsersService {
     if (dto.username !== undefined) data.username = dto.username;
     if (dto.role !== undefined) data.role = dto.role;
     if (dto.active !== undefined) data.active = dto.active;
+    if (dto.email !== undefined) data.email = dto.email?.trim() || null;
     if (dto.comissaoPercentual !== undefined) data.comissaoPercentual = dto.comissaoPercentual;
     if (dto.password) data.password = await bcrypt.hash(dto.password, 12);
 
@@ -109,7 +113,9 @@ export class UsersService {
       if (dto.role !== undefined) attrs.app_metadata = { role: dto.role, prismaId: existing.id, tipo: 'operador' };
       const { error } = await this.supabase.admin.auth.admin.updateUserById(existing.supabaseId, attrs);
       if (error) throw new ConflictException(`Falha ao sincronizar conta de acesso: ${error.message}`);
-      if (usernameMudou) data.email = `${dto.username}@siafi.local`;
+      if (usernameMudou && (!existing.email || existing.email.endsWith('@siafi.local')) && dto.email === undefined) {
+        data.email = `${dto.username}@siafi.local`;
+      }
     }
 
     const user = await this.prisma.user.update({ where: { id }, data });

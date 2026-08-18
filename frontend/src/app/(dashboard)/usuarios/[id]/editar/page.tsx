@@ -20,6 +20,7 @@ const schema = z.object({
   nome: z.string().min(3),
   username: z.string().min(3),
   password: z.string().min(8).optional().or(z.literal('')),
+  email: z.string().trim().email('E-mail inválido').optional().or(z.literal('')),
   role: z.enum(['admin', 'financeiro', 'consultor', 'caixa', 'cliente']),
   active: z.boolean(),
   comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
@@ -42,12 +43,12 @@ export default function EditarUsuarioPage() {
   const selectedRole = useWatch({ control, name: 'role' })
 
   useEffect(() => {
-    if (user) reset({ nome: user.nome, username: user.username, role: user.role, active: user.active, password: '', comissaoPercentual: user.comissaoPercentual != null ? Number(user.comissaoPercentual) : undefined })
+    if (user) reset({ nome: user.nome, username: user.username, role: user.role, active: user.active, password: '', email: user.email && !String(user.email).endsWith('@siafi.local') ? user.email : '', comissaoPercentual: user.comissaoPercentual != null ? Number(user.comissaoPercentual) : undefined })
   }, [user, reset])
 
   const mutation = useMutation({
     mutationFn: (data: FormData) => {
-      const payload: any = { nome: data.nome, username: data.username, role: data.role, active: data.active }
+      const payload: any = { nome: data.nome, username: data.username, role: data.role, active: data.active, email: data.email || null }
       if (data.role === 'consultor' || data.role === 'admin') payload.comissaoPercentual = data.comissaoPercentual
       if (data.password) payload.password = data.password
       return api.patch(`/users/${id}`, payload)
@@ -74,6 +75,11 @@ export default function EditarUsuarioPage() {
           <CardContent className="space-y-4">
             <div className="space-y-1.5"><Label>Nome completo *</Label><Input {...register('nome')} />{errors.nome && <p className="text-xs text-destructive">{errors.nome.message}</p>}</div>
             <div className="space-y-1.5"><Label>Username *</Label><Input {...register('username')} />{errors.username && <p className="text-xs text-destructive">{errors.username.message}</p>}</div>
+            <div className="space-y-1.5">
+              <Label>E-mail de contato <span className="text-muted-foreground text-xs">(recuperação de senha)</span></Label>
+              <Input type="email" {...register('email')} placeholder="operador@empresa.com.br" />
+              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+            </div>
             <div className="space-y-1.5">
               <Label>Nova Senha <span className="text-muted-foreground text-xs">(deixe em branco para manter)</span></Label>
               <Input type="password" {...register('password')} placeholder="••••••••" />

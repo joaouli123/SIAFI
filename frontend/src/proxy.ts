@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 const PUBLIC_PATHS = [
   '/login', '/mfa-challenge', '/mfa-setup', '/api', '/_next', '/favicon.ico', '/auth',
   '/portal/login', '/portal/mfa-challenge', '/portal/mfa-setup', '/portal/primeiro-acesso',
-  '/redefinir-senha',
+  '/redefinir-senha', '/esqueci-senha',
 ]
 
 function isPublicPath(pathname: string) {

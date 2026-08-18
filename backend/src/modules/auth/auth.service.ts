@@ -10,6 +10,7 @@ import { UsersService } from '../users/users.service';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import * as nodemailer from 'nodemailer';
 import type { Response } from 'express';
 
 export interface AuthenticatedUser {
@@ -517,6 +518,92 @@ export class AuthService {
     await this.prisma.user.update({
       where: { id: userId },
       data: { password: hashed, failedLoginAttempts: 0, lockedUntil: null },
+    });
+  }
+
+  // ─── Esqueci minha senha ─────────────────────────────────────────────────
+
+  /**
+   * Fluxo público de recuperação de senha. Aceita username OU e-mail de
+   * contato do operador. Sempre resolve sem erro (não revela se a conta existe).
+   * Gera link de recovery no Supabase para `${username}@siafi.local` e envia
+   * ao e-mail de contato cadastrado (User.email); sem e-mail cadastrado, o
+   * pedido é ignorado silenciosamente e auditado para o admin.
+   */
+  async solicitarRecuperacaoSenha(identificador: string): Promise<void> {
+    const ident = (identificador ?? '').trim();
+    if (!ident) return;
+
+    const user = await this.prisma.user.findFirst({
+      where: { OR: [{ username: ident }, { email: ident }], active: true },
+    });
+    if (!user) return;
+
+    // Destino: e-mail de contato real. O e-mail interno *@siafi.local nunca
+    // é entregável — só serve de identidade no Supabase.
+    const destino = user.email && !user.email.endsWith('@siafi.local') ? user.email : null;
+    if (!destino) {
+      await this.prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          acao: 'PASSWORD_RECOVERY_SEM_EMAIL',
+          entidade: 'User',
+          entidadeId: user.id,
+          dados: { username: user.username, motivo: 'operador sem e-mail de contato cadastrado' } as any,
+        },
+      }).catch(() => {});
+      return;
+    }
+
+    const supabaseEmail = this.toSupabaseEmail(user.username);
+    if (!user.supabaseId) {
+      // Conta ainda não sincronizada no Supabase (nunca logou): sem link possível
+      return;
+    }
+
+    const appUrl = process.env.APP_URL ?? 'https://2wm.siafi.app.br';
+    const { data, error } = await this.supabase.admin.auth.admin.generateLink({
+      type: 'recovery',
+      email: supabaseEmail,
+      options: { redirectTo: `${appUrl}/redefinir-senha` },
+    });
+    if (error || !data?.properties?.action_link) return;
+    const link = data.properties.action_link as string;
+
+    await this.enviarEmailRecuperacao(destino, user.nome, user.username, link, appUrl);
+    await this.prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        acao: 'PASSWORD_RECOVERY_SOLICITADA',
+        entidade: 'User',
+        entidadeId: user.id,
+        dados: { username: user.username, destino } as any,
+      },
+    }).catch(() => {});
+  }
+
+  private async enviarEmailRecuperacao(
+    to: string, nome: string, username: string, link: string, appUrl: string,
+  ): Promise<void> {
+    const host = process.env.SMTP_HOST ?? process.env.MAIL_HOST;
+    const port = +(process.env.SMTP_PORT ?? process.env.MAIL_PORT ?? 587);
+    const user = process.env.SMTP_USER ?? process.env.MAIL_USER;
+    const pass = process.env.SMTP_PASS ?? process.env.MAIL_PASS;
+    const from = process.env.SMTP_FROM ?? `"SIAFI" <${user ?? ''}>`;
+    if (!host || !user || !pass) throw new InternalServerErrorException('SMTP não configurado');
+
+    const transporter = nodemailer.createTransport({ host, port, secure: port === 465, auth: { user, pass } });
+    await transporter.sendMail({
+      from, to,
+      subject: 'SIAFI — redefinição de senha',
+      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+        <img src="${appUrl}/logo.png" alt="SIAFI" style="height:40px;margin-bottom:24px">
+        <h2 style="color:#1d4ed8;margin:0 0 12px">Redefinição de senha</h2>
+        <p>Olá, <strong>${nome}</strong>. Recebemos um pedido para redefinir a senha do usuário <code>${username}</code>.</p>
+        <p style="margin:24px 0"><a href="${link}" style="background:#1d4ed8;color:#fff;padding:12px 20px;border-radius:6px;text-decoration:none;font-weight:600">Redefinir minha senha</a></p>
+        <p style="font-size:12px;color:#777">O link expira em 1 hora e só pode ser usado uma vez. Se você não pediu isso, ignore este e-mail — sua senha atual continua válida.</p>
+        <p style="font-size:12px;color:#777">Se o botão não funcionar, copie e cole no navegador:<br><span style="word-break:break-all">${link}</span></p>
+      </div>`,
     });
   }
 

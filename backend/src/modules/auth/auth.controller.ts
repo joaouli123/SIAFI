@@ -21,6 +21,7 @@ import { MfaService } from './mfa.service';
 import { UsersService } from '../users/users.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MeGuard } from './guards/me.guard';
+import { Throttle } from '@nestjs/throttler';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { LoginDto } from './dto/login.dto';
 import { ValidateGoogleDto } from './dto/validate-google.dto';
@@ -116,6 +117,21 @@ export class AuthController {
     // DISABLE_MFA=true suspende a exigência neste ambiente (ver auth.service.ts)
     const needsMfa = process.env.DISABLE_MFA !== 'true' && mfaRoles.includes(full.role) && aal !== 'aal2';
     return { id: full.id, username: full.username, nome: full.nome, role: full.role, aal, needsMfa };
+  }
+
+  /**
+   * POST /api/auth/esqueci-senha  (público, rate-limited)
+   * Envia link de recuperação ao e-mail de contato do operador.
+   * Resposta sempre neutra — não revela se a conta existe.
+   */
+  @Throttle({ default: { ttl: 60_000, limit: 5 } })
+  @Post('esqueci-senha')
+  @HttpCode(HttpStatus.OK)
+  async esqueciSenha(@Body() body: { identificador?: string }) {
+    if (body?.identificador) {
+      await this.authService.solicitarRecuperacaoSenha(String(body.identificador)).catch(() => {});
+    }
+    return { message: 'Se o usuário existir e tiver e-mail cadastrado, enviaremos as instruções.' };
   }
 
   /**

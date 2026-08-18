@@ -23,6 +23,7 @@ const schema = z.object({
   username: z.string().min(3, 'Username deve ter ao menos 3 caracteres')
               .regex(/^[a-z0-9_.]+$/, 'Use apenas letras minúsculas, números, . e _'),
   password: z.string().min(8, 'Senha deve ter ao menos 8 caracteres'),
+  email:    z.string().trim().email('E-mail inválido').optional().or(z.literal('')),
   role:     z.enum(['admin', 'financeiro', 'consultor', 'caixa', 'cliente']),
   comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
 })
@@ -146,6 +147,12 @@ export default function NovoUsuarioPage() {
                 <Input type="password" {...register('password')} placeholder="Mínimo 8 caracteres" />
                 {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
               </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>E-mail de contato</Label>
+              <Input type="email" {...register('email')} placeholder="operador@empresa.com.br" />
+              <p className="text-xs text-muted-foreground">Usado para recuperação de senha ("Esqueci minha senha"). Sem e-mail, o operador depende do administrador para redefinir.</p>
+              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
           </CardContent>
         </Card>
