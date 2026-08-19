@@ -309,10 +309,26 @@ export class PaymentsService {
     };
   }
 
+  async listarContasDestino(): Promise<string[]> {
+    const linhas = await this.prisma.payment.findMany({
+      where: { contaDestino: { not: null } },
+      select: { contaDestino: true },
+      distinct: ['contaDestino'],
+      orderBy: { contaDestino: 'asc' },
+    });
+    return linhas
+      .map((l) => l.contaDestino?.trim() ?? '')
+      .filter((c) => c.length > 0);
+  }
+
   async findAll(filter: import('./dto/payment-filter.dto').PaymentFilterDto, role?: string): Promise<unknown> {
-    const { search, startDate, endDate, consultorId, page = 1, limit = 20 } = filter;
+    const { search, startDate, endDate, consultorId, contaDestino, page = 1, limit = 20 } = filter;
 
     const where: Prisma.PaymentWhereInput = {};
+
+    if (contaDestino?.trim()) {
+      where.contaDestino = { contains: contaDestino.trim(), mode: 'insensitive' };
+    }
 
     if (search || consultorId) {
       // Consultor = carteira do CLIENTE (client.consultorId), não o criador do contrato.

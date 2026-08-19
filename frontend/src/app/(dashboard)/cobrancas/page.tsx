@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { formatCurrency, formatDate } from '@/lib/utils'
 
 interface Cobranca {
@@ -26,18 +27,20 @@ interface Cobranca {
   observacao: string | null
   createdAt: string
   client: { nome: string }
-  installment: { numero: number; valor: number; dataVencimento: string }
+  installment: { numero: number; installmentAmount: string; dataVencimento: string }
 }
 
 interface ClienteCarteira {
   id: number
   nome: string
+  cpf?: string | null
 }
 
 interface Installment {
   id: number
   numero: number
-  valor: number
+  installmentAmount: string
+  valorComEncargos?: string
   dataVencimento: string
   status: string
 }
@@ -180,7 +183,7 @@ export default function CobrancasPage() {
                       </div>
                       <p className="text-sm font-medium">{c.client.nome}</p>
                       <p className="text-xs text-muted-foreground">
-                        Parcela {c.installment.numero} · {formatCurrency(c.installment.valor)} · venc. {formatDate(c.installment.dataVencimento)}
+                        Parcela {c.installment.numero} · {formatCurrency(c.installment.installmentAmount)} · venc. {formatDate(c.installment.dataVencimento)}
                       </p>
                       {c.observacao && (
                         <p className="text-sm text-slate-600 mt-1 italic">{c.observacao}</p>
@@ -204,19 +207,16 @@ export default function CobrancasPage() {
           >
             <div className="space-y-1.5">
               <Label>Cliente</Label>
-              <Select
-                {...criarForm.register('clientId')}
-                onChange={e => {
-                  criarForm.setValue('clientId', Number(e.target.value))
-                  setSelectedClientId(Number(e.target.value) || null)
+              <ClienteCombobox
+                clientes={clientes ?? []}
+                value={selectedClientId}
+                onSelect={c => {
+                  criarForm.setValue('clientId', (c?.id ?? 0) as any)
+                  setSelectedClientId(c?.id ?? null)
                   criarForm.setValue('installmentId', 0 as any)
                 }}
-              >
-                <option value="">Selecione o cliente</option>
-                {clientes?.map(c => (
-                  <option key={c.id} value={c.id}>{c.nome}</option>
-                ))}
-              </Select>
+                placeholder="Digite o nome ou CPF do cliente..."
+              />
               {criarForm.formState.errors.clientId && (
                 <p className="text-xs text-destructive">{criarForm.formState.errors.clientId.message}</p>
               )}
@@ -233,7 +233,7 @@ export default function CobrancasPage() {
                 </option>
                 {parcelas?.map(p => (
                   <option key={p.id} value={p.id}>
-                    Parcela {p.numero} · {formatCurrency(p.valor)} · venc. {formatDate(p.dataVencimento)}
+                    Parcela {p.numero} · {formatCurrency(p.valorComEncargos ?? p.installmentAmount)} · venc. {formatDate(p.dataVencimento)}
                   </option>
                 ))}
               </Select>

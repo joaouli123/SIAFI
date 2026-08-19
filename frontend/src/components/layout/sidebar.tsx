@@ -9,7 +9,7 @@ import {
   ArrowLeftRight, Settings, Shield, ShieldCheck, LogOut, X, ChevronRight,
   AlertCircle, RefreshCcw, QrCode, BarChart2, Bell, MessageSquare,
   UserCog, ListChecks, Briefcase, ClipboardList, TrendingUp, Phone,
-  Banknote, Search, Mail, Info, HelpCircle, Building2, FileStack, User,
+  Banknote, Search, Mail, Info, HelpCircle, Building2, FileStack, FileText, User,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
@@ -84,6 +84,7 @@ const navGroups: NavGroup[] = [
     items: [
       { label: 'Relatórios',   href: '/relatorios',   icon: BarChart2 },
       { label: 'Central de Relatórios', href: '/relatorios/central', icon: FileStack },
+      { label: 'Relatório do Cliente',  href: '/consultor/relatorio-cliente', icon: FileText },
       { label: 'Notificações', href: '/notificacoes', icon: Bell },
     ],
   },
@@ -108,6 +109,7 @@ const navGroups: NavGroup[] = [
       { label: 'PIX / Boleto',       href: '/pix',                   icon: QrCode },
       { label: 'Reparcelamentos',    href: '/reparcelamentos',        icon: RefreshCcw },
       { label: 'Relatórios',         href: '/consultor/relatorios',  icon: BarChart2 },
+      { label: 'Relatório do Cliente', href: '/consultor/relatorio-cliente', icon: FileText },
     ],
   },
 

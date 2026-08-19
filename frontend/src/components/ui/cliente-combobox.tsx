@@ -21,6 +21,7 @@ export function ClienteCombobox({
   placeholder = 'Buscar por nome ou CPF...',
   excludeId,
   avulsoLabel,
+  vazioLabel = 'Nenhum cliente encontrado.',
 }: {
   clientes: ClienteOption[]
   value?: number | null
@@ -28,6 +29,7 @@ export function ClienteCombobox({
   placeholder?: string
   excludeId?: number | null
   avulsoLabel?: string
+  vazioLabel?: string
 }) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
@@ -97,7 +99,7 @@ export function ClienteCombobox({
           )}
           {filtered.length === 0 ? (
             <p className="px-3 py-3 text-sm text-muted-foreground">
-              {query.trim() ? 'Nenhum cliente encontrado.' : 'Digite para buscar…'}
+              {query.trim() ? vazioLabel : 'Digite para buscar…'}
             </p>
           ) : (
             filtered.map((c) => (

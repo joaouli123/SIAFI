@@ -39,6 +39,22 @@ export class ConsultorController {
     return this.consultorService.getRelatorio(user.id);
   }
 
+  // Clientes disponíveis para o seletor do relatório — consultor só vê a própria carteira
+  @Get('clientes')
+  @Roles('consultor', 'financeiro', 'admin')
+  listarClientes(@CurrentUser() user: RequestUser) {
+    return this.consultorService.listarClientesRelatorio(user);
+  }
+
+  @Get('relatorio-cliente/:clientId')
+  @Roles('consultor', 'financeiro', 'admin')
+  getRelatorioCliente(
+    @Param('clientId', ParseIntPipe) clientId: number,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.consultorService.getRelatorioCliente(clientId, user);
+  }
+
   @Get('carteira/:clientId')
   @Roles('consultor')
   getClienteDetalhe(

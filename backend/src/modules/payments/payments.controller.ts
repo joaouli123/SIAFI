@@ -43,6 +43,13 @@ export class PaymentsController {
     return this.paymentsService.findHoje();
   }
 
+  // Bancos/contas já usados em baixas — alimenta o filtro "Bco Recebedor"
+  @Get('contas')
+  @Roles('admin', 'financeiro', 'caixa')
+  listarContasDestino() {
+    return this.paymentsService.listarContasDestino();
+  }
+
   @Post()
   @Roles('admin', 'financeiro', 'caixa')
   create(@Body() dto: CreatePaymentDto, @CurrentUser() user: AuthUser) {

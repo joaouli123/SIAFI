@@ -140,7 +140,7 @@ export class InstallmentsService {
     } as Record<string, any>, role);
   }
 
-  async findOverdue(consultorId?: number, role?: string): Promise<unknown[]> {
+  async findOverdue(consultorId?: number, role?: string, clientId?: number): Promise<unknown[]> {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -149,8 +149,11 @@ export class InstallmentsService {
       dataVencimento: { lt: today },
     };
 
-    if (consultorId) {
-      where['loan'] = { client: { consultorId } };
+    if (consultorId || clientId) {
+      const clientWhere: Record<string, unknown> = {};
+      if (consultorId) clientWhere.consultorId = consultorId;
+      if (clientId) clientWhere.id = clientId;
+      where['loan'] = { client: clientWhere };
     }
 
     const data = await this.prisma.installment.findMany({

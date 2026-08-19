@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus, Search, RefreshCw, Wallet, Undo2, FileDown, Calendar } from 'lucide-react'
+import { Plus, Search, RefreshCw, Wallet, Undo2, FileDown, Calendar, Landmark } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -64,6 +64,7 @@ export default function PagamentosPage() {
   const [startDate, setStartDate] = useState(firstOfMonth)
   const [endDate, setEndDate] = useState(today)
   const [consultorId, setConsultorId] = useState('')
+  const [contaInput, setContaInput] = useState('')
   const [page, setPage] = useState(1)
   const qc = useQueryClient()
   const { user } = useAuth()
@@ -71,10 +72,11 @@ export default function PagamentosPage() {
   const showSplit = user?.role !== 'caixa'
 
   const search = useDebounce(searchInput, 400)
-  useEffect(() => { setPage(1) }, [search, startDate, endDate, consultorId])
+  const contaDestino = useDebounce(contaInput, 400)
+  useEffect(() => { setPage(1) }, [search, startDate, endDate, consultorId, contaDestino])
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['payments', { search, startDate, endDate, consultorId, page }],
+    queryKey: ['payments', { search, startDate, endDate, consultorId, contaDestino, page }],
     queryFn: () =>
       api.get<PaymentsResponse>('/payments', {
         params: {
@@ -82,6 +84,7 @@ export default function PagamentosPage() {
           startDate: startDate || undefined,
           endDate: endDate || undefined,
           consultorId: consultorId ? Number(consultorId) : undefined,
+          contaDestino: contaDestino || undefined,
           page,
           limit: 20,
         },
@@ -96,6 +99,11 @@ export default function PagamentosPage() {
     queryKey: ['consultores'],
     queryFn: () => api.get<{id: number; nome: string}[]>('/clients/consultores').then((r) => r.data),
     enabled: user?.role === 'admin' || user?.role === 'financeiro',
+  })
+
+  const { data: contas } = useQuery<string[]>({
+    queryKey: ['payments-contas'],
+    queryFn: () => api.get<string[]>('/payments/contas').then((r) => r.data),
   })
 
   const estornoMut = useMutation({
@@ -157,6 +165,19 @@ export default function PagamentosPage() {
                 {consultores.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
               </select>
             )}
+            <div className="relative w-44">
+              <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                list="contas-recebedoras"
+                placeholder="Bco Recebedor"
+                value={contaInput}
+                onChange={(e) => setContaInput(e.target.value)}
+                className="pl-9 text-sm"
+              />
+              <datalist id="contas-recebedoras">
+                {contas?.map((c) => <option key={c} value={c} />)}
+              </datalist>
+            </div>
             <div className="flex items-center gap-2">
               <Label className="text-xs text-muted-foreground whitespace-nowrap">De</Label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-36 text-sm" />
@@ -186,12 +207,12 @@ export default function PagamentosPage() {
               <p className="text-muted-foreground text-sm font-medium">
                 {searchInput || startDate || endDate ? 'Nenhum pagamento no período.' : 'Nenhum pagamento encontrado.'}
               </p>
-              {(searchInput || startDate !== firstOfMonth || endDate !== today) && (
+              {(searchInput || contaInput || startDate !== firstOfMonth || endDate !== today) && (
                 <Button
                   variant="outline"
                   size="sm"
                   className="mt-3"
-                  onClick={() => { setSearchInput(''); setStartDate(firstOfMonth); setEndDate(today) }}
+                  onClick={() => { setSearchInput(''); setContaInput(''); setStartDate(firstOfMonth); setEndDate(today) }}
                 >
                   Limpar filtros
                 </Button>

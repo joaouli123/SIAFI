@@ -20,6 +20,10 @@ export class PaymentFilterDto {
   consultorId?: number;
 
   @IsOptional()
+  @IsString()
+  contaDestino?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
