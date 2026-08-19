@@ -178,8 +178,24 @@ export default function EditarEmprestimoPage() {
     },
   })
 
+  // Espelha o cronogramaMudou do backend: só estes campos regeneram as parcelas.
+  // Mexer em comissão, multa, mora ou observações não toca no cronograma.
+  function regeneraParcelas(d: FormData) {
+    return (
+      Number(d.principalAmount) !== Number(loan.principalAmount) ||
+      Number(d.targetProfit) !== Number(loan.targetProfit) ||
+      Number(d.numeroParcelas) !== Number(loan.numeroParcelas) ||
+      (d.dataInicio ?? '') !== toDateInputValue(loan.dataInicio) ||
+      (d.diaVencimento ?? null) !== (loan.diaVencimento ?? null) ||
+      !!d.dataPrimeiroVencimento
+    )
+  }
+
   function onSubmit(d: FormData) {
-    if (!confirm('Salvar alterações? As parcelas pendentes/atrasadas serão regeneradas; parcelas já pagas serão preservadas.')) return
+    const msg = regeneraParcelas(d)
+      ? 'Salvar alterações? As parcelas pendentes/atrasadas serão regeneradas; parcelas já pagas serão preservadas.'
+      : 'Salvar alterações? O cronograma de parcelas não muda — nenhuma parcela será regerada.'
+    if (!confirm(msg)) return
     mutation.mutate(d)
   }
 
