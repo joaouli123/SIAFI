@@ -48,6 +48,15 @@ const SETTING_GROUPS = [
     ],
   },
   {
+    title: 'Comissões',
+    icon: '💸',
+    description: 'Percentuais padrão da casa, usados quando o contrato não define o seu. Alterar aqui vale para as próximas baixas — nenhum contrato precisa ser reeditado.',
+    keys: [
+      { key: 'financeiro.comissao_consultor_percentual',     label: 'Comissão do consultor (%)',     placeholder: '10', hint: 'Sobre o lucro geral de cada baixa. O contrato e o cadastro do consultor têm prioridade sobre este valor' },
+      { key: 'financeiro.comissao_administrador_percentual', label: 'Comissão do administrador (%)', placeholder: '4',  hint: 'Sobre o lucro geral de cada baixa. O contrato tem prioridade sobre este valor' },
+    ],
+  },
+  {
     title: 'Limites Operacionais',
     icon: '🔒',
     description: 'Valores mínimos e máximos para controle de empréstimos.',

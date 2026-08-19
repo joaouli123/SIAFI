@@ -46,6 +46,14 @@ export interface ParcelaParams {
   installmentAmount: Numerico;
   comissaoPercentual?: Numerico;
   comissaoAdministradorPercentual?: Numerico;
+  /**
+   * Simulacao "e se o percentual fosse outro": quando definido, manda em tudo —
+   * ignora o snapshot da baixa e o percentual do contrato. Serve a tela de
+   * Recebimentos, onde se digita o percentual e os totais recalculam na hora.
+   * Nao grava nada: o historico continua com o percentual da epoca.
+   */
+  overrideComissaoPercentual?: Numerico;
+  overrideComissaoAdministradorPercentual?: Numerico;
 }
 
 export interface Split {
@@ -115,8 +123,12 @@ export function splitParcela(payments: BaixaInput[], p: ParcelaParams): Split[] 
     const lucro        = valorPago.minus(capital);
     // Recebimentos novos carregam seu próprio snapshot. Baixas antigas continuam usando
     // a regra do contrato, preservando compatibilidade com o histórico existente.
-    const pctBaixa      = D(b.comissaoPercentual ?? p.comissaoPercentual);
-    const pctAdminBaixa = D(b.comissaoAdministradorPercentual ?? p.comissaoAdministradorPercentual);
+    const pctBaixa = p.overrideComissaoPercentual != null
+      ? D(p.overrideComissaoPercentual)
+      : D(b.comissaoPercentual ?? p.comissaoPercentual);
+    const pctAdminBaixa = p.overrideComissaoAdministradorPercentual != null
+      ? D(p.overrideComissaoAdministradorPercentual)
+      : D(b.comissaoAdministradorPercentual ?? p.comissaoAdministradorPercentual);
     const comissao     = lucro.times(pctBaixa).dividedBy(100);
     const comissaoAdministrador = lucro.times(pctAdminBaixa).dividedBy(100);
     // Valores monetarios usam duas casas. Calcula o residual da empresa com

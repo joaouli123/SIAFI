@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt, Min, IsNumber } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min, Max, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class PaymentFilterDto {
@@ -22,6 +22,21 @@ export class PaymentFilterDto {
   @IsOptional()
   @IsString()
   contaDestino?: string;
+
+  // Simulacao de percentual na tela de Recebimentos: recalcula os totais sem gravar nada.
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  simComissaoPercentual?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  simComissaoAdministradorPercentual?: number;
 
   @IsOptional()
   @Type(() => Number)

@@ -6,6 +6,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { dataLocal } from '../../common/data';
 import { ScoreRiscoService } from '../score-risco/score-risco.service';
 import { InstallmentsService } from '../installments/installments.service';
+import { SettingsService } from '../settings/settings.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import {
   splitBaixa, realizedLucro, BAIXA_SELECT, BAIXA_ORDER, BaixaInput, Numerico, Split,
@@ -19,7 +20,22 @@ export class PaymentsService {
     private readonly prisma: PrismaService,
     private readonly scoreRisco: ScoreRiscoService,
     private readonly installments: InstallmentsService,
+    private readonly settings: SettingsService,
   ) {}
+
+  // Percentual padrao da casa, usado quando o contrato nao define o seu. Permite
+  // mudar a regra num lugar so, sem reeditar centenas de contratos (e sem regerar parcelas).
+  private async percentuaisPadrao(): Promise<{ consultor: number | null; administrador: number | null }> {
+    const ler = async (chave: string) => {
+      const n = await this.settings.getNumber(chave, NaN);
+      return Number.isFinite(n) ? n : null;
+    };
+    const [consultor, administrador] = await Promise.all([
+      ler('financeiro.comissao_consultor_percentual'),
+      ler('financeiro.comissao_administrador_percentual'),
+    ]);
+    return { consultor, administrador };
+  }
 
   async create(dto: CreatePaymentDto, userId?: number, role?: string): Promise<unknown> {
     if (role !== 'admin' && (dto.comissaoPercentual != null || dto.comissaoAdministradorPercentual != null)) {
@@ -37,6 +53,7 @@ export class PaymentsService {
     // Assim, uma baixa parcial em 08/08 não carrega encargos posteriores nem reinicia
     // o saldo usando a data original da parcela.
     const encAtual = await this.installments.getEncargos(dto.installmentId, dto.dataPagamento);
+    const padrao = await this.percentuaisPadrao();
 
     const payment = await this.prisma.$transaction(async (tx) => {
       // 1. Buscar parcela com loan e client
@@ -59,9 +76,11 @@ export class PaymentsService {
       const comissaoConsultor = dto.comissaoPercentual
         ?? installment.loan.comissaoPercentual
         ?? installment.loan.consultor?.comissaoPercentual
+        ?? padrao.consultor
         ?? null;
       const comissaoAdministrador = dto.comissaoAdministradorPercentual
         ?? installment.loan.comissaoAdministradorPercentual
+        ?? padrao.administrador
         ?? (role === 'admin' ? operador?.comissaoPercentual : null)
         ?? null;
       if (Number(comissaoConsultor ?? 0) + Number(comissaoAdministrador ?? 0) > 100) {
@@ -322,7 +341,16 @@ export class PaymentsService {
   }
 
   async findAll(filter: import('./dto/payment-filter.dto').PaymentFilterDto, role?: string): Promise<unknown> {
-    const { search, startDate, endDate, consultorId, contaDestino, page = 1, limit = 20 } = filter;
+    const {
+      search, startDate, endDate, consultorId, contaDestino,
+      simComissaoPercentual, simComissaoAdministradorPercentual,
+      page = 1, limit = 20,
+    } = filter;
+    // Simulacao: nao grava nada, so recalcula o que a tela mostra.
+    const sim = {
+      overrideComissaoPercentual: simComissaoPercentual,
+      overrideComissaoAdministradorPercentual: simComissaoAdministradorPercentual,
+    };
 
     const where: Prisma.PaymentWhereInput = {};
 
@@ -418,14 +446,14 @@ export class PaymentsService {
         loan: { comissaoPercentual: unknown; comissaoAdministradorPercentual: unknown };
         payments: BaixaInput[];
       };
-      const split = verSplit ? this.splitPagamento(p.id, inst) : null;
+      const split = verSplit ? this.splitPagamento(p.id, inst, sim) : null;
       const { payments: _omit, ...instRest } = inst as Record<string, unknown>;
       return { ...p, installment: instRest, split };
     });
 
     let somaCapital = 0, somaComissao = 0, somaComissaoAdministrador = 0, somaLucro = 0, somaLucroEmpresa = 0;
     for (const p of baixasPeriodo) {
-      const s = this.splitPagamento(p.id, p.installment as never);
+      const s = this.splitPagamento(p.id, p.installment as never, sim);
       somaCapital      += s.capital;
       somaComissao     += s.comissao;
       somaComissaoAdministrador += s.comissaoAdministrador;
@@ -465,6 +493,10 @@ export class PaymentsService {
       loan: { comissaoPercentual: unknown; comissaoAdministradorPercentual: unknown };
       payments: BaixaInput[];
     },
+    sim?: {
+      overrideComissaoPercentual?: Numerico;
+      overrideComissaoAdministradorPercentual?: Numerico;
+    },
   ): Split {
     return splitBaixa(
       inst.payments,
@@ -473,6 +505,8 @@ export class PaymentsService {
         installmentAmount:  inst.installmentAmount as Numerico,
         comissaoPercentual: inst.loan.comissaoPercentual as Numerico,
         comissaoAdministradorPercentual: inst.loan.comissaoAdministradorPercentual as Numerico,
+        overrideComissaoPercentual: sim?.overrideComissaoPercentual,
+        overrideComissaoAdministradorPercentual: sim?.overrideComissaoAdministradorPercentual,
       },
       { id: paymentId },
     );
