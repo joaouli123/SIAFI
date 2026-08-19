@@ -75,6 +75,13 @@ export default function NovoPagamentoPage() {
     },
   })
 
+  // Contas/bancos já usados — sugestões do campo "Bco Recebedor"
+  const { data: contasUsadas } = useQuery<string[]>({
+    queryKey: ['payments-contas'],
+    queryFn: () => api.get<string[]>('/payments/contas').then(r => r.data),
+    staleTime: 60_000,
+  })
+
   // ── Step 1: all clients ────────────────────────────────────────────────────
   const { data: allClients, isLoading: loadingClients } = useQuery<ClientRow[]>({
     queryKey: ['clients-select'],
@@ -480,7 +487,14 @@ export default function NovoPagamentoPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bco Recebedor</Label>
-                  <Input {...form.register('contaDestino')} placeholder="ex: Itaú PJ, dinheiro em caixa" />
+                  <Input
+                    {...form.register('contaDestino')}
+                    list="contas-recebedoras-novo"
+                    placeholder="ex: Itaú PJ, dinheiro em caixa"
+                  />
+                  <datalist id="contas-recebedoras-novo">
+                    {contasUsadas?.map(c => <option key={c} value={c} />)}
+                  </datalist>
                   <p className="text-[10px] text-muted-foreground">Conta/banco que recebeu o valor</p>
                 </div>
 

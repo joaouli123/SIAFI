@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { formatCPF, formatPhone, formatDate, formatCurrency, STATUS_LOAN } from '@/lib/utils'
 
 interface ClienteDetalhe {
@@ -262,43 +263,34 @@ export default function ConsultorClienteDetalhePage() {
 
               <div className="space-y-1.5">
                 <Label className="text-xs">Parcela em atraso *</Label>
-                <select
-                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                  {...register('installmentId')}
-                >
+                <Select {...register('installmentId')}>
                   <option value="">Selecione a parcela</option>
                   {parcelasAtrasadas?.map(p => (
                     <option key={p.id} value={p.id}>
                       Parcela {p.numero} · {formatCurrency(p.valor)} · venc. {formatDate(p.dataVencimento)}
                     </option>
                   ))}
-                </select>
+                </Select>
                 {errors.installmentId && <p className="text-xs text-destructive">{errors.installmentId.message}</p>}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label className="text-xs">Canal *</Label>
-                  <select
-                    className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                    {...register('canal')}
-                  >
+                  <Select {...register('canal')}>
                     <option value="whatsapp">WhatsApp</option>
                     <option value="ligacao">Ligação</option>
                     <option value="presencial">Presencial</option>
-                  </select>
+                  </Select>
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs">Resultado *</Label>
-                  <select
-                    className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
-                    {...register('resultado')}
-                  >
+                  <Select {...register('resultado')}>
                     <option value="prometeu_pagar">Prometeu pagar</option>
                     <option value="nao_atendeu">Não atendeu</option>
                     <option value="numero_incorreto">Nº incorreto</option>
                     <option value="outro">Outro</option>
-                  </select>
+                  </Select>
                 </div>
               </div>
 

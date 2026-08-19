@@ -6,6 +6,7 @@ import { Send, MessageSquare, Users, Plus, Search } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDateTime } from '@/lib/utils'
@@ -197,16 +198,12 @@ export default function MensagensPage() {
           {/* Nova conversa */}
           {showNovaConversa && (
             <div className="flex gap-2">
-              <select
-                className="flex-1 h-8 rounded-md border border-input bg-background px-2 text-xs"
-                value={targetUserId}
-                onChange={e => setTargetUserId(e.target.value)}
-              >
+              <Select className="flex-1" value={targetUserId} onChange={e => setTargetUserId(e.target.value)}>
                 <option value="">Selecionar usuário...</option>
                 {allUsers.filter(u => u.id !== user?.id).map(u => (
                   <option key={u.id} value={u.id}>{u.nome} ({ROLE_LABEL[u.role] ?? u.role})</option>
                 ))}
-              </select>
+              </Select>
               <Button size="sm" className="h-8 text-xs px-2"
                 disabled={!targetUserId || criarConvMut.isPending}
                 onClick={() => criarConvMut.mutate(Number(targetUserId))}>

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, ShieldCheck, FileText, Send, ExternalLink } from 'lucide-react'
 import { portalApi } from '@/lib/portal/portal-api'
 import { usePortalAuth } from '@/contexts/portal-auth.context'
+import { Select } from '@/components/ui/select'
 
 const TIPOS_SOLICITACAO = [
   { value: 'acesso',                   label: 'Quero uma cópia de todos os meus dados' },
@@ -233,12 +234,13 @@ export default function PrivacidadePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div>
               <label style={{ ...labelStyle, display: 'block', marginBottom: '6px' }}>Tipo de solicitação</label>
-              <select
+              <Select
+                unstyled
                 value={tipo}
                 onChange={(e) => setTipo(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '10px 12px',
+                  padding: '10px 32px 10px 12px',
                   borderRadius: '8px',
                   border: '1px solid var(--portal-gray-300)',
                   fontSize: '13px',
@@ -252,7 +254,7 @@ export default function PrivacidadePage() {
                 {TIPOS_SOLICITACAO.map((t) => (
                   <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             <div>

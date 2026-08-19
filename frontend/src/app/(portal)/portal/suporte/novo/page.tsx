@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { ArrowLeft, Loader2, Send } from 'lucide-react'
 import { portalApi } from '@/lib/portal/portal-api'
+import { Select } from '@/components/ui/select'
 
 const ASSUNTOS = [
   'Dúvida sobre parcela',
@@ -91,13 +92,14 @@ export default function NovoTicketPage() {
           {/* Assunto */}
           <div>
             <label style={labelStyle}>Assunto *</label>
-            <select
+            <Select
+              unstyled
               {...register('assunto')}
-              style={{ ...inputStyle, cursor: 'pointer' }}
+              style={{ ...inputStyle, paddingRight: '32px', cursor: 'pointer' }}
             >
               <option value="">Selecione o assunto...</option>
               {ASSUNTOS.map(a => <option key={a} value={a}>{a}</option>)}
-            </select>
+            </Select>
             {errors.assunto && (
               <p style={{ fontSize: '12px', color: 'var(--portal-red-600)', marginTop: '4px', fontFamily: 'var(--font-dm-sans, sans-serif)' }}>
                 {errors.assunto.message}

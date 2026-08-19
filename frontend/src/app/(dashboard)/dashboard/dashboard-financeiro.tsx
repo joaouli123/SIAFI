@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { formatDate, formatCurrency, formatDateTime, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
@@ -586,12 +587,12 @@ export default function DashboardFinanceiro() {
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Método de entrega *</label>
-                <select className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm" value={metodoLiberacao} onChange={e => setMetodoLiberacao(e.target.value)}>
+                <Select value={metodoLiberacao} onChange={e => setMetodoLiberacao(e.target.value)}>
                   <option value="dinheiro">Dinheiro em espécie</option>
                   <option value="pix">PIX</option>
                   <option value="ted">TED / Transferência bancária</option>
                   <option value="transferencia">Transferência interna</option>
-                </select>
+                </Select>
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Data de liberação *</label>

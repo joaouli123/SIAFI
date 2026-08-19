@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Select } from '@/components/ui/select'
 import api from '@/lib/api'
 
 const CATEGORIAS = [
@@ -96,15 +97,10 @@ export default function NovoSuporteInternoPage() {
           {/* Categoria */}
           <div className="space-y-1.5">
             <Label htmlFor="categoria">Categoria *</Label>
-            <select
-              id="categoria"
-              value={categoria}
-              onChange={e => { setCategoria(e.target.value); setError('') }}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            >
+            <Select id="categoria" value={categoria} onChange={e => { setCategoria(e.target.value); setError('') }}>
               <option value="">Selecione a categoria...</option>
               {CATEGORIAS.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+            </Select>
           </div>
 
           {/* Mensagem */}
