@@ -3,9 +3,18 @@ import { createHash } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SettingsService } from '../settings/settings.service';
 import { EmpresaConfigService } from '../empresa/empresa-config.service';
-import puppeteer from 'puppeteer';
 import PDFDocument from 'pdfkit';
 import type { Response } from 'express';
+
+// puppeteer 25 e ESM-only (nao publica build CommonJS). O Nest compila para
+// CommonJS, entao um import estatico vira require() e derruba o processo no
+// boot com ERR_REQUIRE_ESM. Carrega sob demanda, so quando um PDF e gerado.
+type Puppeteer = typeof import('puppeteer').default;
+let puppeteerCache: Promise<Puppeteer> | undefined;
+function carregarPuppeteer(): Promise<Puppeteer> {
+  puppeteerCache ??= import('puppeteer').then((m) => m.default);
+  return puppeteerCache;
+}
 
 // ─── Formatadores ────────────────────────────────────────────────────────────
 
@@ -49,6 +58,7 @@ export class PdfService {
     ].filter(Boolean) as string[];
     const executablePath = candidatos.find(p => existsSync(p));
 
+    const puppeteer = await carregarPuppeteer();
     const browser = await puppeteer.launch({
       headless: true,
       executablePath,
