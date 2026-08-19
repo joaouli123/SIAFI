@@ -142,9 +142,16 @@ export default function NovoPagamentoPage() {
     ? new Date(overdueCheck) < new Date(new Date().toDateString())
     : false
 
+  // A mora corre por dia, então o total depende da data da baixa, não de hoje.
+  // Sem enviar a data, a tela mostrava a dívida de hoje e o backend recusava a
+  // baixa retroativa por "excede o total devido".
+  const dataPagamentoSel = form.watch('dataPagamento')
+
   const { data: encargos } = useQuery<Encargos>({
-    queryKey: ['encargos', instIdForEncargos],
-    queryFn:  () => api.get<Encargos>(`/installments/${instIdForEncargos}/encargos`).then(r => r.data),
+    queryKey: ['encargos', instIdForEncargos, dataPagamentoSel],
+    queryFn:  () => api.get<Encargos>(`/installments/${instIdForEncargos}/encargos`, {
+      params: { data: dataPagamentoSel || undefined },
+    }).then(r => r.data),
     enabled:  !!instIdForEncargos && step === 3 && isOverdueInst,
     staleTime: 30_000,
   })
