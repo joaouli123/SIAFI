@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
@@ -156,14 +157,16 @@ export default function PagamentosPage() {
               />
             </div>
             {consultores && (
-              <select
-                value={consultorId}
-                onChange={(e) => setConsultorId(e.target.value)}
-                className="flex h-9 w-40 items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <option value="">Consultor (Todos)</option>
-                {consultores.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
-              </select>
+              <div className="w-full sm:w-[200px] shrink-0">
+                <ClienteCombobox
+                  clientes={consultores}
+                  value={consultorId ? Number(consultorId) : null}
+                  onSelect={(c) => setConsultorId(c ? String(c.id) : '')}
+                  placeholder="Consultor..."
+                  avulsoLabel="Todos os consultores"
+                  vazioLabel="Nenhum consultor encontrado."
+                />
+              </div>
             )}
             <div className="relative w-44">
               <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
