@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import Decimal from 'decimal.js';
@@ -23,7 +23,7 @@ import {
 import type { NotificationJobData, PaymentJobData } from '../queue/queue.interfaces';
 
 @Injectable()
-export class CronService {
+export class CronService implements OnModuleInit {
   private readonly logger = new Logger(CronService.name);
 
   constructor(
@@ -35,7 +35,20 @@ export class CronService {
     private readonly notificationsQueue: Queue<NotificationJobData>,
     @InjectQueue(QUEUE_PAYMENT_PROCESSING)
     private readonly paymentQueue: Queue<PaymentJobData>,
+    private readonly scheduler: SchedulerRegistry,
   ) {}
+
+  // Toda instancia deste backend roda as 10 rotinas contra o MESMO banco. Uma
+  // segunda instancia (homologacao, demo) duplicaria cobranca por WhatsApp/e-mail
+  // para clientes reais e rodaria de novo o sla-aceite, que CANCELA contratos.
+  // Sobe com CRON_ENABLED=false quem nao for a instancia dona das rotinas.
+  onModuleInit() {
+    if (process.env.CRON_ENABLED !== 'false') return;
+    for (const nome of [...this.scheduler.getCronJobs().keys()]) {
+      this.scheduler.deleteCronJob(nome);
+    }
+    this.logger.warn('CRON_ENABLED=false — rotinas automaticas desligadas nesta instancia');
+  }
 
   @Cron('0 8 * * *', { name: 'mark-overdue', timeZone: 'America/Sao_Paulo' })
   async markOverdueInstallments(): Promise<void> {
