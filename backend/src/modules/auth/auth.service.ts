@@ -106,7 +106,23 @@ export class AuthService {
     }
 
     // 6. Autenticar via Supabase
-    const { data, error } = await this.supabase.admin.auth.signInWithPassword({ email, password });
+    let { data, error } = await this.supabase.admin.auth.signInWithPassword({ email, password });
+
+    // A senha já passou no bcrypt local (passo 3): se o Supabase recusa, é o
+    // lado dele que está dessincronizado — conta com e-mail antigo após rename
+    // de username, senha trocada direto no banco, ou supabaseId apontando para
+    // uma conta removida. Nesses casos trocar a senha na tela nunca resolvia,
+    // porque atualizava a conta vinculada e não a que o login procura.
+    // Ressincroniza pelo e-mail atual e tenta uma única vez mais.
+    if (error || !data.session) {
+      await this.syncToSupabase(
+        { id: dbUser.id, username: dbUser.username, nome: dbUser.nome, role: dbUser.role },
+        password,
+        email,
+      );
+      ({ data, error } = await this.supabase.admin.auth.signInWithPassword({ email, password }));
+    }
+
     if (error || !data.session) {
       throw new UnauthorizedException('Falha na autenticação Supabase');
     }
@@ -625,8 +641,31 @@ export class AuthService {
     });
   }
 
+  // listUsers() devolve só a primeira página (50 contas por padrão). Com o
+  // portal do cliente ativo isso passa do limite e contas existentes deixam de
+  // ser encontradas, gerando duplicata ou erro de e-mail já cadastrado.
+  private async buscarContaPorEmail(
+    email: string,
+  ): Promise<{ id: string; email?: string } | undefined> {
+    const alvo = email.toLowerCase();
+    for (let page = 1; page <= 40; page++) {
+      const { data } = await this.supabase.admin.auth.admin.listUsers({
+        page,
+        perPage: 200,
+      });
+      const users = (data as { users?: { id: string; email?: string }[] } | null)?.users ?? [];
+      const achou = users.find((u) => (u.email ?? '').toLowerCase() === alvo);
+      if (achou) return achou;
+      if (users.length < 200) return undefined;
+    }
+    return undefined;
+  }
+
   toSupabaseEmail(username: string): string {
-    return `${username}@siafi.local`;
+    // O Supabase grava e-mail sempre em minúsculas. Montar o endereço com o
+    // username cru fazia toda comparação por e-mail falhar para quem tem
+    // maiúscula no nome (ex.: Bruno.Teste), quebrando o login e a sincronização.
+    return `${username.toLowerCase()}@siafi.local`;
   }
 
   extractAal(token: string): string {
@@ -657,9 +696,7 @@ export class AuthService {
     rawPassword: string,
     email: string,
   ): Promise<void> {
-    const { data: listData } = await this.supabase.admin.auth.admin.listUsers();
-    const users = (listData as { users?: { id: string; email?: string }[] } | null)?.users ?? [];
-    const existing = users.find((u) => u.email === email);
+    const existing = await this.buscarContaPorEmail(email);
 
     let supabaseId: string;
 
@@ -682,6 +719,20 @@ export class AuthService {
         throw new InternalServerErrorException(`Sync Supabase falhou: ${error?.message}`);
       }
       supabaseId = data.user.id;
+    }
+
+    // supabaseId é único: se outra linha ainda aponta para esta conta, o vínculo
+    // dela está obsoleto — o e-mail deriva do username, que é único, então a
+    // conta só pode pertencer a quem tem o username correspondente.
+    const vinculoAntigo = await this.prisma.user.findFirst({
+      where: { supabaseId, id: { not: user.id } },
+      select: { id: true },
+    });
+    if (vinculoAntigo) {
+      await this.prisma.user.update({
+        where: { id: vinculoAntigo.id },
+        data: { supabaseId: null },
+      });
     }
 
     await this.prisma.user.update({ where: { id: user.id }, data: { supabaseId } });

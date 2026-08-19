@@ -3,25 +3,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
 
-export interface CreateUserDto {
-  nome: string;
-  username: string;
-  password: string;
-  role: string;
-  email?: string | null;
-  comissaoPercentual?: number;
-}
-
-export interface UpdateUserDto {
-  nome?: string;
-  username?: string;
-  password?: string;
-  role?: string;
-  active?: boolean;
-  email?: string | null;
-  comissaoPercentual?: number | null;
-}
+export { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -66,6 +50,12 @@ export class UsersService {
     const existing = await this.prisma.user.findUnique({ where: { username: dto.username } });
     if (existing) throw new ConflictException('Username já está em uso');
 
+    const emailLimpo = dto.email?.trim() || null;
+    if (emailLimpo) {
+      const emailEmUso = await this.prisma.user.findFirst({ where: { email: emailLimpo } });
+      if (emailEmUso) throw new ConflictException('E-mail já está em uso');
+    }
+
     const hashed = await bcrypt.hash(dto.password, 12);
     this.validateCommission(dto.comissaoPercentual, dto.role);
     const user = await this.prisma.user.create({
@@ -74,7 +64,7 @@ export class UsersService {
         username: dto.username,
         password: hashed,
         role: dto.role as any,
-        email: dto.email?.trim() || null,
+        email: emailLimpo,
         comissaoPercentual: dto.comissaoPercentual ?? null,
         active: true,
       },
@@ -102,19 +92,27 @@ export class UsersService {
     // username (ou a senha) só no Prisma deixa a conta Supabase órfã e o
     // operador sem conseguir logar. Sincroniza antes de gravar.
     const usernameMudou = dto.username !== undefined && dto.username !== existing.username;
-    if (existing.supabaseId && (usernameMudou || dto.password || dto.role !== undefined)) {
+    if (
+      existing.supabaseId &&
+      (usernameMudou || dto.password || dto.role !== undefined || dto.active !== undefined)
+    ) {
       const attrs: Record<string, any> = {};
       if (usernameMudou) {
-        attrs.email = `${dto.username}@siafi.local`;
+        // minúsculas: é assim que o Supabase grava e é assim que o login procura
+        attrs.email = `${dto.username!.toLowerCase()}@siafi.local`;
         attrs.email_confirm = true;
         attrs.user_metadata = { username: dto.username, nome: dto.nome ?? existing.nome };
       }
       if (dto.password) attrs.password = dto.password;
       if (dto.role !== undefined) attrs.app_metadata = { role: dto.role, prismaId: existing.id, tipo: 'operador' };
+      // O guard resolve perfil e id pelo próprio token, sem consultar o banco, e
+      // o refresh renova a sessão sem olhar `active`. Sem bloquear a conta no
+      // Supabase, desativar um operador não tirava o acesso dele.
+      if (dto.active !== undefined) attrs.ban_duration = dto.active ? 'none' : '876000h';
       const { error } = await this.supabase.admin.auth.admin.updateUserById(existing.supabaseId, attrs);
       if (error) throw new ConflictException(`Falha ao sincronizar conta de acesso: ${error.message}`);
       if (usernameMudou && (!existing.email || existing.email.endsWith('@siafi.local')) && dto.email === undefined) {
-        data.email = `${dto.username}@siafi.local`;
+        data.email = `${dto.username!.toLowerCase()}@siafi.local`;
       }
     }
 
@@ -136,6 +134,12 @@ export class UsersService {
   async softDelete(id: number): Promise<void> {
     const existing = await this.prisma.user.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Usuário não encontrado');
+    if (existing.supabaseId) {
+      const { error } = await this.supabase.admin.auth.admin.updateUserById(existing.supabaseId, {
+        ban_duration: '876000h',
+      });
+      if (error) throw new ConflictException(`Falha ao revogar o acesso: ${error.message}`);
+    }
     await this.prisma.user.update({ where: { id }, data: { active: false } });
   }
 }
