@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
+import { ComboboxTexto } from '@/components/ui/combobox-texto'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn, formatCurrency, formatDate, formatCPF, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
@@ -487,14 +488,12 @@ export default function NovoPagamentoPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bco Recebedor</Label>
-                  <Input
-                    {...form.register('contaDestino')}
-                    list="contas-recebedoras-novo"
+                  <ComboboxTexto
+                    value={form.watch('contaDestino') ?? ''}
+                    onChange={(v) => form.setValue('contaDestino', v, { shouldDirty: true })}
+                    opcoes={contasUsadas}
                     placeholder="ex: Itaú PJ, dinheiro em caixa"
                   />
-                  <datalist id="contas-recebedoras-novo">
-                    {contasUsadas?.map(c => <option key={c} value={c} />)}
-                  </datalist>
                   <p className="text-[10px] text-muted-foreground">Conta/banco que recebeu o valor</p>
                 </div>
 

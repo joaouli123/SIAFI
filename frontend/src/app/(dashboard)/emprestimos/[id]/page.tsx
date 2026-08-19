@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import { formatCurrency, formatDate, formatDateLocal, STATUS_LOAN, STATUS_INSTALLMENT, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
+import { ComboboxTexto } from '@/components/ui/combobox-texto'
 
 interface Payment {
   id: number; valorPago: number; valorDevido?: number | null
@@ -69,6 +70,20 @@ export default function EmprestimoDetalhePage() {
   const [comissaoRecebimento, setComissaoRecebimento] = useState('')
   const [comissaoAdminRecebimento, setComissaoAdminRecebimento] = useState('')
   const [activeTab, setActiveTab] = useState<'parcelas' | 'cobrancas'>('parcelas')
+
+  
+
+  // Contas/bancos ja usados — sugestoes dos campos "Bco Recebedor"
+
+  const { data: contasUsadas } = useQuery<string[]>({
+
+    queryKey: ['payments-contas'],
+
+    queryFn: () => api.get<string[]>('/payments/contas').then((r) => r.data),
+
+    staleTime: 60_000,
+
+  })
   const [expandedPayments, setExpandedPayments] = useState<Set<number>>(new Set())
   const togglePayments = (id: number) => setExpandedPayments(prev => {
     const next = new Set(prev)
@@ -269,7 +284,7 @@ export default function EmprestimoDetalhePage() {
                 <div className="space-y-1.5"><Label>% Desconto (sobre lucro)</Label><Input type="number" step="0.01" min="0" max="100" value={qPct} onChange={(e) => setQPct(e.target.value)} placeholder="0" /></div>
                 <div className="space-y-1.5"><Label>Data</Label><Input type="date" value={qData} onChange={(e) => setQData(e.target.value)} /></div>
                 <div className="space-y-1.5"><Label>Método</Label><Select value={qMetodo} onChange={(e) => setQMetodo(e.target.value)}>{Object.entries(METODO_PAGAMENTO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</Select></div>
-                <div className="space-y-1.5"><Label>Bco Recebedor</Label><Input value={qConta} onChange={(e) => setQConta(e.target.value)} placeholder="opcional" /></div>
+                <div className="space-y-1.5"><Label>Bco Recebedor</Label><ComboboxTexto value={qConta} onChange={setQConta} opcoes={contasUsadas} placeholder="opcional" /></div>
               </div>
               <div className="flex gap-2">
                 <Button className="bg-green-600 hover:bg-green-700 gap-2" disabled={quitarMut.isPending}
@@ -833,7 +848,7 @@ export default function EmprestimoDetalhePage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bco Recebedor</Label>
-                  <Input value={contaDestino} onChange={(e) => setContaDestino(e.target.value)} placeholder="ex: Itaú PJ, dinheiro em caixa" />
+                  <ComboboxTexto value={contaDestino} onChange={setContaDestino} opcoes={contasUsadas} placeholder="ex: Itaú PJ, dinheiro em caixa" />
                 </div>
 
                 {user?.role === 'admin' && (

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ClienteCombobox } from '@/components/ui/cliente-combobox'
+import { ComboboxTexto } from '@/components/ui/combobox-texto'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
@@ -169,17 +170,14 @@ export default function PagamentosPage() {
               </div>
             )}
             <div className="relative w-44">
-              <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-              <Input
-                list="contas-recebedoras"
-                placeholder="Bco Recebedor"
+              <Landmark className="absolute left-3 top-[18px] -translate-y-1/2 size-4 text-muted-foreground z-10" />
+              <ComboboxTexto
                 value={contaInput}
-                onChange={(e) => setContaInput(e.target.value)}
-                className="pl-9 text-sm"
+                onChange={setContaInput}
+                opcoes={contas}
+                placeholder="Bco Recebedor"
+                inputClassName="pl-9 text-sm"
               />
-              <datalist id="contas-recebedoras">
-                {contas?.map((c) => <option key={c} value={c} />)}
-              </datalist>
             </div>
             <div className="flex items-center gap-2">
               <Label className="text-xs text-muted-foreground whitespace-nowrap">De</Label>
