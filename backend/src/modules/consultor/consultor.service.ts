@@ -332,6 +332,7 @@ export class ConsultorService {
       qtdPagas: 0,
       qtdVencidas: 0,
       qtdAVencer: 0,
+      qtdQuitadasHistorico: 0,
     };
 
     const contratos = client.loans.map((loan) => {
@@ -388,6 +389,13 @@ export class ConsultorService {
         }
       }
 
+      // A migracao do legado so trouxe as parcelas EM ABERTO: as ja quitadas no
+      // sistema antigo nao viraram linha nenhuma. Sem isso o relatorio diz "0 pagas"
+      // num contrato de 2021 com metade do carne liquidado - justamente o numero que
+      // o consultor usa na negociacao. O que sobra e a diferenca entre o que o
+      // contrato declara e o que o sistema registra.
+      const quitadasHistorico = Math.max(0, loan.numeroParcelas - loan.installments.length);
+
       resumo.totalContratos += 1;
       resumo.totalContratado += Number(loan.totalReceivable);
       resumo.totalPago += pagoContrato;
@@ -396,6 +404,7 @@ export class ConsultorService {
       resumo.qtdPagas += pagas.length;
       resumo.qtdVencidas += vencidas.length;
       resumo.qtdAVencer += aVencer.length;
+      resumo.qtdQuitadasHistorico += quitadasHistorico;
 
       return {
         id: loan.id,
@@ -403,6 +412,7 @@ export class ConsultorService {
         principalAmount: String(loan.principalAmount),
         totalReceivable: String(loan.totalReceivable),
         numeroParcelas: loan.numeroParcelas,
+        qtdQuitadasHistorico: quitadasHistorico,
         dataInicio: loan.dataInicio,
         metodoPagamento: loan.metodoPagamento,
         totalPago: r2(pagoContrato),

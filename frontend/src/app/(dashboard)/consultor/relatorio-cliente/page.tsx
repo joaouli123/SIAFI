@@ -40,6 +40,7 @@ interface ContratoRel {
   principalAmount: string
   totalReceivable: string
   numeroParcelas: number
+  qtdQuitadasHistorico: number
   dataInicio: string
   metodoPagamento: string | null
   totalPago: number
@@ -71,6 +72,7 @@ interface RelatorioCliente {
     qtdPagas: number
     qtdVencidas: number
     qtdAVencer: number
+    qtdQuitadasHistorico: number
   }
   contratos: ContratoRel[]
 }
@@ -285,7 +287,11 @@ export default function RelatorioClientePage() {
             <Kpi
               icon={CheckCircle2} tone="green" label="Total pago"
               value={formatCurrency(data.resumo.totalPago)}
-              sub={`${data.resumo.qtdPagas} parcela(s) paga(s)`}
+              sub={
+                data.resumo.qtdQuitadasHistorico > 0
+                  ? `${data.resumo.qtdPagas + data.resumo.qtdQuitadasHistorico} parcela(s) quitada(s) · ${data.resumo.qtdQuitadasHistorico} antes do sistema`
+                  : `${data.resumo.qtdPagas} parcela(s) paga(s)`
+              }
             />
             <Kpi
               icon={AlertTriangle} tone="red" label="Vencido (com encargos)"
@@ -324,9 +330,23 @@ export default function RelatorioClientePage() {
                     <span className="text-green-600">Pago: {formatCurrency(ct.totalPago)}</span>
                     <span className="text-red-600">Vencido: {formatCurrency(ct.totalVencido)}</span>
                     <span className="text-amber-600">A vencer: {formatCurrency(ct.totalAVencer)}</span>
+                    <span>
+                      Quitadas: {ct.pagas.length + ct.qtdQuitadasHistorico} de {ct.numeroParcelas}
+                      {' · '}Em aberto: {ct.vencidas.length + ct.aVencer.length}
+                    </span>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {ct.qtdQuitadasHistorico > 0 && (
+                    <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
+                      <span className="font-medium text-green-600">
+                        {ct.qtdQuitadasHistorico} parcela(s) quitada(s) antes da migração
+                      </span>{' '}
+                      — pagas no sistema anterior, sem baixa individual registrada aqui. Contam no
+                      total do contrato ({ct.numeroParcelas} parcelas), mas não aparecem na tabela
+                      abaixo.
+                    </div>
+                  )}
                   <TabelaParcelas
                     titulo="Parcelas pagas" icone={CheckCircle2} parcelas={ct.pagas}
                     tone="text-green-600" mostrarPagamento
