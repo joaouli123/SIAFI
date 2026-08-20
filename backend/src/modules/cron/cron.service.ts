@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { Cron, SchedulerRegistry } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import Decimal from 'decimal.js';
@@ -35,23 +35,26 @@ export class CronService implements OnModuleInit {
     private readonly notificationsQueue: Queue<NotificationJobData>,
     @InjectQueue(QUEUE_PAYMENT_PROCESSING)
     private readonly paymentQueue: Queue<PaymentJobData>,
-    private readonly scheduler: SchedulerRegistry,
   ) {}
 
   // Toda instancia deste backend roda as 10 rotinas contra o MESMO banco. Uma
   // segunda instancia (homologacao, demo) duplicaria cobranca por WhatsApp/e-mail
   // para clientes reais e rodaria de novo o sla-aceite, que CANCELA contratos.
   // Sobe com CRON_ENABLED=false quem nao for a instancia dona das rotinas.
+  // Excluir os jobs no onModuleInit nao funciona: o ScheduleExplorer do
+  // @nestjs/schedule so os registra depois deste hook, entao o registry esta
+  // vazio aqui e as rotinas sobem mesmo assim. O corte tem que ser no handler.
+  private readonly cronDesligado = process.env.CRON_ENABLED === 'false';
+
   onModuleInit() {
-    if (process.env.CRON_ENABLED !== 'false') return;
-    for (const nome of [...this.scheduler.getCronJobs().keys()]) {
-      this.scheduler.deleteCronJob(nome);
+    if (this.cronDesligado) {
+      this.logger.warn('CRON_ENABLED=false — rotinas automaticas desligadas nesta instancia');
     }
-    this.logger.warn('CRON_ENABLED=false — rotinas automaticas desligadas nesta instancia');
   }
 
   @Cron('0 8 * * *', { name: 'mark-overdue', timeZone: 'America/Sao_Paulo' })
   async markOverdueInstallments(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: marcando parcelas em atraso');
 
     const today = new Date();
@@ -77,6 +80,7 @@ export class CronService implements OnModuleInit {
 
   @Cron('0 9 * * *', { name: 'send-reminders', timeZone: 'America/Sao_Paulo' })
   async sendReminders(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: enfileirando lembretes de vencimento (próximos 3 dias)');
 
     const today = new Date();
@@ -129,6 +133,7 @@ export class CronService implements OnModuleInit {
 
   @Cron('0 10 * * *', { name: 'send-overdue', timeZone: 'America/Sao_Paulo' })
   async sendOverdueNotices(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: enfileirando cobranças de atraso');
 
     const today = new Date();
@@ -168,6 +173,7 @@ export class CronService implements OnModuleInit {
 
   @Cron('0 11 * * *', { name: 'lembrete-reparcelamentos', timeZone: 'America/Sao_Paulo' })
   async lembreteReparcelamentosAprovados(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: lembretes de reparcelamentos aprovados não executados');
 
     const limite = new Date(Date.now() - 3 * 86_400_000); // aprovados há mais de 3 dias
@@ -199,6 +205,7 @@ export class CronService implements OnModuleInit {
 
   @Cron('0 */2 * * *', { name: 'sla-intencoes', timeZone: 'America/Sao_Paulo' })
   async verificarSlaIntencoes(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: verificando SLA de intenções');
     const now = new Date();
     const duasHorasAtras = new Date(now.getTime() - 2 * 3_600_000);
@@ -251,6 +258,7 @@ export class CronService implements OnModuleInit {
 
   @Cron('0 7 * * *', { name: 'sla-aceite', timeZone: 'America/Sao_Paulo' })
   async verificarSlaAceite(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: verificando SLA de aceite de propostas');
     const agora = new Date();
     const em2dias = new Date(agora.getTime() + 2 * 86_400_000);
@@ -360,6 +368,7 @@ export class CronService implements OnModuleInit {
 
   @Cron('0 2 * * *', { name: 'conciliacao-pix', timeZone: 'America/Sao_Paulo' })
   async conciliacaoPix(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: enfileirando job de conciliação PIX');
 
     await this.paymentQueue.add(
@@ -371,6 +380,7 @@ export class CronService implements OnModuleInit {
 
   @Cron('5 8 * * *', { name: 'atualizar-encargos', timeZone: 'America/Sao_Paulo' })
   async atualizarEncargos(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: atualizando multas e mora diária');
 
     const today = new Date();
@@ -437,12 +447,14 @@ export class CronService implements OnModuleInit {
 
   @Cron('30 9 * * *', { name: 'cobrancas-antecipadas', timeZone: 'America/Sao_Paulo' })
   async enviarCobrancasAntecipadas(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: processando cobranças antecipadas');
     await this.cobranca.processarCobrancasAntecipadas();
   }
 
   @Cron('0 14 * * *', { name: 'reenviar-cobrancas', timeZone: 'America/Sao_Paulo' })
   async reenviarCobrancasNaoLidas(): Promise<void> {
+    if (this.cronDesligado) return;
     this.logger.log('Cron: reenviando cobranças D-3');
     await this.cobranca.reenviarCobrancas();
   }
