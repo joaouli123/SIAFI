@@ -9,6 +9,7 @@ import { createHash } from 'crypto';
 import Decimal from 'decimal.js';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { filtroCliente } from '../../common/busca';
 import { dataLocal } from '../../common/data';
 import { PortalService } from '../client-portal/portal.service';
 import { InstallmentsService } from '../installments/installments.service';
@@ -50,7 +51,7 @@ export class LoansService {
     const where: Prisma.LoanWhereInput = {};
     if (status) where.status = status as LoanStatus;
     if (clientId) where.clientId = clientId;
-    if (search) where.client = { nome: { contains: search } };
+    if (search) where.client = { OR: filtroCliente(search) };
 
     const [data, total] = await Promise.all([
       this.prisma.loan.findMany({

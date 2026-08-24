@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { dataLocal } from '../../common/data';
 import { calcularEncargos, Encargos, ParcelaEncargo } from '../../common/encargos';
+import { filtroCliente } from '../../common/busca';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { InstallmentFilterDto } from './dto/installment-filter.dto';
 import { UpdateInstallmentDto } from './dto/update-installment.dto';
@@ -57,10 +58,7 @@ export class InstallmentsService {
     const clientWhere: Prisma.ClientWhereInput = {};
     if (effectiveConsultorId) clientWhere.consultorId = effectiveConsultorId;
     if (search) {
-      clientWhere.OR = [
-        { nome: { contains: search, mode: 'insensitive' } },
-        { cpf: { contains: search } },
-      ];
+      clientWhere.OR = filtroCliente(search);
     }
     if (Object.keys(clientWhere).length) loanWhere.client = clientWhere;
     if (Object.keys(loanWhere).length) where.loan = loanWhere;

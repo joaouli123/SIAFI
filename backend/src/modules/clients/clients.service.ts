@@ -3,6 +3,7 @@ import { Client, Prisma } from '@prisma/client';
 import { extname } from 'path';
 import { PrismaService } from '../../prisma/prisma.service';
 import { dataLocal } from '../../common/data';
+import { filtroCliente } from '../../common/busca';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -50,11 +51,7 @@ export class ClientsService {
     }
 
     if (search) {
-      where.OR = [
-        { nome: { contains: search } },
-        { cpf: { contains: search } },
-        { whatsapp: { contains: search } },
-      ];
+      where.OR = filtroCliente(search);
     }
 
     const [data, total] = await Promise.all([
