@@ -248,11 +248,51 @@ export class ConsultorService {
     const where: Record<string, unknown> = { active: true };
     if (currentUser.role === 'consultor') where.consultorId = currentUser.id;
 
-    return this.prisma.client.findMany({
+    const clientes = await this.prisma.client.findMany({
       where,
       orderBy: { nome: 'asc' },
       select: { id: true, nome: true, cpf: true },
     });
+    if (clientes.length === 0) return [];
+
+    // A tela lista a carteira inteira de cara, entao cada linha ja diz se o
+    // cliente tem parcela vencida: e a primeira coisa que o consultor precisa
+    // saber antes de ligar, sem ter que abrir cliente por cliente.
+    const ids = clientes.map((c) => c.id);
+    const loans = await this.prisma.loan.findMany({
+      where: { clientId: { in: ids }, status: { in: ['ativo', 'inadimplente'] } },
+      select: { id: true, clientId: true },
+    });
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const atrasadas = loans.length
+      ? await this.prisma.installment.groupBy({
+          by: ['loanId'],
+          where: {
+            loanId: { in: loans.map((l) => l.id) },
+            status: { in: ['pendente', 'parcialmente_pago', 'atrasado'] },
+            dataVencimento: { lt: hoje },
+          },
+          _count: { _all: true },
+        })
+      : [];
+
+    const clientePorLoan = new Map(loans.map((l) => [l.id, l.clientId]));
+    const contratos = new Map<number, number>();
+    for (const l of loans) contratos.set(l.clientId, (contratos.get(l.clientId) ?? 0) + 1);
+    const emAtraso = new Map<number, number>();
+    for (const g of atrasadas) {
+      const clientId = clientePorLoan.get(g.loanId);
+      if (clientId === undefined) continue;
+      emAtraso.set(clientId, (emAtraso.get(clientId) ?? 0) + g._count._all);
+    }
+
+    return clientes.map((c) => ({
+      ...c,
+      contratosAtivos: contratos.get(c.id) ?? 0,
+      parcelasAtrasadas: emAtraso.get(c.id) ?? 0,
+    }));
   }
 
   /**

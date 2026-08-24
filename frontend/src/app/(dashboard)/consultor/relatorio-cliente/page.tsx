@@ -3,20 +3,21 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
-  FileText, CheckCircle2, AlertTriangle, CalendarClock, Wallet, Printer,
+  FileText, CheckCircle2, AlertTriangle, CalendarClock, Wallet, Printer, Search, Users,
 } from 'lucide-react'
 import api from '@/lib/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ClienteCombobox } from '@/components/ui/cliente-combobox'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCPF, formatCurrency, formatDate } from '@/lib/utils'
 
 interface ClienteOpt {
   id: number
   nome: string
   cpf?: string | null
+  contratosAtivos: number
+  parcelasAtrasadas: number
 }
 
 interface ParcelaRel {
@@ -194,6 +195,7 @@ function TabelaParcelas({
 
 export default function RelatorioClientePage() {
   const [clientId, setClientId] = useState<number | null>(null)
+  const [busca, setBusca] = useState('')
 
   const { data: clientes, isLoading: loadingClientes } = useQuery<ClienteOpt[]>({
     queryKey: ['consultor-clientes-relatorio'],
@@ -204,6 +206,15 @@ export default function RelatorioClientePage() {
     queryKey: ['relatorio-cliente', clientId],
     queryFn: () => api.get(`/consultor/relatorio-cliente/${clientId}`).then((r) => r.data),
     enabled: !!clientId,
+  })
+
+  const q = busca.trim().toLowerCase()
+  const qd = q.replace(/\D/g, '')
+  const clientesFiltrados = (clientes ?? []).filter((c) => {
+    if (!q) return true
+    if (c.nome.toLowerCase().includes(q)) return true
+    const cpf = c.cpf ?? ''
+    return cpf.includes(busca.trim()) || (qd.length > 0 && cpf.replace(/\D/g, '').includes(qd))
   })
 
   return (
@@ -223,31 +234,93 @@ export default function RelatorioClientePage() {
         )}
       </div>
 
-      <Card>
-        <CardContent className="pt-5 pb-5">
-          <div className="max-w-lg">
-            <p className="text-sm font-medium mb-1.5">Cliente</p>
-            {loadingClientes ? (
-              <Skeleton className="h-9" />
-            ) : (
-              <ClienteCombobox
-                clientes={clientes ?? []}
-                value={clientId}
-                onSelect={(c) => setClientId(c?.id ?? null)}
-                placeholder="Digite o nome ou CPF do cliente..."
-              />
+      <Card className="print:hidden">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Users className="size-4 text-muted-foreground" />
+              Sua carteira
+              {!loadingClientes && (
+                <span className="font-normal text-sm text-muted-foreground">
+                  {clientes?.length ?? 0} cliente(s)
+                </span>
+              )}
+            </CardTitle>
+            {(clientes?.length ?? 0) > 0 && (
+              <div className="relative w-full sm:w-72">
+                <Search className="size-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  placeholder="Filtrar por nome ou CPF..."
+                  className="w-full h-9 pl-8 pr-3 rounded-md border bg-background text-sm outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
             )}
           </div>
+        </CardHeader>
+        <CardContent>
+          {loadingClientes ? (
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {[0, 1, 2, 3, 4, 5].map((i) => <Skeleton key={i} className="h-16" />)}
+            </div>
+          ) : (clientes?.length ?? 0) === 0 ? (
+            <div className="flex flex-col items-center py-10 text-center text-muted-foreground">
+              <Users className="size-8 mb-2 opacity-40" />
+              <p className="font-medium text-foreground">Nenhum cliente vinculado à sua carteira</p>
+              <p className="text-sm mt-1">
+                Peça ao financeiro para vincular os clientes ao seu usuário.
+              </p>
+            </div>
+          ) : clientesFiltrados.length === 0 ? (
+            <p className="py-6 text-sm text-muted-foreground">
+              Nenhum cliente encontrado para “{busca.trim()}”.
+            </p>
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 max-h-[26rem] overflow-y-auto">
+              {clientesFiltrados.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setClientId(c.id === clientId ? null : c.id)}
+                  className={`text-left rounded-lg border p-3 transition hover:bg-muted/60 ${
+                    c.id === clientId ? 'border-primary bg-primary/5 ring-1 ring-primary' : ''
+                  }`}
+                >
+                  <p className="font-medium text-sm truncate">{c.nome}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {c.cpf ? formatCPF(c.cpf) : 'CPF não informado'}
+                  </p>
+                  <div className="flex gap-1.5 mt-2 flex-wrap">
+                    {c.parcelasAtrasadas > 0 ? (
+                      <Badge variant="destructive" className="text-[10px]">
+                        {c.parcelasAtrasadas} em atraso
+                      </Badge>
+                    ) : c.contratosAtivos > 0 ? (
+                      <Badge variant="secondary" className="text-[10px]">Em dia</Badge>
+                    ) : null}
+                    {c.contratosAtivos > 0 && (
+                      <Badge variant="outline" className="text-[10px]">
+                        {c.contratosAtivos} contrato(s)
+                      </Badge>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
       {!clientId ? (
-        <Card>
-          <CardContent className="flex flex-col items-center py-14 text-muted-foreground">
-            <FileText className="size-8 mb-2 opacity-40" />
-            <p>Selecione um cliente para ver o relatório.</p>
-          </CardContent>
-        </Card>
+        (clientes?.length ?? 0) > 0 ? (
+          <Card className="print:hidden">
+            <CardContent className="flex flex-col items-center py-14 text-muted-foreground">
+              <FileText className="size-8 mb-2 opacity-40" />
+              <p>Selecione um cliente acima para ver o relatório.</p>
+            </CardContent>
+          </Card>
+        ) : null
       ) : isLoading ? (
         <div className="space-y-3">
           {[0, 1, 2].map((i) => <Skeleton key={i} className="h-28" />)}
