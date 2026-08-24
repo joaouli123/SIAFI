@@ -144,6 +144,11 @@ export default function ParcelasPage() {
       </div>
 
       <div className="bg-card border border-border/40 rounded-xl p-3 shadow-sm flex flex-col lg:flex-row gap-3 lg:items-center">
+        <div className="relative flex-1 w-full min-w-[200px]">
+          <Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" />
+          <Input className="pl-9 h-9" placeholder="Buscar por cliente ou CPF..." value={fSearch} onChange={(e) => { setFSearch(e.target.value); setFPage(1) }} />
+        </div>
+
         {showConsultorFilter && (
           <div className="w-full lg:w-[220px] shrink-0">
             <ClienteCombobox
@@ -156,11 +161,6 @@ export default function ParcelasPage() {
             />
           </div>
         )}
-
-        <div className="relative flex-1 w-full min-w-[200px]">
-          <Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" />
-          <Input className="pl-9 h-9" placeholder="Buscar por cliente ou CPF..." value={fSearch} onChange={(e) => { setFSearch(e.target.value); setFPage(1) }} />
-        </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           <Input type="number" placeholder="Nº Empréstimo" className="w-32 h-9" value={fLoanId} onChange={(e) => { setFLoanId(e.target.value); setFPage(1) }} />

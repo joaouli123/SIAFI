@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft, ArrowRight, Save, Search, User, CreditCard, CheckCircle2, AlertTriangle,
@@ -60,7 +60,15 @@ interface Encargos {
 export default function NovoPagamentoPage() {
   const qc           = useQueryClient()
   const searchParams = useSearchParams()
-  const preParcelaId = searchParams.get('parcelaId')
+  const router       = useRouter()
+
+  // O deep-link ?parcelaId= vale so para a PRIMEIRA baixa. Como ele vivia preso na
+  // URL, "Novo Pagamento" voltava ao passo 1 com a busca de clientes desligada
+  // (enabled: !preParcelaId) e a lista vazia: a operadora nao conseguia dar a
+  // segunda baixa. Virou estado justamente para poder ser zerado no reset.
+  const [preParcelaId, setPreParcelaId] = useState<string | null>(
+    () => searchParams.get('parcelaId'),
+  )
 
   const [step,   setStep]   = useState<WizardStep>(preParcelaId ? 3 : 1)
   const [search, setSearch] = useState('')
@@ -207,6 +215,8 @@ export default function NovoPagamentoPage() {
   }
 
   function resetWizard() {
+    if (searchParams.get('parcelaId')) router.replace('/pagamentos/novo')
+    setPreParcelaId(null)
     setStep(1); setSearch(''); setClient(null); setLoanId(null); setInst(null)
     form.reset({ dataPagamento: hojeISODate(), metodoPagamento: 'dinheiro' })
   }
