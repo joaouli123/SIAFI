@@ -125,6 +125,7 @@ model User {
   conversasParticipadas   ConversaParticipante[]      @relation("ParticipaConversa")
   solicitacoesReparcela   SolicitacaoReparcelamento[] @relation("ConsultorReparcelamento")
   solicitacoesRespondidas SolicitacaoTitular[]
+  tratativas              ClienteTratativa[]
 
   @@map("users")
 }
@@ -206,6 +207,7 @@ model Client {
   solicitacoesTitular        SolicitacaoTitular[]
   avalistaEm                 Avalista[]                  @relation("AvalistaVinculado")
   meusAvalistas              Avalista[]                  @relation("ClienteAvalistas")
+  tratativas                 ClienteTratativa[]
 
   @@index([nome])
   @@index([riskLevel])
@@ -807,6 +809,28 @@ model CobrancaContato {
   @@index([clientId])
   @@index([consultorId])
   @@map("cobranca_contatos")
+}
+
+// ─── ClienteTratativa ─────────────────────────────────────────────────────────
+
+/// Registro das tratativas do consultor com o cliente (telefone, visita, etc).
+/// E um log append-only justamente porque o campo unico de observacoes do
+/// cliente e sobrescrito: a tratativa de hoje apagaria a da semana passada, e
+/// e o historico que serve pra cobranca e pra passar o cliente pra outro
+/// consultor.
+model ClienteTratativa {
+  id        Int      @id @default(autoincrement())
+  clientId  Int      @map("client_id")
+  userId    Int      @map("user_id")
+  canal     String   @db.VarChar(20)
+  descricao String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([clientId, createdAt])
+  @@map("cliente_tratativas")
 }
 
 // ─── LGPD ─────────────────────────────────────────────────────────────────────

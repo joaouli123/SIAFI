@@ -9,6 +9,7 @@ import { PaginatedResponse, paginate } from '../../common/dto/paginated-response
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { ClientFilterDto } from './dto/client-filter.dto';
+import { CreateTratativaDto } from './dto/create-tratativa.dto';
 
 const BUCKET = 'client-documents';
 
@@ -248,6 +249,95 @@ export class ClientsService {
     }
 
     return this.prisma.client.update({ where: { id }, data });
+  }
+
+  // ─── Tratativas ────────────────────────────────────────────────────────────
+
+  /// Checagem leve de acesso. findById serve, mas carrega loans, avalistas e
+  /// score so pra decidir se o consultor pode ver a lista de tratativas.
+  private async assertAcessoCliente(id: number, consultorId?: number): Promise<void> {
+    const client = await this.prisma.client.findUnique({
+      where: { id },
+      select: { id: true, consultorId: true },
+    });
+    if (!client) {
+      throw new NotFoundException(`Cliente com id ${id} nao encontrado`);
+    }
+    if (consultorId && client.consultorId !== consultorId) {
+      throw new ForbiddenException('Cliente nao pertence a sua carteira');
+    }
+  }
+
+  async listarTratativas(id: number, consultorId?: number): Promise<unknown[]> {
+    await this.assertAcessoCliente(id, consultorId);
+    return this.prisma.clienteTratativa.findMany({
+      where: { clientId: id },
+      orderBy: { createdAt: 'desc' },
+      include: { user: { select: { id: true, nome: true, role: true } } },
+    });
+  }
+
+  async registrarTratativa(
+    id: number,
+    dto: CreateTratativaDto,
+    autor: { id: number; role: string },
+  ): Promise<unknown> {
+    await this.assertAcessoCliente(id, autor.role === 'consultor' ? autor.id : undefined);
+
+    const tratativa = await this.prisma.clienteTratativa.create({
+      data: {
+        clientId: id,
+        userId: autor.id,
+        canal: dto.canal,
+        descricao: dto.descricao.trim(),
+      },
+      include: { user: { select: { id: true, nome: true, role: true } } },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId: autor.id,
+        acao: 'CLIENTE_TRATATIVA_REGISTRADA',
+        entidade: 'Client',
+        entidadeId: id,
+        dados: { tratativaId: tratativa.id, canal: dto.canal },
+      },
+    });
+
+    return tratativa;
+  }
+
+  /// So o autor apaga a propria tratativa; admin e financeiro apagam qualquer
+  /// uma. Consultor nao mexe no registro de outro consultor.
+  async removerTratativa(
+    id: number,
+    tratativaId: number,
+    autor: { id: number; role: string },
+  ): Promise<void> {
+    await this.assertAcessoCliente(id, autor.role === 'consultor' ? autor.id : undefined);
+
+    const tratativa = await this.prisma.clienteTratativa.findUnique({
+      where: { id: tratativaId },
+      select: { id: true, clientId: true, userId: true },
+    });
+    if (!tratativa || tratativa.clientId !== id) {
+      throw new NotFoundException(`Tratativa ${tratativaId} nao encontrada`);
+    }
+    const podeApagarDeOutro = autor.role === 'admin' || autor.role === 'financeiro';
+    if (tratativa.userId !== autor.id && !podeApagarDeOutro) {
+      throw new ForbiddenException('Voce so pode remover as tratativas que registrou');
+    }
+
+    await this.prisma.clienteTratativa.delete({ where: { id: tratativaId } });
+    await this.prisma.auditLog.create({
+      data: {
+        userId: autor.id,
+        acao: 'CLIENTE_TRATATIVA_REMOVIDA',
+        entidade: 'Client',
+        entidadeId: id,
+        dados: { tratativaId },
+      },
+    });
   }
 
   async softDelete(id: number): Promise<void> {

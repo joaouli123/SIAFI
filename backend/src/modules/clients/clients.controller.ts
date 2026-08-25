@@ -24,6 +24,7 @@ import type { UploadedFiles as ClientUploadedFiles } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { ClientFilterDto } from './dto/client-filter.dto';
+import { CreateTratativaDto } from './dto/create-tratativa.dto';
 
 const uploadInterceptor = FileFieldsInterceptor(
   [
@@ -71,6 +72,36 @@ export class ClientsController {
   @Roles('admin', 'financeiro', 'caixa')
   getDocumentUrls(@Param('id', ParseIntPipe) id: number) {
     return this.clientsService.getDocumentUrls(id);
+  }
+
+  @Get(':id/tratativas')
+  @Roles('admin', 'financeiro', 'consultor')
+  listarTratativas(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: RequestUser,
+  ) {
+    const consultorFilter = currentUser.role === 'consultor' ? currentUser.id : undefined;
+    return this.clientsService.listarTratativas(id, consultorFilter);
+  }
+
+  @Post(':id/tratativas')
+  @Roles('admin', 'financeiro', 'consultor')
+  registrarTratativa(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CreateTratativaDto,
+    @CurrentUser() currentUser: RequestUser,
+  ) {
+    return this.clientsService.registrarTratativa(id, dto, currentUser);
+  }
+
+  @Delete(':id/tratativas/:tratativaId')
+  @Roles('admin', 'financeiro', 'consultor')
+  removerTratativa(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('tratativaId', ParseIntPipe) tratativaId: number,
+    @CurrentUser() currentUser: RequestUser,
+  ) {
+    return this.clientsService.removerTratativa(id, tratativaId, currentUser);
   }
 
   @Get(':id')

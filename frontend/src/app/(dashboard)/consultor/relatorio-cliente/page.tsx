@@ -10,7 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCPF, formatCurrency, formatDate } from '@/lib/utils'
+import { formatCPF, formatCurrency, formatDate, formatDateTime } from '@/lib/utils'
+import { TratativasCard, LABEL_CANAL, type Tratativa } from '@/components/clientes/tratativas-card'
 
 interface ClienteOpt {
   id: number
@@ -208,6 +209,14 @@ export default function RelatorioClientePage() {
     enabled: !!clientId,
   })
 
+  // Mesma queryKey do TratativasCard: o cabecalho le do cache, sem request extra.
+  const { data: tratativas } = useQuery<Tratativa[]>({
+    queryKey: ['tratativas', clientId],
+    queryFn: () => api.get(`/clients/${clientId}/tratativas`).then((r) => r.data),
+    enabled: !!clientId,
+  })
+  const ultima = tratativas?.[0]
+
   const q = busca.trim().toLowerCase()
   const qd = q.replace(/\D/g, '')
   const clientesFiltrados = (clientes ?? []).filter((c) => {
@@ -347,6 +356,12 @@ export default function RelatorioClientePage() {
                 )}
                 {data.cliente.consultor && <span>Consultor: {data.cliente.consultor.nome}</span>}
                 <span>Contratos: {data.resumo.totalContratos}</span>
+                <span>
+                  Última tratativa:{' '}
+                  {ultima
+                    ? `${formatDateTime(ultima.createdAt)} · ${LABEL_CANAL[ultima.canal] ?? ultima.canal}`
+                    : 'nenhuma registrada'}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -377,6 +392,8 @@ export default function RelatorioClientePage() {
               sub={`${data.resumo.qtdAVencer} parcela(s) a vencer`}
             />
           </div>
+
+          <TratativasCard clientId={data.cliente.id} />
 
           {!data.contratos.length ? (
             <Card>

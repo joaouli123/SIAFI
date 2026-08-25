@@ -17,6 +17,7 @@ import { useAuth } from '@/contexts/auth.context'
 import { toast } from 'sonner'
 import api from '@/lib/api'
 import { PortalCard } from '@/components/portal/portal-card'
+import { TratativasCard } from '@/components/clientes/tratativas-card'
 
 interface Consultor {
   id: number
@@ -59,6 +60,9 @@ export default function ClienteDetalhePage() {
   const [selectedConsultorId, setSelectedConsultorId] = useState<string>('')
 
   const canManage = user?.role === 'admin' || user?.role === 'financeiro'
+  // Observacoes/tratativas: o consultor tambem escreve, mas so na propria carteira
+  // (o PATCH /clients/:id ja recusa cliente de outro consultor).
+  const canEditObs = canManage || user?.role === 'consultor'
 
   const { data: client, isLoading, isError } = useQuery({
     queryKey: ['clients', id],
@@ -293,11 +297,13 @@ export default function ClienteDetalhePage() {
           </Card>
         )}
 
+        <TratativasCard clientId={client.id} className="md:col-span-2" />
+
         <Card className="md:col-span-2">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-base">Observações</CardTitle>
-              {canManage && !isEditingObs && (
+              {canEditObs && !isEditingObs && (
                 <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5" onClick={() => setIsEditingObs(true)}>
                   <Pencil className="size-3" /> Editar
                 </Button>
