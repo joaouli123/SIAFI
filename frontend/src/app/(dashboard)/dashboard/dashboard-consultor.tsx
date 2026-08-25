@@ -246,7 +246,13 @@ export default function DashboardConsultor() {
                       : 'bg-muted/30 border-border',
                   )}>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{inst.loan.client.nome}</p>
+                      <Link
+                        href={`/consultor/relatorio-cliente?clientId=${inst.loan.client.id}`}
+                        className="block text-sm font-medium truncate hover:underline"
+                        title="Abrir os contratos deste cliente"
+                      >
+                        {inst.loan.client.nome}
+                      </Link>
                       <p className="text-xs text-muted-foreground">
                         Parcela {inst.numero} · Venceu {formatDate(inst.dataVencimento)} ·{' '}
                         <span className="font-medium text-red-600">{dias} dia{dias !== 1 ? 's' : ''} de atraso</span>

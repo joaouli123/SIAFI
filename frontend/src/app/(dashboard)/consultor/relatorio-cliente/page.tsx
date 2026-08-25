@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import {
   FileText, CheckCircle2, AlertTriangle, CalendarClock, Wallet, Printer, Search, Users,
@@ -195,8 +196,22 @@ function TabelaParcelas({
 }
 
 export default function RelatorioClientePage() {
-  const [clientId, setClientId] = useState<number | null>(null)
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [busca, setBusca] = useState('')
+
+  // O cliente selecionado mora na URL (?clientId=) pra que outras telas — o
+  // dashboard do consultor, por exemplo — consigam linkar direto pro relatorio
+  // de um cliente, e pra que o link possa ser copiado e o voltar funcione.
+  const clientIdParam = Number(searchParams.get('clientId'))
+  const clientId = Number.isInteger(clientIdParam) && clientIdParam > 0 ? clientIdParam : null
+
+  function selecionarCliente(id: number | null) {
+    router.replace(
+      id ? `/consultor/relatorio-cliente?clientId=${id}` : '/consultor/relatorio-cliente',
+      { scroll: false },
+    )
+  }
 
   const { data: clientes, isLoading: loadingClientes } = useQuery<ClienteOpt[]>({
     queryKey: ['consultor-clientes-relatorio'],
@@ -291,7 +306,7 @@ export default function RelatorioClientePage() {
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => setClientId(c.id === clientId ? null : c.id)}
+                  onClick={() => selecionarCliente(c.id === clientId ? null : c.id)}
                   className={`text-left rounded-lg border p-3 transition hover:bg-muted/60 ${
                     c.id === clientId ? 'border-primary bg-primary/5 ring-1 ring-primary' : ''
                   }`}
