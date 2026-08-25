@@ -366,10 +366,76 @@ export class ClientsService {
   }
 
   async findQuitados(): Promise<unknown[]> {
-    return this.prisma.client.findMany({
+    const clients = await this.prisma.client.findMany({
       where: { loans: { some: { status: 'quitado' } } },
-      select: { id: true, nome: true, cpf: true },
+      select: {
+        id: true,
+        nome: true,
+        cpf: true,
+        whatsapp: true,
+        email: true,
+        observacoes: true,
+        consultor: { select: { id: true, nome: true } },
+        loans: {
+          select: {
+            id: true,
+            status: true,
+            principalAmount: true,
+            totalReceivable: true,
+          },
+        },
+      },
       orderBy: { nome: 'asc' },
+    });
+
+    const ids = clients.map((c) => c.id);
+
+    // Installment nao guarda data de quitacao: a referencia e a ultima baixa viva
+    // num contrato ja quitado.
+    const baixas = ids.length
+      ? await this.prisma.payment.findMany({
+          where: {
+            estornado: false,
+            installment: { loan: { status: 'quitado', clientId: { in: ids } } },
+          },
+          select: {
+            dataPagamento: true,
+            installment: { select: { loan: { select: { clientId: true } } } },
+          },
+          orderBy: { dataPagamento: 'desc' },
+        })
+      : [];
+
+    const ultimaQuitacao = new Map<number, Date>();
+    for (const b of baixas) {
+      const clientId = b.installment.loan.clientId;
+      if (!ultimaQuitacao.has(clientId)) {
+        ultimaQuitacao.set(clientId, b.dataPagamento);
+      }
+    }
+
+    return clients.map((c) => {
+      const quitados = c.loans.filter((l) => l.status === 'quitado');
+      const ativos = c.loans.filter((l) => l.status === 'ativo');
+      const soma = (
+        lista: typeof quitados,
+        campo: 'principalAmount' | 'totalReceivable',
+      ) => lista.reduce((acc, l) => acc + Number(l[campo]), 0);
+
+      return {
+        id: c.id,
+        nome: c.nome,
+        cpf: c.cpf,
+        whatsapp: c.whatsapp,
+        email: c.email,
+        observacoes: c.observacoes,
+        consultor: c.consultor,
+        contratosQuitados: quitados.length,
+        contratosAtivos: ativos.length,
+        capitalEmprestado: soma(quitados, 'principalAmount'),
+        totalQuitado: soma(quitados, 'totalReceivable'),
+        ultimaQuitacao: ultimaQuitacao.get(c.id) ?? null,
+      };
     });
   }
 

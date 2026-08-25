@@ -304,7 +304,7 @@ export default function DashboardFinanceiro() {
           ] : undefined}
         />
         <StatCard title="Clientes Atrasados"  value={clientsQ.data?.atrasados ?? overdueClients.length} icon={AlertTriangle} color="red"    isLoading={clientsQ.isLoading}  href="/inadimplentes" />
-        <StatCard title="Clientes Quitados"   value={clientsQ.data?.quitados ?? '—'}     icon={CheckCircle}   color="purple" isLoading={clientsQ.isLoading} />
+        <StatCard title="Clientes Quitados"   value={clientsQ.data?.quitados ?? '—'}     icon={CheckCircle}   color="purple" isLoading={clientsQ.isLoading} href="/clientes/quitados" />
       </div>
 
       {/* Gráficos: composição da carteira + inadimplência por faixa */}
