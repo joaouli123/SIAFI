@@ -101,6 +101,10 @@ GET  /api/clients/:id       → detalhe com loans[]
 POST /api/clients           → criar (multipart: foto, rg, comprovante)
 PATCH /api/clients/:id      → atualizar
 DELETE /api/clients/:id     → soft-delete (active: false)
+
+GET    /api/clients/:id/tratativas        → log de tratativas (consultor só na própria carteira)
+POST   /api/clients/:id/tratativas        → registrar { canal, descricao } — append-only, com autor e data
+DELETE /api/clients/:id/tratativas/:tId   → remover (só o autor, ou admin/financeiro)
 ```
 
 ## Endpoints Importantes — Empréstimos
