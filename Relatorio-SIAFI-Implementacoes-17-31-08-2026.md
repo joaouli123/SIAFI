@@ -1,0 +1,79 @@
+# SIAFI 2.0 - Relatorio de Implementacoes e Correcoes
+
+Empresa: Lidera Tecnologia e Gestao
+Sistema: SIAFI - Sistema Integrado de Apoio Financeiro
+Periodo: 17 a 31 de agosto de 2026
+Data: 25/08/2026 (documento em andamento - fechamento em 31/08/2026)
+Referencia: Sequencia ao relatorio quinzenal de 01 a 17/08/2026
+
+## Resumo
+
+Este documento registra as implementacoes e correcoes realizadas apos o relatorio
+quinzenal anterior. Itens ja apresentados e somados no relatorio de 01 a 17/08/2026
+(comissoes e apuracao de parcelas, tabelas do sistema e filtro de consultor em
+Parcelas) nao foram repetidos aqui.
+
+## Implementacoes
+
+| Item | Descricao | Valor |
+| --- | --- | ---: |
+| Campos de selecao com digitacao em todo o sistema | Todo campo que escolhe um item de uma lista passou a abrir a lista ao ser clicado e a aceitar digitacao para filtrar. A busca localiza por nome ou por CPF e ignora acentos e pontuacao. Substituiu o menu suspenso antigo, em que era preciso rolar a lista inteira para achar o cliente. Aplicado nas telas de Cobrancas, Pagamentos, Parcelas, Recebimentos, Emprestimos, Relatorios e Portal do Cliente. | |
+| Campo Bco Recebedor com lista e busca | O campo de conta/banco recebedor no lancamento de baixa passou a listar as contas cadastradas e a filtrar conforme a digitacao, no lugar do preenchimento livre. | |
+| Filtro de consultor tambem em Recebimentos | O filtro por consultor, ja disponivel em Parcelas, foi estendido a tela de Recebimentos, com o mesmo campo de digitacao. | |
+| Relatorio do cliente para consultores | Nova visao que reune, por cliente, cada contrato com as parcelas separadas em pagas, vencidas e a vencer. O consultor enxerga a propria carteira; administrador e financeiro enxergam qualquer cliente. Inclui correcoes nos filtros da tela. | |
+| Fluxo "Esqueci minha senha" para operadores | Recuperacao de senha por e-mail para usuarios internos, com link de redefinicao proprio e redefinicao processada no servidor. Antes nao havia caminho de recuperacao: a senha so podia ser trocada por um administrador. | |
+
+| Relatorio do consultor abre com a carteira inteira | A tela passou a abrir ja com todos os clientes da carteira do consultor listados, sem exigir busca previa. Antes era preciso digitar o nome para que qualquer coisa aparecesse. | |
+| Registro de tratativas do cliente | Novo campo de tratativas por cliente: o consultor registra cada contato (canal, descricao) e o sistema grava autor e data. O historico e somente-adicao, aparece no Relatorio do Cliente e na ficha do cliente, e o proprio autor (ou administrador/financeiro) pode remover um registro. O campo de Observacoes do cliente tambem foi liberado para edicao pelo consultor. | |
+| Fila de cobrancas com link para o cliente | Na lista de Cobrancas urgentes do painel do consultor, que ja vem ordenada da parcela mais antiga para a mais recente, o nome do cliente passou a ser um link que abre o relatorio daquele cliente. Antes o nome era texto morto e o consultor precisava procurar o cliente manualmente. | |
+| Data do pagamento nas parcelas vencidas | No Relatorio do Cliente, a coluna de data do pagamento passou a aparecer nas tres tabelas (pagas, vencidas e a vencer). Parcela vencida com baixa parcial mostrava o valor pago sem dizer quando o dinheiro entrou. O valor pago tambem passou a ser destacado em azul. | |
+| Relacao de clientes quitados | O indicador Clientes Quitados do painel passou a ser clicavel, como os demais, e abre uma nova tela com a relacao dos clientes: CPF, nome, quantidade de contratos quitados e ativos, WhatsApp, consultor, data da ultima quitacao e total quitado, com busca por nome ou CPF. | |
+
+| Exportacao dos Recebimentos para Excel | Botao de Excel na tela de Recebimentos. A planilha sai com o mesmo filtro aplicado na tela (cliente, consultor, banco recebedor e periodo) e traz data, cliente, consultor, contrato, parcela, valor pago, desconto, metodo, conta recebedora, a divisao entre capital, lucro e comissoes, situacao e observacao, alem de uma linha final com os totais do periodo. | |
+| Ordem das colunas no Relatorio do Cliente | A data do pagamento passou a ficar entre o valor da parcela e o valor pago, conforme solicitado. | |
+| CPF do cliente nos Recebimentos | Nova coluna de CPF na tela de Recebimentos, posicionada antes do nome do cliente, para permitir a conferencia dos valores baixados com os informados pela equipe. A mesma coluna foi incluida na planilha de Excel dos recebimentos. | |
+
+## Correcoes
+
+| Item | Descricao | Valor |
+| --- | --- | ---: |
+| Encargos na baixa com data retroativa | Ao lancar um pagamento com data anterior a de hoje, a tela calculava multa e mora ate a data atual, enquanto o servidor congelava o calculo na data informada pelo operador. O sistema entao recusava o proprio valor que havia sugerido, com a mensagem "excede o total devido com encargos". A data do pagamento passou a ser enviada no calculo e os dois lados agora exibem e aceitam o mesmo valor. | |
+| Aviso indevido de regeneracao de parcelas | Ao editar um contrato, o aviso de que as parcelas seriam refeitas aparecia em qualquer alteracao, inclusive em mudanca de dados cadastrais. Passou a aparecer somente quando a alteracao realmente muda o cronograma. | |
+| Acesso dos consultores bloqueado | Os usuarios com perfil de consultor nao conseguiam entrar no sistema, e trocar a senha nao resolvia. Duas causas: um usuario estava desativado e por isso sequer era localizado no login; e as contas de acesso de dois consultores continuavam presas ao nome de usuario antigo, de modo que a troca de senha atualizava um cadastro e o login procurava outro. Vinculos corrigidos e login ajustado para se autocorrigir quando essa divergencia ocorrer, evitando o problema no futuro. | |
+| Sincronizacao da conta ao editar operador | Alterar nome de usuario, senha ou perfil de um operador atualizava apenas o cadastro interno e deixava a conta de acesso desatualizada, tirando o operador do sistema. A edicao passou a atualizar os dois lados na mesma operacao. | |
+| Link de recuperacao de senha com destino errado | O link enviado por e-mail caia na pagina inicial em vez da tela de redefinicao. Corrigido para abrir direto na tela correta. | |
+| Tela travada apos login com sessao invalida | Quando as credenciais salvas no navegador nao valiam mais, a tela alternava entre login e painel indefinidamente, deixando o usuario com o simbolo de carregamento na tela. O ciclo foi interrompido e o usuario passa a ser levado ao login. | |
+
+| Busca por cliente incompleta | A busca por nome so encontrava o cliente se as maiusculas e minusculas fossem digitadas exatamente como no cadastro, e ainda parava no 500o cadastro - clientes cadastrados depois disso simplesmente nao eram localizados. Corrigido: a busca ignora maiusculas/minusculas e alcanca toda a base. | |
+| Segunda baixa seguida travava a busca de cliente | Apos lancar um pagamento, ao tentar lancar o proximo o campo de cliente ficava travado e nao localizava ninguem, obrigando a recarregar a tela. Corrigido. | |
+| Parcelas quitadas antigas contadas como vencidas | No relatorio do consultor, parcela ja quitada com vencimento no passado aparecia entre as vencidas e inflava o total em atraso do cliente. Passou a ser classificada pelo saldo, e nao pela data. | |
+
+## Ambiente de homologacao
+
+| Item | Descricao | Valor |
+| --- | --- | ---: |
+| Publicacao do ambiente de homologacao | Backend e frontend de homologacao passaram a ser construidos e publicados a partir do codigo-fonte, permitindo que cada ajuste seja disponibilizado para conferencia do cliente antes de ir para producao. Inclui chave para desligar as rotinas automaticas na homologacao, para que o ambiente de teste nao dispare cobrancas reais. | |
+
+## Total
+
+**TOTAL: R$ ____**
+
+## Validacao
+
+- Alteracoes de backend e frontend submetidas a verificacao de tipos e compilacao.
+- Correcao de encargos conferida comparando o valor exibido na tela com o valor
+  aceito pelo servidor, na mesma data de pagamento.
+- Acesso de consultor testado ponta a ponta apos a correcao, inclusive no cenario
+  de divergencia entre o cadastro interno e a conta de acesso.
+- Campos de selecao com digitacao conferidos nas telas em que foram aplicados.
+- Fila de cobrancas conferida contra os dados reais: ordem por vencimento mais antigo
+  e link abrindo o relatorio do cliente correto.
+- Relacao de clientes quitados conferida contra o indicador do painel.
+- Exportacao para Excel conferida gerando o arquivo real no ambiente de homologacao:
+  cabecalho, linhas e linha de totais conferidos contra os valores exibidos na tela.
+- Todos os itens acima publicados no ambiente de homologacao para conferencia.
+
+Pagamento via PIX - Chave: CNPJ 66.650.579/0001-46 (UX Code Desenvolvimento Web).
+
+UX Code Desenvolvimento Web | CNPJ 66.650.579/0001-46
+contato@uxcode.com.br | (41) 98703-8339

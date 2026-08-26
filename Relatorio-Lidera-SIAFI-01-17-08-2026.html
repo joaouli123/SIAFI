@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Relatorio Lidera SIAFI 01-17/08/2026</title>
+<style>
+  :root {
+    --bar: #2E9494;
+    --bar-text: #ffffff;
+    --title: #45B3B3;
+    --row-alt: #F2FAFA;
+    --border: #D6E6E6;
+    --text: #333333;
+    --muted: #666666;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    font-size: 11.5px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .capa { text-align: center; margin-bottom: 34px; }
+  .capa img { width: 108px; height: 108px; margin-bottom: 10px; }
+  h1 {
+    color: var(--title);
+    font-size: 27px;
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
+  }
+  .sub { font-size: 13.5px; color: var(--text); margin-bottom: 14px; }
+  .tipo { font-weight: bold; font-size: 14px; margin-bottom: 8px; }
+  .meta { font-size: 11.5px; color: var(--text); }
+
+  .secao {
+    background: var(--bar);
+    color: var(--bar-text);
+    font-weight: bold;
+    font-size: 13.5px;
+    padding: 9px 14px;
+    margin: 26px 0 14px;
+  }
+  p { margin: 0 0 10px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 4px;
+    font-size: 10.5px;
+  }
+  thead th {
+    background: var(--bar);
+    color: var(--bar-text);
+    text-align: left;
+    font-weight: bold;
+    padding: 7px 10px;
+  }
+  tbody td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    vertical-align: middle;
+  }
+  tbody tr:nth-child(odd) td { background: var(--row-alt); }
+  tr.total td { background: var(--row-alt); font-weight: bold; }
+  td.valor { white-space: nowrap; }
+  .col-item { width: 27%; }
+  .col-valor { width: 17%; }
+
+  .rotulo { font-weight: bold; margin: 0 0 6px; }
+  .bloco { break-inside: avoid; page-break-inside: avoid; margin-top: 16px; }
+  ul { margin: 0 0 10px; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+
+  .pix { margin-top: 18px; font-size: 11.5px; }
+  .rodape {
+    margin-top: 10px;
+    font-size: 9px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+</style>
+</head>
+<body>
+
+<div class="capa">
+  <img src="{{LOGO}}" alt="UX Code">
+  <h1>Lidera Tecnologia e Gest&atilde;o</h1>
+  <div class="sub">Relat&oacute;rio de Entregas - SIAFI 2.0</div>
+  <div class="tipo">RELAT&Oacute;RIO QUINZENAL</div>
+  <div class="meta">Empresa: Lidera Tecnologia e Gest&atilde;o</div>
+  <div class="meta">Sistema: SIAFI 2.0 - Sistema Integrado de Apoio Financeiro</div>
+  <div class="meta">Per&iacute;odo: 1 a 17 de agosto de 2026</div>
+  <div class="meta">Data: 17 de agosto de 2026</div>
+</div>
+
+<div class="secao">Resumo Consolidado</div>
+
+<p>Este documento re&uacute;ne as entregas realizadas no SIAFI 2.0 na quinzena, dando sequ&ecirc;ncia ao relat&oacute;rio complementar de 31/07/2026.</p>
+
+<p>Est&atilde;o listadas as evolu&ccedil;&otilde;es solicitadas no per&iacute;odo. Itens j&aacute; apresentados em relat&oacute;rios anteriores n&atilde;o foram somados novamente.</p>
+
+<table>
+  <thead>
+    <tr><th class="col-item">Sistema</th><th>Resumo</th><th class="col-valor">Valor</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SIAFI 2.0</td>
+      <td>Comiss&otilde;es e apura&ccedil;&atilde;o de parcelas, melhorias nas tabelas do sistema e filtro de consultor.</td>
+      <td class="valor">R$ 200,00</td>
+    </tr>
+    <tr class="total">
+      <td>TOTAL GERAL</td>
+      <td>Total dos itens consolidados neste arquivo.</td>
+      <td class="valor">R$ 200,00</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="secao">1. SIAFI 2.0 - Entregas da Quinzena</div>
+
+<p>Per&iacute;odo de 01/08/2026 a 17/08/2026.</p>
+
+<table>
+  <thead>
+    <tr><th class="col-item">Item</th><th>Descri&ccedil;&atilde;o</th><th class="col-valor">Valor</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Comiss&otilde;es e apura&ccedil;&atilde;o de parcelas</td>
+      <td>Percentual de comiss&atilde;o do administrador calculado sobre o Lucro Geral, apura&ccedil;&atilde;o da comiss&atilde;o a cada baixa e ajustes na apura&ccedil;&atilde;o das parcelas. Inclui duas altera&ccedil;&otilde;es de banco de dados.</td>
+      <td class="valor">R$ 90,00</td>
+    </tr>
+    <tr>
+      <td>Tabelas do sistema</td>
+      <td>Cabe&ccedil;alho fixo em todas as tabelas, que antes saía da tela ao rolar a p&aacute;gina; CPF desmembrado da coluna de nome e reposicionado antes dele; &aacute;rea &uacute;til ampliada de 1280 para 1600 pixels, dando mais espa&ccedil;o de leitura ao nome do cliente.</td>
+      <td class="valor">R$ 70,00</td>
+    </tr>
+    <tr>
+      <td>Filtro de consultor em Parcelas</td>
+      <td>Filtro por consultor dispon&iacute;vel em todas as abas da tela de Parcelas, implementado no servidor e na interface.</td>
+      <td class="valor">R$ 40,00</td>
+    </tr>
+    <tr class="total">
+      <td>TOTAL SIAFI</td>
+      <td></td>
+      <td class="valor">R$ 200,00</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="bloco">
+  <div class="rotulo">Valida&ccedil;&atilde;o do SIAFI:</div>
+  <ul>
+    <li>Altera&ccedil;&otilde;es testadas e conferidas em homologa&ccedil;&atilde;o pelo usu&aacute;rio antes da publica&ccedil;&atilde;o.</li>
+    <li>Ajustes de banco de dados aplicados.</li>
+    <li>Altera&ccedil;&otilde;es de interface submetidas a revis&atilde;o de c&oacute;digo.</li>
+  </ul>
+</div>
+
+<div class="secao">2. Total Geral</div>
+
+<table>
+  <thead>
+    <tr><th>Descri&ccedil;&atilde;o</th><th class="col-valor">Valor</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SIAFI 2.0 - entregas da quinzena de 01 a 17/08/2026</td>
+      <td class="valor">R$ 200,00</td>
+    </tr>
+    <tr class="total">
+      <td>TOTAL GERAL A RECEBER</td>
+      <td class="valor">R$ 200,00</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="pix">Pagamento via PIX - Chave: CNPJ 66.650.579/0001-46 (UX Code Desenvolvimento Web).</p>
+
+<div class="rodape">
+  Lidera - SIAFI 2.0. Documento gerado para acompanhamento das entregas.<br>
+  UX Code Desenvolvimento Web | CNPJ 66.650.579/0001-46
+</div>
+
+</body>
+</html>
