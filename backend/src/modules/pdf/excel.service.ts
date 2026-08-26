@@ -258,7 +258,10 @@ export class ExcelService {
         estornado: boolean;
         installment: {
           numero: number;
-          loan: { id: number; client: { nome: string; consultor: { nome: string } | null } };
+          loan: {
+            id: number;
+            client: { nome: string; cpf: string | null; consultor: { nome: string } | null };
+          };
         };
         split: {
           capital: number;
@@ -280,6 +283,7 @@ export class ExcelService {
     const ws = wb.addWorksheet('Recebimentos');
     ws.columns = [
       { header: 'Data', key: 'data', width: 12 },
+      { header: 'CPF', key: 'cpf', width: 16 },
       { header: 'Cliente', key: 'cliente', width: 32 },
       { header: 'Consultor', key: 'consultor', width: 22 },
       { header: 'Contrato', key: 'contrato', width: 10 },
@@ -305,6 +309,7 @@ export class ExcelService {
     for (const p of resultado.data) {
       ws.addRow({
         data: DT(p.dataPagamento),
+        cpf: p.installment.loan.client.cpf ?? '',
         cliente: p.installment.loan.client.nome,
         consultor: p.installment.loan.client.consultor?.nome ?? '',
         contrato: p.installment.loan.id,

@@ -13,7 +13,7 @@ import { ComboboxTexto } from '@/components/ui/combobox-texto'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
-import { formatCurrency, formatDateLocal, toNumber, hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
+import { formatCurrency, formatDateLocal, formatCPF, toNumber, hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 
@@ -30,7 +30,7 @@ interface Payment {
   installment: {
     id: number
     numero: number
-    loan: { id: number; client: { nome: string; consultor?: { id: number; nome: string } | null } }
+    loan: { id: number; client: { nome: string; cpf?: string | null; consultor?: { id: number; nome: string } | null } }
   }
   split?: {
     capital: number; lucro: number; comissao: number; comissaoAdministrador?: number
@@ -361,6 +361,7 @@ export default function PagamentosPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">CPF</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcela</th>
@@ -379,6 +380,9 @@ export default function PagamentosPage() {
                 <tbody>
                   {data.data.map((p) => (
                     <tr key={p.id} className={`border-b border-border hover:bg-muted/20 ${p.estornado ? 'opacity-50' : ''}`}>
+                      <td className="px-4 py-3 text-muted-foreground font-mono text-xs whitespace-nowrap">
+                        {p.installment?.loan?.client?.cpf ? formatCPF(p.installment.loan.client.cpf) : '—'}
+                      </td>
                       <td className="px-4 py-3 font-medium">
                         {p.installment?.loan?.client?.nome ?? '—'}
                         {p.estornado && <Badge variant="outline" className="ml-2 text-xs">Estornado</Badge>}

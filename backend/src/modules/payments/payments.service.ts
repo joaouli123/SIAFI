@@ -419,7 +419,13 @@ export class PaymentsService {
                   id: true,
                   comissaoPercentual: true,
                   comissaoAdministradorPercentual: true,
-                  client: { select: { nome: true, consultor: { select: { id: true, nome: true } } } },
+                  client: {
+                    select: {
+                      nome: true,
+                      cpf: true,
+                      consultor: { select: { id: true, nome: true } },
+                    },
+                  },
                 },
               },
               payments: {
