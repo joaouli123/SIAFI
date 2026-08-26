@@ -157,8 +157,8 @@ function TabelaParcelas({
             <tr>
               <th className="text-left px-4 py-2 font-medium">Parcela</th>
               <th className="text-left px-4 py-2 font-medium">Vencimento</th>
-              <th className="text-left px-4 py-2 font-medium">Pagamento</th>
               <th className="text-right px-4 py-2 font-medium">Valor</th>
+              <th className="text-left px-4 py-2 font-medium">Pagamento</th>
               <th className="text-right px-4 py-2 font-medium">Pago</th>
               {mostrarAtraso && <th className="text-right px-4 py-2 font-medium">Multa/Mora</th>}
               {mostrarAtraso && <th className="text-right px-4 py-2 font-medium">Atraso</th>}
@@ -172,8 +172,8 @@ function TabelaParcelas({
               <tr key={p.id} className="hover:bg-muted/30">
                 <td className="px-4 py-2 font-medium">{p.numero}</td>
                 <td className="px-4 py-2">{formatDate(p.dataVencimento)}</td>
-                <td className="px-4 py-2">{p.dataPagamento ? formatDate(p.dataPagamento) : '—'}</td>
                 <td className="px-4 py-2 text-right">{formatCurrency(p.valor)}</td>
+                <td className="px-4 py-2">{p.dataPagamento ? formatDate(p.dataPagamento) : '—'}</td>
                 <td className="px-4 py-2 text-right font-medium text-blue-600">{formatCurrency(p.totalPago)}</td>
                 {mostrarAtraso && (
                   <td className="px-4 py-2 text-right text-red-600">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus, Search, RefreshCw, Wallet, Undo2, FileDown, Calendar, Landmark, Percent, Save } from 'lucide-react'
+import { Plus, Search, RefreshCw, Wallet, Undo2, FileDown, FileSpreadsheet, Calendar, Landmark, Percent, Save } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -157,6 +157,41 @@ export default function PagamentosPage() {
 
   // Todos os totais são do período inteiro (agregados no backend, todo o filtro),
   // considerando apenas baixas não estornadas.
+  const [exportando, setExportando] = useState(false)
+
+  // A planilha sai com o mesmo filtro da tela (menos a paginacao), pra que o
+  // arquivo bata com o que o operador esta vendo.
+  async function exportarExcel() {
+    setExportando(true)
+    try {
+      const res = await api.get('/export/pagamentos/excel', {
+        responseType: 'blob',
+        params: {
+          search: search || undefined,
+          startDate: startDate || undefined,
+          endDate: endDate || undefined,
+          consultorId: consultorId ? Number(consultorId) : undefined,
+          contaDestino: contaDestino || undefined,
+          simComissaoPercentual: simComissao !== '' ? Number(simComissao) : undefined,
+          simComissaoAdministradorPercentual: simComissaoAdmin !== '' ? Number(simComissaoAdmin) : undefined,
+        },
+      })
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(
+        new Blob([res.data as BlobPart], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        }),
+      )
+      a.download = `recebimentos-${startDate || 'inicio'}-a-${endDate || hojeISODate()}.xlsx`
+      a.click()
+      URL.revokeObjectURL(a.href)
+    } catch {
+      toast.error('Não foi possível gerar a planilha.')
+    } finally {
+      setExportando(false)
+    }
+  }
+
   const totalRecebido = data?.totais?.recebido ?? 0
   const totalDesconto = data?.totais?.desconto ?? 0
   const totalCapital = data?.totais?.capital ?? 0
@@ -172,9 +207,21 @@ export default function PagamentosPage() {
           <h1 className="text-2xl font-bold tracking-tight">Recebimentos</h1>
           <p className="text-muted-foreground text-sm mt-1">Histórico de recebimentos</p>
         </div>
-        <Link href="/pagamentos/novo">
-          <Button className="gap-2"><Plus className="size-4" />Registrar Recebimento</Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="gap-2 text-green-700 border-green-300 hover:bg-green-50"
+            onClick={exportarExcel}
+            disabled={exportando}
+            title="Exportar os recebimentos filtrados para Excel"
+          >
+            <FileSpreadsheet className="size-4" />
+            {exportando ? 'Gerando...' : 'Excel'}
+          </Button>
+          <Link href="/pagamentos/novo">
+            <Button className="gap-2"><Plus className="size-4" />Registrar Recebimento</Button>
+          </Link>
+        </div>
       </div>
 
       <Card>

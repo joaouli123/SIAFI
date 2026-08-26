@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PaymentsService } from '../payments/payments.service';
+import type { PaymentFilterDto } from '../payments/dto/payment-filter.dto';
 import * as ExcelJS from 'exceljs';
 import type { Response } from 'express';
 
@@ -10,7 +12,10 @@ const DT = (d: Date | string | null | undefined) =>
 
 @Injectable()
 export class ExcelService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly payments: PaymentsService,
+  ) {}
 
   // ─── Relatório de Contratos ───────────────────────────────────────────────
 
@@ -227,6 +232,122 @@ export class ExcelService {
     });
 
     this.sendWorkbook(wb, res, `inadimplentes-${Date.now()}.xlsx`);
+  }
+
+  // ─── Recebimentos (mesma consulta da tela, sem paginacao) ─────────────────
+
+  async exportarRecebimentos(
+    filter: PaymentFilterDto,
+    role: string | undefined,
+    res: Response,
+  ): Promise<void> {
+    // Reusa findAll pra que a planilha traga exatamente o que a tela mostra:
+    // mesmos filtros, mesma divisao capital/lucro/comissao, mesmos totais.
+    const resultado = (await this.payments.findAll(
+      { ...filter, page: 1, limit: 100000 },
+      role,
+    )) as {
+      data: Array<{
+        id: number;
+        valorPago: unknown;
+        desconto: unknown;
+        dataPagamento: Date;
+        metodoPagamento: string;
+        contaDestino: string | null;
+        observacao: string | null;
+        estornado: boolean;
+        installment: {
+          numero: number;
+          loan: { id: number; client: { nome: string; consultor: { nome: string } | null } };
+        };
+        split: {
+          capital: number;
+          lucro: number;
+          comissao: number;
+          comissaoAdministrador: number;
+          lucroEmpresa: number;
+        } | null;
+      }>;
+      totais?: Record<string, number>;
+    };
+
+    const verSplit = role !== 'caixa';
+
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'SIAFI — Lidera';
+    wb.created = new Date();
+
+    const ws = wb.addWorksheet('Recebimentos');
+    ws.columns = [
+      { header: 'Data', key: 'data', width: 12 },
+      { header: 'Cliente', key: 'cliente', width: 32 },
+      { header: 'Consultor', key: 'consultor', width: 22 },
+      { header: 'Contrato', key: 'contrato', width: 10 },
+      { header: 'Parcela', key: 'parcela', width: 9 },
+      { header: 'Valor Pago', key: 'valor', width: 14 },
+      { header: 'Desconto', key: 'desconto', width: 12 },
+      { header: 'Metodo', key: 'metodo', width: 14 },
+      { header: 'Conta/Banco', key: 'conta', width: 20 },
+      ...(verSplit
+        ? [
+            { header: 'Capital', key: 'capital', width: 14 },
+            { header: 'Lucro', key: 'lucro', width: 14 },
+            { header: 'Comissao Consultor', key: 'comissao', width: 18 },
+            { header: 'Comissao Administrador', key: 'comissaoAdm', width: 20 },
+            { header: 'Lucro Empresa', key: 'lucroEmpresa', width: 16 },
+          ]
+        : []),
+      { header: 'Situacao', key: 'situacao', width: 12 },
+      { header: 'Observacao', key: 'obs', width: 40 },
+    ];
+    this.styleHeader(ws);
+
+    for (const p of resultado.data) {
+      ws.addRow({
+        data: DT(p.dataPagamento),
+        cliente: p.installment.loan.client.nome,
+        consultor: p.installment.loan.client.consultor?.nome ?? '',
+        contrato: p.installment.loan.id,
+        parcela: p.installment.numero,
+        valor: BRL(p.valorPago as number),
+        desconto: BRL(p.desconto as number),
+        metodo: p.metodoPagamento,
+        conta: p.contaDestino ?? '',
+        ...(verSplit && p.split
+          ? {
+              capital: BRL(p.split.capital),
+              lucro: BRL(p.split.lucro),
+              comissao: BRL(p.split.comissao),
+              comissaoAdm: BRL(p.split.comissaoAdministrador),
+              lucroEmpresa: BRL(p.split.lucroEmpresa),
+            }
+          : {}),
+        situacao: p.estornado ? 'Estornado' : 'Ativo',
+        obs: p.observacao ?? '',
+      });
+    }
+
+    const t = resultado.totais;
+    if (t) {
+      ws.addRow({});
+      const linha = ws.addRow({
+        cliente: 'TOTAL DO PERIODO (baixas ativas)',
+        valor: BRL(t.recebido),
+        desconto: BRL(t.desconto),
+        ...(verSplit
+          ? {
+              capital: BRL(t.capital ?? 0),
+              lucro: BRL(t.lucro ?? 0),
+              comissao: BRL(t.comissao ?? 0),
+              comissaoAdm: BRL(t.comissaoAdministrador ?? 0),
+              lucroEmpresa: BRL(t.lucroEmpresa ?? 0),
+            }
+          : {}),
+      });
+      linha.font = { bold: true };
+    }
+
+    this.sendWorkbook(wb, res, `recebimentos-${Date.now()}.xlsx`);
   }
 
   // ─── Helper ───────────────────────────────────────────────────────────────

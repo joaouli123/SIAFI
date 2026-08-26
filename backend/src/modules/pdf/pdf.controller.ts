@@ -13,6 +13,8 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { PdfService } from './pdf.service';
 import { ExcelService } from './excel.service';
+import { PaymentFilterDto } from '../payments/dto/payment-filter.dto';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('export')
@@ -95,6 +97,16 @@ export class PdfController {
   @Roles('admin', 'financeiro')
   async inadimplentesExcel(@Res() res: Response) {
     await this.excelService.exportarInadimplentes(res);
+  }
+
+  @Get('pagamentos/excel')
+  @Roles('admin', 'financeiro', 'caixa')
+  async recebimentosExcel(
+    @Query() filter: PaymentFilterDto,
+    @CurrentUser() user: { role?: string },
+    @Res() res: Response,
+  ) {
+    await this.excelService.exportarRecebimentos(filter, user?.role, res);
   }
 
   // ─── Manual do Sistema (PDFKit legado) ────────────────────────────────────
