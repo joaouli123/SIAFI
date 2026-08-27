@@ -49,6 +49,16 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 
+// A 1a parcela ainda em aberto e a ancora do cronograma: e dela que o backend
+// parte ao regerar as pendentes. Pre-preenchida, a data para de se perder a cada
+// edicao de valores — antes o campo vinha vazio e o operador digitava de novo.
+function vencimentoEmAberto(loan: any): string {
+  const inst = (loan?.installments ?? []).find(
+    (i: any) => (i.status === 'pendente' || i.status === 'atrasado') && Number(i.totalPago) === 0,
+  )
+  return inst ? toDateInputValue(inst.dataVencimento) : ''
+}
+
 export default function EditarEmprestimoPage() {
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
@@ -77,7 +87,7 @@ export default function EditarEmprestimoPage() {
         : undefined,
       metodoPagamento: loan.metodoPagamento ?? 'dinheiro',
       dataInicio: toDateInputValue(loan.dataInicio),
-      dataPrimeiroVencimento: '',
+      dataPrimeiroVencimento: vencimentoEmAberto(loan),
       observacoes: loan.observacoes ?? '',
       diaVencimento: loan.diaVencimento ?? undefined,
       multaPercentual: loan.multaPercentual != null ? Number(loan.multaPercentual) : undefined,
@@ -167,7 +177,14 @@ export default function EditarEmprestimoPage() {
       const { comissaoValor, comissaoAdministradorValor, valorParcela, ...rest } = data
       const payload = {
         ...rest,
-        dataPrimeiroVencimento: data.dataPrimeiroVencimento || undefined, // só envia se preenchida
+        // Reenvia a data so quando ela ancora algo: o cronograma vai ser regerado
+        // por outro campo, ou o operador mudou a propria data. Assim uma edicao de
+        // comissao/observacao continua sem tocar nas parcelas.
+        dataPrimeiroVencimento:
+          data.dataPrimeiroVencimento &&
+          (cronogramaMudouSemData(data) || data.dataPrimeiroVencimento !== vencimentoEmAberto(loan))
+            ? data.dataPrimeiroVencimento
+            : undefined,
       }
       return api.patch(`/loans/${id}`, payload)
     },
@@ -180,14 +197,20 @@ export default function EditarEmprestimoPage() {
 
   // Espelha o cronogramaMudou do backend: só estes campos regeneram as parcelas.
   // Mexer em comissão, multa, mora ou observações não toca no cronograma.
-  function regeneraParcelas(d: FormData) {
+  function cronogramaMudouSemData(d: FormData) {
     return (
       Number(d.principalAmount) !== Number(loan.principalAmount) ||
       Number(d.targetProfit) !== Number(loan.targetProfit) ||
       Number(d.numeroParcelas) !== Number(loan.numeroParcelas) ||
       (d.dataInicio ?? '') !== toDateInputValue(loan.dataInicio) ||
-      (d.diaVencimento ?? null) !== (loan.diaVencimento ?? null) ||
-      !!d.dataPrimeiroVencimento
+      (d.diaVencimento ?? null) !== (loan.diaVencimento ?? null)
+    )
+  }
+
+  function regeneraParcelas(d: FormData) {
+    return (
+      cronogramaMudouSemData(d) ||
+      (!!d.dataPrimeiroVencimento && d.dataPrimeiroVencimento !== vencimentoEmAberto(loan))
     )
   }
 
@@ -275,7 +298,7 @@ export default function EditarEmprestimoPage() {
             <div className="space-y-1.5">
               <Label>Data do 1º Vencimento</Label>
               <Input type="date" {...register('dataPrimeiroVencimento')} />
-              <p className="text-xs text-muted-foreground">Preencha para redefinir o vencimento das parcelas pendentes (a 1ª nesta data); vazio mantém o cronograma</p>
+              <p className="text-xs text-muted-foreground">Vencimento da 1ª parcela em aberto. Ao alterar valores, o cronograma das pendentes é remontado a partir desta data.</p>
             </div>
             <div className="md:col-span-2 space-y-1.5">
               <Label>Observações</Label>
