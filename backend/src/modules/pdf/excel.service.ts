@@ -4,7 +4,6 @@ import { PaymentsService } from '../payments/payments.service';
 import type { PaymentFilterDto } from '../payments/dto/payment-filter.dto';
 import * as ExcelJS from 'exceljs';
 import { Prisma } from '@prisma/client';
-import { filtroCliente } from '../../common/busca';
 import { dataLocal } from '../../common/data';
 import type { Response } from 'express';
 
@@ -183,7 +182,27 @@ export class ExcelService {
     // esta na frente do operador, nao a carteira inteira toda vez.
     const where: Prisma.InstallmentWhereInput = { status: 'atrasado' };
     const busca = filtro.search?.trim();
-    if (busca) where.loan = { client: { OR: filtroCliente(busca) } };
+    if (busca) {
+      // A tela compara o termo com nome/CPF/telefone ja normalizados no navegador.
+      // Reproduzir isso no Prisma nao da: telefone e gravado com espaco e hifen, e
+      // 'contains' de digitos nunca casa. Sao ~500 clientes — filtrar em memoria
+      // garante que a planilha traga exatamente as mesmas linhas da tela.
+      const termo = busca.toLowerCase();
+      const digitos = busca.replace(/\D/g, '');
+      const clientes = await this.prisma.client.findMany({
+        select: { id: true, nome: true, cpf: true, whatsapp: true },
+      });
+      const ids = clientes
+        .filter(
+          (c) =>
+            (c.nome ?? '').toLowerCase().includes(termo) ||
+            (!!digitos &&
+              ((c.cpf ?? '').replace(/\D/g, '').includes(digitos) ||
+                (c.whatsapp ?? '').replace(/\D/g, '').includes(digitos))),
+        )
+        .map((c) => c.id);
+      where.loan = { clientId: { in: ids } };
+    }
     if (filtro.startDate || filtro.endDate) {
       where.dataVencimento = {};
       if (filtro.startDate)
