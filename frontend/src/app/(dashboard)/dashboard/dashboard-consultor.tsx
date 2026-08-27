@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
   Users, TrendingUp, AlertTriangle, ClipboardList, RefreshCw,
@@ -114,6 +115,30 @@ export default function DashboardConsultor() {
     refetchInterval: 120_000,
   })
 
+  // Uma linha por cliente: o consultor liga para a pessoa, nao para a parcela.
+  // Ordena pelo atraso mais antigo, que era a prioridade da lista por parcela.
+  const clientesEmAtraso = useMemo(() => {
+    const mapa = new Map<number, {
+      clientId: number; nome: string; numeros: number[]
+      saldo: number; diasMax: number; maisAntiga: string
+    }>()
+    for (const inst of overdueQuery.data ?? []) {
+      const id = inst.loan.client.id
+      const atual = mapa.get(id) ?? {
+        clientId: id, nome: inst.loan.client.nome, numeros: [],
+        saldo: 0, diasMax: 0, maisAntiga: inst.dataVencimento,
+      }
+      atual.numeros.push(inst.numero)
+      atual.saldo += Number(inst.installmentAmount) - Number(inst.totalPago)
+      const dias = diasAtraso(inst.dataVencimento)
+      if (dias > atual.diasMax) { atual.diasMax = dias; atual.maisAntiga = inst.dataVencimento }
+      mapa.set(id, atual)
+    }
+    return [...mapa.values()]
+      .map(c => ({ ...c, numeros: c.numeros.sort((x, y) => x - y) }))
+      .sort((a, b) => b.diasMax - a.diasMax)
+  }, [overdueQuery.data])
+
   // Intenções aprovadas ou rejeitadas sem feedback enviado → ação necessária
   const intencoesAcao = intencoesQuery.data?.filter(
     i => (i.status === 'aprovado' || i.status === 'rejeitado') && !i.feedbackEnviadoEm
@@ -215,8 +240,10 @@ export default function DashboardConsultor() {
           <CardTitle className="text-base flex items-center gap-2">
             <AlertTriangle className="size-4 text-red-500" />
             Cobranças urgentes
-            {(overdueQuery.data?.length ?? 0) > 0 && (
-              <Badge variant="destructive" className="text-xs">{overdueQuery.data?.length}</Badge>
+            {clientesEmAtraso.length > 0 && (
+              <Badge variant="destructive" className="text-xs" title={`${overdueQuery.data?.length ?? 0} parcelas em atraso`}>
+                {clientesEmAtraso.length} cliente{clientesEmAtraso.length !== 1 ? 's' : ''}
+              </Badge>
             )}
           </CardTitle>
           <Link href="/cobrancas">
@@ -235,47 +262,48 @@ export default function DashboardConsultor() {
             </div>
           ) : (
             <div className="space-y-2">
-              {overdueQuery.data.slice(0, 10).map(inst => {
-                const dias = diasAtraso(inst.dataVencimento)
-                const saldo = Number(inst.installmentAmount) - Number(inst.totalPago)
-                return (
-                  <div key={inst.id} className={cn(
-                    'flex items-center justify-between rounded-lg px-4 py-3 border',
-                    dias > 30
-                      ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900'
-                      : 'bg-muted/30 border-border',
-                  )}>
-                    <div className="flex-1 min-w-0">
-                      <Link
-                        href={`/consultor/relatorio-cliente?clientId=${inst.loan.client.id}`}
-                        className="block text-sm font-medium truncate hover:underline"
-                        title="Abrir os contratos deste cliente"
-                      >
-                        {inst.loan.client.nome}
-                      </Link>
+              {clientesEmAtraso.slice(0, 10).map(c => (
+                <div key={c.clientId} className={cn(
+                  'flex items-center justify-between rounded-lg px-4 py-3 border',
+                  c.diasMax > 30
+                    ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900'
+                    : 'bg-muted/30 border-border',
+                )}>
+                  <div className="flex-1 min-w-0">
+                    <Link
+                      href={`/consultor/relatorio-cliente?clientId=${c.clientId}`}
+                      className="block text-sm font-medium truncate hover:underline"
+                      title="Abrir os contratos deste cliente"
+                    >
+                      {c.nome}
+                    </Link>
+                    <p className="text-xs text-muted-foreground">
+                      {c.numeros.length === 1
+                        ? `Parcela ${c.numeros[0]}`
+                        : `${c.numeros.length} parcelas (${c.numeros.map(n => `P${n}`).join(', ')})`} ·{' '}
+                      {c.numeros.length === 1 ? 'Venceu' : 'A mais antiga venceu'} {formatDate(c.maisAntiga)} ·{' '}
+                      <span className="font-medium text-red-600">{c.diasMax} dia{c.diasMax !== 1 ? 's' : ''} de atraso</span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 ml-4 shrink-0">
+                    <div className="text-right">
+                      <p className="text-sm font-semibold">{formatCurrency(c.saldo)}</p>
                       <p className="text-xs text-muted-foreground">
-                        Parcela {inst.numero} · Venceu {formatDate(inst.dataVencimento)} ·{' '}
-                        <span className="font-medium text-red-600">{dias} dia{dias !== 1 ? 's' : ''} de atraso</span>
+                        {c.numeros.length === 1 ? 'saldo devedor' : 'total em atraso'}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3 ml-4 shrink-0">
-                      <div className="text-right">
-                        <p className="text-sm font-semibold">{formatCurrency(saldo)}</p>
-                        <p className="text-xs text-muted-foreground">saldo devedor</p>
-                      </div>
-                      <Link href="/cobrancas">
-                        <Button size="sm" variant="outline" className="gap-1 text-xs">
-                          <Phone className="size-3" />
-                          Registrar
-                        </Button>
-                      </Link>
-                    </div>
+                    <Link href="/cobrancas">
+                      <Button size="sm" variant="outline" className="gap-1 text-xs">
+                        <Phone className="size-3" />
+                        Registrar
+                      </Button>
+                    </Link>
                   </div>
-                )
-              })}
-              {overdueQuery.data.length > 10 && (
+                </div>
+              ))}
+              {clientesEmAtraso.length > 10 && (
                 <p className="text-xs text-muted-foreground text-center pt-1">
-                  +{overdueQuery.data.length - 10} parcelas
+                  +{clientesEmAtraso.length - 10} cliente{clientesEmAtraso.length - 10 !== 1 ? 's' : ''}
                 </p>
               )}
             </div>

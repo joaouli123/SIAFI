@@ -365,6 +365,7 @@ export default function PagamentosPage() {
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcela</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell whitespace-nowrap">Pagamento</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Desconto</th>
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Capital</th>}
@@ -373,7 +374,6 @@ export default function PagamentosPage() {
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Com. Admin.</th>}
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Lucro Empresa</th>}
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Bco Recebedor</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell whitespace-nowrap">Data</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ação</th>
                   </tr>
                 </thead>
@@ -392,6 +392,9 @@ export default function PagamentosPage() {
                       </td>
                       <td className="px-4 py-3 text-center text-muted-foreground hidden lg:table-cell">
                         P{p.installment?.numero}
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell whitespace-nowrap">
+                        {formatDateLocal(p.dataPagamento)}
                       </td>
                       <td className="px-4 py-3 text-right font-bold text-green-600">
                         {formatCurrency(p.valorPago)}
@@ -428,9 +431,6 @@ export default function PagamentosPage() {
                       )}
                       <td className="px-4 py-3 text-muted-foreground hidden xl:table-cell">
                         {p.contaDestino?.trim() ? p.contaDestino : '—'}
-                      </td>
-                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell whitespace-nowrap">
-                        {formatDateLocal(p.dataPagamento)}
                       </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex justify-end gap-1">
