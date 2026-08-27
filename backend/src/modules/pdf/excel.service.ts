@@ -204,13 +204,31 @@ export class ExcelService {
       where.loan = { clientId: { in: ids } };
     }
     if (filtro.startDate || filtro.endDate) {
-      where.dataVencimento = {};
-      if (filtro.startDate)
-        (where.dataVencimento as Prisma.DateTimeFilter).gte = dataLocal(filtro.startDate);
-      if (filtro.endDate)
-        (where.dataVencimento as Prisma.DateTimeFilter).lte = new Date(
-          `${filtro.endDate}T23:59:59.999`,
-        );
+      // A tela lista CONTRATOS e conta o atraso pelo vencimento em aberto mais antigo.
+      // Filtrar parcela a parcela responde outra pergunta: no 1o semestre de 2026 a tela
+      // mostrava 48 clientes e a planilha trazia 84, porque contratos com atraso mais
+      // velho tambem tem parcelas vencendo dentro do periodo. O periodo escolhe os
+      // contratos, e a planilha traz todas as parcelas em atraso deles — assim a soma
+      // da planilha fecha com o 'Total em Atraso' do card.
+      const ini = filtro.startDate ? dataLocal(filtro.startDate) : null;
+      const fim = filtro.endDate
+        ? new Date(`${filtro.endDate}T23:59:59.999`)
+        : null;
+      const emAtraso = await this.prisma.installment.findMany({
+        where: { status: 'atrasado' },
+        select: { loanId: true, dataVencimento: true },
+      });
+      const maisAntiga = new Map<number, Date>();
+      for (const i of emAtraso) {
+        const atual = maisAntiga.get(i.loanId);
+        if (!atual || i.dataVencimento < atual)
+          maisAntiga.set(i.loanId, i.dataVencimento);
+      }
+      where.loanId = {
+        in: [...maisAntiga.entries()]
+          .filter(([, d]) => (!ini || d >= ini) && (!fim || d <= fim))
+          .map(([loanId]) => loanId),
+      };
     }
 
     const installments = await this.prisma.installment.findMany({
