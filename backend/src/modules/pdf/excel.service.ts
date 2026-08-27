@@ -187,7 +187,11 @@ export class ExcelService {
       // Reproduzir isso no Prisma nao da: telefone e gravado com espaco e hifen, e
       // 'contains' de digitos nunca casa. Sao ~500 clientes — filtrar em memoria
       // garante que a planilha traga exatamente as mesmas linhas da tela.
-      const termo = busca.toLowerCase();
+      // Sem acento dos dois lados, igual a tela: 42 dos 518 clientes tem acento
+      // no nome e o operador digita sem.
+      const semAcento = (v: string) =>
+        v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      const termo = semAcento(busca);
       const digitos = busca.replace(/\D/g, '');
       const clientes = await this.prisma.client.findMany({
         select: { id: true, nome: true, cpf: true, whatsapp: true },
@@ -195,7 +199,7 @@ export class ExcelService {
       const ids = clientes
         .filter(
           (c) =>
-            (c.nome ?? '').toLowerCase().includes(termo) ||
+            semAcento(c.nome ?? '').includes(termo) ||
             (!!digitos &&
               ((c.cpf ?? '').replace(/\D/g, '').includes(digitos) ||
                 (c.whatsapp ?? '').replace(/\D/g, '').includes(digitos))),

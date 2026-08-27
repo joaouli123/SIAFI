@@ -27,6 +27,11 @@ function diaISO(data: string): string {
   return isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10)
 }
 
+// Busca sem acento: 42 dos 518 clientes tem acento no nome, entao digitar
+// "conceicao" precisa achar "Conceicao".
+const semAcento = (v: string) =>
+  v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
 function HoverObsPopover({ obs, title = 'Observações' }: { obs: string; title?: string }) {
   const [open, setOpen] = useState(false)
   return (
@@ -118,11 +123,11 @@ export default function InadimplentesPage() {
   }, [installmentsData])
 
   const linhasFiltradas = useMemo(() => {
-    const termo = fSearch.trim().toLowerCase()
+    const termo = semAcento(fSearch.trim())
     const digitos = termo.replace(/\D/g, '')
     return linhas.filter((l) => {
       if (termo) {
-        const nome = (l.loan.client?.nome ?? '').toLowerCase()
+        const nome = semAcento(l.loan.client?.nome ?? '')
         const cpf = (l.loan.client?.cpf ?? '').replace(/\D/g, '')
         const fone = (l.loan.client?.whatsapp ?? '').replace(/\D/g, '')
         const achou = nome.includes(termo) || (!!digitos && (cpf.includes(digitos) || fone.includes(digitos)))
