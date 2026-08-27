@@ -95,8 +95,13 @@ export class PdfController {
 
   @Get('inadimplentes/excel')
   @Roles('admin', 'financeiro')
-  async inadimplentesExcel(@Res() res: Response) {
-    await this.excelService.exportarInadimplentes(res);
+  async inadimplentesExcel(
+    @Query('search') search: string | undefined,
+    @Query('startDate') startDate: string | undefined,
+    @Query('endDate') endDate: string | undefined,
+    @Res() res: Response,
+  ) {
+    await this.excelService.exportarInadimplentes(res, { search, startDate, endDate });
   }
 
   @Get('pagamentos/excel')

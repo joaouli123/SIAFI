@@ -3,6 +3,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { PaymentsService } from '../payments/payments.service';
 import type { PaymentFilterDto } from '../payments/dto/payment-filter.dto';
 import * as ExcelJS from 'exceljs';
+import { Prisma } from '@prisma/client';
+import { filtroCliente } from '../../common/busca';
+import { dataLocal } from '../../common/data';
 import type { Response } from 'express';
 
 const BRL = (v: number | string | null | undefined) =>
@@ -169,12 +172,30 @@ export class ExcelService {
 
   // ─── Relatório de Inadimplentes ───────────────────────────────────────────
 
-  async exportarInadimplentes(res: Response): Promise<void> {
+  async exportarInadimplentes(
+    res: Response,
+    filtro: { search?: string; startDate?: string; endDate?: string } = {},
+  ): Promise<void> {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
+    // Mesmos filtros da tela /inadimplentes: a planilha e a conferencia do que
+    // esta na frente do operador, nao a carteira inteira toda vez.
+    const where: Prisma.InstallmentWhereInput = { status: 'atrasado' };
+    const busca = filtro.search?.trim();
+    if (busca) where.loan = { client: { OR: filtroCliente(busca) } };
+    if (filtro.startDate || filtro.endDate) {
+      where.dataVencimento = {};
+      if (filtro.startDate)
+        (where.dataVencimento as Prisma.DateTimeFilter).gte = dataLocal(filtro.startDate);
+      if (filtro.endDate)
+        (where.dataVencimento as Prisma.DateTimeFilter).lte = new Date(
+          `${filtro.endDate}T23:59:59.999`,
+        );
+    }
+
     const installments = await this.prisma.installment.findMany({
-      where: { status: 'atrasado' },
+      where,
       orderBy: { dataVencimento: 'asc' },
       include: {
         loan: {
