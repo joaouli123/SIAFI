@@ -3,7 +3,7 @@
 Empresa: Lidera Tecnologia e Gestao
 Sistema: SIAFI - Sistema Integrado de Apoio Financeiro
 Periodo: 17 a 31 de agosto de 2026
-Data: 25/08/2026 (documento em andamento - fechamento em 31/08/2026)
+Data: 27/08/2026 (documento em andamento - fechamento em 31/08/2026)
 Referencia: Sequencia ao relatorio quinzenal de 01 a 17/08/2026
 
 ## Resumo
@@ -34,7 +34,7 @@ Parcelas) nao foram repetidos aqui.
 | CPF do cliente nos Recebimentos | Nova coluna de CPF na tela de Recebimentos, posicionada antes do nome do cliente, para permitir a conferencia dos valores baixados com os informados pela equipe. A mesma coluna foi incluida na planilha de Excel dos recebimentos. | |
 | Posicao da data do pagamento nos Recebimentos | A coluna com a data do pagamento passou a ficar entre Parcela e Valor, conforme solicitado, em vez de ficar no fim da tabela. | |
 | Fila de cobrancas agrupada por cliente | No painel do consultor, a lista de Cobrancas urgentes passou a mostrar cada cliente uma unica vez, reunindo as parcelas em atraso daquele cliente em uma linha so: quantidade de parcelas, data do atraso mais antigo, dias de atraso e total em aberto. Antes o mesmo cliente aparecia repetido em varias linhas, uma por parcela. | |
-| Filtros na tela de Inadimplentes | A tela ganhou busca por nome do cliente (tambem por CPF ou WhatsApp) e filtro por periodo da data de atraso. Os totais no topo - contratos inadimplentes, total em atraso e clientes unicos - passam a refletir o filtro aplicado, e a planilha de Excel sai com os mesmos filtros da tela, em vez de exportar a carteira inteira. | |
+| Filtros na tela de Inadimplentes | A tela ganhou busca por nome do cliente (tambem por CPF ou WhatsApp) e filtro por periodo da data de atraso. A busca ignora acentos e pontuacao: o nome pode ser digitado sem acento e o CPF ou o telefone com ou sem formatacao. O periodo considera a data do atraso mais antigo do contrato, que e a exibida na coluna. Os totais no topo - contratos inadimplentes, total em atraso e clientes unicos - passam a refletir o filtro aplicado, e a planilha de Excel traz exatamente os mesmos clientes que a tela mostra, em vez de exportar a carteira inteira. | |
 
 ## Correcoes
 
@@ -75,6 +75,10 @@ Parcelas) nao foram repetidos aqui.
 - Relacao de clientes quitados conferida contra o indicador do painel.
 - Exportacao para Excel conferida gerando o arquivo real no ambiente de homologacao:
   cabecalho, linhas e linha de totais conferidos contra os valores exibidos na tela.
+- Filtros da tela de Inadimplentes conferidos na homologacao em onze cenarios (nome,
+  nome sem acento, CPF com e sem pontuacao, telefone, periodos e combinacoes): em todos,
+  a relacao de clientes da planilha coincide com a exibida na tela, e o total sem filtro
+  fecha com o indicador do topo (R$ 1.484.710,69 em 1.761 parcelas de 509 contratos).
 - Todos os itens acima publicados no ambiente de homologacao para conferencia.
 
 Pagamento via PIX - Chave: CNPJ 66.650.579/0001-46 (UX Code Desenvolvimento Web).
