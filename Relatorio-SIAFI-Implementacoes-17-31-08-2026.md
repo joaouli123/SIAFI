@@ -3,7 +3,7 @@
 Empresa: Lidera Tecnologia e Gestao
 Sistema: SIAFI - Sistema Integrado de Apoio Financeiro
 Periodo: 17 a 31 de agosto de 2026
-Data: 27/08/2026 (documento em andamento - fechamento em 31/08/2026)
+Data: 28/08/2026 (documento em andamento - fechamento em 31/08/2026)
 Referencia: Sequencia ao relatorio quinzenal de 01 a 17/08/2026
 
 ## Resumo
@@ -51,6 +51,7 @@ Parcelas) nao foram repetidos aqui.
 | Busca por cliente incompleta | A busca por nome so encontrava o cliente se as maiusculas e minusculas fossem digitadas exatamente como no cadastro, e ainda parava no 500o cadastro - clientes cadastrados depois disso simplesmente nao eram localizados. Corrigido: a busca ignora maiusculas/minusculas e alcanca toda a base. | |
 | Segunda baixa seguida travava a busca de cliente | Apos lancar um pagamento, ao tentar lancar o proximo o campo de cliente ficava travado e nao localizava ninguem, obrigando a recarregar a tela. Corrigido. | |
 | Parcelas quitadas antigas contadas como vencidas | No relatorio do consultor, parcela ja quitada com vencimento no passado aparecia entre as vencidas e inflava o total em atraso do cliente. Passou a ser classificada pelo saldo, e nao pela data. | |
+| Data do contrato recuava um dia a cada edicao | Ao abrir um contrato, alterar qualquer campo e salvar, a data de inicio e a data de vencimento caiam um dia; na edicao seguinte caiam mais um, obrigando a equipe a redigitar as datas toda vez. A causa era a hora em que as datas eram gravadas: o servidor de producao trabalha em fuso diferente do da tela, e a data gravada a meia-noite era relida como o dia anterior. As datas passaram a ser gravadas e lidas de forma independente de fuso, e o ciclo abrir-salvar-abrir foi verificado cinco vezes seguidas sem alteracao. A correcao alcanca todos os pontos que geram vencimento: criacao de contrato, edicao, reparcelamento e liberacao de capital. | |
 
 ## Ambiente de homologacao
 
@@ -79,6 +80,10 @@ Parcelas) nao foram repetidos aqui.
   nome sem acento, CPF com e sem pontuacao, telefone, periodos e combinacoes): em todos,
   a relacao de clientes da planilha coincide com a exibida na tela, e o total sem filtro
   fecha com o indicador do topo (R$ 1.484.710,69 em 1.761 parcelas de 509 contratos).
+- Correcao das datas do contrato verificada simulando o ciclo abrir-salvar-abrir cinco
+  vezes, nos dois fusos (o do servidor e o do escritorio): antes a data caia um dia por
+  edicao, depois permanece igual em todas as voltas. O historico de auditoria do sistema
+  foi usado para identificar os contratos afetados - apenas dois foram editados no periodo.
 - Todos os itens acima publicados no ambiente de homologacao para conferencia.
 
 Pagamento via PIX - Chave: CNPJ 66.650.579/0001-46 (UX Code Desenvolvimento Web).
