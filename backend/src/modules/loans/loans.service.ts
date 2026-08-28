@@ -10,7 +10,7 @@ import Decimal from 'decimal.js';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { filtroCliente } from '../../common/busca';
-import { dataLocal } from '../../common/data';
+import { dataDia, dataLocal } from '../../common/data';
 import { PortalService } from '../client-portal/portal.service';
 import { InstallmentsService } from '../installments/installments.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
@@ -258,19 +258,13 @@ export class LoansService {
     // ── Datas de vencimento ───────────────────────────────────────────────────
     // Se dataPrimeiroVencimento for informada, a parcela 1 vence nessa data e as
     // seguintes a cada mês. Caso contrário, mantém o padrão (dataInicio + N meses).
-    // Parse como data LOCAL (ano, mês, dia) — evita o recuo de 1 dia que
-    // new Date('YYYY-MM-DD') causa (meia-noite UTC) e mantém a convenção do
-    // calcularDataVencimento, que também constrói datas locais.
-    const primeiroVenc = dto.dataPrimeiroVencimento
-      ? (() => {
-          const [y, m, d] = dto.dataPrimeiroVencimento!.split('-').map(Number);
-          return new Date(y, m - 1, d);
-        })()
-      : null;
+    // dataDia() grava o dia ao meio-dia UTC: a meia-noite local virava 00:00Z e o
+    // formulário relia isso como o dia anterior, fazendo a data recuar a cada edição.
+    const primeiroVenc = dto.dataPrimeiroVencimento ? dataDia(dto.dataPrimeiroVencimento) : null;
     const vencDaParcela = (i: number): Date =>
       primeiroVenc
         ? addMonthsSafe(primeiroVenc, i)
-        : calcularDataVencimento(dataLocal(dto.dataInicio), i + 1, dto.diaVencimento);
+        : calcularDataVencimento(dataDia(dto.dataInicio), i + 1, dto.diaVencimento);
 
     // ── Geração das parcelas ────────────────────────────────────────────────
     const installments = Array.from({ length: n }, (_, i) => {
@@ -305,7 +299,7 @@ export class LoansService {
           totalReceivable:         total.toDecimalPlaces(2).toNumber(),
           numeroParcelas:          n,
           metodoPagamento:         dto.metodoPagamento ?? null,
-          dataInicio:              dataLocal(dto.dataInicio),
+          dataInicio:              dataDia(dto.dataInicio),
           observacoes:             dto.observacoes ?? null,
           status:                  ctx.loanStatus ?? 'ativo',
           aceiteExpiraEm:          ctx.aceiteExpiraEm ?? null,
@@ -372,13 +366,11 @@ export class LoansService {
     const newPrincipal  = dto.principalAmount != null ? new Decimal(dto.principalAmount) : new Decimal(loan.principalAmount.toString());
     const newProfit     = dto.targetProfit   != null ? new Decimal(dto.targetProfit)    : new Decimal(loan.targetProfit.toString());
     const newN          = dto.numeroParcelas ?? loan.numeroParcelas;
-    const newDataInicio = dto.dataInicio ? dataLocal(dto.dataInicio) : loan.dataInicio;
+    const newDataInicio = dto.dataInicio ? dataDia(dto.dataInicio) : loan.dataInicio;
     const newDiaVenc    = dto.diaVencimento !== undefined ? dto.diaVencimento : loan.diaVencimento;
-    // Data do 1º vencimento (parse local, como no create); quando informada, redefine
+    // Data do 1º vencimento (mesmo tratamento do create); quando informada, redefine
     // o cronograma das parcelas pendentes (1ª pendente nessa data, demais mensais).
-    const primeiroVenc = dto.dataPrimeiroVencimento
-      ? (() => { const [y, m, d] = dto.dataPrimeiroVencimento!.split('-').map(Number); return new Date(y, m - 1, d); })()
-      : null;
+    const primeiroVenc = dto.dataPrimeiroVencimento ? dataDia(dto.dataPrimeiroVencimento) : null;
 
     if (newPrincipal.lte(0)) throw new BadRequestException('principalAmount deve ser positivo.');
     if (newProfit.lt(0))     throw new BadRequestException('targetProfit não pode ser negativo.');
@@ -725,7 +717,7 @@ export class LoansService {
         where: { id: loanId },
         data: {
           status:          'ativo',
-          dataInicio:      dataLib,
+          dataInicio:      dataDia(dataLib),
           liberadoPor:     ctx.userId ?? null,
           liberadoEm:      dataLib,
           metodoLiberacao: dto.metodoLiberacao,
@@ -741,7 +733,7 @@ export class LoansService {
       for (const inst of installments) {
         await tx.installment.update({
           where: { id: inst.id },
-          data:  { dataVencimento: addMonthsSafe(dataLib, inst.numero) },
+          data:  { dataVencimento: addMonthsSafe(dataDia(dataLib), inst.numero) },
         });
       }
 

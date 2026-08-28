@@ -27,13 +27,18 @@ export function primeiroDiaMesISO(): string {
   return `${hojeISODate().slice(0, 8)}01`
 }
 
-// Converte uma data (string/Date) para YYYY-MM-DD no fuso de Brasília — para
-// pré-preencher <input type="date"> a partir de um valor existente sem recuo de fuso.
+// Valor de um <input type="date">. Le o dia em UTC, igual a formatDate/formatDateLocal
+// que as tabelas usam. Converter para Brasilia (UTC-3) mostrava o dia anterior nas datas
+// gravadas a meia-noite UTC, e salvar de novo persistia esse dia a menos.
 export function toDateInputValue(date: string | Date | null | undefined): string {
   if (!date) return ""
+  if (typeof date === "string") {
+    const m = /^(\d{4}-\d{2}-\d{2})/.exec(date)
+    if (m) return m[1]
+  }
   const d = typeof date === "string" ? new Date(date) : date
   if (isNaN(d.getTime())) return ""
-  return new Intl.DateTimeFormat("en-CA", { timeZone: TIMEZONE }).format(d)
+  return d.toISOString().slice(0, 10)
 }
 
 export function toNumber(val: unknown): number {
