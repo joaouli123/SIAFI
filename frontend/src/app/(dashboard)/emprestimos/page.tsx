@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   Plus, Search, RefreshCw, Eye, XCircle, CreditCard, TrendingUp,
   AlertTriangle, CheckCircle, Clock, MessageSquare, QrCode, FileText,
-  DollarSign, X, ExternalLink, Pencil,
+  DollarSign, X, ExternalLink, Pencil, FileDown,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,7 +22,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   formatCurrency, formatDate, formatDateLocal, formatDateTimeLocal,
-  formatCPF, toNumber, STATUS_LOAN, STATUS_INSTALLMENT,
+  formatCPF, toNumber, STATUS_LOAN, STATUS_INSTALLMENT, hojeISODate,
 } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
@@ -684,6 +684,38 @@ export default function EmprestimosPage() {
       }).then((r) => r.data),
   })
 
+  const [baixando, setBaixando] = useState(false)
+
+  const baixarExcel = async () => {
+    // A planilha sai com os mesmos filtros da tela: exportar a carteira inteira
+    // depois de filtrar um periodo so gera conferencia manual do outro lado.
+    setBaixando(true)
+    try {
+      const res = await api.get('/export/contratos/excel', {
+        params: {
+          search: search || undefined,
+          status: status || undefined,
+          inicioDe: inicioDe || undefined,
+          inicioAte: inicioAte || undefined,
+        },
+        responseType: 'blob',
+      })
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(
+        new Blob([res.data as BlobPart], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        }),
+      )
+      a.download = `contratos-${hojeISODate()}.xlsx`
+      a.click()
+      URL.revokeObjectURL(a.href)
+    } catch {
+      toast.error('Nao foi possivel gerar a planilha. Tente novamente.')
+    } finally {
+      setBaixando(false)
+    }
+  }
+
   const cancelMut = useMutation({
     mutationFn: (id: number) => api.patch(`/loans/${id}/cancel`),
     onSuccess: (_, id) => {
@@ -784,6 +816,15 @@ export default function EmprestimosPage() {
               <option value="quitado">Quitado</option>
               <option value="cancelado">Cancelado</option>
             </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={baixarExcel}
+              disabled={baixando}
+              className="gap-2"
+            >
+              <FileDown className="size-3.5" />{baixando ? 'Gerando...' : 'Excel'}
+            </Button>
             <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
               <RefreshCw className="size-3.5" />Atualizar
             </Button>

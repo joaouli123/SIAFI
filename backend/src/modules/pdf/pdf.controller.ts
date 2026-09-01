@@ -78,9 +78,12 @@ export class PdfController {
   @Roles('admin', 'financeiro')
   async contratosExcel(
     @Query('status') status: string | undefined,
+    @Query('search') search: string | undefined,
+    @Query('inicioDe') inicioDe: string | undefined,
+    @Query('inicioAte') inicioAte: string | undefined,
     @Res() res: Response,
   ) {
-    await this.excelService.exportarContratos(status, res);
+    await this.excelService.exportarContratos({ status, search, inicioDe, inicioAte }, res);
   }
 
   @Get('movimentacao/excel')

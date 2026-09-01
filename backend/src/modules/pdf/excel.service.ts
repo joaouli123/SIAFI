@@ -4,7 +4,8 @@ import { PaymentsService } from '../payments/payments.service';
 import type { PaymentFilterDto } from '../payments/dto/payment-filter.dto';
 import * as ExcelJS from 'exceljs';
 import { Prisma } from '@prisma/client';
-import { dataLocal } from '../../common/data';
+import { dataLocal, fimDoDiaUtc, inicioDoDiaUtc } from '../../common/data';
+import { filtroCliente } from '../../common/busca';
 import type { Response } from 'express';
 
 const BRL = (v: number | string | null | undefined) =>
@@ -21,9 +22,28 @@ export class ExcelService {
 
   // ─── Relatório de Contratos ───────────────────────────────────────────────
 
-  async exportarContratos(status: string | undefined, res: Response): Promise<void> {
+  /**
+   * O filtro tem que ser o MESMO de LoansService.findAll. Planilha que ignora a
+   * busca e o periodo da tela devolve a carteira inteira, e quem exportou so
+   * descobre a divergencia depois de mandar o arquivo pra frente.
+   */
+  async exportarContratos(
+    filtros: { status?: string; search?: string; inicioDe?: string; inicioAte?: string },
+    res: Response,
+  ): Promise<void> {
+    const { status, search, inicioDe, inicioAte } = filtros;
+
+    const where: Prisma.LoanWhereInput = {};
+    if (status) where.status = status as any;
+    if (search) where.client = { OR: filtroCliente(search) };
+    if (inicioDe || inicioAte) {
+      where.dataInicio = {};
+      if (inicioDe) (where.dataInicio as Prisma.DateTimeFilter).gte = inicioDoDiaUtc(inicioDe);
+      if (inicioAte) (where.dataInicio as Prisma.DateTimeFilter).lte = fimDoDiaUtc(inicioAte);
+    }
+
     const loans = await this.prisma.loan.findMany({
-      where: status ? { status: status as any } : undefined,
+      where,
       orderBy: { createdAt: 'desc' },
       include: {
         client: { select: { nome: true, cpf: true, whatsapp: true, cidade: true, estado: true } },
