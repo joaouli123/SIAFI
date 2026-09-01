@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
@@ -13,20 +13,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
-import { Skeleton } from '@/components/ui/skeleton'
+import { ContratoCombobox } from '@/components/ui/contrato-combobox'
 import { formatCurrency } from '@/lib/utils'
 import api from '@/lib/api'
 import Decimal from 'decimal.js'
-
-interface LoanOption {
-  id: number
-  status: string
-  principalAmount: number
-  totalReceivable: number
-  numeroParcelas: number
-  dataInicio: string
-  client: { nome: string }
-}
 
 const TIPOS = [
   { value: 'prorrogacao',       label: 'Prorrogação' },
@@ -60,13 +50,8 @@ export default function NovoReparcelamentoPage() {
   const router = useRouter()
   const [simAtivo, setSimAtivo] = useState(false)
 
-  const { data: loans = [], isLoading: loansLoading } = useQuery({
-    queryKey: ['loans-ativo-inadimplente'],
-    queryFn: () => api.get<{ data: LoanOption[] }>('/loans?status=ativo&limit=200')
-      .then(r => r.data.data),
-  })
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
     defaultValues: { simParcelas: 12 },
   })
@@ -94,10 +79,6 @@ export default function NovoReparcelamentoPage() {
     return { total, parcela }
   })()
 
-  if (loansLoading) {
-    return <div className="space-y-4 w-full"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>
-  }
-
   return (
     <div className="space-y-6 w-full">
       <div className="flex items-center gap-4">
@@ -116,14 +97,10 @@ export default function NovoReparcelamentoPage() {
           <CardContent className="space-y-4">
             <div className="space-y-1.5">
               <Label>Empréstimo</Label>
-              <Select {...register('loanId')}>
-                <option value="">Selecione o empréstimo...</option>
-                {loans.map(l => (
-                  <option key={l.id} value={l.id}>
-                    #{l.id} — {l.client.nome} · {formatCurrency(Number(l.principalAmount))} · {l.numeroParcelas}x
-                  </option>
-                ))}
-              </Select>
+              <ContratoCombobox
+                value={watch('loanId') ? Number(watch('loanId')) : null}
+                onSelect={(l) => setValue('loanId', (l?.id ?? 0) as any, { shouldValidate: true })}
+              />
               {errors.loanId && <p className="text-xs text-destructive">{errors.loanId.message}</p>}
             </div>
 

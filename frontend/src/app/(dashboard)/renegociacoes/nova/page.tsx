@@ -7,13 +7,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, RefreshCcw } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Select } from '@/components/ui/select'
+import { ContratoCombobox } from '@/components/ui/contrato-combobox'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatCurrency, formatDate, hojeISODate } from '@/lib/utils'
 import * as React from 'react'
@@ -34,10 +34,7 @@ export default function NovaRenegociacaoPage() {
   const searchParams = useSearchParams()
   const preLoanId = searchParams.get('loanId')
 
-  const { data: loans } = useQuery({
-    queryKey: ['loans-ativos'],
-    queryFn: () => api.get<any>('/loans', { params: { status: 'ativo', limit: 200 } }).then((r) => r.data.data ?? r.data),
-  })
+  const [contrato, setContrato] = useState<any>(null)
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
@@ -50,7 +47,7 @@ export default function NovaRenegociacaoPage() {
   })
 
   const loanId = watch('loanId')
-  const selectedLoan = (loans ?? []).find((l: any) => l.id === Number(loanId))
+  const selectedLoan = contrato?.id === Number(loanId) ? contrato : null
 
   useEffect(() => { if (preLoanId) setValue('loanId', Number(preLoanId)) }, [preLoanId, setValue])
 
@@ -108,12 +105,10 @@ export default function NovaRenegociacaoPage() {
           <CardContent className="space-y-4">
             <div className="space-y-1.5">
               <Label>Empréstimo *</Label>
-              <Select {...register('loanId', { valueAsNumber: true })}>
-                <option value="">Selecione o empréstimo...</option>
-                {((loans ?? []) as any[]).map((l: any) => (
-                  <option key={l.id} value={l.id}>#{l.id} — {l.client?.nome} — {formatCurrency(Number(l.principalAmount) || 0)}</option>
-                ))}
-              </Select>
+              <ContratoCombobox
+                value={loanId ? Number(loanId) : null}
+                onSelect={(l) => { setContrato(l); setValue('loanId', l?.id ?? 0, { shouldValidate: true }) }}
+              />
               {errors.loanId && <p className="text-xs text-destructive">{errors.loanId.message}</p>}
             </div>
 
