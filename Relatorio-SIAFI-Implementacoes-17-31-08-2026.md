@@ -54,6 +54,7 @@ Parcelas) nao foram repetidos aqui.
 | Data do contrato recuava um dia a cada edicao | Ao abrir um contrato, alterar qualquer campo e salvar, a data de inicio e a data de vencimento caiam um dia; na edicao seguinte caiam mais um, obrigando a equipe a redigitar as datas toda vez. A causa era a hora em que as datas eram gravadas: o servidor de producao trabalha em fuso diferente do da tela, e a data gravada a meia-noite era relida como o dia anterior. As datas passaram a ser gravadas e lidas de forma independente de fuso, e o ciclo abrir-salvar-abrir foi verificado cinco vezes seguidas sem alteracao. A correcao alcanca todos os pontos que geram vencimento: criacao de contrato, edicao, reparcelamento e liberacao de capital. | |
 | Cliente nao encontrado ao lancar novo contrato | Ao dar entrada em um contrato, determinados clientes nao eram localizados no campo de cliente, mesmo com o cadastro ativo e aparecendo normalmente nas telas de Clientes e de Parcelas. A causa nao era o cliente ter encerrado um contrato anterior, e sim a posicao dele na ordem alfabetica: a tela carregava a lista de clientes ate um limite de 500 e filtrava dentro dessa lista, e a base ja tem 518 clientes ativos - os 18 ultimos em ordem alfabetica nunca chegavam a tela. A busca passou a ser feita pelo servidor a cada letra digitada, por nome ou CPF, sem lista intermediaria: deixa de existir um ponto a partir do qual a base fica grande demais. A mesma correcao foi aplicada nas demais telas com o mesmo limite (avalistas no cadastro e na edicao de cliente, PIX e Intencoes). Na Central de Relatorios o pedido excedia o limite e retornava erro, de modo que o seletor de cliente do extrato nunca listava ninguem; tambem corrigido. | |
 | Cadastro de cliente com avalista era recusado | O cadastro e a edicao de cliente falhavam sempre que um avalista era preenchido: o sistema recusava a gravacao e devolvia erro, campo a campo do avalista. A conversao dos dados do avalista, enviados junto com as fotos e documentos, perdia as regras de validacao no caminho, e a checagem de seguranca do sistema entao rejeitava todo campo que nao reconhecia. Corrigido nos dois fluxos (cadastro novo e edicao), sem afrouxar a validacao: avalista incompleto ou com campo indevido continua sendo recusado. | |
+| Contratos antigos nao apareciam em Renegociacao e Reparcelamento | Os campos de contrato dessas duas telas listavam apenas os 200 contratos mais recentes. Com 571 contratos ativos, os 371 mais antigos nao podiam ser selecionados - justamente os contratos de mais tempo, que sao os que mais chegam a renegociacao. O campo passou a buscar no servidor por nome ou CPF do cliente, sem limite de listagem. | |
 
 ## Ambiente de homologacao
 
@@ -68,6 +69,9 @@ Parcelas) nao foram repetidos aqui.
 ## Validacao
 
 - Alteracoes de backend e frontend submetidas a verificacao de tipos e compilacao.
+- Selecao de contrato em Renegociacao e Reparcelamento conferida na base com 10 dos
+  contratos que estavam fora do limite anterior (os 5 mais antigos e os 5 mais recentes
+  do grupo): todos localizados pelo nome e pelo CPF do cliente.
 - Busca de cliente conferida na base: os 18 cadastros que estavam fora do limite
   de 500 sao alcancados por nome (em qualquer caixa) e por CPF, com ou sem pontuacao.
 - Cadastro com avalista conferido na propria rotina de validacao do sistema, nos dois
