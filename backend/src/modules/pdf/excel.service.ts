@@ -12,6 +12,19 @@ const BRL = (v: number | string | null | undefined) =>
   Number(v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const DT = (d: Date | string | null | undefined) =>
   d ? new Date(d).toLocaleDateString('pt-BR') : '—';
+const CPF = (v: string | null | undefined) =>
+  v && v.length === 11 ? v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (v ?? '');
+
+// A planilha vai para fora do sistema: 'aguardando_liberacao' nao e rotulo de
+// relatorio, e o mesmo texto que a tela mostra evita conferencia cruzada.
+const STATUS_LOAN: Record<string, string> = {
+  aguardando_aceite: 'Aguardando aceite',
+  aguardando_liberacao: 'Aguardando liberacao',
+  ativo: 'Ativo',
+  inadimplente: 'Inadimplente',
+  quitado: 'Quitado',
+  cancelado: 'Cancelado',
+};
 
 @Injectable()
 export class ExcelService {
@@ -79,31 +92,60 @@ export class ExcelService {
 
     this.styleHeader(ws);
 
+    // Valor como TEXTO ('R$ 3.300,00') impede somar, ordenar e filtrar no Excel:
+    // quem recebe a planilha tem que redigitar tudo. Vai numero cru com formato.
+    const COL_MOEDA = ['valor', 'valorParcela', 'totalPagar', 'totalRecebido'];
+    COL_MOEDA.forEach((k) => (ws.getColumn(k).numFmt = 'R$ #,##0.00'));
+    ws.getColumn('dataInicio').numFmt = 'dd/mm/yyyy';
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+    let somaValor = 0;
+    let somaTotalPagar = 0;
+    let somaRecebido = 0;
+
     loans.forEach((l) => {
       const pagas = l.installments.filter((i) => i.status === 'pago').length;
       const atrasadas = l.installments.filter((i) => i.status === 'atrasado').length;
       const totalRecebido = l.installments.reduce((s, i) => s + Number(i.totalPago), 0);
-      const valorParcela = l.installments[0]?.installmentAmount ?? 0;
+      const valorParcela = Number(l.installments[0]?.installmentAmount ?? 0);
       const totalPagar = l.installments.reduce((s, i) => s + Number(i.installmentAmount), 0);
+      const principal = Number(l.principalAmount);
+
+      somaValor += principal;
+      somaTotalPagar += totalPagar;
+      somaRecebido += totalRecebido;
 
       ws.addRow({
         id: l.id,
         cliente: l.client.nome,
-        cpf: l.client.cpf ?? '',
+        cpf: CPF(l.client.cpf),
         whatsapp: l.client.whatsapp ?? '',
         cidade: l.client.cidade ?? '',
         estado: l.client.estado ?? '',
-        valor: BRL(Number(l.principalAmount)),
+        valor: principal,
         parcelas: l.numeroParcelas,
-        valorParcela: BRL(Number(valorParcela)),
-        totalPagar: BRL(totalPagar),
-        dataInicio: DT(l.dataInicio),
-        status: l.status,
+        valorParcela,
+        totalPagar,
+        dataInicio: l.dataInicio,
+        status: STATUS_LOAN[l.status] ?? l.status,
         pagas,
         atrasadas,
-        totalRecebido: BRL(totalRecebido),
+        totalRecebido,
       });
     });
+
+    ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: ws.rowCount, column: ws.columnCount } };
+
+    if (loans.length) {
+      ws.addRow({});
+      const total = ws.addRow({
+        cliente: `TOTAL — ${loans.length} contrato(s)`,
+        valor: somaValor,
+        totalPagar: somaTotalPagar,
+        totalRecebido: somaRecebido,
+      });
+      total.font = { bold: true };
+    }
 
     this.sendWorkbook(wb, res, `contratos-${Date.now()}.xlsx`);
   }
