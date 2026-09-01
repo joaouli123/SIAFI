@@ -145,11 +145,6 @@ export default function EditarClientePage() {
     name: 'avalistas',
   })
 
-  const { data: allClients } = useQuery({
-    queryKey: ['clients-list'],
-    queryFn: () => api.get<any>('/clients', { params: { limit: 500, status: 'active' } }).then((r) => r.data.data ?? r.data),
-  })
-
   useEffect(() => {
     if (client) {
       reset({
@@ -330,7 +325,7 @@ export default function EditarClientePage() {
                     <div className="md:col-span-2 space-y-1.5">
                       <Label>Cliente existente (opcional)</Label>
                       <ClienteCombobox
-                        clientes={allClients ?? []}
+                        buscaRemota
                         value={watch(`avalistas.${i}.clienteId`)}
                         excludeId={Number(id)}
                         avulsoLabel="— Pessoa avulsa (preencher manualmente) —"

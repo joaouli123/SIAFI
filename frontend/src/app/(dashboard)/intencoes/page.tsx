@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
+import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -227,14 +228,6 @@ export default function IntencoesPage() {
     queryFn: () => api.get<IntencaoItem[]>('/intencoes', {
       params: statusFiltro ? { status: statusFiltro } : {},
     }).then(r => r.data),
-  })
-
-  const { data: clients = [] } = useQuery({
-    queryKey: ['clients-minimal'],
-    queryFn: () =>
-      api.get<{ data: { id: number; nome: string }[] }>('/clients?limit=500')
-        .then(r => r.data.data),
-    enabled: openCreate,
   })
 
   const canViewLoans = user?.role === 'admin' || user?.role === 'financeiro'
@@ -504,10 +497,12 @@ export default function IntencoesPage() {
           <form onSubmit={formCreate.handleSubmit(d => createMut.mutate(d))} className="space-y-4">
             <div className="space-y-1.5">
               <Label>Cliente</Label>
-              <Select {...formCreate.register('clientId')}>
-                <option value="">Selecione o cliente...</option>
-                {clients.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
-              </Select>
+              <ClienteCombobox
+                buscaRemota
+                value={formCreate.watch('clientId') || null}
+                placeholder="Buscar cliente por nome ou CPF..."
+                onSelect={c => formCreate.setValue('clientId', c?.id ?? 0, { shouldValidate: true })}
+              />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">

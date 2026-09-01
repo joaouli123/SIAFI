@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
+import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import api from '@/lib/api'
@@ -43,12 +44,6 @@ export default function CentralRelatoriosPage() {
   const { data, isLoading } = useQuery<Catalogo>({
     queryKey: ['reports', 'catalogo'],
     queryFn: () => api.get('/reports/catalogo').then(r => r.data),
-    staleTime: 5 * 60_000,
-  })
-
-  const { data: clientes } = useQuery<any[]>({
-    queryKey: ['clients-list'],
-    queryFn: () => api.get<any>('/clients', { params: { limit: 1000 } }).then(r => r.data.data ?? r.data),
     staleTime: 5 * 60_000,
   })
 
@@ -182,12 +177,14 @@ export default function CentralRelatoriosPage() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 shrink-0">
                       {rel.params.includes('cliente') && (
-                        <Select value={clientId} onChange={(e) => setClientId(e.target.value)} className="w-full sm:w-52">
-                          <option value="">Selecione o cliente...</option>
-                          {(clientes ?? []).map((c) => (
-                            <option key={c.id} value={c.id}>{c.nome}</option>
-                          ))}
-                        </Select>
+                        <div className="w-full sm:w-52">
+                          <ClienteCombobox
+                            buscaRemota
+                            value={clientId ? Number(clientId) : null}
+                            placeholder="Buscar cliente..."
+                            onSelect={(c) => setClientId(c ? String(c.id) : '')}
+                          />
+                        </div>
                       )}
                       <div className="flex flex-wrap gap-1.5">
                         {(data!.formatos).map((fmt) => {

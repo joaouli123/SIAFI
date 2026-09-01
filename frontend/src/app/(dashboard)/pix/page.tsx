@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
+import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency, formatDate, formatDateTime } from '@/lib/utils'
@@ -82,9 +83,12 @@ export default function PixPage() {
   const [pagamentoConfirmado, setPagamentoConfirmado] = useState(false)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const { data: clients } = useQuery({
-    queryKey: ['clients-list'],
-    queryFn:  () => api.get<any>('/clients', { params: { limit: 500, status: 'active' } }).then(r => r.data.data ?? r.data),
+  // A busca de cliente virou server-side no combobox; aqui basta o selecionado,
+  // que precisa trazer o whatsapp para o envio da cobranca.
+  const { data: selectedClient } = useQuery<any>({
+    queryKey: ['client-pix', clienteId],
+    queryFn:  () => api.get<any>(`/clients/${clienteId}`).then(r => r.data),
+    enabled:  !!clienteId,
   })
 
   const { data: loans } = useQuery({
@@ -186,7 +190,6 @@ export default function PixPage() {
   }
 
   const selectedInst   = (installments as any[])?.find((i: any) => i.id === Number(installmentId))
-  const selectedClient = (clients as any[])?.find((c: any) => c.id === Number(clienteId))
   const isOverdue      = selectedInst && new Date(selectedInst.dataVencimento) < new Date()
 
   // Verificar se há QR Code ativo (não expirado) para a parcela selecionada
@@ -211,12 +214,12 @@ export default function PixPage() {
             <>
               <div className="space-y-1.5">
                 <Label>Cliente</Label>
-                <Select value={clienteId} onChange={e => { setClienteId(e.target.value); setLoanId(''); setValue('installmentId', 0); setPagamentoConfirmado(false) }}>
-                  <option value="">Selecione o cliente...</option>
-                  {(clients ?? []).map((c: any) => (
-                    <option key={c.id} value={c.id}>{c.nome}</option>
-                  ))}
-                </Select>
+                <ClienteCombobox
+                  buscaRemota
+                  value={clienteId ? Number(clienteId) : null}
+                  placeholder="Buscar cliente por nome ou CPF..."
+                  onSelect={c => { setClienteId(c ? String(c.id) : ''); setLoanId(''); setValue('installmentId', 0); setPagamentoConfirmado(false) }}
+                />
               </div>
 
               {clienteId && (

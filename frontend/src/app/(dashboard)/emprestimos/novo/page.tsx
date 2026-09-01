@@ -3,7 +3,7 @@
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Calculator, ChevronDown, ChevronRight, Plus, Trash2, Users, Percent } from 'lucide-react'
@@ -59,11 +59,6 @@ export default function NovoEmprestimoPage() {
   const qc = useQueryClient()
   const preClienteId = searchParams.get('clienteId')
   const [showCobrancaConfig, setShowCobrancaConfig] = useState(false)
-
-  const { data: clients } = useQuery({
-    queryKey: ['clients-list'],
-    queryFn: () => api.get<any>('/clients', { params: { limit: 500, status: 'active' } }).then((r) => r.data.data ?? r.data),
-  })
 
   const { register, handleSubmit, watch, setValue, getValues, control, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
@@ -197,7 +192,7 @@ export default function NovoEmprestimoPage() {
             <div className="md:col-span-2 space-y-1.5">
               <Label>Cliente *</Label>
               <ClienteCombobox
-                clientes={clients ?? []}
+                buscaRemota
                 value={watch('clientId')}
                 onSelect={(c) => setValue('clientId', c?.id ?? 0, { shouldValidate: true })}
                 placeholder="Buscar cliente por nome ou CPF..."

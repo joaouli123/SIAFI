@@ -148,11 +148,6 @@ export default function NovoClientePage() {
     name: 'avalistas',
   })
 
-  const { data: allClients } = useQuery({
-    queryKey: ['clients-list'],
-    queryFn: () => api.get<any>('/clients', { params: { limit: 500, status: 'active' } }).then((r) => r.data.data ?? r.data),
-  })
-
   const mutation = useMutation({
     mutationFn: (data: FormData) => {
       const fd = new FormData()
@@ -351,7 +346,7 @@ export default function NovoClientePage() {
                     <div className="md:col-span-2 space-y-1.5">
                       <Label>Cliente existente (opcional)</Label>
                       <ClienteCombobox
-                        clientes={allClients ?? []}
+                        buscaRemota
                         value={watch(`avalistas.${i}.clienteId`)}
                         avulsoLabel="— Pessoa avulsa (preencher manualmente) —"
                         placeholder="Buscar cliente por nome ou CPF..."
