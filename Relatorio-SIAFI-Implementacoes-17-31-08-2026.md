@@ -36,6 +36,7 @@ Parcelas) nao foram repetidos aqui.
 | Fila de cobrancas agrupada por cliente | No painel do consultor, a lista de Cobrancas urgentes passou a mostrar cada cliente uma unica vez, reunindo as parcelas em atraso daquele cliente em uma linha so: quantidade de parcelas, data do atraso mais antigo, dias de atraso e total em aberto. Antes o mesmo cliente aparecia repetido em varias linhas, uma por parcela. | |
 | Filtros na tela de Inadimplentes | A tela ganhou busca por nome do cliente (tambem por CPF ou WhatsApp) e filtro por periodo da data de atraso. A busca ignora maiusculas/minusculas, e o CPF pode ser digitado com ou sem formatacao. O periodo considera a data do atraso mais antigo do contrato, que e a exibida na coluna. Os totais no topo - contratos inadimplentes, total em atraso e clientes unicos - passam a refletir o filtro aplicado, e a planilha de Excel traz exatamente os mesmos clientes que a tela mostra, em vez de exportar a carteira inteira. | |
 | Filtro por data de inicio do contrato | A tela de Emprestimos ganhou um intervalo de periodo pela data de inicio do contrato (de/ate), com botao para limpar. Funciona junto com a busca por nome ou CPF e com o filtro de status. | |
+| Exportacao dos Emprestimos para Excel | A tela de Emprestimos ganhou o botao de Excel. A planilha traz contrato, cliente, CPF, WhatsApp, cidade, estado, valor emprestado, quantidade e valor da parcela, total a pagar, data de inicio, situacao, parcelas pagas, parcelas atrasadas e total recebido. Sai com os mesmos filtros aplicados na tela - busca por nome ou CPF, situacao e periodo de inicio do contrato - em vez de exportar a carteira inteira. | |
 
 ## Correcoes
 
@@ -99,6 +100,11 @@ Parcelas) nao foram repetidos aqui.
   vezes, nos dois fusos (o do servidor e o do escritorio): antes a data caia um dia por
   edicao, depois permanece igual em todas as voltas. O historico de auditoria do sistema
   foi usado para identificar os contratos afetados - apenas dois foram editados no periodo.
+- Exportacao dos Emprestimos conferida gerando as planilhas de verdade e abrindo os
+  arquivos: sem filtro saem 574 contratos, o mesmo total da base; no periodo de 2016
+  saem exatamente os dois contratos daquele ano, com as datas 29/02/2016 e 10/09/2016
+  corretas; em julho/2026 saem 78, o mesmo que a tela mostra. Em todos os cenarios a
+  quantidade de linhas da planilha coincide com a da tela.
 - Todos os itens acima publicados no ambiente de homologacao para conferencia.
 
 Pagamento via PIX - Chave: CNPJ 66.650.579/0001-46 (UX Code Desenvolvimento Web).
