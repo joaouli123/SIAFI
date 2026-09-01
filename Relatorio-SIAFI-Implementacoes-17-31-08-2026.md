@@ -3,7 +3,7 @@
 Empresa: Lidera Tecnologia e Gestao
 Sistema: SIAFI - Sistema Integrado de Apoio Financeiro
 Periodo: 17 a 31 de agosto de 2026
-Data: 28/08/2026 (documento em andamento - fechamento em 31/08/2026)
+Data: 31/08/2026 (fechamento da quinzena)
 Referencia: Sequencia ao relatorio quinzenal de 01 a 17/08/2026
 
 ## Resumo
@@ -17,7 +17,7 @@ Parcelas) nao foram repetidos aqui.
 
 | Item | Descricao | Valor |
 | --- | --- | ---: |
-| Campos de selecao com digitacao em todo o sistema | Todo campo que escolhe um item de uma lista passou a abrir a lista ao ser clicado e a aceitar digitacao para filtrar. A busca localiza por nome ou por CPF e ignora acentos e pontuacao. Substituiu o menu suspenso antigo, em que era preciso rolar a lista inteira para achar o cliente. Aplicado nas telas de Cobrancas, Pagamentos, Parcelas, Recebimentos, Emprestimos, Relatorios e Portal do Cliente. | |
+| Campos de selecao com digitacao em todo o sistema | Todo campo que escolhe um item de uma lista passou a abrir a lista ao ser clicado e a aceitar digitacao para filtrar. A busca localiza por nome ou por CPF, ignorando maiusculas/minusculas e a pontuacao do CPF. Substituiu o menu suspenso antigo, em que era preciso rolar a lista inteira para achar o cliente. Aplicado nas telas de Cobrancas, Pagamentos, Parcelas, Recebimentos, Emprestimos, Relatorios e Portal do Cliente. | |
 | Campo Bco Recebedor com lista e busca | O campo de conta/banco recebedor no lancamento de baixa passou a listar as contas cadastradas e a filtrar conforme a digitacao, no lugar do preenchimento livre. | |
 | Filtro de consultor tambem em Recebimentos | O filtro por consultor, ja disponivel em Parcelas, foi estendido a tela de Recebimentos, com o mesmo campo de digitacao. | |
 | Relatorio do cliente para consultores | Nova visao que reune, por cliente, cada contrato com as parcelas separadas em pagas, vencidas e a vencer. O consultor enxerga a propria carteira; administrador e financeiro enxergam qualquer cliente. Inclui correcoes nos filtros da tela. | |
@@ -34,7 +34,7 @@ Parcelas) nao foram repetidos aqui.
 | CPF do cliente nos Recebimentos | Nova coluna de CPF na tela de Recebimentos, posicionada antes do nome do cliente, para permitir a conferencia dos valores baixados com os informados pela equipe. A mesma coluna foi incluida na planilha de Excel dos recebimentos. | |
 | Posicao da data do pagamento nos Recebimentos | A coluna com a data do pagamento passou a ficar entre Parcela e Valor, conforme solicitado, em vez de ficar no fim da tabela. | |
 | Fila de cobrancas agrupada por cliente | No painel do consultor, a lista de Cobrancas urgentes passou a mostrar cada cliente uma unica vez, reunindo as parcelas em atraso daquele cliente em uma linha so: quantidade de parcelas, data do atraso mais antigo, dias de atraso e total em aberto. Antes o mesmo cliente aparecia repetido em varias linhas, uma por parcela. | |
-| Filtros na tela de Inadimplentes | A tela ganhou busca por nome do cliente (tambem por CPF ou WhatsApp) e filtro por periodo da data de atraso. A busca ignora acentos e pontuacao: o nome pode ser digitado sem acento e o CPF ou o telefone com ou sem formatacao. O periodo considera a data do atraso mais antigo do contrato, que e a exibida na coluna. Os totais no topo - contratos inadimplentes, total em atraso e clientes unicos - passam a refletir o filtro aplicado, e a planilha de Excel traz exatamente os mesmos clientes que a tela mostra, em vez de exportar a carteira inteira. | |
+| Filtros na tela de Inadimplentes | A tela ganhou busca por nome do cliente (tambem por CPF ou WhatsApp) e filtro por periodo da data de atraso. A busca ignora maiusculas/minusculas, e o CPF pode ser digitado com ou sem formatacao. O periodo considera a data do atraso mais antigo do contrato, que e a exibida na coluna. Os totais no topo - contratos inadimplentes, total em atraso e clientes unicos - passam a refletir o filtro aplicado, e a planilha de Excel traz exatamente os mesmos clientes que a tela mostra, em vez de exportar a carteira inteira. | |
 
 ## Correcoes
 
@@ -52,6 +52,8 @@ Parcelas) nao foram repetidos aqui.
 | Segunda baixa seguida travava a busca de cliente | Apos lancar um pagamento, ao tentar lancar o proximo o campo de cliente ficava travado e nao localizava ninguem, obrigando a recarregar a tela. Corrigido. | |
 | Parcelas quitadas antigas contadas como vencidas | No relatorio do consultor, parcela ja quitada com vencimento no passado aparecia entre as vencidas e inflava o total em atraso do cliente. Passou a ser classificada pelo saldo, e nao pela data. | |
 | Data do contrato recuava um dia a cada edicao | Ao abrir um contrato, alterar qualquer campo e salvar, a data de inicio e a data de vencimento caiam um dia; na edicao seguinte caiam mais um, obrigando a equipe a redigitar as datas toda vez. A causa era a hora em que as datas eram gravadas: o servidor de producao trabalha em fuso diferente do da tela, e a data gravada a meia-noite era relida como o dia anterior. As datas passaram a ser gravadas e lidas de forma independente de fuso, e o ciclo abrir-salvar-abrir foi verificado cinco vezes seguidas sem alteracao. A correcao alcanca todos os pontos que geram vencimento: criacao de contrato, edicao, reparcelamento e liberacao de capital. | |
+| Cliente nao encontrado ao lancar novo contrato | Ao dar entrada em um contrato, determinados clientes nao eram localizados no campo de cliente, mesmo com o cadastro ativo e aparecendo normalmente nas telas de Clientes e de Parcelas. A causa nao era o cliente ter encerrado um contrato anterior, e sim a posicao dele na ordem alfabetica: a tela carregava a lista de clientes ate um limite de 500 e filtrava dentro dessa lista, e a base ja tem 518 clientes ativos - os 18 ultimos em ordem alfabetica nunca chegavam a tela. A busca passou a ser feita pelo servidor a cada letra digitada, por nome ou CPF, sem lista intermediaria: deixa de existir um ponto a partir do qual a base fica grande demais. A mesma correcao foi aplicada nas demais telas com o mesmo limite (avalistas no cadastro e na edicao de cliente, PIX e Intencoes). Na Central de Relatorios o pedido excedia o limite e retornava erro, de modo que o seletor de cliente do extrato nunca listava ninguem; tambem corrigido. | |
+| Cadastro de cliente com avalista era recusado | O cadastro e a edicao de cliente falhavam sempre que um avalista era preenchido: o sistema recusava a gravacao e devolvia erro, campo a campo do avalista. A conversao dos dados do avalista, enviados junto com as fotos e documentos, perdia as regras de validacao no caminho, e a checagem de seguranca do sistema entao rejeitava todo campo que nao reconhecia. Corrigido nos dois fluxos (cadastro novo e edicao), sem afrouxar a validacao: avalista incompleto ou com campo indevido continua sendo recusado. | |
 
 ## Ambiente de homologacao
 
@@ -66,6 +68,11 @@ Parcelas) nao foram repetidos aqui.
 ## Validacao
 
 - Alteracoes de backend e frontend submetidas a verificacao de tipos e compilacao.
+- Busca de cliente conferida na base: os 18 cadastros que estavam fora do limite
+  de 500 sao alcancados por nome (em qualquer caixa) e por CPF, com ou sem pontuacao.
+- Cadastro com avalista conferido na propria rotina de validacao do sistema, nos dois
+  fluxos (novo e edicao) e tambem nos casos que devem falhar (avalista sem nome e
+  campo indevido), que continuam sendo recusados.
 - Correcao de encargos conferida comparando o valor exibido na tela com o valor
   aceito pelo servidor, na mesma data de pagamento.
 - Acesso de consultor testado ponta a ponta apos a correcao, inclusive no cenario
