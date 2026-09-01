@@ -13,7 +13,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { AvalistaDto } from './avalista.dto';
+import { AvalistaDto, paraAvalistas } from './avalista.dto';
 
 function stripNonDigits(value: unknown): unknown {
   if (typeof value === 'string') return value.replace(/\D/g, '');
@@ -99,16 +99,7 @@ export class UpdateClientDto {
   consultorId?: number | null;
 
   @IsOptional()
-  @Transform(({ value }) => {
-    if (typeof value === 'string') {
-      try {
-        return JSON.parse(value);
-      } catch {
-        return value;
-      }
-    }
-    return value;
-  })
+  @Transform(({ value }) => paraAvalistas(value))
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AvalistaDto)
