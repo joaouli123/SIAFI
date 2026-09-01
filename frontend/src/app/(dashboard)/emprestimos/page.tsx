@@ -653,6 +653,8 @@ export default function EmprestimosPage() {
   const { user } = useAuth()
   const [searchInput, setSearchInput] = useState('')
   const [status, setStatus] = useState('')
+  const [inicioDe, setInicioDe] = useState('')
+  const [inicioAte, setInicioAte] = useState('')
   const [page, setPage] = useState(1)
   const [selectedLoanId, setSelectedLoanId] = useState<number | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -660,7 +662,7 @@ export default function EmprestimosPage() {
 
   const search = useDebounce(searchInput, 400)
 
-  useEffect(() => { setPage(1) }, [search, status])
+  useEffect(() => { setPage(1) }, [search, status, inicioDe, inicioAte])
 
   const { data: stats } = useQuery({
     queryKey: ['loans-stats'],
@@ -668,10 +670,17 @@ export default function EmprestimosPage() {
   })
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['loans', { search, status, page }],
+    queryKey: ['loans', { search, status, inicioDe, inicioAte, page }],
     queryFn: () =>
       api.get<LoansResponse>('/loans', {
-        params: { search: search || undefined, status: status || undefined, page, limit: 20 },
+        params: {
+          search: search || undefined,
+          status: status || undefined,
+          inicioDe: inicioDe || undefined,
+          inicioAte: inicioAte || undefined,
+          page,
+          limit: 20,
+        },
       }).then((r) => r.data),
   })
 
@@ -778,6 +787,38 @@ export default function EmprestimosPage() {
             <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
               <RefreshCw className="size-3.5" />Atualizar
             </Button>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 mt-3">
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground" htmlFor="inicio-de">Início do contrato — de</label>
+              <Input
+                id="inicio-de"
+                type="date"
+                value={inicioDe}
+                onChange={(e) => setInicioDe(e.target.value)}
+                className="w-44"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground" htmlFor="inicio-ate">até</label>
+              <Input
+                id="inicio-ate"
+                type="date"
+                value={inicioAte}
+                onChange={(e) => setInicioAte(e.target.value)}
+                className="w-44"
+              />
+            </div>
+            {(inicioDe || inicioAte) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { setInicioDe(''); setInicioAte('') }}
+                className="gap-2"
+              >
+                <X className="size-3.5" />Limpar período
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="p-0">

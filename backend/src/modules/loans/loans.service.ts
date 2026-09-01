@@ -10,7 +10,7 @@ import Decimal from 'decimal.js';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { filtroCliente } from '../../common/busca';
-import { dataDia, dataLocal } from '../../common/data';
+import { dataDia, dataLocal, fimDoDiaUtc, inicioDoDiaUtc } from '../../common/data';
 import { PortalService } from '../client-portal/portal.service';
 import { InstallmentsService } from '../installments/installments.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
@@ -45,13 +45,18 @@ export class LoansService {
   // ─── Queries ────────────────────────────────────────────────────────────────
 
   async findAll(filters: LoanFilterDto, role?: string): Promise<PaginatedResponse<unknown>> {
-    const { page, limit, search, status, clientId } = filters;
+    const { page, limit, search, status, clientId, inicioDe, inicioAte } = filters;
     const skip = (page - 1) * limit;
 
     const where: Prisma.LoanWhereInput = {};
     if (status) where.status = status as LoanStatus;
     if (clientId) where.clientId = clientId;
     if (search) where.client = { OR: filtroCliente(search) };
+    if (inicioDe || inicioAte) {
+      where.dataInicio = {};
+      if (inicioDe) (where.dataInicio as Prisma.DateTimeFilter).gte = inicioDoDiaUtc(inicioDe);
+      if (inicioAte) (where.dataInicio as Prisma.DateTimeFilter).lte = fimDoDiaUtc(inicioAte);
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.loan.findMany({
