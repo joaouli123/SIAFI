@@ -74,8 +74,8 @@ export class ExcelService {
 
     ws.columns = [
       { header: 'Contrato', key: 'id', width: 12 },
-      { header: 'Cliente', key: 'cliente', width: 30 },
       { header: 'CPF', key: 'cpf', width: 16 },
+      { header: 'Cliente', key: 'cliente', width: 30 },
       { header: 'WhatsApp', key: 'whatsapp', width: 16 },
       { header: 'Cidade', key: 'cidade', width: 20 },
       { header: 'Estado', key: 'estado', width: 8 },
@@ -117,8 +117,8 @@ export class ExcelService {
 
       ws.addRow({
         id: l.id,
-        cliente: l.client.nome,
         cpf: CPF(l.client.cpf),
+        cliente: l.client.nome,
         whatsapp: l.client.whatsapp ?? '',
         cidade: l.client.cidade ?? '',
         estado: l.client.estado ?? '',
@@ -317,8 +317,8 @@ export class ExcelService {
 
     const ws = wb.addWorksheet('Inadimplentes');
     ws.columns = [
-      { header: 'Cliente', key: 'cliente', width: 30 },
       { header: 'CPF', key: 'cpf', width: 16 },
+      { header: 'Cliente', key: 'cliente', width: 30 },
       { header: 'WhatsApp', key: 'tel', width: 16 },
       { header: 'Cidade', key: 'cidade', width: 20 },
       { header: 'Contrato', key: 'contrato', width: 12 },
@@ -331,6 +331,9 @@ export class ExcelService {
       { header: 'Total Devido', key: 'total', width: 14 },
     ];
     this.styleHeader(ws);
+    ['valor', 'multa', 'mora', 'total'].forEach((k) => (ws.getColumn(k).numFmt = 'R$ #,##0.00'));
+    ws.getColumn('venc').numFmt = 'dd/mm/yyyy';
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
 
     installments.forEach((inst) => {
       const venc = new Date(inst.dataVencimento);
@@ -340,18 +343,18 @@ export class ExcelService {
       const total = saldo + Number(inst.valorMulta) + Number(inst.valorMora);
 
       ws.addRow({
+        cpf: CPF(inst.loan.client.cpf),
         cliente: inst.loan.client.nome,
-        cpf: inst.loan.client.cpf ?? '',
         tel: inst.loan.client.whatsapp ?? '',
         cidade: inst.loan.client.cidade ?? '',
         contrato: inst.loan.id,
         parcela: inst.numero,
-        venc: DT(inst.dataVencimento),
+        venc: inst.dataVencimento,
         dias,
-        valor: BRL(saldo),
-        multa: BRL(Number(inst.valorMulta)),
-        mora: BRL(Number(inst.valorMora)),
-        total: BRL(total),
+        valor: saldo,
+        multa: Number(inst.valorMulta),
+        mora: Number(inst.valorMora),
+        total,
       });
     });
 
@@ -429,26 +432,31 @@ export class ExcelService {
       { header: 'Observacao', key: 'obs', width: 40 },
     ];
     this.styleHeader(ws);
+    ['valor', 'desconto', 'capital', 'lucro', 'comissao', 'comissaoAdm', 'lucroEmpresa'].forEach(
+      (k) => (ws.getColumn(k).numFmt = 'R$ #,##0.00'),
+    );
+    ws.getColumn('data').numFmt = 'dd/mm/yyyy';
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
 
     for (const p of resultado.data) {
       ws.addRow({
-        data: DT(p.dataPagamento),
-        cpf: p.installment.loan.client.cpf ?? '',
+        data: p.dataPagamento,
+        cpf: CPF(p.installment.loan.client.cpf),
         cliente: p.installment.loan.client.nome,
         consultor: p.installment.loan.client.consultor?.nome ?? '',
         contrato: p.installment.loan.id,
         parcela: p.installment.numero,
-        valor: BRL(p.valorPago as number),
-        desconto: BRL(p.desconto as number),
+        valor: Number(p.valorPago),
+        desconto: Number(p.desconto),
         metodo: p.metodoPagamento,
         conta: p.contaDestino ?? '',
         ...(verSplit && p.split
           ? {
-              capital: BRL(p.split.capital),
-              lucro: BRL(p.split.lucro),
-              comissao: BRL(p.split.comissao),
-              comissaoAdm: BRL(p.split.comissaoAdministrador),
-              lucroEmpresa: BRL(p.split.lucroEmpresa),
+              capital: p.split.capital,
+              lucro: p.split.lucro,
+              comissao: p.split.comissao,
+              comissaoAdm: p.split.comissaoAdministrador,
+              lucroEmpresa: p.split.lucroEmpresa,
             }
           : {}),
         situacao: p.estornado ? 'Estornado' : 'Ativo',
@@ -461,15 +469,15 @@ export class ExcelService {
       ws.addRow({});
       const linha = ws.addRow({
         cliente: 'TOTAL DO PERIODO (baixas ativas)',
-        valor: BRL(t.recebido),
-        desconto: BRL(t.desconto),
+        valor: t.recebido,
+        desconto: t.desconto,
         ...(verSplit
           ? {
-              capital: BRL(t.capital ?? 0),
-              lucro: BRL(t.lucro ?? 0),
-              comissao: BRL(t.comissao ?? 0),
-              comissaoAdm: BRL(t.comissaoAdministrador ?? 0),
-              lucroEmpresa: BRL(t.lucroEmpresa ?? 0),
+              capital: t.capital ?? 0,
+              lucro: t.lucro ?? 0,
+              comissao: t.comissao ?? 0,
+              comissaoAdm: t.comissaoAdministrador ?? 0,
+              lucroEmpresa: t.lucroEmpresa ?? 0,
             }
           : {}),
       });
