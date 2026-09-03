@@ -235,7 +235,12 @@ export class ExcelService {
 
   async exportarInadimplentes(
     res: Response,
-    filtro: { search?: string; startDate?: string; endDate?: string } = {},
+    filtro: {
+      search?: string;
+      startDate?: string;
+      endDate?: string;
+      consultorId?: number;
+    } = {},
   ): Promise<void> {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -243,6 +248,10 @@ export class ExcelService {
     // Mesmos filtros da tela /inadimplentes: a planilha e a conferencia do que
     // esta na frente do operador, nao a carteira inteira toda vez.
     const where: Prisma.InstallmentWhereInput = { status: 'atrasado' };
+    // Busca e consultor caem os dois em where.loan; montar separado evita que o
+    // segundo apague o primeiro quando o operador usa os dois ao mesmo tempo.
+    const loanWhere: Prisma.LoanWhereInput = {};
+    if (filtro.consultorId) loanWhere.client = { consultorId: filtro.consultorId };
     const busca = filtro.search?.trim();
     if (busca) {
       // A tela compara o termo com nome/CPF/telefone ja normalizados no navegador.
@@ -267,8 +276,9 @@ export class ExcelService {
                 (c.whatsapp ?? '').replace(/\D/g, '').includes(digitos))),
         )
         .map((c) => c.id);
-      where.loan = { clientId: { in: ids } };
+      loanWhere.clientId = { in: ids };
     }
+    if (Object.keys(loanWhere).length) where.loan = loanWhere;
     if (filtro.startDate || filtro.endDate) {
       // A tela lista CONTRATOS e conta o atraso pelo vencimento em aberto mais antigo.
       // Filtrar parcela a parcela responde outra pergunta: no 1o semestre de 2026 a tela
@@ -304,7 +314,14 @@ export class ExcelService {
         loan: {
           include: {
             client: {
-              select: { nome: true, cpf: true, whatsapp: true, cidade: true, estado: true },
+              select: {
+                nome: true,
+                cpf: true,
+                whatsapp: true,
+                cidade: true,
+                estado: true,
+                consultor: { select: { nome: true } },
+              },
             },
           },
         },
@@ -321,6 +338,7 @@ export class ExcelService {
       { header: 'Cliente', key: 'cliente', width: 30 },
       { header: 'WhatsApp', key: 'tel', width: 16 },
       { header: 'Cidade', key: 'cidade', width: 20 },
+      { header: 'Consultor', key: 'consultor', width: 24 },
       { header: 'Contrato', key: 'contrato', width: 12 },
       { header: 'Parcela', key: 'parcela', width: 10 },
       { header: 'Vencimento', key: 'venc', width: 14 },
@@ -347,6 +365,7 @@ export class ExcelService {
         cliente: inst.loan.client.nome,
         tel: inst.loan.client.whatsapp ?? '',
         cidade: inst.loan.client.cidade ?? '',
+        consultor: inst.loan.client.consultor?.nome ?? '',
         contrato: inst.loan.id,
         parcela: inst.numero,
         venc: inst.dataVencimento,
@@ -485,6 +504,84 @@ export class ExcelService {
     }
 
     this.sendWorkbook(wb, res, `recebimentos-${Date.now()}.xlsx`);
+  }
+
+  // ─── Relação de Clientes (mesma consulta da tela, sem paginação) ──────────
+
+  /**
+   * O filtro tem que ser o MESMO de ClientsService.findAll — a planilha serve para
+   * imprimir a carteira de UM consultor, e exportar a base inteira depois de filtrar
+   * na tela obrigaria a refiltrar tudo de novo do outro lado.
+   */
+  async exportarClientes(
+    filtros: { search?: string; status?: string; consultorId?: number },
+    res: Response,
+  ): Promise<void> {
+    const where: Prisma.ClientWhereInput = {};
+    if (filtros.consultorId) where.consultorId = filtros.consultorId;
+    if (filtros.status === 'active') where.active = true;
+    else if (filtros.status === 'inactive') where.active = false;
+    if (filtros.search?.trim()) where.OR = filtroCliente(filtros.search.trim());
+
+    const clientes = await this.prisma.client.findMany({
+      where,
+      orderBy: { nome: 'asc' },
+      include: {
+        consultor: { select: { nome: true } },
+        _count: { select: { loans: { where: { status: { not: 'cancelado' } } } } },
+      },
+    });
+
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'SIAFI — Lidera';
+    wb.created = new Date();
+
+    const ws = wb.addWorksheet('Clientes');
+    ws.columns = [
+      { header: 'CPF', key: 'cpf', width: 16 },
+      { header: 'Cliente', key: 'nome', width: 32 },
+      { header: 'WhatsApp', key: 'whatsapp', width: 16 },
+      { header: 'E-mail', key: 'email', width: 28 },
+      { header: 'Cidade', key: 'cidade', width: 20 },
+      { header: 'UF', key: 'estado', width: 6 },
+      { header: 'Consultor', key: 'consultor', width: 24 },
+      { header: 'Contratos', key: 'contratos', width: 11 },
+      { header: 'Cadastro', key: 'cadastro', width: 14 },
+      { header: 'Portal', key: 'portal', width: 12 },
+      { header: 'Status', key: 'status', width: 10 },
+    ];
+    this.styleHeader(ws);
+    ws.getColumn('cadastro').numFmt = 'dd/mm/yyyy';
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+    clientes.forEach((c) => {
+      ws.addRow({
+        cpf: CPF(c.cpf),
+        nome: c.nome,
+        whatsapp: c.whatsapp ?? '',
+        email: c.email ?? '',
+        cidade: c.cidade ?? '',
+        estado: c.estado ?? '',
+        consultor: c.consultor?.nome ?? 'Sem consultor',
+        contratos: c._count.loans,
+        cadastro: c.createdAt,
+        portal: c.portalAtivo ? 'Ativo' : c.supabaseId ? 'Desativado' : 'Sem acesso',
+        status: c.active ? 'Ativo' : 'Inativo',
+      });
+    });
+
+    ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: ws.rowCount, column: ws.columnCount } };
+
+    if (clientes.length) {
+      ws.addRow({});
+      const total = ws.addRow({
+        nome: `TOTAL — ${clientes.length} cliente(s)`,
+        contratos: clientes.reduce((s, c) => s + c._count.loans, 0),
+      });
+      total.font = { bold: true };
+    }
+
+    this.sendWorkbook(wb, res, `clientes-${Date.now()}.xlsx`);
   }
 
   // ─── Helper ───────────────────────────────────────────────────────────────

@@ -86,6 +86,26 @@ export class PdfController {
     await this.excelService.exportarContratos({ status, search, inicioDe, inicioAte }, res);
   }
 
+  @Get('clientes/excel')
+  @Roles('admin', 'financeiro', 'consultor')
+  async clientesExcel(
+    @Query('search') search: string | undefined,
+    @Query('status') status: string | undefined,
+    @Query('consultorId') consultorId: string | undefined,
+    @CurrentUser() user: { id?: number; role?: string },
+    @Res() res: Response,
+  ) {
+    // Consultor exporta só a própria carteira; o filtro da tela é para admin/financeiro.
+    const filtro = Number(consultorId);
+    const escopo =
+      user?.role === 'consultor'
+        ? user.id
+        : Number.isFinite(filtro) && filtro > 0
+          ? filtro
+          : undefined;
+    await this.excelService.exportarClientes({ search, status, consultorId: escopo }, res);
+  }
+
   @Get('movimentacao/excel')
   @Roles('admin', 'financeiro')
   async movimentacaoExcel(
@@ -102,9 +122,16 @@ export class PdfController {
     @Query('search') search: string | undefined,
     @Query('startDate') startDate: string | undefined,
     @Query('endDate') endDate: string | undefined,
+    @Query('consultorId') consultorId: string | undefined,
     @Res() res: Response,
   ) {
-    await this.excelService.exportarInadimplentes(res, { search, startDate, endDate });
+    const filtro = Number(consultorId);
+    await this.excelService.exportarInadimplentes(res, {
+      search,
+      startDate,
+      endDate,
+      consultorId: Number.isFinite(filtro) && filtro > 0 ? filtro : undefined,
+    });
   }
 
   @Get('pagamentos/excel')

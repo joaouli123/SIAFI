@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
-import { Plus, Search, RefreshCw, Eye, Pencil, Trash2, Users, UserCheck, X, StickyNote } from 'lucide-react'
+import { Plus, Search, RefreshCw, Eye, Pencil, Trash2, Users, UserCheck, X, StickyNote, FileDown } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
-import { formatCPF, formatPhone, formatDate } from '@/lib/utils'
+import { formatCPF, formatPhone, formatDate, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 
@@ -82,12 +82,15 @@ export default function ClientesPage() {
   const [page, setPage] = useState(1)
   const [vincularClient, setVincularClient] = useState<Client | null>(null)
   const [selectedConsultorId, setSelectedConsultorId] = useState<string>('')
+  const [baixando, setBaixando] = useState(false)
   const qc = useQueryClient()
 
   const search = useDebounce(searchInput, 400)
   useEffect(() => { setPage(1) }, [search, status, consultorFilter])
 
   const canManage = user?.role === 'admin' || user?.role === 'financeiro'
+  // Caixa nao tem a rota de exportacao (403); consultor exporta a propria carteira.
+  const canExport = user?.role !== 'caixa'
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['clients', { search, status, consultorFilter, page }],
@@ -129,6 +132,37 @@ export default function ClientesPage() {
     },
     onError: () => toast.error('Não foi possível vincular o consultor. Tente novamente.'),
   })
+
+  const baixarExcel = async () => {
+    // A planilha sai com os mesmos filtros da tela — e o caso de uso e justamente
+    // filtrar um consultor e imprimir a lista de clientes dele.
+    setBaixando(true)
+    try {
+      const res = await api.get('/export/clientes/excel', {
+        params: {
+          search: search || undefined,
+          status: status || undefined,
+          consultorId: consultorFilter || undefined,
+        },
+        responseType: 'blob',
+      })
+      const nomeConsultor = consultores?.find((c) => String(c.id) === consultorFilter)?.nome
+      const sufixo = nomeConsultor ? `-${nomeConsultor.replace(/\s+/g, '-').toLowerCase()}` : ''
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(
+        new Blob([res.data as BlobPart], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        }),
+      )
+      a.download = `clientes${sufixo}-${hojeISODate()}.xlsx`
+      a.click()
+      URL.revokeObjectURL(a.href)
+    } catch {
+      toast.error('Nao foi possivel gerar a planilha. Tente novamente.')
+    } finally {
+      setBaixando(false)
+    }
+  }
 
   function handleDelete(id: number, nome: string) {
     if (confirm(`Desativar cliente "${nome}"?`)) deleteMut.mutate(id)
@@ -178,6 +212,18 @@ export default function ClientesPage() {
                   <option key={c.id} value={String(c.id)}>{c.nome}</option>
                 ))}
               </Select>
+            )}
+            {canExport && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={baixarExcel}
+                disabled={baixando || !data?.total}
+                className="gap-2"
+                title="Gerar planilha da lista de clientes (respeita os filtros da tela)"
+              >
+                <FileDown className="size-3.5" />{baixando ? 'Gerando...' : 'Excel'}
+              </Button>
             )}
             <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
               <RefreshCw className="size-3.5" />Atualizar

@@ -34,9 +34,19 @@ interface Installment {
   loan: { id: number; client: { id: number; nome: string; cpf?: string | null; consultor?: { id: number; nome: string } | null }; consultor?: { id: number; nome: string } | null }
 }
 
+interface TotaisParcelas {
+  quantidade: number
+  capital: number
+  valor: number
+  pago: number
+  saldo: number
+  encargos: number
+}
+
 interface PaginatedInstallments {
   data: Installment[]
   meta: { total: number; page: number; limit: number; lastPage: number }
+  totais?: TotaisParcelas
 }
 
 export default function ParcelasPage() {
@@ -92,6 +102,10 @@ export default function ParcelasPage() {
 
   const activeData = pagedResp?.data
   const meta = pagedResp?.meta
+  // Os totais vem do backend somando o FILTRO INTEIRO. Somar so as 50 linhas da pagina
+  // dava um total do capital e das parcelas que mudava a cada pagina e nao fechava com
+  // a carteira; a soma local so entra como fallback se o backend nao mandar totais.
+  const totais = pagedResp?.totais
 
   const hojeD = useMemo(() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d }, [])
 
@@ -130,6 +144,12 @@ export default function ParcelasPage() {
   }, 0) ?? 0
 
   const totalEncargos = activeData?.reduce((s, i) => s + toNumber(i.moraAcumulada) + toNumber(i.multaAplicada), 0) ?? 0
+
+  const fCapital  = totais?.capital  ?? totalCapital
+  const fValor    = totais?.valor    ?? totalValor
+  const fPago     = totais?.pago     ?? totalPago
+  const fSaldo    = totais?.saldo    ?? totalSaldo
+  const fEncargos = totais?.encargos ?? totalEncargos
 
   return (
     <div className="space-y-6">
@@ -326,18 +346,19 @@ export default function ParcelasPage() {
                 <tfoot>
                   <tr className="bg-muted/40 border-t font-medium text-sm">
                     <td colSpan={5} className="px-4 py-2.5 text-xs text-muted-foreground">
-                      {meta ? `${meta.total} no total${meta.lastPage > 1 ? ' · somas desta página' : ''}` : `${activeData.length} parcela${activeData.length !== 1 ? 's' : ''}`}
+                      {`TOTAL — ${(totais?.quantidade ?? meta?.total ?? activeData.length).toLocaleString('pt-BR')} parcela${(totais?.quantidade ?? meta?.total ?? activeData.length) !== 1 ? 's' : ''}`}
+                      <span className="ml-1 opacity-70">{totais ? '(filtro completo)' : '(esta página)'}</span>
                     </td>
                     {showSplit && (
-                      <td className="px-4 py-2.5 text-right text-xs hidden lg:table-cell">{formatCurrency(totalCapital)}</td>
+                      <td className="px-4 py-2.5 text-right text-xs hidden lg:table-cell">{formatCurrency(fCapital)}</td>
                     )}
-                    <td className="px-4 py-2.5 text-right text-xs">{formatCurrency(totalValor)}</td>
+                    <td className="px-4 py-2.5 text-right text-xs">{formatCurrency(fValor)}</td>
                     {showSplit && (
-                      <td className="px-4 py-2.5 text-right text-xs text-green-600 hidden lg:table-cell">{formatCurrency(totalPago)}</td>
+                      <td className="px-4 py-2.5 text-right text-xs text-green-600 hidden lg:table-cell">{formatCurrency(fPago)}</td>
                     )}
-                    <td className="px-4 py-2.5 text-right text-xs text-destructive">{formatCurrency(totalSaldo)}</td>
+                    <td className="px-4 py-2.5 text-right text-xs text-destructive">{formatCurrency(fSaldo)}</td>
                     <td className="px-4 py-2.5 text-right text-xs text-orange-600 hidden md:table-cell">
-                      {totalEncargos > 0 ? formatCurrency(totalEncargos) : '—'}
+                      {fEncargos > 0 ? formatCurrency(fEncargos) : '—'}
                     </td>
                     <td className="hidden md:table-cell" />
                     <td className="hidden xl:table-cell" />
@@ -346,6 +367,40 @@ export default function ParcelasPage() {
                   </tr>
                 </tfoot>
               </table>
+            </div>
+
+            {/* Resumo do filtro: as colunas Capital e Pago somem abaixo de lg, e era
+                justamente o total do capital que o operador precisava enxergar. */}
+            <div className="border-t border-border bg-muted/30 px-4 py-3 flex flex-wrap gap-x-8 gap-y-3">
+              {showSplit && (
+                <div>
+                  <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">Total do capital</span>
+                  <span className="font-semibold">{formatCurrency(fCapital)}</span>
+                </div>
+              )}
+              <div>
+                <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">Total das parcelas</span>
+                <span className="font-semibold">{formatCurrency(fValor)}</span>
+              </div>
+              {showSplit && (
+                <div>
+                  <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">Total pago</span>
+                  <span className="font-semibold text-green-600">{formatCurrency(fPago)}</span>
+                </div>
+              )}
+              <div>
+                <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">Saldo em aberto</span>
+                <span className="font-semibold text-destructive">{formatCurrency(fSaldo)}</span>
+              </div>
+              <div>
+                <span className="block text-[11px] uppercase tracking-wide text-muted-foreground">Juros e multa</span>
+                <span className="font-semibold text-orange-600">{fEncargos > 0 ? formatCurrency(fEncargos) : '—'}</span>
+              </div>
+              <div className="ml-auto self-end text-xs text-muted-foreground">
+                {totais
+                  ? `${totais.quantidade.toLocaleString('pt-BR')} parcela${totais.quantidade !== 1 ? 's' : ''} no filtro`
+                  : `${activeData.length} parcela${activeData.length !== 1 ? 's' : ''} nesta página`}
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -16,6 +16,18 @@ import {
   remainingCapital,
 } from '../../common/commission';
 
+/** Somas do filtro inteiro exibidas no rodapé de /parcelas. */
+export interface TotaisParcelas {
+  quantidade: number;
+  capital: number;
+  valor: number;
+  pago: number;
+  saldo: number;
+  encargos: number;
+}
+
+const round2 = (v: number) => Math.round(v * 100) / 100;
+
 @Injectable()
 export class InstallmentsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -31,7 +43,7 @@ export class InstallmentsService {
     filters: InstallmentFilterDto,
     consultorId?: number,
     role?: string,
-  ): Promise<PaginatedResponse<unknown>> {
+  ): Promise<PaginatedResponse<unknown> & { totais: TotaisParcelas }> {
     const { status, clientId, loanId, consultorId: filterConsultorId, search, startDate, endDate, aberto, comObservacao, page, limit } = filters;
     const skip = (page - 1) * limit;
 
@@ -63,7 +75,7 @@ export class InstallmentsService {
     if (Object.keys(clientWhere).length) loanWhere.client = clientWhere;
     if (Object.keys(loanWhere).length) where.loan = loanWhere;
 
-    const [data, total] = await Promise.all([
+    const [data, total, totais] = await Promise.all([
       this.prisma.installment.findMany({
         where,
         skip,
@@ -84,6 +96,7 @@ export class InstallmentsService {
         },
       }),
       this.prisma.installment.count({ where }),
+      this.calcTotais(where),
     ]);
 
     const { multaDefault, moraDiaDefault } = await this.getTaxasDefault();
@@ -101,7 +114,63 @@ export class InstallmentsService {
       }, role);
     });
 
-    return paginate(mappedData, total, page, limit);
+    return { ...paginate(mappedData, total, page, limit), totais };
+  }
+
+  /**
+   * Somas de TODO o filtro, não só da página. O rodapé da tela somava apenas as 50 linhas
+   * visíveis: o total do capital e o das parcelas mudavam a cada página e não fechavam com
+   * a carteira, então não serviam para conferência.
+   */
+  private async calcTotais(where: Prisma.InstallmentWhereInput): Promise<TotaisParcelas> {
+    const [rows, { multaDefault, moraDiaDefault }] = await Promise.all([
+      this.prisma.installment.findMany({
+        where,
+        select: {
+          status: true,
+          installmentAmount: true,
+          principalPayback: true,
+          totalPago: true,
+          saldoDevedor: true,
+          dataVencimento: true,
+          payments: InstallmentsService.BAIXAS_PARCELA,
+          loan: { select: { multaPercentual: true, moraDiariaPercentual: true } },
+        },
+      }),
+      this.getTaxasDefault(),
+    ]);
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const t = { quantidade: rows.length, capital: 0, valor: 0, pago: 0, saldo: 0, encargos: 0 };
+
+    for (const inst of rows as any[]) {
+      const enc = this.calcEncargos(inst, multaDefault, moraDiaDefault, hoje);
+      const venc = new Date(inst.dataVencimento);
+      venc.setHours(0, 0, 0, 0);
+
+      const face = Number(inst.installmentAmount);
+      const pago = Number(inst.totalPago);
+      const saldo = inst.status === 'pago' || inst.status === 'cancelado' ? 0 : enc.saldo;
+      const atrasada = inst.status === 'atrasado' || (saldo > 0 && venc < hoje);
+      const encargos = atrasada ? enc.valorMulta + enc.valorMora : 0;
+
+      t.capital += this.getRemainingCapital(inst);
+      t.pago += pago;
+      t.saldo += saldo + encargos;
+      t.encargos += encargos;
+      t.valor += inst.status === 'cancelado' ? face : Math.max(face, pago + saldo + encargos);
+    }
+
+    return {
+      quantidade: t.quantidade,
+      capital: round2(t.capital),
+      valor: round2(t.valor),
+      pago: round2(t.pago),
+      saldo: round2(t.saldo),
+      encargos: round2(t.encargos),
+    };
   }
 
   async findByLoan(loanId: number): Promise<unknown[]> {

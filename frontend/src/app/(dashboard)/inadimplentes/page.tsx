@@ -9,14 +9,17 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { ClienteCombobox } from '@/components/ui/cliente-combobox'
 import { useMemo, useState } from 'react'
 import { formatCurrency, formatDateLocal, formatCPF, formatPhone, hojeISODate } from '@/lib/utils'
+import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 
 interface Loan {
   id: number; valor: number; numeroParcelas: number; dataInicio: string; status: string
   observacoes?: string | null
-  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null; quantidadeEmprestimos?: number }
+  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null; quantidadeEmprestimos?: number; consultor?: { id: number; nome: string } | null }
+  consultor?: { id: number; nome: string } | null
   installments: Array<{ id: number; installmentAmount: number; totalPago: number; dataVencimento: string; status: string; moraAcumulada?: number; multaAplicada?: number }>
 }
 
@@ -53,15 +56,32 @@ function HoverObsPopover({ obs, title = 'Observações' }: { obs: string; title?
 }
 
 export default function InadimplentesPage() {
-  const { data: installmentsData, isLoading, isError, refetch } = useQuery({
-    queryKey: ['installments', 'overdue'],
-    queryFn: () => api.get<any>('/installments/overdue').then((r) => r.data),
-  })
+  const { user } = useAuth()
+  const podeFiltrarConsultor = user?.role === 'admin' || user?.role === 'financeiro'
 
   const [fSearch, setFSearch] = useState('')
   const [fStart, setFStart] = useState('')
   const [fEnd, setFEnd] = useState('')
-  const temFiltro = !!(fSearch.trim() || fStart || fEnd)
+  const [fConsultor, setFConsultor] = useState('')
+  const temFiltro = !!(fSearch.trim() || fStart || fEnd || fConsultor)
+
+  // O consultor vai no servidor (o backend ja filtra a carteira por client.consultorId);
+  // nome, CPF e periodo continuam no cliente, sobre a lista ja recortada.
+  const { data: installmentsData, isLoading, isError, refetch } = useQuery({
+    queryKey: ['installments', 'overdue', fConsultor],
+    queryFn: () =>
+      api
+        .get<any>('/installments/overdue', {
+          params: { consultorId: fConsultor || undefined },
+        })
+        .then((r) => r.data),
+  })
+
+  const { data: consultores } = useQuery<{ id: number; nome: string }[]>({
+    queryKey: ['clients-consultores'],
+    queryFn: () => api.get<{ id: number; nome: string }[]>('/clients/consultores').then((r) => r.data),
+    enabled: podeFiltrarConsultor,
+  })
 
   // Saldo devedor em atraso = saldo (installmentAmount - pago) + encargos (multa + mora),
   // idêntico ao exibido em /parcelas.
@@ -91,6 +111,7 @@ export default function InadimplentesPage() {
             status: inst.loan.status,
             observacoes: inst.loan.observacoes,
             client: inst.loan.client || { id: 0, nome: 'Cliente Desconhecido', cpf: '', whatsapp: '' },
+            consultor: inst.loan.client?.consultor ?? inst.loan.consultor ?? null,
             installments: [],
           })
         }
@@ -146,7 +167,7 @@ export default function InadimplentesPage() {
   const totalEmAtraso = linhasFiltradas.reduce((s, l) => s + l.saldo, 0)
   const clientesUnicos = new Set(linhasFiltradas.map((l) => l.loan.client?.id)).size
 
-  const limparFiltros = () => { setFSearch(''); setFStart(''); setFEnd('') }
+  const limparFiltros = () => { setFSearch(''); setFStart(''); setFEnd(''); setFConsultor('') }
 
   const baixarExcel = async () => {
     // A planilha sai com os mesmos filtros da tela: exportar a carteira inteira
@@ -156,6 +177,7 @@ export default function InadimplentesPage() {
         search: fSearch.trim() || undefined,
         startDate: fStart || undefined,
         endDate: fEnd || undefined,
+        consultorId: fConsultor || undefined,
       },
       responseType: 'blob',
     })
@@ -204,6 +226,19 @@ export default function InadimplentesPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+              {podeFiltrarConsultor && (
+                <div className="w-full sm:w-[240px]">
+                  <ClienteCombobox
+                    clientes={consultores ?? []}
+                    value={fConsultor ? Number(fConsultor) : null}
+                    onSelect={(c) => setFConsultor(c ? String(c.id) : '')}
+                    placeholder="Consultor..."
+                    avulsoLabel="Todos os consultores"
+                    vazioLabel="Nenhum consultor encontrado."
+                  />
+                </div>
+              )}
+
               <div className="flex items-center gap-1.5 bg-background rounded-lg border px-2 h-9">
                 <span className="text-xs text-muted-foreground whitespace-nowrap">Atraso:</span>
                 <Input type="date" value={fStart} onChange={(e) => setFStart(e.target.value)} className="w-[125px] h-7 border-0 p-1 bg-transparent text-sm shadow-none focus-visible:ring-0" />
@@ -258,6 +293,7 @@ export default function InadimplentesPage() {
                     <th className="px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground">Atraso</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo Devedor</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground">Obs</th>
@@ -286,6 +322,7 @@ export default function InadimplentesPage() {
                           </div>
                         </td>
                         <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.client?.whatsapp ? formatPhone(loan.client.whatsapp) : '—'}</td>
+                        <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{loan.consultor?.nome ?? '—'}</td>
                         <td className="px-4 py-3">
                           {maisAntiga ? (
                             <div className="flex items-center gap-2">
