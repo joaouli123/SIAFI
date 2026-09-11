@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Cookie, X } from 'lucide-react'
 
@@ -8,12 +8,28 @@ const STORAGE_KEY = 'siafi_cookie_consent'
 
 export function CookieBanner() {
   const [visible, setVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     try {
       if (!localStorage.getItem(STORAGE_KEY)) setVisible(true)
     } catch {}
   }, [])
+
+  // O banner e fixo no rodape e cobria o fim das telas — inclusive o botao Salvar dos
+  // formularios, que ficava inclicavel ate alguem clicar em Entendi. A altura dele vira
+  // --cookie-banner-h, que o body e o layout do painel descontam.
+  useEffect(() => {
+    const el = ref.current
+    if (!visible || !el) return
+    const root = document.documentElement
+    const ro = new ResizeObserver(() => root.style.setProperty('--cookie-banner-h', `${el.offsetHeight}px`))
+    ro.observe(el)
+    return () => {
+      ro.disconnect()
+      root.style.removeProperty('--cookie-banner-h')
+    }
+  }, [visible])
 
   function handleAccept() {
     try {
@@ -29,6 +45,7 @@ export function CookieBanner() {
 
   return (
     <div
+      ref={ref}
       role="dialog"
       aria-label="Aviso sobre cookies"
       className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white dark:bg-zinc-900 shadow-lg"

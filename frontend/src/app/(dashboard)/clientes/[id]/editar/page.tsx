@@ -244,7 +244,9 @@ export default function EditarClientePage() {
             <div className="space-y-1.5"><Label>Telefone</Label><Input {...register('telefone')} /></div>
             <div className="space-y-1.5">
               <Label>Status</Label>
-              <Select {...register('active', { setValueAs: (v) => v === 'true' })}>
+              {/* O reset passa o boolean true por aqui e o select passa a string 'true';
+                  so com v === 'true' todo salvar gravava o cliente como Inativo. */}
+              <Select {...register('active', { setValueAs: (v) => v === true || v === 'true' })}>
                 <option value="true">Ativo</option>
                 <option value="false">Inativo</option>
               </Select>

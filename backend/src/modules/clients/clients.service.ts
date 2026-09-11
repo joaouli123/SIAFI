@@ -155,12 +155,13 @@ export class ClientsService {
       data.meusAvalistas = {
         create: dto.avalistas.map(a => ({
           nome: a.nome,
-          cpf: a.cpf ?? null,
-          telefone: a.telefone ?? null,
-          email: a.email ?? null,
-          endereco: a.endereco ?? null,
-          parentesco: a.parentesco ?? null,
-          clienteVinculadoId: a.clienteId ?? null,
+          // || e nao ??: campo deixado em branco na tela chega como '' e deve gravar null
+          cpf: a.cpf || null,
+          telefone: a.telefone || null,
+          email: a.email || null,
+          endereco: a.endereco || null,
+          parentesco: a.parentesco || null,
+          clienteVinculadoId: a.clienteId || null,
         }))
       };
     }
@@ -227,12 +228,13 @@ export class ClientsService {
         deleteMany: {},
         create: dto.avalistas.map(a => ({
           nome: a.nome,
-          cpf: a.cpf ?? null,
-          telefone: a.telefone ?? null,
-          email: a.email ?? null,
-          endereco: a.endereco ?? null,
-          parentesco: a.parentesco ?? null,
-          clienteVinculadoId: a.clienteId ?? null,
+          // || e nao ??: campo deixado em branco na tela chega como '' e deve gravar null
+          cpf: a.cpf || null,
+          telefone: a.telefone || null,
+          email: a.email || null,
+          endereco: a.endereco || null,
+          parentesco: a.parentesco || null,
+          clienteVinculadoId: a.clienteId || null,
         }))
       };
     }

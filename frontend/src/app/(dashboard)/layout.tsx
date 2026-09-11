@@ -85,7 +85,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <TemaProvider>
-      <div className="flex h-screen overflow-hidden bg-background">
+      <div className="flex overflow-hidden bg-background" style={{ height: 'calc(100vh - var(--cookie-banner-h, 0px))' }}>
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex flex-1 flex-col min-w-0">
           <Topbar onMenuToggle={() => setSidebarOpen((v) => !v)} />

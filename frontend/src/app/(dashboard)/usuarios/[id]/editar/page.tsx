@@ -97,7 +97,9 @@ export default function EditarUsuarioPage() {
             </div>
             <div className="space-y-1.5">
               <Label>Status</Label>
-              <Select {...register('active', { setValueAs: (v) => v === 'true' })}>
+              {/* O reset passa o boolean true por aqui e o select passa a string 'true';
+                  so com v === 'true' todo salvar desativava (e bloqueava) o usuario. */}
+              <Select {...register('active', { setValueAs: (v) => v === true || v === 'true' })}>
                 <option value="true">Ativo</option>
                 <option value="false">Inativo</option>
               </Select>

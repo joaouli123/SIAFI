@@ -140,6 +140,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* altura do aviso de cookies enquanto ele esta aberto (ver cookie-banner.tsx) */
+    padding-bottom: var(--cookie-banner-h, 0px);
   }
   html {
     @apply font-sans scroll-smooth;
