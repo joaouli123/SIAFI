@@ -14,6 +14,7 @@ import {
   UnauthorizedException,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -31,6 +32,15 @@ interface CurrentUserPayload {
   supabaseId: string;
   username: string;
   role: string;
+  tipo?: string;
+}
+
+// O id de um cliente é da tabela clients; usado nas rotas de operador ele aponta
+// para outro registro de users (quem tiver o mesmo número).
+function recusarCliente(user: CurrentUserPayload): void {
+  if (user.role === 'cliente' || user.tipo === 'cliente') {
+    throw new ForbiddenException('Sessão de cliente: use o Portal do Cliente');
+  }
 }
 
 @Controller('auth')
@@ -124,6 +134,7 @@ export class AuthController {
   @UseGuards(MeGuard)
   @Get('me')
   async me(@CurrentUser() user: CurrentUserPayload) {
+    recusarCliente(user);
     const full = await this.usersService.findById(user.id);
     if (!full) throw new NotFoundException('Usuário não encontrado');
     const aal = (user as any).aal ?? 'aal1';
@@ -165,6 +176,7 @@ export class AuthController {
     @Body() body: { novaSenha?: string },
     @Req() req: Request,
   ) {
+    recusarCliente(user);
     if (!body?.novaSenha || body.novaSenha.length < 8) {
       throw new BadRequestException('Senha inválida');
     }

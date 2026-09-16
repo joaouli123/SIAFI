@@ -41,7 +41,7 @@ function getRedirectParam(): string | null {
 }
 
 export default function LoginPage() {
-  const { login, loginWithGoogle, isAuthenticated, isLoading, user } = useAuth()
+  const { login, loginWithGoogle, isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -56,10 +56,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      const redirect = getRedirectParam()
-      router.replace(user?.role === 'cliente' ? (redirect ?? '/portal') : (redirect ?? '/dashboard'))
+      router.replace(getRedirectParam() ?? '/dashboard')
     }
-  }, [isAuthenticated, isLoading, user, router])
+  }, [isAuthenticated, isLoading, router])
 
   const {
     register,
@@ -74,12 +73,13 @@ export default function LoginPage() {
     try {
       const result = await login(data)
       const redirect = getRedirectParam()
-      if (result.needsMfa) {
+      if (result.role === 'cliente') {
+        const destino = redirect?.startsWith('/portal') ? redirect : '/portal'
+        router.replace(result.needsMfa ? '/portal/mfa-challenge?redirect=' + encodeURIComponent(destino) : destino)
+      } else if (result.needsMfa) {
         router.replace('/mfa-challenge')
       } else if (result.setupMfaRequired) {
         router.replace('/mfa-setup')
-      } else if (result.role === 'cliente') {
-        router.replace(redirect ?? '/portal')
       } else {
         router.replace(redirect ?? '/dashboard')
       }

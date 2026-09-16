@@ -67,13 +67,23 @@ export function PortalAuthProvider({ children }: { children: React.ReactNode }) 
 
     init().finally(() => { if (!cancelled) setIsLoading(false) })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
+    // O callback roda com o lock do auth preso: esperar a API aqui (o interceptor
+    // pode chamar refreshSession) trava getSession/signOut até o lock expirar.
+    // INITIAL_SESSION já foi tratado pelo init().
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
+      if (event === 'INITIAL_SESSION') return
       if (event === 'SIGNED_OUT') {
         portalTokenStore.clear()
         if (!cancelled) setUser(null)
-      } else if (session?.access_token && isClientToken(session.access_token)) {
-        await loadFromToken(session.access_token)
+        return
       }
+      const token = session?.access_token
+      if (!token || !isClientToken(token)) return
+      if (event === 'TOKEN_REFRESHED') {
+        portalTokenStore.set(token)
+        return
+      }
+      setTimeout(() => { if (!cancelled) void loadFromToken(token) }, 0)
     })
 
     return () => {

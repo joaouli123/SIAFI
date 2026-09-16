@@ -32,6 +32,10 @@ function decodeJwtPayload(token: string): Record<string, unknown> | null {
   }
 }
 
+export function isClienteToken(token: string): boolean {
+  return (decodeJwtPayload(token)?.app_metadata as Record<string, unknown> | undefined)?.role === 'cliente'
+}
+
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4010/api',
   withCredentials: true,
@@ -101,6 +105,10 @@ api.interceptors.response.use(
       const { data } = await api.post<{ accessToken: string; refreshToken: string }>('/auth/refresh', {
         refreshToken: localRefreshToken,
       });
+      if (isClienteToken(data.accessToken)) {
+        try { localStorage.removeItem('siafi_refresh_token') } catch {}
+        throw new Error('Sessão de cliente não vale no sistema da equipe')
+      }
       tokenStore.set(data.accessToken)
       if (typeof window !== 'undefined' && data.refreshToken) {
         localStorage.setItem('siafi_refresh_token', data.refreshToken);
@@ -115,10 +123,8 @@ api.interceptors.response.use(
         const supabase = getSupabaseBrowserClient()
         const { data: { session } } = await supabase.auth.getSession()
         if (session?.access_token) {
-          const payload = decodeJwtPayload(session.access_token)
-          const appRole = (payload?.app_metadata as Record<string, unknown> | undefined)?.role
           // Reject client sessions — prevents client session from contaminating staff API calls
-          if (appRole !== 'cliente') {
+          if (!isClienteToken(session.access_token)) {
             tokenStore.set(session.access_token)
             processQueue(null, session.access_token)
             originalRequest.headers.Authorization = `Bearer ${session.access_token}`

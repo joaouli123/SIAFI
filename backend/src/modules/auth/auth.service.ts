@@ -66,7 +66,7 @@ export class AuthService {
 
     // Fallback: verificar se é cliente do portal
     if (!dbUser) {
-      return this.loginAsCliente(identificador, password, res);
+      return this.loginAsCliente(identificador, password);
     }
 
     // 2. Verificar bloqueio por tentativas excessivas
@@ -326,11 +326,7 @@ export class AuthService {
 
   // ─── Login de cliente do portal ──────────────────────────────────────────
 
-  private async loginAsCliente(
-    email: string,
-    password: string,
-    res: Response,
-  ) {
+  private async loginAsCliente(email: string, password: string) {
     const client = await this.prisma.client.findFirst({
       where: { email, active: true, portalAtivo: true },
     });
@@ -341,15 +337,10 @@ export class AuthService {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
+    // Sem cookie refresh_token: a sessão do cliente vive só no Supabase do portal.
+    // O refresh token rotaciona; se o fluxo da equipe o consumisse, a detecção de
+    // reuso do Supabase derrubaria a sessão do portal.
     const { access_token, refresh_token } = data.session;
-
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-    });
 
     await this.prisma.client.update({
       where: { id: client.id },
@@ -396,6 +387,9 @@ export class AuthService {
     });
     if (error || !data.session) {
       throw new UnauthorizedException('Refresh token inválido ou expirado');
+    }
+    if (this.extractAppRole(data.session.access_token) === 'cliente') {
+      throw new UnauthorizedException('Sessão de cliente: use o Portal do Cliente');
     }
     return {
       accessToken: data.session.access_token,
@@ -674,6 +668,15 @@ export class AuthService {
       return (payload.aal as string) || 'aal1';
     } catch {
       return 'aal1';
+    }
+  }
+
+  extractAppRole(token: string): string | undefined {
+    try {
+      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+      return payload.app_metadata?.role as string | undefined;
+    } catch {
+      return undefined;
     }
   }
 

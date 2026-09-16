@@ -35,6 +35,11 @@ export function proxy(request: NextRequest) {
   }
 
   if (!hasActiveSession(request)) {
+    if (pathname === '/portal' || pathname.startsWith('/portal/')) {
+      const portalLogin = new URL('/portal/login', request.url)
+      portalLogin.searchParams.set('redirect', pathname)
+      return NextResponse.redirect(portalLogin)
+    }
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('from', pathname)
     return NextResponse.redirect(loginUrl)

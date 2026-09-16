@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { isClienteToken } from '@/lib/api'
 import { portalTokenStore } from '@/lib/portal/portal-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -24,26 +25,31 @@ export default function PortalLoginPage() {
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [contaAtiva, setContaAtiva] = useState<string | null>(null)
+  const [trocandoConta, setTrocandoConta] = useState(false)
 
-  // Se houver sessão de staff ativa, encerra antes de mostrar o formulário
-  // para evitar que o AuthProvider global redirecione para o dashboard
+  // Sessão de cliente já aberta: pergunta em vez de entrar sozinho, senão quem
+  // precisa usar outra conta fica preso no portal. Sessão de staff é encerrada
+  // para o AuthProvider global não redirecionar para o dashboard.
   useEffect(() => {
     const supabase = getSupabaseBrowserClient()
     supabase.auth.getSession().then(({ data: { session } }: { data: { session: any } }) => {
       if (!session) return
-      try {
-        const b64 = session.access_token.split('.')[1]?.replace(/-/g, '+').replace(/_/g, '/')
-        const payload = b64 ? JSON.parse(atob(b64)) : {}
-        if (payload?.app_metadata?.role === 'cliente') {
-          router.replace('/portal')
-        } else {
-          supabase.auth.signOut()
-        }
-      } catch {
+      if (isClienteToken(session.access_token)) {
+        setContaAtiva(session.user?.user_metadata?.nome || session.user?.email || 'cliente')
+      } else {
         supabase.auth.signOut()
       }
     })
-  }, [router])
+  }, [])
+
+  async function entrarComOutraConta() {
+    setTrocandoConta(true)
+    await getSupabaseBrowserClient().auth.signOut().catch(() => {})
+    portalTokenStore.clear()
+    setContaAtiva(null)
+    setTrocandoConta(false)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -102,59 +108,95 @@ export default function PortalLoginPage() {
           <p className="text-sm text-muted-foreground text-center">Entre com suas credenciais de acesso</p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                disabled={loading}
-              />
+          {contaAtiva ? (
+            <div className="space-y-3">
+              <p className="text-sm text-center text-muted-foreground">
+                Você está conectado como <span className="font-medium text-foreground break-words">{contaAtiva}</span>.
+              </p>
+              <Button
+                type="button"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white h-10"
+                onClick={() => router.replace(getRedirectParam())}
+                disabled={trocandoConta}
+              >
+                Continuar no portal
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-10"
+                onClick={entrarComOutraConta}
+                disabled={trocandoConta}
+              >
+                {trocandoConta && <Loader2 className="size-4 animate-spin mr-2" />}
+                Entrar com outra conta
+              </Button>
             </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="password">Senha</Label>
-              <div className="relative">
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email</Label>
                 <Input
-                  id="password"
-                  type={showPass ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  className="pr-10"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="seu@email.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   disabled={loading}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(v => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  tabIndex={-1}
-                >
-                  {showPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
               </div>
-            </div>
 
-            {error && (
-              <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2">
-                <p className="text-sm text-destructive">{error}</p>
+              <div className="space-y-1.5">
+                <Label htmlFor="password">Senha</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPass ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    className="pr-10"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass(v => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    {showPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
               </div>
-            )}
 
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white h-10"
-              disabled={loading}
+              {error && (
+                <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white h-10"
+                disabled={loading}
+              >
+                {loading && <Loader2 className="size-4 animate-spin mr-2" />}
+                {loading ? 'Entrando...' : 'Entrar'}
+              </Button>
+            </form>
+          )}
+
+          <div className="mt-4 pt-4 border-t text-center">
+            <p className="text-xs text-muted-foreground mb-1">É da equipe Lidera?</p>
+            <a
+              href="/login"
+              className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors"
             >
-              {loading && <Loader2 className="size-4 animate-spin mr-2" />}
-              {loading ? 'Entrando...' : 'Entrar'}
-            </Button>
-          </form>
+              Acesso da equipe →
+            </a>
+          </div>
 
           <p className="mt-5 text-center text-xs text-muted-foreground">
             SIAFI — Sistema Integrado de Apoio Financeiro · Lidera

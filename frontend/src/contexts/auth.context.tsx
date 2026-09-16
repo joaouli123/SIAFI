@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import api, { tokenStore } from '@/lib/api'
+import api, { isClienteToken, tokenStore } from '@/lib/api'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export type UserRole = 'admin' | 'financeiro' | 'consultor' | 'caixa' | 'cliente'
@@ -116,6 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { data } = await api.post<{ accessToken: string; refreshToken?: string }>('/auth/refresh', {
           refreshToken: localRefreshToken
         })
+        if (isClienteToken(data.accessToken)) throw new Error('Sessão de cliente')
         tokenStore.set(data.accessToken)
         if (typeof window !== 'undefined' && data.refreshToken) {
           localStorage.setItem('siafi_refresh_token', data.refreshToken)
@@ -132,14 +133,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (session?.access_token) {
-          // Decode JWT to reject client sessions — prevents a client Supabase session
+          // Reject client sessions — prevents a client Supabase session
           // stored in a staff browser from silently authenticating as the wrong user
-          const parts = session.access_token.split('.')
-          const payload = parts[1]
-            ? JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
-            : {}
-          const appRole = (payload?.app_metadata as Record<string, unknown> | undefined)?.role
-          if (appRole !== 'cliente') {
+          if (!isClienteToken(session.access_token)) {
             tokenStore.set(session.access_token)
             const me = await fetchMe()
             if (me.needsMfa) {
@@ -157,10 +153,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return false
     }
 
-    init().then((navigating) => {
-      if (cancelled || navigating) return
-      setIsLoading(false)
-    })
+    init()
+      .then((navigating) => {
+        if (cancelled || navigating) return
+        setIsLoading(false)
+      })
+      .catch(() => { if (!cancelled) setIsLoading(false) })
 
     return () => { cancelled = true }
   }, [])
@@ -173,6 +171,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       needsMfa?: boolean
       setupMfaRequired?: boolean
     }>('/auth/login', credentials)
+
+    if (data.user?.role === 'cliente') {
+      // O cliente segue só com a sessão Supabase do portal. Guardar esses tokens no
+      // fluxo da equipe fazia o refresh rotacionar o token e derrubar o portal.
+      const { error } = await getSupabaseBrowserClient().auth.setSession({
+        access_token: data.accessToken,
+        refresh_token: data.refreshToken,
+      })
+      if (error) throw error
+      return { role: data.user.role, needsMfa: !!data.needsMfa }
+    }
 
     tokenStore.set(data.accessToken)
     if (typeof window !== 'undefined' && data.refreshToken) {
