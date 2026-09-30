@@ -19,7 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog'
-import { formatCurrency, formatDate, METODO_PAGAMENTO, PERIODICIDADE, hojeISODate } from '@/lib/utils'
+import { formatCurrency, formatDate, METODO_PAGAMENTO, PERIODICIDADE, PERIODICIDADE_ATIVA, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 import { baixarPlanilha } from '@/lib/planilha'
@@ -387,12 +387,14 @@ export default function ReparcelamentosPage() {
                 <Input type="date" {...formProposta.register('novaDataInicio')} />
               </div>
             </div>
-            <div className="space-y-1.5">
-              <Label>Periodicidade das Parcelas</Label>
-              <Select {...formProposta.register('novaPeriodicidade')}>
-                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-              </Select>
-            </div>
+            {PERIODICIDADE_ATIVA && (
+              <div className="space-y-1.5">
+                <Label>Periodicidade das Parcelas</Label>
+                <Select {...formProposta.register('novaPeriodicidade')}>
+                  {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                </Select>
+              </div>
+            )}
             {/* Simulação inline */}
             <div className="rounded-lg border bg-muted/40 p-3 text-sm flex items-center justify-between">
               <span className="text-muted-foreground">Valor por parcela</span>

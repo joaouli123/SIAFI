@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCurrency, METODO_PAGAMENTO, PERIODICIDADE, toDateInputValue } from '@/lib/utils'
+import { formatCurrency, METODO_PAGAMENTO, PERIODICIDADE, PERIODICIDADE_ATIVA, toDateInputValue } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 import Decimal from 'decimal.js'
@@ -292,13 +292,15 @@ export default function EditarEmprestimoPage() {
                 {Object.entries(METODO_PAGAMENTO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </Select>
             </div>
-            <div className="space-y-1.5">
-              <Label>Periodicidade das Parcelas</Label>
-              <Select {...register('periodicidade')}>
-                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-              </Select>
-              <p className="text-xs text-muted-foreground">Intervalo entre um vencimento e o próximo</p>
-            </div>
+            {PERIODICIDADE_ATIVA && (
+              <div className="space-y-1.5">
+                <Label>Periodicidade das Parcelas</Label>
+                <Select {...register('periodicidade')}>
+                  {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                </Select>
+                <p className="text-xs text-muted-foreground">Intervalo entre um vencimento e o próximo</p>
+              </div>
+            )}
 
             <div className="space-y-1.5">
               <Label>Data de Início do Contrato *</Label>
