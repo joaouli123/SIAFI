@@ -44,7 +44,7 @@ export class LoansService {
 
   // ─── Queries ────────────────────────────────────────────────────────────────
 
-  async findAll(filters: LoanFilterDto, role?: string): Promise<PaginatedResponse<unknown> & { totais?: { capital: number; totalAReceber: number } }> {
+  async findAll(filters: LoanFilterDto, role?: string): Promise<PaginatedResponse<unknown> & { totais?: { capital: number; totalAReceber: number; parcelas: number } }> {
     const { page, limit, search, status, clientId, inicioDe, inicioAte } = filters;
     const skip = (page - 1) * limit;
 
@@ -73,6 +73,14 @@ export class LoansService {
         ? null
         : this.prisma.loan.aggregate({ where, _sum: { principalAmount: true, totalReceivable: true } }),
     ]);
+    // O valor da parcela nao e coluna: sai do total dividido pelo numero de parcelas de cada contrato.
+    const parcelas = role === 'caixa'
+      ? []
+      : await this.prisma.loan.findMany({ where, select: { totalReceivable: true, numeroParcelas: true } });
+    const somaParcelas = parcelas.reduce(
+      (s, l) => (l.numeroParcelas > 0 ? s.plus(new Decimal(l.totalReceivable.toString()).div(l.numeroParcelas)) : s),
+      new Decimal(0),
+    );
 
     if (role === 'caixa') {
       return paginate(data.map((l) => this.sanitizeForCaixa(l as Record<string, unknown>)), total, page, limit);
@@ -84,6 +92,7 @@ export class LoansService {
       totais: {
         capital: Number(soma?._sum.principalAmount ?? 0),
         totalAReceber: Number(soma?._sum.totalReceivable ?? 0),
+        parcelas: somaParcelas.toDecimalPlaces(2).toNumber(),
       },
     };
   }
