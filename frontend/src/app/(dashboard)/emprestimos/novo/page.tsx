@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { ClienteCombobox } from '@/components/ui/cliente-combobox'
-import { formatCurrency, METODO_PAGAMENTO, PERIODICIDADE, PERIODICIDADE_ATIVA, hojeISODate } from '@/lib/utils'
+import { formatCurrency, METODO_PAGAMENTO, PERIODICIDADE, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 import Decimal from 'decimal.js'
@@ -245,15 +245,13 @@ export default function NovoEmprestimoPage() {
               </Select>
             </div>
 
-            {PERIODICIDADE_ATIVA && (
-              <div className="space-y-1.5">
-                <Label>Periodicidade das Parcelas</Label>
-                <Select {...register('periodicidade')}>
-                  {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                </Select>
-                <p className="text-xs text-muted-foreground">Intervalo entre um vencimento e o próximo</p>
-              </div>
-            )}
+            <div className="space-y-1.5">
+              <Label>Periodicidade das Parcelas</Label>
+              <Select {...register('periodicidade')}>
+                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </Select>
+              <p className="text-xs text-muted-foreground">Intervalo entre um vencimento e o próximo</p>
+            </div>
 
             <div className="space-y-1.5">
               <Label>Data de Início do Contrato *</Label>
@@ -359,7 +357,7 @@ export default function NovoEmprestimoPage() {
               <div className="space-y-1.5">
                 <Label>Dia Fixo de Vencimento (1–28)</Label>
                 <Input type="number" min={1} max={28} {...register('diaVencimento')} placeholder="ex: 5" />
-                <p className="text-xs text-muted-foreground">Todas as parcelas vencerão neste dia (ignorado se a Data do 1º Vencimento for informada)</p>
+                <p className="text-xs text-muted-foreground">Todas as parcelas vencerão neste dia (só na periodicidade mensal; ignorado se a Data do 1º Vencimento for informada)</p>
               </div>
 
               <div className="space-y-1.5">

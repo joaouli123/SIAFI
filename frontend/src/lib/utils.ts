@@ -134,9 +134,6 @@ export const METODO_PAGAMENTO: Record<string, string> = {
   cartao:       "Cartão",
 }
 
-// Parcelas semanais/quinzenais ficam prontas mas escondidas ate o cliente contratar.
-export const PERIODICIDADE_ATIVA = false
-
 export const PERIODICIDADE: Record<string, string> = {
   mensal:    "Mensal",
   quinzenal: "Quinzenal (a cada 15 dias)",

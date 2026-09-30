@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { ContratoCombobox } from '@/components/ui/contrato-combobox'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select } from '@/components/ui/select'
-import { formatCurrency, formatDate, hojeISODate, PERIODICIDADE, PERIODICIDADE_ATIVA } from '@/lib/utils'
+import { formatCurrency, formatDate, hojeISODate, PERIODICIDADE } from '@/lib/utils'
 import * as React from 'react'
 import api from '@/lib/api'
 
@@ -146,14 +146,12 @@ export default function NovaRenegociacaoPage() {
               <Input type="date" {...register('dataInicio')} />
               {errors.dataInicio && <p className="text-xs text-destructive">{errors.dataInicio.message}</p>}
             </div>
-            {PERIODICIDADE_ATIVA && (
-              <div className="space-y-1.5">
-                <Label>Periodicidade das Parcelas</Label>
-                <Select {...register('periodicidade')}>
-                  {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                </Select>
-              </div>
-            )}
+            <div className="space-y-1.5">
+              <Label>Periodicidade das Parcelas</Label>
+              <Select {...register('periodicidade')}>
+                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </Select>
+            </div>
             <div className="md:col-span-2 space-y-1.5">
               <Label>Observações</Label>
               <Textarea {...register('observacoes')} placeholder="Motivo e condições da renegociação..." rows={3} />

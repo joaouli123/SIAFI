@@ -27,8 +27,6 @@ const STATUS_LOAN: Record<string, string> = {
 };
 
 const PERIODICIDADE: Record<string, string> = { mensal: 'Mensal', quinzenal: 'Quinzenal', semanal: 'Semanal' };
-// Parcelas semanais/quinzenais ficam prontas mas escondidas ate o cliente contratar.
-const PERIODICIDADE_ATIVA = false;
 
 @Injectable()
 export class ExcelService {
@@ -636,7 +634,7 @@ export class ExcelService {
       { header: 'Contrato', key: 'contrato', width: 10 },
       { header: 'Valor Total', key: 'valor', width: 16 },
       { header: 'Parcelas', key: 'parcelas', width: 10 },
-      ...(PERIODICIDADE_ATIVA ? [{ header: 'Periodicidade', key: 'periodicidade', width: 13 }] : []),
+      { header: 'Periodicidade', key: 'periodicidade', width: 13 },
       { header: 'Taxa (% a.m.)', key: 'taxa', width: 13 },
       { header: 'Inicio', key: 'inicio', width: 12 },
       { header: 'Valor Descontado', key: 'desconto', width: 16 },
@@ -721,7 +719,7 @@ export class ExcelService {
       { header: 'Novo Capital', key: 'novoCapital', width: 16 },
       { header: 'Novo Lucro', key: 'novoLucro', width: 16 },
       { header: 'Novas Parcelas', key: 'novasParc', width: 12 },
-      ...(PERIODICIDADE_ATIVA ? [{ header: 'Periodicidade', key: 'novaPer', width: 13 }] : []),
+      { header: 'Periodicidade', key: 'novaPer', width: 13 },
       { header: 'Novo Inicio', key: 'novoInicio', width: 12 },
       { header: 'Novo Contrato', key: 'novoLoan', width: 12 },
       { header: 'Status', key: 'status', width: 22 },
