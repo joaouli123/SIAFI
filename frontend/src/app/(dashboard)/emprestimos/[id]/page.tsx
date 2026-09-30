@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { formatCurrency, formatDate, formatDateLocal, STATUS_LOAN, STATUS_INSTALLMENT, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
+import { formatCurrency, formatDate, formatDateLocal, STATUS_LOAN, STATUS_INSTALLMENT, METODO_PAGAMENTO, OPCOES_METODO_PAGAMENTO, metodoParaSalvar, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
 import { ComboboxTexto } from '@/components/ui/combobox-texto'
@@ -44,7 +44,7 @@ interface Loan {
   id: number; principalAmount: number; targetProfit: number; totalReceivable: number
   taxaJuros: number | null; modoTaxa: string | null
   numeroParcelas: number; dataInicio: string; status: string
-  observacoes?: string | null; metodoPagamento?: string | null
+  observacoes?: string | null; metodoPagamento?: string | null; periodicidade?: string | null
   comissaoPercentual?: number | null
   comissaoAdministradorPercentual?: number | null
   descontoQuitacaoPercentual?: number | null
@@ -61,7 +61,7 @@ export default function EmprestimoDetalhePage() {
   const qc = useQueryClient()
   const [payInstallmentId, setPayInstallmentId] = useState<number | null>(null)
   const [valorPago, setValorPago] = useState('')
-  const [metodo, setMetodo] = useState('dinheiro')
+  const [metodo, setMetodo] = useState('Dinheiro')
   const [dataPagamento, setDataPagamento] = useState(hojeISODate())
   const [contaDestino, setContaDestino] = useState('')
   const [descPago, setDescPago] = useState('')
@@ -96,7 +96,7 @@ export default function EmprestimoDetalhePage() {
   const [comObs, setComObs] = useState('')
   const [showQuitar, setShowQuitar] = useState(false)
   const [qData, setQData] = useState(hojeISODate())
-  const [qMetodo, setQMetodo] = useState('dinheiro')
+  const [qMetodo, setQMetodo] = useState('Dinheiro')
   const [qConta, setQConta] = useState('')
   const [qPct, setQPct] = useState('')
 
@@ -178,7 +178,7 @@ export default function EmprestimoDetalhePage() {
     payMut.mutate({
       installmentId: payInstallmentId,
       valorPago: Number(valorPago),
-      metodoPagamento: metodo,
+      metodoPagamento: metodoParaSalvar(metodo),
       dataPagamento,
       contaDestino: contaDestino.trim() || undefined,
       desconto: desc > 0 ? desc : undefined,
@@ -283,12 +283,12 @@ export default function EmprestimoDetalhePage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 <div className="space-y-1.5"><Label>% Desconto (sobre lucro)</Label><Input type="number" step="0.01" min="0" max="100" value={qPct} onChange={(e) => setQPct(e.target.value)} placeholder="0" /></div>
                 <div className="space-y-1.5"><Label>Data</Label><Input type="date" value={qData} onChange={(e) => setQData(e.target.value)} /></div>
-                <div className="space-y-1.5"><Label>Método</Label><Select value={qMetodo} onChange={(e) => setQMetodo(e.target.value)}>{Object.entries(METODO_PAGAMENTO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</Select></div>
+                <div className="space-y-1.5"><Label>Método</Label><ComboboxTexto value={qMetodo} onChange={setQMetodo} opcoes={OPCOES_METODO_PAGAMENTO} placeholder="Digite ou escolha" /></div>
                 <div className="space-y-1.5"><Label>Bco Recebedor</Label><ComboboxTexto value={qConta} onChange={setQConta} opcoes={contasUsadas} placeholder="opcional" /></div>
               </div>
               <div className="flex gap-2">
                 <Button className="bg-green-600 hover:bg-green-700 gap-2" disabled={quitarMut.isPending}
-                  onClick={() => { if (confirm(`Quitar o contrato dando baixa em ${abertas.length} parcela(s) com desconto de ${formatCurrency(descEst)}?`)) quitarMut.mutate({ dataPagamento: qData, metodoPagamento: qMetodo, contaDestino: qConta.trim() || undefined, descontoPercentual: qPct !== '' ? pct : undefined }) }}>
+                  onClick={() => { if (confirm(`Quitar o contrato dando baixa em ${abertas.length} parcela(s) com desconto de ${formatCurrency(descEst)}?`)) quitarMut.mutate({ dataPagamento: qData, metodoPagamento: metodoParaSalvar(qMetodo), contaDestino: qConta.trim() || undefined, descontoPercentual: qPct !== '' ? pct : undefined }) }}>
                   <CheckCircle className="size-4" />{quitarMut.isPending ? 'Quitando...' : 'Confirmar quitação'}
                 </Button>
                 <Button variant="outline" onClick={() => setShowQuitar(false)}>Cancelar</Button>
@@ -319,7 +319,7 @@ export default function EmprestimoDetalhePage() {
         <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">Parcelas</p>
-            <p className="font-medium">{loan.numeroParcelas}x de {formatCurrency(Number(loan.totalReceivable) / loan.numeroParcelas)}</p>
+            <p className="font-medium">{loan.numeroParcelas}x de {formatCurrency(Number(loan.totalReceivable) / loan.numeroParcelas)}{loan.periodicidade && loan.periodicidade !== 'mensal' ? ` · ${loan.periodicidade}` : ''}</p>
           </div>
           <div><p className="text-muted-foreground">Data de Início</p><p className="font-medium">{formatDate(loan.dataInicio)}</p></div>
           {loan.metodoPagamento && (
@@ -842,9 +842,7 @@ export default function EmprestimoDetalhePage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Método de Pagamento</Label>
-                  <Select value={metodo} onChange={(e) => setMetodo(e.target.value)}>
-                    {Object.entries(METODO_PAGAMENTO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                  </Select>
+                  <ComboboxTexto value={metodo} onChange={setMetodo} opcoes={OPCOES_METODO_PAGAMENTO} placeholder="Digite ou escolha (ex: PIX, Boleto)" />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bco Recebedor</Label>

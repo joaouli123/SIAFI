@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { somarPeriodos } from '../../common/utils/date.utils';
 import { PrismaService } from '../../prisma/prisma.service';
 import { dataLocal } from '../../common/data';
 import { CreateRenegociacaoDto } from './dto/create-renegociacao.dto';
@@ -68,8 +69,11 @@ export class RenegociacoesService {
       });
 
       const n = dto.numeroParcelas;
+      const periodicidade = dto.periodicidade ?? 'mensal';
       const taxaMensal = dto.taxaJuros / 100;
-      const totalComJuros = saldoDevedor * (1 + taxaMensal * n);
+      // A taxa continua ao mes: parcelas semanais/quinzenais cobrem menos meses.
+      const meses = periodicidade === 'semanal' ? (n * 7) / 30 : periodicidade === 'quinzenal' ? n / 2 : n;
+      const totalComJuros = saldoDevedor * (1 + taxaMensal * meses);
       const valorParcela = Math.round((totalComJuros / n) * 100) / 100;
       const encargos = totalComJuros - saldoDevedor;
 
@@ -87,8 +91,7 @@ export class RenegociacoesService {
 
       const newInstallments = Array.from({ length: n }, (_, i) => {
         const isLast = i === n - 1;
-        const dataVencimento = dataLocal(dto.dataInicio);
-        dataVencimento.setMonth(dataVencimento.getMonth() + i);
+        const dataVencimento = somarPeriodos(dataLocal(dto.dataInicio), i, periodicidade);
         return {
           loanId:            dto.loanId,
           numero:            baseNumero + i,
@@ -115,6 +118,7 @@ export class RenegociacoesService {
           numeroParcelas: dto.numeroParcelas,
           taxaJuros: dto.taxaJuros,
           dataInicio: dataLocal(dto.dataInicio),
+          periodicidade,
           observacoes: dto.observacoes ?? null,
         },
       });

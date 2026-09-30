@@ -5,7 +5,7 @@ import type { PaymentFilterDto } from '../payments/dto/payment-filter.dto';
 import * as ExcelJS from 'exceljs';
 import { Prisma } from '@prisma/client';
 import { dataLocal, fimDoDiaUtc, inicioDoDiaUtc } from '../../common/data';
-import { filtroCliente } from '../../common/busca';
+import { filtroAvalista, filtroCliente } from '../../common/busca';
 import type { Response } from 'express';
 
 const BRL = (v: number | string | null | undefined) =>
@@ -25,6 +25,8 @@ const STATUS_LOAN: Record<string, string> = {
   quitado: 'Quitado',
   cancelado: 'Cancelado',
 };
+
+const PERIODICIDADE: Record<string, string> = { mensal: 'Mensal', quinzenal: 'Quinzenal', semanal: 'Semanal' };
 
 @Injectable()
 export class ExcelService {
@@ -321,6 +323,17 @@ export class ExcelService {
                 cidade: true,
                 estado: true,
                 consultor: { select: { nome: true } },
+                observacoes: true,
+                tratativas: {
+                  orderBy: { createdAt: 'desc' },
+                  take: 1,
+                  select: {
+                    canal: true,
+                    descricao: true,
+                    createdAt: true,
+                    user: { select: { nome: true } },
+                  },
+                },
               },
             },
           },
@@ -347,13 +360,18 @@ export class ExcelService {
       { header: 'Multa', key: 'multa', width: 12 },
       { header: 'Mora', key: 'mora', width: 12 },
       { header: 'Total Devido', key: 'total', width: 14 },
+      { header: 'Ultima Tratativa', key: 'tratativaData', width: 14 },
+      { header: 'Tratativa', key: 'tratativa', width: 60 },
+      { header: 'Observacoes', key: 'obs', width: 40 },
     ];
     this.styleHeader(ws);
     ['valor', 'multa', 'mora', 'total'].forEach((k) => (ws.getColumn(k).numFmt = 'R$ #,##0.00'));
     ws.getColumn('venc').numFmt = 'dd/mm/yyyy';
+    ws.getColumn('tratativaData').numFmt = 'dd/mm/yyyy';
     ws.views = [{ state: 'frozen', ySplit: 1 }];
 
     installments.forEach((inst) => {
+      const ultima = inst.loan.client.tratativas[0];
       const venc = new Date(inst.dataVencimento);
       venc.setHours(0, 0, 0, 0);
       const dias = Math.floor((hoje.getTime() - venc.getTime()) / (1000 * 60 * 60 * 24));
@@ -374,6 +392,11 @@ export class ExcelService {
         multa: Number(inst.valorMulta),
         mora: Number(inst.valorMora),
         total,
+        tratativaData: ultima?.createdAt ?? null,
+        tratativa: ultima
+          ? `${ultima.canal} (${ultima.user?.nome ?? ''}): ${ultima.descricao}`
+          : '',
+        obs: [inst.loan.client.observacoes, inst.loan.observacoes].filter(Boolean).join(' | '),
       });
     });
 
@@ -404,6 +427,7 @@ export class ExcelService {
         estornado: boolean;
         installment: {
           numero: number;
+          dataVencimento: Date;
           loan: {
             id: number;
             client: { nome: string; cpf: string | null; consultor: { nome: string } | null };
@@ -427,17 +451,18 @@ export class ExcelService {
     wb.created = new Date();
 
     const ws = wb.addWorksheet('Recebimentos');
+    // Ordem pedida pela administracao (16/09): data do pagamento entre a parcela e
+    // o valor, e metodo/conta depois da divisao do lucro, antes da situacao.
     ws.columns = [
-      { header: 'Data', key: 'data', width: 12 },
       { header: 'CPF', key: 'cpf', width: 16 },
       { header: 'Cliente', key: 'cliente', width: 32 },
       { header: 'Consultor', key: 'consultor', width: 22 },
       { header: 'Contrato', key: 'contrato', width: 10 },
+      { header: 'Vencimento', key: 'vencimento', width: 12 },
       { header: 'Parcela', key: 'parcela', width: 9 },
+      { header: 'Data Pagamento', key: 'data', width: 15 },
       { header: 'Valor Pago', key: 'valor', width: 14 },
       { header: 'Desconto', key: 'desconto', width: 12 },
-      { header: 'Metodo', key: 'metodo', width: 14 },
-      { header: 'Conta/Banco', key: 'conta', width: 20 },
       ...(verSplit
         ? [
             { header: 'Capital', key: 'capital', width: 14 },
@@ -447,6 +472,8 @@ export class ExcelService {
             { header: 'Lucro Empresa', key: 'lucroEmpresa', width: 16 },
           ]
         : []),
+      { header: 'Metodo Recebimento', key: 'metodo', width: 18 },
+      { header: 'Conta Recebedora', key: 'conta', width: 20 },
       { header: 'Situacao', key: 'situacao', width: 12 },
       { header: 'Observacao', key: 'obs', width: 40 },
     ];
@@ -455,6 +482,7 @@ export class ExcelService {
       (k) => (ws.getColumn(k).numFmt = 'R$ #,##0.00'),
     );
     ws.getColumn('data').numFmt = 'dd/mm/yyyy';
+    ws.getColumn('vencimento').numFmt = 'dd/mm/yyyy';
     ws.views = [{ state: 'frozen', ySplit: 1 }];
 
     for (const p of resultado.data) {
@@ -464,6 +492,7 @@ export class ExcelService {
         cliente: p.installment.loan.client.nome,
         consultor: p.installment.loan.client.consultor?.nome ?? '',
         contrato: p.installment.loan.id,
+        vencimento: p.installment.dataVencimento,
         parcela: p.installment.numero,
         valor: Number(p.valorPago),
         desconto: Number(p.desconto),
@@ -514,7 +543,7 @@ export class ExcelService {
    * na tela obrigaria a refiltrar tudo de novo do outro lado.
    */
   async exportarClientes(
-    filtros: { search?: string; status?: string; consultorId?: number },
+    filtros: { search?: string; status?: string; consultorId?: number; avalista?: string },
     res: Response,
   ): Promise<void> {
     const where: Prisma.ClientWhereInput = {};
@@ -522,12 +551,14 @@ export class ExcelService {
     if (filtros.status === 'active') where.active = true;
     else if (filtros.status === 'inactive') where.active = false;
     if (filtros.search?.trim()) where.OR = filtroCliente(filtros.search.trim());
+    if (filtros.avalista?.trim()) Object.assign(where, filtroAvalista(filtros.avalista));
 
     const clientes = await this.prisma.client.findMany({
       where,
       orderBy: { nome: 'asc' },
       include: {
         consultor: { select: { nome: true } },
+        meusAvalistas: { select: { nome: true }, orderBy: { id: 'asc' } },
         _count: { select: { loans: { where: { status: { not: 'cancelado' } } } } },
       },
     });
@@ -545,6 +576,7 @@ export class ExcelService {
       { header: 'Cidade', key: 'cidade', width: 20 },
       { header: 'UF', key: 'estado', width: 6 },
       { header: 'Consultor', key: 'consultor', width: 24 },
+      { header: 'Avalista', key: 'avalista', width: 30 },
       { header: 'Contratos', key: 'contratos', width: 11 },
       { header: 'Cadastro', key: 'cadastro', width: 14 },
       { header: 'Portal', key: 'portal', width: 12 },
@@ -563,6 +595,7 @@ export class ExcelService {
         cidade: c.cidade ?? '',
         estado: c.estado ?? '',
         consultor: c.consultor?.nome ?? 'Sem consultor',
+        avalista: c.meusAvalistas.map((a) => a.nome).join(', '),
         contratos: c._count.loans,
         cadastro: c.createdAt,
         portal: c.portalAtivo ? 'Ativo' : c.supabaseId ? 'Desativado' : 'Sem acesso',
@@ -582,6 +615,157 @@ export class ExcelService {
     }
 
     this.sendWorkbook(wb, res, `clientes-${Date.now()}.xlsx`);
+  }
+
+  async exportarRenegociacoes(res: Response): Promise<void> {
+    const lista = await this.prisma.renegociacao.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { loan: { select: { id: true, client: { select: { nome: true, cpf: true } } } } },
+    });
+
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'SIAFI — Lidera';
+    wb.created = new Date();
+    const ws = wb.addWorksheet('Renegociacoes');
+    ws.columns = [
+      { header: 'Data', key: 'data', width: 12 },
+      { header: 'CPF', key: 'cpf', width: 16 },
+      { header: 'Cliente', key: 'cliente', width: 32 },
+      { header: 'Contrato', key: 'contrato', width: 10 },
+      { header: 'Valor Total', key: 'valor', width: 16 },
+      { header: 'Parcelas', key: 'parcelas', width: 10 },
+      { header: 'Periodicidade', key: 'periodicidade', width: 13 },
+      { header: 'Taxa (% a.m.)', key: 'taxa', width: 13 },
+      { header: 'Inicio', key: 'inicio', width: 12 },
+      { header: 'Valor Descontado', key: 'desconto', width: 16 },
+      { header: 'Motivo', key: 'motivo', width: 28 },
+      { header: 'Observacoes', key: 'obs', width: 40 },
+    ];
+    this.styleHeader(ws);
+    ['data', 'inicio'].forEach((k) => (ws.getColumn(k).numFmt = 'dd/mm/yyyy'));
+    ['valor', 'desconto'].forEach((k) => (ws.getColumn(k).numFmt = '"R$" #,##0.00'));
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+    lista.forEach((r) => {
+      ws.addRow({
+        data: r.createdAt,
+        cpf: CPF(r.loan?.client?.cpf),
+        cliente: r.loan?.client?.nome ?? '',
+        contrato: r.loanId,
+        valor: Number(r.valorTotal),
+        parcelas: r.numeroParcelas,
+        periodicidade: PERIODICIDADE[r.periodicidade] ?? r.periodicidade,
+        taxa: Number(r.taxaJuros),
+        inicio: r.dataInicio,
+        desconto: r.valorDescontado != null ? Number(r.valorDescontado) : null,
+        motivo: r.motivoRenegociacao ?? '',
+        obs: r.observacoes ?? '',
+      });
+    });
+
+    ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: ws.rowCount, column: ws.columnCount } };
+    if (lista.length) {
+      ws.addRow({});
+      const total = ws.addRow({
+        cliente: `TOTAL — ${lista.length} renegociacao(oes)`,
+        valor: lista.reduce((s, r) => s + Number(r.valorTotal), 0),
+        desconto: lista.reduce((s, r) => s + Number(r.valorDescontado ?? 0), 0),
+      });
+      total.font = { bold: true };
+    }
+
+    this.sendWorkbook(wb, res, `renegociacoes-${Date.now()}.xlsx`);
+  }
+
+  async exportarReparcelamentos(filtros: { status?: string }, res: Response): Promise<void> {
+    const lista = await this.prisma.solicitacaoReparcelamento.findMany({
+      where: filtros.status ? { status: filtros.status } : {},
+      orderBy: { createdAt: 'desc' },
+      include: {
+        client: { select: { nome: true, cpf: true } },
+        consultor: { select: { nome: true } },
+        loan: { select: { principalAmount: true, totalReceivable: true, numeroParcelas: true } },
+      },
+    });
+
+    const TIPO: Record<string, string> = {
+      prorrogacao: 'Prorrogacao',
+      reducao_parcelas: 'Reducao de parcelas',
+      aumento_prazo: 'Aumento de prazo',
+    };
+    const STATUS: Record<string, string> = {
+      pendente: 'Pendente',
+      proposta_enviada: 'Proposta enviada',
+      aprovado: 'Aprovado (2a instancia)',
+      executado: 'Executado',
+      rejeitado: 'Rejeitado',
+    };
+
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'SIAFI — Lidera';
+    wb.created = new Date();
+    const ws = wb.addWorksheet('Reparcelamentos');
+    ws.columns = [
+      { header: 'Data', key: 'data', width: 12 },
+      { header: 'CPF', key: 'cpf', width: 16 },
+      { header: 'Cliente', key: 'cliente', width: 32 },
+      { header: 'Contrato', key: 'contrato', width: 10 },
+      { header: 'Consultor', key: 'consultor', width: 24 },
+      { header: 'Tipo', key: 'tipo', width: 20 },
+      { header: 'Motivo', key: 'motivo', width: 36 },
+      { header: 'Capital Original', key: 'capital', width: 16 },
+      { header: 'Total Original', key: 'totalOrig', width: 16 },
+      { header: 'Parcelas Originais', key: 'parcOrig', width: 12 },
+      { header: 'Novo Capital', key: 'novoCapital', width: 16 },
+      { header: 'Novo Lucro', key: 'novoLucro', width: 16 },
+      { header: 'Novas Parcelas', key: 'novasParc', width: 12 },
+      { header: 'Periodicidade', key: 'novaPer', width: 13 },
+      { header: 'Novo Inicio', key: 'novoInicio', width: 12 },
+      { header: 'Novo Contrato', key: 'novoLoan', width: 12 },
+      { header: 'Status', key: 'status', width: 22 },
+    ];
+    this.styleHeader(ws);
+    ['data', 'novoInicio'].forEach((k) => (ws.getColumn(k).numFmt = 'dd/mm/yyyy'));
+    ['capital', 'totalOrig', 'novoCapital', 'novoLucro'].forEach((k) => (ws.getColumn(k).numFmt = '"R$" #,##0.00'));
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+    const num = (v: unknown) => (v == null ? null : Number(v));
+    lista.forEach((s) => {
+      ws.addRow({
+        data: s.createdAt,
+        cpf: CPF(s.client?.cpf),
+        cliente: s.client?.nome ?? '',
+        contrato: s.loanId,
+        consultor: s.consultor?.nome ?? '',
+        tipo: TIPO[s.tipo] ?? s.tipo,
+        motivo: s.motivoCliente ?? '',
+        capital: num(s.loan?.principalAmount),
+        totalOrig: num(s.loan?.totalReceivable),
+        parcOrig: s.loan?.numeroParcelas ?? null,
+        novoCapital: num(s.novoValorPrincipal),
+        novoLucro: num(s.novoTargetProfit),
+        novasParc: s.novoNumeroParcelas ?? null,
+        novaPer: s.novaPeriodicidade ? PERIODICIDADE[s.novaPeriodicidade] ?? s.novaPeriodicidade : '',
+        novoInicio: s.novaDataInicio ?? null,
+        novoLoan: s.novoLoanId ?? null,
+        status: STATUS[s.status] ?? s.status,
+      });
+    });
+
+    ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: ws.rowCount, column: ws.columnCount } };
+    if (lista.length) {
+      ws.addRow({});
+      const total = ws.addRow({
+        cliente: `TOTAL — ${lista.length} solicitacao(oes)`,
+        capital: lista.reduce((t, s) => t + Number(s.loan?.principalAmount ?? 0), 0),
+        totalOrig: lista.reduce((t, s) => t + Number(s.loan?.totalReceivable ?? 0), 0),
+        novoCapital: lista.reduce((t, s) => t + Number(s.novoValorPrincipal ?? 0), 0),
+        novoLucro: lista.reduce((t, s) => t + Number(s.novoTargetProfit ?? 0), 0),
+      });
+      total.font = { bold: true };
+    }
+
+    this.sendWorkbook(wb, res, `reparcelamentos-${Date.now()}.xlsx`);
   }
 
   // ─── Helper ───────────────────────────────────────────────────────────────

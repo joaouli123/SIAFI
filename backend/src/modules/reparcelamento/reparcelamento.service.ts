@@ -10,7 +10,7 @@ import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
 import { dataLocal } from '../../common/data';
 import { ScoreRiscoService } from '../score-risco/score-risco.service';
-import { addMonthsSafe } from '../../common/utils/date.utils';
+import { somarPeriodos } from '../../common/utils/date.utils';
 import { QUEUE_FINANCE_NOTIFICATIONS } from '../queue/queue.constants';
 import type { NotificationJobData } from '../queue/queue.interfaces';
 import { CreateSolicitacaoDto } from './dto/create-solicitacao.dto';
@@ -126,6 +126,7 @@ export class ReparcelamentoService {
         novoTargetProfit:       dto.novoTargetProfit,
         novoNumeroParcelas:     dto.novoNumeroParcelas,
         novaDataInicio:         dataLocal(dto.novaDataInicio),
+        novaPeriodicidade:      dto.novaPeriodicidade ?? 'mensal',
         multaAplicada:          dto.multaAplicada ?? null,
         moraAplicada:           dto.moraAplicada ?? null,
         observacaoFinanceiro:   dto.observacaoFinanceiro ?? null,
@@ -194,12 +195,14 @@ export class ReparcelamentoService {
     const novoValorPrincipal = s.novoValorPrincipal!;
     const novoTargetProfit   = s.novoTargetProfit!;
     const novoNumeroParcelas = s.novoNumeroParcelas!;
+    const periodicidade      = s.novaPeriodicidade ?? 'mensal';
 
     const installments = this.calcularParcelas(
       new Decimal(novoValorPrincipal.toString()),
       new Decimal(novoTargetProfit.toString()),
       novoNumeroParcelas,
       novaDataInicio,
+      periodicidade,
     );
 
     const total = new Decimal(novoValorPrincipal.toString()).plus(new Decimal(novoTargetProfit.toString()));
@@ -212,6 +215,7 @@ export class ReparcelamentoService {
       profit:        s.novoTargetProfit.toString(),
       parcelas:      s.novoNumeroParcelas,
       dataInicio:    novaDataInicio.toISOString(),
+      periodicidade,
       ts:            Date.now(),
     });
     const aceiteHash = createHash('sha256').update(aceitePayload).digest('hex');
@@ -240,6 +244,7 @@ export class ReparcelamentoService {
           totalReceivable:     total.toDecimalPlaces(2).toNumber(),
           numeroParcelas:      novoNumeroParcelas,
           dataInicio:          novaDataInicio,
+          periodicidade,
           origemLoanId:        s.loanId,
           reparcelamentoCount: (s.loan.reparcelamentoCount ?? 0) + 1,
           metodoPagamento:     s.loan.metodoPagamento,
@@ -280,10 +285,11 @@ export class ReparcelamentoService {
     profit: number,
     numeroParcelas: number,
     dataInicio: string,
+    periodicidade?: string,
   ) {
     const p = new Decimal(principal);
     const l = new Decimal(profit);
-    const parcelas = this.calcularParcelas(p, l, numeroParcelas, dataLocal(dataInicio));
+    const parcelas = this.calcularParcelas(p, l, numeroParcelas, dataLocal(dataInicio), periodicidade);
     const total    = p.plus(l);
     return {
       parcelas,
@@ -299,6 +305,7 @@ export class ReparcelamentoService {
     profit:    Decimal,
     n:         number,
     dataInicio: Date,
+    periodicidade?: string | null,
   ) {
     const total = principal.plus(profit);
     const base  = total.dividedBy(n).toDecimalPlaces(2, Decimal.ROUND_DOWN);
@@ -319,7 +326,7 @@ export class ReparcelamentoService {
         installmentAmount: amt,
         principalPayback:  principalPay.toDecimalPlaces(2).toNumber(),
         netGain:           gain.toDecimalPlaces(2).toNumber(),
-        dataVencimento:    addMonthsSafe(dataInicio, i + 1),
+        dataVencimento:    somarPeriodos(dataInicio, i + 1, periodicidade),
         status:            'pendente' as const,
         totalPago:         0,
         // Sem saldoDevedor o schema aplica o default 0 → o saldo some no detalhe do

@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 import Link from 'next/link'
 import {
-  PlusCircle, FileText, CheckCircle2, ShieldCheck, Zap, XCircle, Calculator,
+  PlusCircle, FileText, FileDown, CheckCircle2, ShieldCheck, Zap, XCircle, Calculator,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,9 +19,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog'
-import { formatCurrency, formatDate, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
+import { formatCurrency, formatDate, METODO_PAGAMENTO, PERIODICIDADE, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
+import { baixarPlanilha } from '@/lib/planilha'
+import { toast } from 'sonner'
 import Decimal from 'decimal.js'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -35,7 +37,7 @@ interface SolicitacaoItem {
   id: number; status: string; tipo: string; motivoCliente: string
   dataPrevistaPagamento?: string | null; createdAt: string
   novoValorPrincipal?: number | null; novoTargetProfit?: number | null
-  novoNumeroParcelas?: number | null; novaDataInicio?: string | null
+  novoNumeroParcelas?: number | null; novaDataInicio?: string | null; novaPeriodicidade?: string | null
   multaAplicada?: number | null; moraAplicada?: number | null
   observacaoFinanceiro?: string | null; novoLoanId?: number | null
   aprovadoSegundaInstancia: boolean
@@ -70,6 +72,7 @@ const schemaProposta = z.object({
   novoTargetProfit:   z.coerce.number().min(0),
   novoNumeroParcelas: z.coerce.number().int().min(1).max(360),
   novaDataInicio:     z.string().min(1),
+  novaPeriodicidade:  z.enum(['mensal', 'quinzenal', 'semanal']).optional(),
   multaAplicada:      z.coerce.number().min(0).optional(),
   moraAplicada:       z.coerce.number().min(0).optional(),
   observacaoFinanceiro: z.string().optional(),
@@ -98,6 +101,7 @@ export default function ReparcelamentosPage() {
   const canProposta = user?.role === 'admin' || user?.role === 'financeiro'
 
   const [statusFiltro, setStatusFiltro] = useState('')
+  const [baixando, setBaixando] = useState(false)
   const [openProposta, setOpenProposta] = useState<SolicitacaoItem | null>(null)
   const [openRejeitar, setOpenRejeitar] = useState<SolicitacaoItem | null>(null)
   const [confirmExecutar, setConfirmExecutar] = useState<SolicitacaoItem | null>(null)
@@ -156,6 +160,7 @@ export default function ReparcelamentosPage() {
       novoTargetProfit:   0,
       novoNumeroParcelas: item.loan.numeroParcelas,
       novaDataInicio:     hojeISODate(),
+      novaPeriodicidade:  'mensal',
     })
   }
 
@@ -181,9 +186,30 @@ export default function ReparcelamentosPage() {
           <h1 className="text-2xl font-bold tracking-tight">Reparcelamentos</h1>
           <p className="text-muted-foreground text-sm">Solicitações de renegociação com fluxo de aprovação em dois estágios</p>
         </div>
-        <Link href="/reparcelamentos/nova">
-          <Button className="gap-2"><PlusCircle className="size-4" />Nova Solicitação</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={baixando}
+            className="gap-2"
+            title="Gerar planilha dos reparcelamentos (respeita a aba selecionada)"
+            onClick={async () => {
+              setBaixando(true)
+              try {
+                await baixarPlanilha('/export/reparcelamentos/excel', 'reparcelamentos', { status: statusFiltro || undefined })
+              } catch {
+                toast.error('Nao foi possivel gerar a planilha. Tente novamente.')
+              } finally {
+                setBaixando(false)
+              }
+            }}
+          >
+            <FileDown className="size-3.5" />{baixando ? 'Gerando...' : 'Excel'}
+          </Button>
+          <Link href="/reparcelamentos/nova">
+            <Button className="gap-2"><PlusCircle className="size-4" />Nova Solicitação</Button>
+          </Link>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -259,6 +285,9 @@ export default function ReparcelamentosPage() {
                           )}
                           {item.novaDataInicio && (
                             <span>Início: {formatDate(item.novaDataInicio)}</span>
+                          )}
+                          {item.novaPeriodicidade && item.novaPeriodicidade !== 'mensal' && (
+                            <span>Periodicidade: {PERIODICIDADE[item.novaPeriodicidade] ?? item.novaPeriodicidade}</span>
                           )}
                         </div>
                       )}
@@ -357,6 +386,12 @@ export default function ReparcelamentosPage() {
                 <Label>Data da 1ª Parcela</Label>
                 <Input type="date" {...formProposta.register('novaDataInicio')} />
               </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Periodicidade das Parcelas</Label>
+              <Select {...formProposta.register('novaPeriodicidade')}>
+                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </Select>
             </div>
             {/* Simulação inline */}
             <div className="rounded-lg border bg-muted/40 p-3 text-sm flex items-center justify-between">

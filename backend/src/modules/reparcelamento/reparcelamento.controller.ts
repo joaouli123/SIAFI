@@ -36,8 +36,9 @@ export class ReparcelamentoController {
     @Query('profit',    ParseFloatPipe) profit:    number,
     @Query('parcelas',  ParseIntPipe)   parcelas:  number,
     @Query('dataInicio') dataInicio: string,
+    @Query('periodicidade') periodicidade?: string,
   ) {
-    return this.svc.simular(principal, profit, parcelas, dataInicio);
+    return this.svc.simular(principal, profit, parcelas, dataInicio, periodicidade);
   }
 
   @Get()

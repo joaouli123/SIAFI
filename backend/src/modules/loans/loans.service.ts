@@ -14,7 +14,7 @@ import { dataDia, dataLocal, fimDoDiaUtc, inicioDoDiaUtc } from '../../common/da
 import { PortalService } from '../client-portal/portal.service';
 import { InstallmentsService } from '../installments/installments.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
-import { addMonthsSafe, calcularDataVencimento } from '../../common/utils/date.utils';
+import { calcularDataVencimento, somarPeriodos } from '../../common/utils/date.utils';
 import { baixasVivas, realizedLucro, splitParcela } from '../../common/commission';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { UpdateLoanDto } from './dto/update-loan.dto';
@@ -44,7 +44,7 @@ export class LoansService {
 
   // ─── Queries ────────────────────────────────────────────────────────────────
 
-  async findAll(filters: LoanFilterDto, role?: string): Promise<PaginatedResponse<unknown>> {
+  async findAll(filters: LoanFilterDto, role?: string): Promise<PaginatedResponse<unknown> & { totais?: { capital: number; totalAReceber: number } }> {
     const { page, limit, search, status, clientId, inicioDe, inicioAte } = filters;
     const skip = (page - 1) * limit;
 
@@ -58,7 +58,7 @@ export class LoansService {
       if (inicioAte) (where.dataInicio as Prisma.DateTimeFilter).lte = fimDoDiaUtc(inicioAte);
     }
 
-    const [data, total] = await Promise.all([
+    const [data, total, soma] = await Promise.all([
       this.prisma.loan.findMany({
         where,
         skip,
@@ -69,13 +69,23 @@ export class LoansService {
         },
       }),
       this.prisma.loan.count({ where }),
+      role === 'caixa'
+        ? null
+        : this.prisma.loan.aggregate({ where, _sum: { principalAmount: true, totalReceivable: true } }),
     ]);
 
-    const items = role === 'caixa'
-      ? data.map((l) => this.sanitizeForCaixa(l as Record<string, unknown>))
-      : data;
+    if (role === 'caixa') {
+      return paginate(data.map((l) => this.sanitizeForCaixa(l as Record<string, unknown>)), total, page, limit);
+    }
 
-    return paginate(items, total, page, limit);
+    // O rodape da tela mostra o total do filtro inteiro, nao so da pagina aberta.
+    return {
+      ...paginate(data, total, page, limit),
+      totais: {
+        capital: Number(soma?._sum.principalAmount ?? 0),
+        totalAReceber: Number(soma?._sum.totalReceivable ?? 0),
+      },
+    };
   }
 
   async findById(id: number, role?: string): Promise<unknown> {
@@ -266,10 +276,13 @@ export class LoansService {
     // dataDia() grava o dia ao meio-dia UTC: a meia-noite local virava 00:00Z e o
     // formulário relia isso como o dia anterior, fazendo a data recuar a cada edição.
     const primeiroVenc = dto.dataPrimeiroVencimento ? dataDia(dto.dataPrimeiroVencimento) : null;
+    const periodicidade = dto.periodicidade ?? 'mensal';
     const vencDaParcela = (i: number): Date =>
       primeiroVenc
-        ? addMonthsSafe(primeiroVenc, i)
-        : calcularDataVencimento(dataDia(dto.dataInicio), i + 1, dto.diaVencimento);
+        ? somarPeriodos(primeiroVenc, i, periodicidade)
+        : periodicidade === 'mensal'
+          ? calcularDataVencimento(dataDia(dto.dataInicio), i + 1, dto.diaVencimento)
+          : somarPeriodos(dataDia(dto.dataInicio), i + 1, periodicidade);
 
     // ── Geração das parcelas ────────────────────────────────────────────────
     const installments = Array.from({ length: n }, (_, i) => {
@@ -309,6 +322,7 @@ export class LoansService {
           status:                  ctx.loanStatus ?? 'ativo',
           aceiteExpiraEm:          ctx.aceiteExpiraEm ?? null,
           diaVencimento:           dto.diaVencimento ?? null,
+          periodicidade,
           multaPercentual:         dto.multaPercentual ?? null,
           moraDiariaPercentual:    dto.moraDiariaPercentual ?? null,
           comissaoPercentual:      comissaoConsultor,
@@ -373,6 +387,7 @@ export class LoansService {
     const newN          = dto.numeroParcelas ?? loan.numeroParcelas;
     const newDataInicio = dto.dataInicio ? dataDia(dto.dataInicio) : loan.dataInicio;
     const newDiaVenc    = dto.diaVencimento !== undefined ? dto.diaVencimento : loan.diaVencimento;
+    const newPeriodicidade = dto.periodicidade ?? loan.periodicidade;
     // Data do 1º vencimento (mesmo tratamento do create); quando informada, redefine
     // o cronograma das parcelas pendentes (1ª pendente nessa data, demais mensais).
     const primeiroVenc = dto.dataPrimeiroVencimento ? dataDia(dto.dataPrimeiroVencimento) : null;
@@ -398,6 +413,7 @@ export class LoansService {
       (dto.numeroParcelas != null && newN !== loan.numeroParcelas) ||
       (dto.dataInicio     != null && newDataInicio.getTime() !== loan.dataInicio.getTime()) ||
       (dto.diaVencimento  !== undefined && newDiaVenc !== loan.diaVencimento) ||
+      newPeriodicidade !== loan.periodicidade ||
       (primeiroVenc != null);
 
     // Parcelas preservadas (histórico) vs. regeneráveis (sem pagamento)
@@ -457,7 +473,11 @@ export class LoansService {
             installmentAmount: amt,
             principalPayback:  principalPay.toDecimalPlaces(2).toNumber(),
             netGain:           gain.toDecimalPlaces(2).toNumber(),
-            dataVencimento:    primeiroVenc ? addMonthsSafe(primeiroVenc, k) : calcularDataVencimento(newDataInicio, numero, newDiaVenc),
+            dataVencimento:    primeiroVenc
+              ? somarPeriodos(primeiroVenc, k, newPeriodicidade)
+              : newPeriodicidade === 'mensal'
+                ? calcularDataVencimento(newDataInicio, numero, newDiaVenc)
+                : somarPeriodos(newDataInicio, numero, newPeriodicidade),
             status:            'pendente' as const,
             totalPago:         0,
             saldoDevedor:      amt,
@@ -490,6 +510,7 @@ export class LoansService {
           numeroParcelas:       newN,
           dataInicio:           newDataInicio,
           diaVencimento:        newDiaVenc ?? null,
+          periodicidade:        newPeriodicidade,
           metodoPagamento:      dto.metodoPagamento ?? loan.metodoPagamento,
           observacoes:          dto.observacoes !== undefined ? dto.observacoes : loan.observacoes,
           multaPercentual:      dto.multaPercentual !== undefined ? dto.multaPercentual : loan.multaPercentual,
@@ -738,7 +759,7 @@ export class LoansService {
       for (const inst of installments) {
         await tx.installment.update({
           where: { id: inst.id },
-          data:  { dataVencimento: addMonthsSafe(dataDia(dataLib), inst.numero) },
+          data:  { dataVencimento: somarPeriodos(dataDia(dataLib), inst.numero, loan.periodicidade) },
         });
       }
 

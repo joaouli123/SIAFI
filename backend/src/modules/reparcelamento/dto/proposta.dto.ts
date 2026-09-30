@@ -1,4 +1,5 @@
-import { IsDateString, IsInt, IsNumber, IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
+import { IsDateString, IsIn, IsInt, IsNumber, IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
+import { PERIODICIDADES, type Periodicidade } from '../../../common/utils/date.utils';
 
 export class PropostaDto {
   @IsNumber({ maxDecimalPlaces: 2 })
@@ -16,6 +17,10 @@ export class PropostaDto {
 
   @IsDateString()
   novaDataInicio: string;
+
+  @IsOptional()
+  @IsIn(PERIODICIDADES)
+  novaPeriodicidade?: Periodicidade;
 
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })

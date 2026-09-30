@@ -31,7 +31,8 @@ interface Installment {
   moraAcumulada: string
   multaAplicada: string
   observacao?: string | null
-  loan: { id: number; client: { id: number; nome: string; cpf?: string | null; consultor?: { id: number; nome: string } | null }; consultor?: { id: number; nome: string } | null }
+  payments?: { dataPagamento: string; estornado?: boolean }[]
+  loan: { id: number; dataInicio?: string; client: { id: number; nome: string; cpf?: string | null; consultor?: { id: number; nome: string } | null }; consultor?: { id: number; nome: string } | null }
 }
 
 interface TotaisParcelas {
@@ -237,10 +238,12 @@ export default function ParcelasPage() {
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">CPF</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell whitespace-nowrap">Data Contrato</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Empréstimo</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Vencimento</th>
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Capital</th>}
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell whitespace-nowrap">Data Pagamento</th>
                     {showSplit && <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Pago</th>}
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Saldo</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Juros</th>
@@ -262,6 +265,9 @@ export default function ParcelasPage() {
                     const isOverdue = inst.status === 'atrasado' || vencida
                     const dias = isOverdue ? diasAtraso(inst.dataVencimento) : 0
                     const displaySaldo = isOverdue ? originalSaldo + encargos : originalSaldo
+                    const ultimaBaixa = (inst.payments ?? [])
+                      .filter((p) => !p.estornado)
+                      .reduce<string | null>((max, p) => (!max || p.dataPagamento > max ? p.dataPagamento : max), null)
                     const displayValor = inst.status === 'cancelado'
                       ? toNumber(inst.installmentAmount)
                       : Math.max(toNumber(inst.installmentAmount), toNumber(inst.totalPago) + displaySaldo)
@@ -285,6 +291,9 @@ export default function ParcelasPage() {
                             <span className="text-xs italic opacity-50">—</span>
                           )}
                         </td>
+                        <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell whitespace-nowrap">
+                          {inst.loan.dataInicio ? formatDateLocal(inst.loan.dataInicio) : '—'}
+                        </td>
                         <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
                           <Link href={`/emprestimos/${inst.loan.id}`} className="hover:underline">Empréstimo #{inst.loan.id} (P{inst.numero})</Link>
                         </td>
@@ -303,6 +312,9 @@ export default function ParcelasPage() {
                           {displayValor > toNumber(inst.installmentAmount) + 0.005 && (
                             <div className="text-[10px] text-muted-foreground">Original: {formatCurrency(toNumber(inst.installmentAmount))}</div>
                           )}
+                        </td>
+                        <td className="px-4 py-3 text-muted-foreground hidden md:table-cell whitespace-nowrap">
+                          {ultimaBaixa ? formatDateLocal(ultimaBaixa) : '—'}
                         </td>
                         {showSplit && (
                           <td className="px-4 py-3 text-right text-green-600 hidden lg:table-cell">{formatCurrency(inst.totalPago)}</td>
@@ -345,7 +357,7 @@ export default function ParcelasPage() {
                 </tbody>
                 <tfoot>
                   <tr className="bg-muted/40 border-t font-medium text-sm">
-                    <td colSpan={5} className="px-4 py-2.5 text-xs text-muted-foreground">
+                    <td colSpan={6} className="px-4 py-2.5 text-xs text-muted-foreground">
                       {`TOTAL — ${(totais?.quantidade ?? meta?.total ?? activeData.length).toLocaleString('pt-BR')} parcela${(totais?.quantidade ?? meta?.total ?? activeData.length) !== 1 ? 's' : ''}`}
                       <span className="ml-1 opacity-70">{totais ? '(filtro completo)' : '(esta página)'}</span>
                     </td>
@@ -353,6 +365,7 @@ export default function ParcelasPage() {
                       <td className="px-4 py-2.5 text-right text-xs hidden lg:table-cell">{formatCurrency(fCapital)}</td>
                     )}
                     <td className="px-4 py-2.5 text-right text-xs">{formatCurrency(fValor)}</td>
+                    <td className="hidden md:table-cell" />
                     {showSplit && (
                       <td className="px-4 py-2.5 text-right text-xs text-green-600 hidden lg:table-cell">{formatCurrency(fPago)}</td>
                     )}

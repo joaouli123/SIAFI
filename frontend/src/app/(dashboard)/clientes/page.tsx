@@ -36,6 +36,7 @@ interface Client {
   supabaseId: string | null
   consultor?: { id: number; nome: string } | null
   observacoes?: string | null
+  meusAvalistas?: { id: number; nome: string }[]
 }
 
 interface ClientsResponse {
@@ -79,6 +80,7 @@ export default function ClientesPage() {
   const [searchInput, setSearchInput] = useState('')
   const [status, setStatus] = useState('')
   const [consultorFilter, setConsultorFilter] = useState('')
+  const [avalistaInput, setAvalistaInput] = useState('')
   const [page, setPage] = useState(1)
   const [vincularClient, setVincularClient] = useState<Client | null>(null)
   const [selectedConsultorId, setSelectedConsultorId] = useState<string>('')
@@ -86,20 +88,22 @@ export default function ClientesPage() {
   const qc = useQueryClient()
 
   const search = useDebounce(searchInput, 400)
-  useEffect(() => { setPage(1) }, [search, status, consultorFilter])
+  const avalista = useDebounce(avalistaInput.trim(), 400)
+  useEffect(() => { setPage(1) }, [search, status, consultorFilter, avalista])
 
   const canManage = user?.role === 'admin' || user?.role === 'financeiro'
   // Caixa nao tem a rota de exportacao (403); consultor exporta a propria carteira.
   const canExport = user?.role !== 'caixa'
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['clients', { search, status, consultorFilter, page }],
+    queryKey: ['clients', { search, status, consultorFilter, avalista, page }],
     queryFn: () =>
       api.get<ClientsResponse>('/clients', {
         params: {
           search: search || undefined,
           status: status || undefined,
           consultorId: consultorFilter || undefined,
+          avalista: avalista || undefined,
           page,
           limit: 20,
         },
@@ -143,6 +147,7 @@ export default function ClientesPage() {
           search: search || undefined,
           status: status || undefined,
           consultorId: consultorFilter || undefined,
+          avalista: avalista || undefined,
         },
         responseType: 'blob',
       })
@@ -200,6 +205,15 @@ export default function ClientesPage() {
                 className="pl-9"
               />
             </div>
+            <div className="relative sm:w-56">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                placeholder="Avalista (nome ou CPF)"
+                value={avalistaInput}
+                onChange={(e) => setAvalistaInput(e.target.value)}
+                className="pl-9"
+              />
+            </div>
             <Select value={status} onChange={(e) => setStatus(e.target.value)} className="w-40">
               <option value="">Todos</option>
               <option value="active">Ativos</option>
@@ -244,10 +258,10 @@ export default function ClientesPage() {
             <div className="p-8 text-center">
               <Users className="size-10 mx-auto text-muted-foreground mb-3" />
               <p className="text-muted-foreground text-sm font-medium">
-                {searchInput || status || consultorFilter ? 'Nenhum resultado para o filtro aplicado.' : 'Nenhum cliente cadastrado ainda.'}
+                {searchInput || status || consultorFilter || avalistaInput ? 'Nenhum resultado para o filtro aplicado.' : 'Nenhum cliente cadastrado ainda.'}
               </p>
-              {(searchInput || status || consultorFilter) ? (
-                <Button variant="outline" size="sm" className="mt-3" onClick={() => { setSearchInput(''); setStatus(''); setConsultorFilter('') }}>
+              {(searchInput || status || consultorFilter || avalistaInput) ? (
+                <Button variant="outline" size="sm" className="mt-3" onClick={() => { setSearchInput(''); setStatus(''); setConsultorFilter(''); setAvalistaInput('') }}>
                   Limpar filtros
                 </Button>
               ) : canManage ? (
@@ -265,6 +279,7 @@ export default function ClientesPage() {
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Nome</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">WhatsApp</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Consultor</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Avalista</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Cadastro</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden xl:table-cell">Portal</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground">Status</th>
@@ -301,6 +316,11 @@ export default function ClientesPage() {
                         ) : (
                           <span className="text-muted-foreground text-xs italic">Sem consultor</span>
                         )}
+                      </td>
+                      <td className="px-4 py-3 text-sm hidden lg:table-cell">
+                        {c.meusAvalistas?.length
+                          ? c.meusAvalistas.map((a) => a.nome).join(', ')
+                          : <span className="text-muted-foreground text-xs">—</span>}
                       </td>
                       <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">{formatDate(c.createdAt)}</td>
                       <td className="px-4 py-3 text-center hidden xl:table-cell">

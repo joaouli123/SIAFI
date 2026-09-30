@@ -1,11 +1,12 @@
-import { IsDateString, IsIn, IsNumber, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
 
 export class QuitarContratoDto {
   @IsDateString()
   dataPagamento: string;
 
   @IsOptional()
-  @IsIn(['dinheiro', 'pix', 'mercadopago', 'transferencia', 'cheque', 'cartao'])
+  @IsString()
+  @MaxLength(60)
   metodoPagamento?: string;
 
   @IsOptional()

@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { ClienteCombobox } from '@/components/ui/cliente-combobox'
-import { formatCurrency, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
+import { formatCurrency, METODO_PAGAMENTO, PERIODICIDADE, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 import Decimal from 'decimal.js'
@@ -37,6 +37,7 @@ const schema = z.object({
   observacoes: z.string().optional(),
   // Configurações de cobrança
   diaVencimento: z.coerce.number().min(1).max(28).optional(),
+  periodicidade: z.enum(['mensal', 'quinzenal', 'semanal']).optional(),
   multaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   moraDiariaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
@@ -64,6 +65,7 @@ export default function NovoEmprestimoPage() {
     resolver: zodResolver(schema) as any,
     defaultValues: {
       metodoPagamento: 'dinheiro',
+      periodicidade: 'mensal',
       numeroParcelas: 12,
       dataInicio: hojeISODate(),
       clientId: preClienteId ? Number(preClienteId) : 0,
@@ -244,6 +246,14 @@ export default function NovoEmprestimoPage() {
             </div>
 
             <div className="space-y-1.5">
+              <Label>Periodicidade das Parcelas</Label>
+              <Select {...register('periodicidade')}>
+                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </Select>
+              <p className="text-xs text-muted-foreground">Intervalo entre um vencimento e o próximo</p>
+            </div>
+
+            <div className="space-y-1.5">
               <Label>Data de Início do Contrato *</Label>
               <Input type="date" {...register('dataInicio')} />
               <p className="text-xs text-muted-foreground">Assinatura / saída do capital</p>
@@ -253,7 +263,7 @@ export default function NovoEmprestimoPage() {
             <div className="space-y-1.5">
               <Label>Data do 1º Vencimento</Label>
               <Input type="date" {...register('dataPrimeiroVencimento')} />
-              <p className="text-xs text-muted-foreground">Vencimento da 1ª parcela (se vazio: 1 mês após o início)</p>
+              <p className="text-xs text-muted-foreground">Vencimento da 1ª parcela (se vazio: um período após o início)</p>
             </div>
 
             <div className="md:col-span-2 space-y-1.5">
@@ -347,7 +357,7 @@ export default function NovoEmprestimoPage() {
               <div className="space-y-1.5">
                 <Label>Dia Fixo de Vencimento (1–28)</Label>
                 <Input type="number" min={1} max={28} {...register('diaVencimento')} placeholder="ex: 5" />
-                <p className="text-xs text-muted-foreground">Todas as parcelas vencerão neste dia (ignorado se a Data do 1º Vencimento for informada)</p>
+                <p className="text-xs text-muted-foreground">Todas as parcelas vencerão neste dia (só na periodicidade mensal; ignorado se a Data do 1º Vencimento for informada)</p>
               </div>
 
               <div className="space-y-1.5">

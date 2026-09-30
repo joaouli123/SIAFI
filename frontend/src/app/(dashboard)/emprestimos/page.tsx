@@ -49,7 +49,7 @@ interface LoanRow {
   consultor?: { id: number; nome: string } | null
 }
 
-interface LoansResponse { data: LoanRow[]; total: number; page: number; lastPage: number }
+interface LoansResponse { data: LoanRow[]; total: number; page: number; lastPage: number; totais?: { capital: number; totalAReceber: number } }
 
 interface PixPayment {
   id: number
@@ -737,7 +737,7 @@ export default function EmprestimosPage() {
     setSheetOpen(true)
   }
 
-  const totalPaginaAtual = data?.data.reduce((s, l) => s + toNumber(l.principalAmount), 0) ?? 0
+  const capitalFiltrado = data?.totais?.capital ?? data?.data.reduce((s, l) => s + toNumber(l.principalAmount), 0) ?? 0
 
   return (
     <div className="space-y-6">
@@ -1020,7 +1020,7 @@ export default function EmprestimosPage() {
                   {status ? ` · ${STATUS_LOAN[status]?.label ?? status}` : ''}
                 </p>
                 <p className="text-sm font-medium">
-                  Capital: {formatCurrency(totalPaginaAtual)}
+                  Capital{data.total > 1 ? ` dos ${data.total} contratos` : ''}: {formatCurrency(capitalFiltrado)}
                 </p>
               </div>
               {data.lastPage > 1 && (

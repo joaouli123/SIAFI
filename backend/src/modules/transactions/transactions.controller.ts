@@ -34,8 +34,11 @@ export class TransactionsController {
 
   @Get('saldo')
   @Roles('admin', 'financeiro', 'caixa')
-  getSaldo() {
-    return this.transactionsService.getSaldo();
+  getSaldo(
+    @Query('dataInicio') dataInicio?: string,
+    @Query('dataFim') dataFim?: string,
+  ) {
+    return this.transactionsService.getSaldo(dataInicio, dataFim);
   }
 
   @Get('movimento')

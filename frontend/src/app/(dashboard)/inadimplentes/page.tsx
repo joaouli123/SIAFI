@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { AlertCircle, FileDown, RefreshCw, Search, StickyNote, X } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -10,15 +10,19 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { ClienteCombobox } from '@/components/ui/cliente-combobox'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { TratativasCard, LABEL_CANAL } from '@/components/clientes/tratativas-card'
 import { useMemo, useState } from 'react'
-import { formatCurrency, formatDateLocal, formatCPF, formatPhone, hojeISODate } from '@/lib/utils'
+import { formatCurrency, formatDateLocal, formatDateTime, formatCPF, formatPhone, hojeISODate } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import api from '@/lib/api'
+
+interface TratativaResumo { id: number; canal: string; descricao: string; createdAt: string; user?: { nome: string } }
 
 interface Loan {
   id: number; valor: number; numeroParcelas: number; dataInicio: string; status: string
   observacoes?: string | null
-  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null; quantidadeEmprestimos?: number; consultor?: { id: number; nome: string } | null }
+  client: { id: number; nome: string; cpf: string; whatsapp: string; observacoes?: string | null; quantidadeEmprestimos?: number; totalTratativas?: number; tratativas?: TratativaResumo[]; consultor?: { id: number; nome: string } | null }
   consultor?: { id: number; nome: string } | null
   installments: Array<{ id: number; installmentAmount: number; totalPago: number; dataVencimento: string; status: string; moraAcumulada?: number; multaAplicada?: number }>
 }
@@ -35,21 +39,50 @@ function diaISO(data: string): string {
 const semAcento = (v: string) =>
   v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
-function HoverObsPopover({ obs, title = 'Observações' }: { obs: string; title?: string }) {
+function ObsTratativas({ loan, onAbrir }: { loan: Loan; onAbrir: () => void }) {
   const [open, setOpen] = useState(false)
+  const obs = `${loan.client?.observacoes || ''}\n${loan.observacoes || ''}`.trim()
+  const tratativas = loan.client?.tratativas ?? []
+  const total = loan.client?.totalTratativas ?? tratativas.length
+  const temAlgo = !!obs || total > 0
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        className="text-amber-500 hover:text-amber-600 cursor-pointer p-0.5"
-        aria-label="Ver observação"
+        onClick={() => { setOpen(false); onAbrir() }}
+        className={`inline-flex items-center gap-1 cursor-pointer p-0.5 ${temAlgo ? 'text-amber-500 hover:text-amber-600' : 'text-muted-foreground hover:text-foreground'}`}
+        aria-label="Ver observações e tratativas"
       >
         <StickyNote className="size-3.5" />
+        {total > 0 && <span className="text-[10px] font-semibold">{total}</span>}
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-80">
-        <p className="font-semibold mb-1 text-xs text-foreground uppercase tracking-wider">{title}</p>
-        <p className="text-xs text-muted-foreground whitespace-pre-wrap">{obs}</p>
+      <PopoverContent align="end" className="w-80">
+        {obs && (
+          <div className="mb-2">
+            <p className="font-semibold mb-1 text-xs text-foreground uppercase tracking-wider">Observações</p>
+            <p className="text-xs text-muted-foreground whitespace-pre-wrap">{obs}</p>
+          </div>
+        )}
+        <p className="font-semibold mb-1 text-xs text-foreground uppercase tracking-wider">Tratativas</p>
+        {tratativas.length ? (
+          <div className="space-y-2">
+            {tratativas.map((t) => (
+              <div key={t.id} className="text-xs">
+                <p className="text-muted-foreground">
+                  {LABEL_CANAL[t.canal] ?? t.canal} · {t.user?.nome ?? '—'} · {formatDateTime(t.createdAt)}
+                </p>
+                <p className="whitespace-pre-wrap line-clamp-3">{t.descricao}</p>
+              </div>
+            ))}
+            {total > tratativas.length && (
+              <p className="text-[10px] text-muted-foreground">+{total - tratativas.length} mais antiga(s)</p>
+            )}
+          </div>
+        ) : (
+          <p className="text-xs text-muted-foreground">Nenhuma tratativa registrada.</p>
+        )}
+        <p className="text-[10px] text-muted-foreground mt-2">Clique para ver todas e registrar uma nova.</p>
       </PopoverContent>
     </Popover>
   )
@@ -57,6 +90,8 @@ function HoverObsPopover({ obs, title = 'Observações' }: { obs: string; title?
 
 export default function InadimplentesPage() {
   const { user } = useAuth()
+  const qc = useQueryClient()
+  const [tratativasDe, setTratativasDe] = useState<{ id: number; nome: string; obs: string } | null>(null)
   const podeFiltrarConsultor = user?.role === 'admin' || user?.role === 'financeiro'
 
   const [fSearch, setFSearch] = useState('')
@@ -338,8 +373,15 @@ export default function InadimplentesPage() {
                           </td>
                           <td className="px-4 py-3 text-right font-bold text-destructive">{formatCurrency(saldo)}</td>
                           <td className="px-4 py-3 text-center">
-                            {(loan.client?.observacoes || loan.observacoes) ? (
-                              <HoverObsPopover obs={`${loan.client?.observacoes || ''}\n${loan.observacoes || ''}`.trim()} title="Observações" />
+                            {loan.client?.id ? (
+                              <ObsTratativas
+                                loan={loan}
+                                onAbrir={() => setTratativasDe({
+                                  id: loan.client.id,
+                                  nome: loan.client.nome,
+                                  obs: `${loan.client?.observacoes || ''}\n${loan.observacoes || ''}`.trim(),
+                                })}
+                              />
                             ) : (
                               <span className="text-muted-foreground text-xs">—</span>
                             )}
@@ -365,6 +407,29 @@ export default function InadimplentesPage() {
           )}
         </>
       )}
+
+      <Dialog
+        open={!!tratativasDe}
+        onOpenChange={(o) => {
+          if (!o) {
+            setTratativasDe(null)
+            qc.invalidateQueries({ queryKey: ['installments', 'overdue'] })
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Observações e tratativas — {tratativasDe?.nome}</DialogTitle>
+          </DialogHeader>
+          {tratativasDe?.obs && (
+            <div className="rounded-lg border bg-muted/30 p-3">
+              <p className="font-semibold mb-1 text-xs uppercase tracking-wider">Observações do cadastro</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{tratativasDe.obs}</p>
+            </div>
+          )}
+          {tratativasDe && <TratativasCard clientId={tratativasDe.id} className="border-0 shadow-none" />}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

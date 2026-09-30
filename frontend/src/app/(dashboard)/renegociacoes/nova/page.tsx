@@ -15,7 +15,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ContratoCombobox } from '@/components/ui/contrato-combobox'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { formatCurrency, formatDate, hojeISODate } from '@/lib/utils'
+import { Select } from '@/components/ui/select'
+import { formatCurrency, formatDate, hojeISODate, PERIODICIDADE } from '@/lib/utils'
 import * as React from 'react'
 import api from '@/lib/api'
 
@@ -24,6 +25,7 @@ const schema = z.object({
   numeroParcelas: z.coerce.number().min(1).max(360),
   taxaJuros: z.coerce.number().min(0).max(100),
   dataInicio: z.string().min(1),
+  periodicidade: z.enum(['mensal', 'quinzenal', 'semanal']).optional(),
   observacoes: z.string().optional(),
 })
 type FormData = z.infer<typeof schema>
@@ -42,6 +44,7 @@ export default function NovaRenegociacaoPage() {
       taxaJuros: 5,
       numeroParcelas: 12,
       dataInicio: hojeISODate(),
+      periodicidade: 'mensal',
       loanId: preLoanId ? Number(preLoanId) : 0,
     },
   })
@@ -81,6 +84,9 @@ export default function NovaRenegociacaoPage() {
   }, [installmentsData])
 
   const taxaJuros = watch('taxaJuros') || 0
+  const periodicidade = watch('periodicidade') ?? 'mensal'
+  // A taxa segue ao mes: o prazo em meses e o que conta, nao o numero de parcelas.
+  const mesesDoPrazo = (n: number) => periodicidade === 'semanal' ? (n * 7) / 30 : periodicidade === 'quinzenal' ? n / 2 : n
   const simulationTerms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 18, 24]
 
   return (
@@ -140,6 +146,12 @@ export default function NovaRenegociacaoPage() {
               <Input type="date" {...register('dataInicio')} />
               {errors.dataInicio && <p className="text-xs text-destructive">{errors.dataInicio.message}</p>}
             </div>
+            <div className="space-y-1.5">
+              <Label>Periodicidade das Parcelas</Label>
+              <Select {...register('periodicidade')}>
+                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </Select>
+            </div>
             <div className="md:col-span-2 space-y-1.5">
               <Label>Observações</Label>
               <Textarea {...register('observacoes')} placeholder="Motivo e condições da renegociação..." rows={3} />
@@ -163,7 +175,7 @@ export default function NovaRenegociacaoPage() {
                   </TableHeader>
                   <TableBody>
                     {simulationTerms.map(n => {
-                      const totalComJuros = dividaTotal * (1 + (taxaJuros / 100) * n)
+                      const totalComJuros = dividaTotal * (1 + (taxaJuros / 100) * mesesDoPrazo(n))
                       const valorParcela = totalComJuros / n
                       return (
                         <TableRow key={n}>

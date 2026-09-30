@@ -46,3 +46,13 @@ export function addMonthsSafe(base: Date, months: number): Date {
 
   return diaAoMeioDiaUTC(targetYear, normalizedMonth, day);
 }
+
+export const PERIODICIDADES = ['mensal', 'quinzenal', 'semanal'] as const;
+export type Periodicidade = (typeof PERIODICIDADES)[number];
+
+/** Vencimento `n` periodos depois de `base`. Quinzenal e 15 dias corridos, semanal 7. */
+export function somarPeriodos(base: Date, n: number, periodicidade?: string | null): Date {
+  const dias = periodicidade === 'semanal' ? 7 : periodicidade === 'quinzenal' ? 15 : 0;
+  if (!dias) return addMonthsSafe(base, n);
+  return diaAoMeioDiaUTC(base.getUTCFullYear(), base.getUTCMonth(), base.getUTCDate() + dias * n);
+}

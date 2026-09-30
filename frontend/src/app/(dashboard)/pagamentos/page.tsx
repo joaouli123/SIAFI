@@ -30,6 +30,7 @@ interface Payment {
   installment: {
     id: number
     numero: number
+    dataVencimento?: string
     loan: { id: number; client: { nome: string; cpf?: string | null; consultor?: { id: number; nome: string } | null } }
   }
   split?: {
@@ -364,6 +365,7 @@ export default function PagamentosPage() {
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">CPF</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground min-w-[240px]">Cliente</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Consultor</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell whitespace-nowrap">Vencimento</th>
                     <th className="text-center px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell">Parcela</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden lg:table-cell whitespace-nowrap">Pagamento</th>
                     <th className="text-right px-4 py-3 font-medium text-muted-foreground">Valor</th>
@@ -389,6 +391,9 @@ export default function PagamentosPage() {
                       </td>
                       <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell">
                         {p.installment?.loan?.client?.consultor?.nome ?? '—'}
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground hidden lg:table-cell whitespace-nowrap">
+                        {p.installment?.dataVencimento ? formatDateLocal(p.installment.dataVencimento) : '—'}
                       </td>
                       <td className="px-4 py-3 text-center text-muted-foreground hidden lg:table-cell">
                         P{p.installment?.numero}

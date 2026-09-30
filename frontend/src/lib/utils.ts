@@ -133,3 +133,26 @@ export const METODO_PAGAMENTO: Record<string, string> = {
   cheque:       "Cheque",
   cartao:       "Cartão",
 }
+
+export const PERIODICIDADE: Record<string, string> = {
+  mensal:    "Mensal",
+  quinzenal: "Quinzenal (a cada 15 dias)",
+  semanal:   "Semanal (a cada 7 dias)",
+}
+
+export const OPCOES_METODO_PAGAMENTO = Object.values(METODO_PAGAMENTO)
+
+const semAcento = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
+
+/** A forma de pagamento da baixa e texto livre; quando o operador escolhe/digita
+ *  uma das formas padrao, grava a chave de sempre para os relatorios agruparem. */
+export function metodoParaSalvar(texto: string): string {
+  const alvo = semAcento(texto)
+  const chave = Object.entries(METODO_PAGAMENTO).find(([k, label]) => k === alvo || semAcento(label) === alvo)?.[0]
+  return chave ?? texto.trim()
+}
+
+export function labelMetodo(valor?: string | null): string {
+  if (!valor) return ''
+  return METODO_PAGAMENTO[valor] ?? valor
+}

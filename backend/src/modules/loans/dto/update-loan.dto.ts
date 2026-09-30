@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsIn,
   IsInt,
   IsNumber,
   IsOptional,
@@ -14,6 +15,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { PERIODICIDADES, type Periodicidade } from '../../../common/utils/date.utils';
 import { PaymentMethod } from '@prisma/client';
 
 // Edição de contrato. Campos financeiros (principalAmount, targetProfit,
@@ -58,6 +60,10 @@ export class UpdateLoanDto {
   @Min(1)
   @Max(28)
   diaVencimento?: number;
+
+  @IsOptional()
+  @IsIn(PERIODICIDADES)
+  periodicidade?: Periodicidade;
 
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 4 })

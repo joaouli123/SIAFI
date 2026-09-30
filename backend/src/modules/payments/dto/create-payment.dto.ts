@@ -13,10 +13,12 @@ export class CreatePaymentDto {
   @IsDateString()
   dataPagamento: string;
 
+  // Texto livre (pedido da administracao em 28/09): alem da lista padrao, o
+  // operador registra formas como "Boleto", "Deposito Bradesco" etc.
   @IsOptional()
-  @IsIn(['dinheiro', 'pix', 'mercadopago', 'transferencia', 'cheque', 'cartao'])
-  metodoPagamento: 'dinheiro' | 'pix' | 'mercadopago' | 'transferencia' | 'cheque' | 'cartao' =
-    'dinheiro';
+  @IsString()
+  @MaxLength(60)
+  metodoPagamento: string = 'dinheiro';
 
   @IsOptional()
   observacao?: string;

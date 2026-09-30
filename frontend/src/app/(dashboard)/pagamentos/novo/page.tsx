@@ -18,7 +18,7 @@ import { Select } from '@/components/ui/select'
 import { ComboboxTexto } from '@/components/ui/combobox-texto'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn, formatCurrency, formatDate, formatCPF, METODO_PAGAMENTO, hojeISODate } from '@/lib/utils'
+import { cn, formatCurrency, formatDate, formatCPF, METODO_PAGAMENTO, OPCOES_METODO_PAGAMENTO, metodoParaSalvar, hojeISODate } from '@/lib/utils'
 import api from '@/lib/api'
 
 const schema = z.object({
@@ -80,7 +80,7 @@ export default function NovoPagamentoPage() {
     resolver: zodResolver(schema) as any,
     defaultValues: {
       dataPagamento:   hojeISODate(),
-      metodoPagamento: 'dinheiro',
+      metodoPagamento: 'Dinheiro',
     },
   })
 
@@ -188,7 +188,7 @@ export default function NovoPagamentoPage() {
 
   // ── Mutation ───────────────────────────────────────────────────────────────
   const mutation = useMutation({
-    mutationFn: (data: FormData) => api.post('/payments', data).then(r => r.data),
+    mutationFn: (data: FormData) => api.post('/payments', { ...data, metodoPagamento: metodoParaSalvar(data.metodoPagamento) }).then(r => r.data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['payments'] })
       qc.invalidateQueries({ queryKey: ['loans'] })
@@ -214,7 +214,7 @@ export default function NovoPagamentoPage() {
     if (searchParams.get('parcelaId')) router.replace('/pagamentos/novo')
     setPreParcelaId(null)
     setStep(1); setSearch(''); setClient(null); setLoanId(null); setInst(null)
-    form.reset({ dataPagamento: hojeISODate(), metodoPagamento: 'dinheiro' })
+    form.reset({ dataPagamento: hojeISODate(), metodoPagamento: 'Dinheiro' })
   }
 
   const StepDot = ({ n, label }: { n: 1 | 2 | 3; label: string }) => {
@@ -493,11 +493,15 @@ export default function NovoPagamentoPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Método de Pagamento *</Label>
-                  <Select {...form.register('metodoPagamento')}>
-                    {Object.entries(METODO_PAGAMENTO).map(([k, v]) => (
-                      <option key={k} value={k}>{v}</option>
-                    ))}
-                  </Select>
+                  <ComboboxTexto
+                    value={form.watch('metodoPagamento') ?? ''}
+                    onChange={(v) => form.setValue('metodoPagamento', v, { shouldValidate: true })}
+                    opcoes={OPCOES_METODO_PAGAMENTO}
+                    placeholder="Digite ou escolha (ex: PIX, Boleto)"
+                  />
+                  {form.formState.errors.metodoPagamento && (
+                    <p className="text-xs text-destructive">{form.formState.errors.metodoPagamento.message}</p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bco Recebedor</Label>

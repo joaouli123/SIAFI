@@ -92,6 +92,7 @@ export class PdfController {
     @Query('search') search: string | undefined,
     @Query('status') status: string | undefined,
     @Query('consultorId') consultorId: string | undefined,
+    @Query('avalista') avalista: string | undefined,
     @CurrentUser() user: { id?: number; role?: string },
     @Res() res: Response,
   ) {
@@ -103,7 +104,7 @@ export class PdfController {
         : Number.isFinite(filtro) && filtro > 0
           ? filtro
           : undefined;
-    await this.excelService.exportarClientes({ search, status, consultorId: escopo }, res);
+    await this.excelService.exportarClientes({ search, status, consultorId: escopo, avalista }, res);
   }
 
   @Get('movimentacao/excel')
@@ -142,6 +143,18 @@ export class PdfController {
     @Res() res: Response,
   ) {
     await this.excelService.exportarRecebimentos(filter, user?.role, res);
+  }
+
+  @Get('renegociacoes/excel')
+  @Roles('admin', 'financeiro')
+  async renegociacoesExcel(@Res() res: Response) {
+    await this.excelService.exportarRenegociacoes(res);
+  }
+
+  @Get('reparcelamentos/excel')
+  @Roles('admin', 'financeiro', 'consultor')
+  async reparcelamentosExcel(@Query('status') status: string | undefined, @Res() res: Response) {
+    await this.excelService.exportarReparcelamentos({ status }, res);
   }
 
   // ─── Manual do Sistema (PDFKit legado) ────────────────────────────────────

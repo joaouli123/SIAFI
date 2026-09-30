@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PaymentMethod, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { createHash } from 'crypto';
 import Decimal from 'decimal.js';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -150,7 +150,7 @@ export class PaymentsService {
           valorPago:       valorPago.toDecimalPlaces(2).toNumber(),
           valorDevido:     totalDevidoAtual.toDecimalPlaces(2).toNumber(),
           dataPagamento:   dataLocal(dto.dataPagamento),
-          metodoPagamento: (dto.metodoPagamento ?? 'dinheiro') as PaymentMethod,
+          metodoPagamento: dto.metodoPagamento?.trim() || 'dinheiro',
           observacao:      dto.observacao ?? null,
           contaDestino:    dto.contaDestino ?? null,
           desconto:        desconto.toDecimalPlaces(2).toNumber(),
@@ -412,6 +412,7 @@ export class PaymentsService {
             select: {
               id: true,
               numero: true,
+              dataVencimento: true,
               principalPayback: true,
               installmentAmount: true,
               loan: {

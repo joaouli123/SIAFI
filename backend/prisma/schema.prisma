@@ -339,6 +339,8 @@ model Loan {
   moraDiariaPercentual     Decimal? @map("mora_diaria_percentual") @db.Decimal(7, 6)
   diasAntecedenciaCobranca Int      @default(10) @map("dias_antecedencia_cobranca")
   diaVencimento            Int?     @map("dia_vencimento")
+  // mensal | quinzenal (15 dias) | semanal (7 dias): intervalo entre os vencimentos.
+  periodicidade            String   @default("mensal") @db.VarChar(10)
   cobrarWhatsapp           Boolean  @default(true) @map("cobrar_whatsapp")
   cobrarEmail              Boolean  @default(true) @map("cobrar_email")
   cobrarPortal             Boolean  @default(true) @map("cobrar_portal")
@@ -425,6 +427,7 @@ model SolicitacaoReparcelamento {
   novoTargetProfit     Decimal?  @map("novo_target_profit") @db.Decimal(10, 2)
   novoNumeroParcelas   Int?      @map("novo_numero_parcelas")
   novaDataInicio       DateTime? @map("nova_data_inicio")
+  novaPeriodicidade    String?   @map("nova_periodicidade") @db.VarChar(10)
   multaAplicada        Decimal?  @map("multa_aplicada") @db.Decimal(10, 2)
   moraAplicada         Decimal?  @map("mora_aplicada") @db.Decimal(10, 2)
   observacaoFinanceiro String?   @map("observacao_financeiro") @db.Text
@@ -599,7 +602,7 @@ model Payment {
   valorPago       Decimal       @map("valor_pago") @db.Decimal(15, 2)
   valorDevido     Decimal?      @map("valor_devido") @db.Decimal(15, 2) // total devido (principal + encargos) no momento da baixa
   dataPagamento   DateTime      @map("data_pagamento")
-  metodoPagamento PaymentMethod @default(dinheiro) @map("metodo_pagamento")
+  metodoPagamento String        @default("dinheiro") @map("metodo_pagamento") @db.VarChar(60) // texto livre: a administracao usa formas alem da lista padrao
   observacao      String?       @db.Text
   contaDestino    String?       @map("conta_destino") @db.VarChar(150) // conta/banco que recebeu a baixa
   desconto        Decimal       @default(0) @db.Decimal(15, 2) // desconto concedido nesta baixa
@@ -702,6 +705,7 @@ model Renegociacao {
   taxaJuros               Decimal          @map("taxa_juros") @db.Decimal(8, 4)
   tipoAmortizacao         AmortizationType @default(simples) @map("tipo_amortizacao")
   dataInicio              DateTime         @map("data_inicio")
+  periodicidade           String           @default("mensal") @db.VarChar(10)
   parcelasRenegociadasIds Json?            @map("parcelas_renegociadas_ids")
   valorDescontado         Decimal?         @map("valor_descontado") @db.Decimal(15, 2)
   motivoRenegociacao      String?          @map("motivo_renegociacao") @db.VarChar(100)

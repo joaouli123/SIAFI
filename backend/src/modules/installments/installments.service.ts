@@ -87,6 +87,7 @@ export class InstallmentsService {
             select: {
               id: true,
               status: true,
+              dataInicio: true,
               multaPercentual: true,
               moraDiariaPercentual: true,
               client: { select: { id: true, nome: true, nomeSocial: true, cpf: true, whatsapp: true, observacoes: true, consultor: { select: { id: true, nome: true } } } },
@@ -238,9 +239,21 @@ export class InstallmentsService {
                 whatsapp: true,
                 observacoes: true,
                 consultor: { select: { id: true, nome: true } },
+                tratativas: {
+                  orderBy: { createdAt: 'desc' },
+                  take: 3,
+                  select: {
+                    id: true,
+                    canal: true,
+                    descricao: true,
+                    createdAt: true,
+                    user: { select: { nome: true } },
+                  },
+                },
                 _count: {
                   select: {
                     loans: { where: { status: { not: 'cancelado' } } },
+                    tratativas: true,
                   },
                 },
               },
@@ -265,7 +278,11 @@ export class InstallmentsService {
           ? {
               ...inst.loan,
               client: client
-                ? { ...clientWithoutCount, quantidadeEmprestimos: clientCount?.loans ?? 0 }
+                ? {
+                    ...clientWithoutCount,
+                    quantidadeEmprestimos: clientCount?.loans ?? 0,
+                    totalTratativas: clientCount?.tratativas ?? 0,
+                  }
                 : client,
             }
           : inst.loan,

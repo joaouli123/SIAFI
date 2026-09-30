@@ -1,13 +1,16 @@
 'use client'
 
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import Link from 'next/link'
-import { RefreshCcw, Plus, RefreshCw } from 'lucide-react'
+import { RefreshCcw, Plus, RefreshCw, FileDown } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import api from '@/lib/api'
+import { baixarPlanilha } from '@/lib/planilha'
 
 interface Renegociacao {
   id: number; valorTotal: number; numeroParcelas: number; taxaJuros: number
@@ -20,6 +23,18 @@ export default function RenegociacoesPage() {
     queryKey: ['renegociacoes'],
     queryFn: () => api.get<Renegociacao[]>('/renegociacoes').then((r) => r.data),
   })
+  const [baixando, setBaixando] = useState(false)
+
+  const baixarExcel = async () => {
+    setBaixando(true)
+    try {
+      await baixarPlanilha('/export/renegociacoes/excel', 'renegociacoes')
+    } catch {
+      toast.error('Nao foi possivel gerar a planilha. Tente novamente.')
+    } finally {
+      setBaixando(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -29,6 +44,9 @@ export default function RenegociacoesPage() {
           <p className="text-muted-foreground text-sm mt-1">Histórico de renegociações de dívida</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={baixarExcel} disabled={baixando || !data?.length} className="gap-2" title="Gerar planilha das renegociações">
+            <FileDown className="size-3.5" />{baixando ? 'Gerando...' : 'Excel'}
+          </Button>
           <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2"><RefreshCw className="size-3.5" />Atualizar</Button>
           <Link href="/renegociacoes/nova"><Button className="gap-2"><Plus className="size-4" />Nova Renegociação</Button></Link>
         </div>

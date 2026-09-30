@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
-import { Plus, RefreshCw, TrendingUp, TrendingDown, DollarSign } from 'lucide-react'
+import { Plus, RefreshCw, TrendingUp, TrendingDown, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,7 +12,7 @@ import { Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { formatCurrency, formatDateTimeLocal, hojeISODate } from '@/lib/utils'
+import { formatCurrency, formatDateTimeLocal, hojeISODate, primeiroDiaMesISO } from '@/lib/utils'
 import { toast } from 'sonner'
 import api from '@/lib/api'
 
@@ -20,24 +20,38 @@ interface Transaction {
   id: number; tipo: 'entrada' | 'saida'; valor: number; descricao: string
   categoria: string; data: string; user?: { nome: string }
 }
-interface Saldo { entradas: number; saidas: number; saldo: number }
+interface Saldo { entradas: number; saidas: number; saldo: number; qtdEntradas?: number; qtdSaidas?: number }
+interface ListaCaixa {
+  data: Transaction[]
+  meta?: { total: number; page: number; limit: number; lastPage: number }
+  totais?: Saldo
+}
+
+const POR_PAGINA = 50
 
 export default function CaixaPage() {
   const [showForm, setShowForm] = useState(false)
   const [tipo, setTipo] = useState('')
   const qc = useQueryClient()
 
+  const [dataInicio, setDataInicio] = useState(primeiroDiaMesISO())
+  const [dataFim, setDataFim] = useState(hojeISODate())
+  const [page, setPage] = useState(1)
+  const periodo = { dataInicio: dataInicio || undefined, dataFim: dataFim || undefined }
+
   const { data: saldo, isLoading: loadSaldo } = useQuery({
-    queryKey: ['transactions', 'saldo'],
-    queryFn: () => api.get<Saldo>('/transactions/saldo').then((r) => r.data),
+    queryKey: ['transactions', 'saldo', periodo],
+    queryFn: () => api.get<Saldo>('/transactions/saldo', { params: periodo }).then((r) => r.data),
   })
 
-  const { data: transactions, isLoading, refetch } = useQuery({
-    queryKey: ['transactions', { tipo }],
-    // /transactions responde paginado ({ data, meta, ... }); extrai o array (aceita array simples também)
-    queryFn: () => api.get<{ data: Transaction[] } | Transaction[]>('/transactions', { params: { tipo: tipo || undefined, limit: 50 } })
-      .then((r) => (Array.isArray(r.data) ? r.data : r.data.data)),
+  const { data: lista, isLoading, refetch } = useQuery({
+    queryKey: ['transactions', { tipo, page, ...periodo }],
+    queryFn: () => api.get<ListaCaixa>('/transactions', { params: { tipo: tipo || undefined, page, limit: POR_PAGINA, ...periodo } })
+      .then((r) => r.data),
   })
+  const transactions = lista?.data
+  const meta = lista?.meta
+  const totais = lista?.totais
 
   const [form, setForm] = useState({ tipo: 'entrada', valor: '', descricao: '', categoria: '', data: hojeISODate() })
 
@@ -71,7 +85,7 @@ export default function CaixaPage() {
               <CardContent className="pt-4"><p className="text-xs text-muted-foreground">Saídas</p><p className="text-2xl font-bold text-red-700 dark:text-red-400">{formatCurrency(saldo?.saidas ?? 0)}</p></CardContent>
             </Card>
             <Card className={saldo && saldo.saldo >= 0 ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-200' : 'bg-red-50 dark:bg-red-950/20 border-red-200'}>
-              <CardContent className="pt-4"><p className="text-xs text-muted-foreground">Saldo do Mês</p><p className={`text-2xl font-bold ${saldo && saldo.saldo >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-red-700'}`}>{formatCurrency(saldo?.saldo ?? 0)}</p></CardContent>
+              <CardContent className="pt-4"><p className="text-xs text-muted-foreground">Saldo do Período</p><p className={`text-2xl font-bold ${saldo && saldo.saldo >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-red-700'}`}>{formatCurrency(saldo?.saldo ?? 0)}</p></CardContent>
             </Card>
           </>
         )}
@@ -118,8 +132,16 @@ export default function CaixaPage() {
 
       <Card>
         <CardHeader className="pb-3">
-          <div className="flex gap-3">
-            <Select value={tipo} onChange={(e) => setTipo(e.target.value)} className="w-40">
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="space-y-1">
+              <Label className="text-xs">De</Label>
+              <Input type="date" value={dataInicio} onChange={(e) => { setDataInicio(e.target.value); setPage(1) }} className="w-40" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Até</Label>
+              <Input type="date" value={dataFim} onChange={(e) => { setDataFim(e.target.value); setPage(1) }} className="w-40" />
+            </div>
+            <Select value={tipo} onChange={(e) => { setTipo(e.target.value); setPage(1) }} className="w-40">
               <option value="">Todos</option>
               <option value="entrada">Entradas</option>
               <option value="saida">Saídas</option>
@@ -161,7 +183,29 @@ export default function CaixaPage() {
                   </tr>
                 ))}
               </tbody>
+              {totais && (
+                <tfoot>
+                  <tr className="border-t-2 border-border bg-muted/40 font-semibold">
+                    <td className="px-4 py-3" colSpan={1}>
+                      Total do período · {meta?.total ?? transactions.length} lançamento(s)
+                    </td>
+                    <td className="px-4 py-3 hidden md:table-cell text-green-600">+{formatCurrency(totais.entradas)}</td>
+                    <td className="px-4 py-3 hidden lg:table-cell text-red-600">-{formatCurrency(totais.saidas)}</td>
+                    <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground">Saldo</td>
+                    <td className={`px-4 py-3 text-right ${totais.saldo >= 0 ? 'text-blue-700 dark:text-blue-400' : 'text-red-600'}`}>{formatCurrency(totais.saldo)}</td>
+                  </tr>
+                </tfoot>
+              )}
             </table>
+          )}
+          {meta && meta.lastPage > 1 && (
+            <div className="flex items-center justify-between px-4 py-3 border-t border-border text-sm">
+              <span className="text-muted-foreground">Página {meta.page} de {meta.lastPage}</span>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}><ChevronLeft className="size-4" /></Button>
+                <Button variant="outline" size="sm" disabled={page >= meta.lastPage} onClick={() => setPage((p) => p + 1)}><ChevronRight className="size-4" /></Button>
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>

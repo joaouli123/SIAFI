@@ -1,4 +1,4 @@
-import { IsIn, IsInt, IsOptional, IsPositive } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsPositive, IsString, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 
@@ -13,4 +13,9 @@ export class ClientFilterDto extends PaginationDto {
   @IsInt()
   @IsPositive()
   consultorId?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(150)
+  avalista?: string;
 }

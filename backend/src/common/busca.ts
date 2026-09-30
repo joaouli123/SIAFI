@@ -17,3 +17,12 @@ export function filtroCliente(search: string): Prisma.ClientWhereInput[] {
   }
   return or;
 }
+
+/// Clientes que tem um avalista com esse nome ou CPF.
+export function filtroAvalista(termo: string): Prisma.ClientWhereInput {
+  const texto = termo.trim();
+  const digitos = texto.replace(/\D/g, '');
+  const or: Prisma.AvalistaWhereInput[] = [{ nome: { contains: texto, mode: 'insensitive' } }];
+  if (digitos) or.push({ cpf: { contains: digitos } });
+  return { meusAvalistas: { some: { OR: or } } };
+}

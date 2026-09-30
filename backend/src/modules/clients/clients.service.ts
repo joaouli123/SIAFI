@@ -3,7 +3,7 @@ import { Client, Prisma } from '@prisma/client';
 import { extname } from 'path';
 import { PrismaService } from '../../prisma/prisma.service';
 import { dataLocal } from '../../common/data';
-import { filtroCliente } from '../../common/busca';
+import { filtroAvalista, filtroCliente } from '../../common/busca';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { PaginatedResponse, paginate } from '../../common/dto/paginated-response.dto';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -33,7 +33,7 @@ export class ClientsService {
   ) {}
 
   async findAll(filters: ClientFilterDto, consultorId?: number): Promise<PaginatedResponse<Client>> {
-    const { page, limit, search, status, consultorId: filterConsultorId } = filters;
+    const { page, limit, search, status, consultorId: filterConsultorId, avalista } = filters;
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};
@@ -55,6 +55,10 @@ export class ClientsService {
       where.OR = filtroCliente(search);
     }
 
+    if (avalista?.trim()) {
+      Object.assign(where, filtroAvalista(avalista));
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.client.findMany({
         where,
@@ -63,6 +67,7 @@ export class ClientsService {
         orderBy: { nome: 'asc' },
         include: {
           consultor: { select: { id: true, nome: true } },
+          meusAvalistas: { select: { id: true, nome: true }, orderBy: { id: 'asc' } },
         },
       }),
       this.prisma.client.count({ where }),

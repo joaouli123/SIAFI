@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatCurrency, METODO_PAGAMENTO, toDateInputValue } from '@/lib/utils'
+import { formatCurrency, METODO_PAGAMENTO, PERIODICIDADE, toDateInputValue } from '@/lib/utils'
 import api from '@/lib/api'
 import { useAuth } from '@/contexts/auth.context'
 import Decimal from 'decimal.js'
@@ -35,6 +35,7 @@ const schema = z.object({
   dataPrimeiroVencimento: z.string().optional(),
   observacoes: z.string().optional(),
   diaVencimento: z.coerce.number().min(1).max(28).optional(),
+  periodicidade: z.enum(['mensal', 'quinzenal', 'semanal']).optional(),
   multaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   moraDiariaPercentual: z.coerce.number().min(0).max(9.99).optional(),
   comissaoPercentual: z.coerce.number().min(0).max(100).optional(),
@@ -90,6 +91,7 @@ export default function EditarEmprestimoPage() {
       dataPrimeiroVencimento: vencimentoEmAberto(loan),
       observacoes: loan.observacoes ?? '',
       diaVencimento: loan.diaVencimento ?? undefined,
+      periodicidade: loan.periodicidade ?? 'mensal',
       multaPercentual: loan.multaPercentual != null ? Number(loan.multaPercentual) : undefined,
       moraDiariaPercentual: loan.moraDiariaPercentual != null ? Number(loan.moraDiariaPercentual) : undefined,
       comissaoPercentual: loan.comissaoPercentual != null ? Number(loan.comissaoPercentual) : undefined,
@@ -203,7 +205,8 @@ export default function EditarEmprestimoPage() {
       Number(d.targetProfit) !== Number(loan.targetProfit) ||
       Number(d.numeroParcelas) !== Number(loan.numeroParcelas) ||
       (d.dataInicio ?? '') !== toDateInputValue(loan.dataInicio) ||
-      (d.diaVencimento ?? null) !== (loan.diaVencimento ?? null)
+      (d.diaVencimento ?? null) !== (loan.diaVencimento ?? null) ||
+      (d.periodicidade ?? 'mensal') !== (loan.periodicidade ?? 'mensal')
     )
   }
 
@@ -289,6 +292,14 @@ export default function EditarEmprestimoPage() {
                 {Object.entries(METODO_PAGAMENTO).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </Select>
             </div>
+            <div className="space-y-1.5">
+              <Label>Periodicidade das Parcelas</Label>
+              <Select {...register('periodicidade')}>
+                {Object.entries(PERIODICIDADE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </Select>
+              <p className="text-xs text-muted-foreground">Intervalo entre um vencimento e o próximo</p>
+            </div>
+
             <div className="space-y-1.5">
               <Label>Data de Início do Contrato *</Label>
               <Input type="date" {...register('dataInicio')} />

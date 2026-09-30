@@ -1,5 +1,6 @@
 import {
   IsDateString,
+  IsIn,
   IsInt,
   IsNumber,
   IsOptional,
@@ -7,6 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import { PERIODICIDADES, type Periodicidade } from '../../../common/utils/date.utils';
 
 export class CreateRenegociacaoDto {
   @IsInt()
@@ -23,6 +25,10 @@ export class CreateRenegociacaoDto {
 
   @IsDateString()
   dataInicio: string;
+
+  @IsOptional()
+  @IsIn(PERIODICIDADES)
+  periodicidade?: Periodicidade;
 
   @IsOptional()
   @IsString()

@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsIn,
   IsInt,
   IsNumber,
   IsOptional,
@@ -12,6 +13,7 @@ import {
   Min,
 } from 'class-validator';
 import { PaymentMethod } from '@prisma/client';
+import { PERIODICIDADES, type Periodicidade } from '../../../common/utils/date.utils';
 
 export class CreateLoanDto {
   @IsInt()
@@ -57,6 +59,10 @@ export class CreateLoanDto {
   @Min(1)
   @Max(28)
   diaVencimento?: number;
+
+  @IsOptional()
+  @IsIn(PERIODICIDADES)
+  periodicidade?: Periodicidade;
 
   // Multa por atraso override do empréstimo (% sobre saldo); null = fallback settings
   // Máx. 9.99 (limite da coluna Decimal(5,4) no banco — evita overflow no save).
